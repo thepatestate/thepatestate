@@ -1,8 +1,9 @@
 import { readFileSync } from "node:fs";
 import { describe, it, expect } from "vitest";
-import { parseTimedText, transcriptToPromptText } from "./transcript";
+import { parseTimedText, parseSrv3, transcriptToPromptText } from "./transcript";
 
 const xml = readFileSync(new URL("./__fixtures__/timedtext.xml", import.meta.url), "utf8");
+const srv3Xml = readFileSync(new URL("./__fixtures__/srv3.xml", import.meta.url), "utf8");
 
 describe("parseTimedText", () => {
   it("parses segments with numeric starts", () => {
@@ -16,6 +17,33 @@ describe("parseTimedText", () => {
   it("returns [] for malformed input", () => {
     expect(parseTimedText("")).toEqual([]);
     expect(parseTimedText("<html>nope</html>")).toEqual([]);
+  });
+});
+
+describe("parseSrv3", () => {
+  it("parses <p t> segments, converting ms to seconds", () => {
+    const segs = parseSrv3(srv3Xml);
+    expect(segs).toHaveLength(3);
+    expect(segs[0].start).toBe(0.32);
+  });
+  it("strips <s> word-fragment tags and joins their text", () => {
+    expect(parseSrv3(srv3Xml)[0].text).toBe("welcome back to the front porch");
+  });
+  it("decodes double-escaped entities", () => {
+    expect(parseSrv3(srv3Xml)[1].text).toBe("let's talk about the top ten & who survives");
+  });
+  it("collapses internal whitespace runs to a single space", () => {
+    expect(parseSrv3(srv3Xml)[2].text).toBe("first up: Georgia");
+  });
+  it("returns [] for malformed input", () => {
+    expect(parseSrv3("")).toEqual([]);
+    expect(parseSrv3("<html>nope</html>")).toEqual([]);
+  });
+  it("skips empty segments", () => {
+    const xmlWithEmpty = `<timedtext><body><p t="100"></p><p t="200">hi</p></body></timedtext>`;
+    const segs = parseSrv3(xmlWithEmpty);
+    expect(segs).toHaveLength(1);
+    expect(segs[0]).toEqual({ start: 0.2, text: "hi" });
   });
 });
 
