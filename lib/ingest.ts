@@ -16,7 +16,9 @@ export interface IngestVideo extends Video {
  * video) is guaranteed by deterministic document ids + createIfNotExists, not
  * by the pre-checks below — the pre-checks are cheap fast-path skips only.
  */
-export async function ingestEpisode(v: IngestVideo): Promise<"created" | "skipped" | "episode-only"> {
+export type IngestResult = "created" | "skipped" | "episode-only" | "failed";
+
+export async function ingestEpisode(v: IngestVideo): Promise<IngestResult> {
   if (!isSanityWriteConfigured) return "skipped";
   try {
     const episodeId = `episode-${v.id}`;
@@ -87,7 +89,8 @@ export async function ingestEpisode(v: IngestVideo): Promise<"created" | "skippe
       seoDescription: draft.seo.description,
     });
     return "created";
-  } catch {
-    return "episode-only";
+  } catch (err) {
+    console.error("[ingest]", v.id, err);
+    return "failed";
   }
 }

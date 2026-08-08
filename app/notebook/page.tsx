@@ -272,6 +272,7 @@ export default async function NotebookPage() {
               ) : null}
 
               <p className="eyebrow" style={{ marginTop: 38 }}>Latest News</p>
+              {lead && <span className="note">Sample content below — more real stories coming</span>}
               <div style={{ marginTop: 4 }}>
                 {DEMO_NEWS.map((n) => (
                   <div className={n.locked ? "newsitem locked" : "newsitem"} key={n.headline}>
@@ -301,6 +302,7 @@ export default async function NotebookPage() {
               <div style={{ marginTop: 14 }}><Link className="btn" href="/#">Load More Articles</Link></div>
 
               <p className="eyebrow" style={{ marginTop: 38 }}>Most Popular This Week</p>
+              {lead && <span className="note">Sample content below — more real stories coming</span>}
               <div style={{ marginTop: 8 }}>
                 {DEMO_POPULAR.map((p) => (
                   <div className="perf" key={p.n}>
@@ -317,6 +319,7 @@ export default async function NotebookPage() {
 
             <div className="wire">
               <h3><span className="dot" />Breaking News</h3>
+              {lead && <span className="note">Sample content below — more real stories coming</span>}
               {DEMO_WIRE.map((w) => (
                 <div className="wire-item" key={w.headline}>
                   <div className="wire-thumb2"><HelmetIcon {...w.icon} /></div>

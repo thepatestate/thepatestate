@@ -105,7 +105,8 @@ export async function classifySeries(input: {
     });
     const parsed = JSON.parse(textOf(res)) as { series?: string };
     return SERIES_VALUES.includes(parsed.series as never) ? (parsed.series as string) : "general";
-  } catch {
+  } catch (err) {
+    console.error("[generate:classifySeries]", err);
     return "general";
   }
 }
@@ -137,8 +138,9 @@ export async function draftCompanion(input: {
       });
       const draft = validateDraft(JSON.parse(textOf(res)));
       if (draft) return draft;
-    } catch {
+    } catch (err) {
       // SDK already retried 429/5xx internally; loop covers schema/parse misses
+      console.error("[generate:draftCompanion]", attempt, err);
     }
   }
   return null;

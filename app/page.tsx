@@ -308,7 +308,7 @@ export default async function Home() {
         <div className="wrap">
           <p className="eyebrow">From the Porch — New Every Weekday</p>
           <h2 className="display">The Notebook</h2>
-          <PreseasonChip />
+          {!notebookLead && <PreseasonChip />}
           <div className="duo" style={{ gridTemplateColumns: "2fr 1fr", marginTop: 26 }}>
             {notebookLead ? (
               <div>

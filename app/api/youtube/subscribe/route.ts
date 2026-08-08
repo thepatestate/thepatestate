@@ -10,6 +10,7 @@ export async function POST(request: Request) {
     "hub.topic": "https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCg-q_MDeWQrjizr1VPLEpYg",
     "hub.callback": `${SITE_URL}/api/youtube/webhook`,
     "hub.verify": "async",
+    "hub.secret": process.env.CRON_SECRET ?? "",
   });
   const res = await fetch("https://pubsubhubbub.appspot.com/subscribe", {
     method: "POST",

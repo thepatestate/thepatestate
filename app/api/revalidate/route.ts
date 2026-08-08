@@ -3,8 +3,8 @@ import { revalidateTag, revalidatePath } from "next/cache";
 import { writeClient, isSanityWriteConfigured } from "@/lib/sanity";
 
 export async function POST(request: Request) {
-  const url = new URL(request.url);
-  if (!process.env.REVALIDATE_SECRET || url.searchParams.get("secret") !== process.env.REVALIDATE_SECRET) {
+  const secret = request.headers.get("x-revalidate-secret");
+  if (!process.env.REVALIDATE_SECRET || secret !== process.env.REVALIDATE_SECRET) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
   try {
@@ -29,7 +29,8 @@ export async function POST(request: Request) {
     revalidatePath("/");
     revalidatePath("/sitemap.xml");
     return NextResponse.json({ ok: true });
-  } catch {
+  } catch (err) {
+    console.error("[revalidate]", err);
     return NextResponse.json({ ok: false }, { status: 200 });
   }
 }

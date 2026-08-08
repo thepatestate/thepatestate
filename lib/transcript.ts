@@ -65,7 +65,8 @@ export async function fetchTranscript(ytId: string): Promise<TranscriptSegment[]
     if (!xmlRes.ok) return null;
     const segs = parseTimedText(await xmlRes.text());
     return segs.length > 0 ? segs : null;
-  } catch {
+  } catch (err) {
+    console.error("[transcript:fetchTranscript]", ytId, err);
     return null;
   }
 }

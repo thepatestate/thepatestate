@@ -14,6 +14,8 @@ export const writeClient = createClient({
   projectId, dataset, apiVersion: "2026-08-01", useCdn: false, token,
 });
 
+// Mirrors the Sanity "episode" schema (studio/schemas) — no query currently
+// returns this exact shape, but it documents the fields ingest/enrich write.
 export interface SanityEpisode {
   _id: string;
   ytId: string;
@@ -50,37 +52,23 @@ const ARTICLE_FIELDS = `_id, headline, slug, dek, bodyMarkdown, pullQuote, bylin
   workflowState, lowConfidence, primaryTeam, teams, tags, seoTitle, seoDescription, publishedAt,
   "episode": episode->{ ytId, title, durationSeconds, series }`;
 
+// Deliberately throws on failure — no try/catch here. Pages calling these
+// error on a Sanity outage, and Next's ISR then serves the last good render
+// instead of these functions failing over to an empty/fake result. Callers
+// that must stay fail-soft (e.g. app/sitemap.ts) catch at the call site.
 export async function getPublishedArticles(limit = 20): Promise<SanityArticle[]> {
-  try {
-    return await readClient.fetch(
-      `*[_type == "article" && workflowState == "published"] | order(publishedAt desc)[0...$limit]{ ${ARTICLE_FIELDS} }`,
-      { limit },
-      { next: { revalidate: 300, tags: ["articles"] } } as never
-    );
-  } catch {
-    return [];
-  }
+  return await readClient.fetch(
+    `*[_type == "article" && workflowState == "published"] | order(publishedAt desc)[0...$limit]{ ${ARTICLE_FIELDS} }`,
+    { limit },
+    { next: { revalidate: 300, tags: ["articles"] } } as never
+  );
 }
 
 export async function getArticleBySlug(slug: string): Promise<SanityArticle | null> {
-  try {
-    return await readClient.fetch(
-      `*[_type == "article" && workflowState == "published" && slug.current == $slug][0]{ ${ARTICLE_FIELDS} }`,
-      { slug },
-      { next: { revalidate: 300, tags: ["articles", `article:${slug}`] } } as never
-    );
-  } catch {
-    return null;
-  }
-}
-
-export async function getEpisodeByYtId(ytId: string): Promise<{ _id: string } | null> {
-  return writeClient.fetch(`*[_type == "episode" && ytId == $ytId][0]{ _id }`, { ytId });
-}
-
-export async function getEpisodesWithoutArticles(): Promise<Array<{ _id: string; ytId: string }>> {
-  return writeClient.fetch(
-    `*[_type == "episode" && count(*[_type == "article" && references(^._id)]) == 0]{ _id, ytId }`
+  return await readClient.fetch(
+    `*[_type == "article" && workflowState == "published" && slug.current == $slug][0]{ ${ARTICLE_FIELDS} }`,
+    { slug },
+    { next: { revalidate: 300, tags: ["articles", `article:${slug}`] } } as never
   );
 }
 

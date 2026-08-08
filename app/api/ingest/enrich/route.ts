@@ -46,6 +46,7 @@ export async function POST(request: Request) {
           { cache: "no-store" }
         );
         if (!res.ok) {
+          console.error("[ingest/enrich] youtube api error", res.status, group.map((e) => e.ytId));
           for (const e of group) results[e.ytId] = "failed";
           continue;
         }
@@ -66,17 +67,20 @@ export async function POST(request: Request) {
               })
               .commit();
             results[item.id] = "updated";
-          } catch {
+          } catch (err) {
+            console.error("[ingest/enrich] patch failed", episodeId, err);
             results[item.id] = "failed";
           }
         }
-      } catch {
+      } catch (err) {
+        console.error("[ingest/enrich] group failed", group.map((e) => e.ytId), err);
         for (const e of group) results[e.ytId] = "failed";
       }
     }
 
     return NextResponse.json({ ok: true, results });
-  } catch {
+  } catch (err) {
+    console.error("[ingest/enrich]", err);
     return NextResponse.json({ ok: false }, { status: 200 });
   }
 }
