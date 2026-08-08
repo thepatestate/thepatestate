@@ -8,11 +8,14 @@ const LINKS = [
   { href: "/pickem", label: "Pick'Em" },
   { href: "/poll", label: "JP Poll" },
   { href: "/playoffs", label: "Playoffs" },
+  { href: "/teams", label: "Teams" },
   { href: "/recruiting", label: "Recruiting" },
   { href: "/notebook", label: "Notebook" },
   { href: "/porch", label: "The Porch" },
   { href: "/tailgate", label: "Tailgate" },
+  { href: "/ledger", label: "Ledger" },
   { href: "/shop", label: "Shop" },
+  { href: "/report", label: "The Report" },
   { href: "/about", label: "About" },
 ];
 

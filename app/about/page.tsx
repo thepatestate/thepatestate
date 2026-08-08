@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import SubscribeCTA from "@/components/SubscribeCTA";
 
 export const metadata: Metadata = { title: "About" };
@@ -42,17 +43,15 @@ export default function AboutPage() {
                 Questions for Friday&apos;s mailbag, corrections, or just a good tailgate tip — the door&apos;s
                 open.
               </p>
-              <a className="btn" href="/porch" style={{ borderColor: "var(--navy)", color: "var(--navy)" }}>
+              <Link className="btn" href="/porch" style={{ borderColor: "var(--navy)", color: "var(--navy)" }}>
                 Go to the Porch
-              </a>
+              </Link>
             </div>
             <div className="panel">
               <p className="eyebrow">Work With Us</p>
               <h3>Partners &amp; Advertising</h3>
               <p>Sponsor Pick&apos;Em, the Playbook, or the tour. One audience, deeply engaged, all season long.</p>
-              <a className="btn" href="/#" style={{ borderColor: "var(--navy)", color: "var(--navy)" }}>
-                Partner Inquiries
-              </a>
+              <button className="btn" disabled>Partnerships Open Soon</button>
             </div>
           </div>
         </div>

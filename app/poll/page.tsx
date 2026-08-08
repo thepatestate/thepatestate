@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import PreseasonChip from "@/components/PreseasonChip";
 
 export const metadata: Metadata = { title: "The JP Poll" };
@@ -100,7 +101,7 @@ export default function PollPage() {
               </div>
             ))}
           </div>
-          <div style={{ marginTop: 8 }}><a className="btn" href="/#">VIEW ALL 136 →</a></div>
+          <div style={{ marginTop: 8 }}><Link className="btn" href="/teams">VIEW ALL 136 →</Link></div>
         </div>
       </section>
 
@@ -161,9 +162,9 @@ export default function PollPage() {
             <span><b>★</b> biggest disagreement of the week</span>
           </div>
           <div style={{ marginTop: 16, fontFamily: "var(--mono)", fontSize: 12, color: "var(--ink-dim)" }}>
-            Showing 1–12 of 25 · <a href="/#" style={{ color: "var(--lamp-deep)" }}>See 13–25 →</a> ·{" "}
-            <a href="/#" style={{ color: "var(--lamp-deep)" }}>All 136 Teams Rated</a> ·{" "}
-            <a href="/#" style={{ color: "var(--lamp-deep)" }}>Poll Archive</a>
+            Showing 1–12 of 25 · <Link href="/#" style={{ color: "var(--lamp-deep)" }}>See 13–25 →</Link> ·{" "}
+            <Link href="/#" style={{ color: "var(--lamp-deep)" }}>All 136 Teams Rated</Link> ·{" "}
+            <Link href="/#" style={{ color: "var(--lamp-deep)" }}>Poll Archive</Link>
           </div>
         </div>
       </section>
@@ -179,7 +180,7 @@ export default function PollPage() {
                 Josh lost to his own audience — the written breakdown of every move on the board.
               </p>
               <span className="meta">JOSH PATE · 7 MIN READ</span>
-              <div style={{ marginTop: 14 }}><a className="btn gold" href="/notebook">Read the Column</a></div>
+              <div style={{ marginTop: 14 }}><Link className="btn gold" href="/notebook">Read the Column</Link></div>
             </div>
             <div>
               <p className="eyebrow" style={{ marginBottom: 10 }}>The Reveal · Watch</p>
@@ -223,9 +224,9 @@ export default function PollPage() {
             <h3>Who&apos;s In? See the Playoff Picture.</h3>
             <p>THE BRACKET, THE RANKINGS, JOSH&apos;S PICKS — AND AN AI TO RUN YOUR OWN</p>
           </div>
-          <a className="btn" href="/playoffs" style={{ borderColor: "var(--lamp)", color: "var(--lamp)" }}>
+          <Link className="btn" href="/playoffs" style={{ borderColor: "var(--lamp)", color: "var(--lamp)" }}>
             Open the Playoffs Page →
-          </a>
+          </Link>
         </div>
       </div>
     </main>

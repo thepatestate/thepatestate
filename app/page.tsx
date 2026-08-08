@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { getVideos, isEpisode, CHANNEL_URL } from "@/lib/youtube";
 import EpisodeHero from "@/components/EpisodeHero";
 import VideoGrid from "@/components/VideoGrid";
@@ -169,7 +170,7 @@ export default async function Home() {
           </p>
           <div className="hero-ctas">
             <SubscribeCTA label="▶ Watch on YouTube" />
-            <a className="btn" href="/show">Browse the Show</a>
+            <Link className="btn" href="/show">Browse the Show</Link>
           </div>
         </div>
       </section>
@@ -236,7 +237,7 @@ export default async function Home() {
                   </div>
                 </div>
               ))}
-              <a className="btn" href="/poll" style={{ width: "100%", textAlign: "center" }}>VIEW ALL 136 →</a>
+              <Link className="btn" href="/poll" style={{ width: "100%", textAlign: "center" }}>VIEW ALL 136 →</Link>
             </div>
 
             <div className="panel panel-field">
@@ -244,7 +245,7 @@ export default async function Home() {
               <p className="eyebrow">Free to Play · Bragging Rights Forever</p>
               <h3>Porch Pick&apos;Em</h3>
               <PreseasonChip />
-              <p>Ten games a week against Josh and 48,000 citizens. Build a streak. Earn your patches.</p>
+              <p>Ten games a week against Josh and the whole State. Build a streak. Earn your patches.</p>
               {DEMO_LEADERBOARD.map((row) => (
                 <div className="lb-row" key={row.rank}>
                   <span>{row.rank}. {row.name}</span>
@@ -274,7 +275,7 @@ export default async function Home() {
               <p style={{ marginTop: 14, fontSize: 13 }}>
                 Season champion watches a game with Josh. Top 10 win game tickets.
               </p>
-              <a className="btn" href="/pickem">Play Free — See the Prizes</a>
+              <Link className="btn" href="/pickem">Play Free — See the Prizes</Link>
             </div>
           </div>
         </div>
@@ -287,7 +288,7 @@ export default async function Home() {
           <PreseasonChip />
           <div className="duo" style={{ gridTemplateColumns: "2fr 1fr", marginTop: 26 }}>
             <div>
-              <a href="/notebook" style={{ display: "block" }}>
+              <Link href="/notebook" style={{ display: "block" }}>
                 <div
                   style={{
                     aspectRatio: "16/8",
@@ -301,10 +302,10 @@ export default async function Home() {
                 >
                   <span className="playbtn" aria-hidden="true">▶</span>
                 </div>
-              </a>
+              </Link>
               <div style={{ marginTop: 16 }}><span className="fr">📝 WEEKEND TRUTHS</span></div>
               <h3 className="display" style={{ fontSize: "clamp(24px,3vw,33px)", lineHeight: 0.95, margin: "6px 0 8px" }}>
-                <a href="/notebook">What Saturday Actually Told Us</a>
+                <Link href="/notebook">What Saturday Actually Told Us</Link>
               </h3>
               <p style={{ fontSize: 15, color: "var(--ink-dim)" }}>
                 Five things that were real, three overreactions to ignore, and the one stat nobody&apos;s talking
@@ -328,7 +329,7 @@ export default async function Home() {
                       {item.badgeText}
                     </div>
                     <h4 style={{ fontSize: 21 }}>
-                      <a href="/notebook">{item.title}</a>
+                      <Link href="/notebook">{item.title}</Link>
                       {item.citizenBadge && <span className="cit-badge">Citizens Only · Free</span>}
                     </h4>
                     <p style={{ fontSize: 14, color: "var(--ink-dim)", marginTop: 6 }}>{item.body}</p>
@@ -339,7 +340,7 @@ export default async function Home() {
                   </div>
                 </div>
               ))}
-              <a className="btn" href="/notebook">Open the Notebook</a>
+              <Link className="btn" href="/notebook">Open the Notebook</Link>
             </div>
 
             <div className="wire">
@@ -354,9 +355,9 @@ export default async function Home() {
                   </div>
                 </div>
               ))}
-              <a className="btn gold" href="/notebook" style={{ marginTop: 14, width: "100%", textAlign: "center" }}>
+              <Link className="btn gold" href="/notebook" style={{ marginTop: 14, width: "100%", textAlign: "center" }}>
                 All Breaking News
-              </a>
+              </Link>
             </div>
           </div>
         </div>
@@ -404,7 +405,7 @@ export default async function Home() {
                   </div>
                 ))}
               </div>
-              <div style={{ marginTop: 18 }}><a className="btn" href="/shop">Shop Everything</a></div>
+              <div style={{ marginTop: 18 }}><Link className="btn" href="/shop">Shop Everything</Link></div>
             </div>
             <div>
               <p className="eyebrow">The Porch Goes On the Road</p>
@@ -413,7 +414,7 @@ export default async function Home() {
               {DEMO_TOUR.map((t) => (
                 <div className="tour-row" key={`${t.date}-${t.city}`}>
                   <span>{t.date} — {t.city}</span>
-                  {t.soldOut ? <span>Sold Out</span> : <a href="/porch">Tickets →</a>}
+                  {t.soldOut ? <span>Sold Out</span> : <Link href="/porch">Tickets →</Link>}
                 </div>
               ))}
             </div>
@@ -432,7 +433,7 @@ export default async function Home() {
           </p>
           <div className="guide-grid">
             {DEMO_GUIDES.map((g) => (
-              <a className="guide" href="/tailgate" key={g.name}>
+              <Link className="guide" href="/tailgate" key={g.name}>
                 <div className="ph" style={{ background: g.gradient, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 44 }}>
                   {g.emoji}
                 </div>
@@ -440,10 +441,10 @@ export default async function Home() {
                   <h4>{g.name}</h4>
                   <div className="meta">{g.meta}</div>
                 </div>
-              </a>
+              </Link>
             ))}
           </div>
-          <div style={{ marginTop: 24 }}><a className="btn" href="/tailgate">Open the Full Guide — 136 Stadiums</a></div>
+          <div style={{ marginTop: 24 }}><Link className="btn" href="/tailgate">Open the Full Guide — 136 Stadiums</Link></div>
         </div>
       </section>
 
@@ -479,7 +480,7 @@ export default async function Home() {
               </p>
               <div style={{ marginTop: 18, display: "flex", gap: 12, flexWrap: "wrap" }}>
                 <button className="btn gold" disabled>Claim Free Citizenship</button>
-                <a className="btn" href="/report">Peek Inside the Guide</a>
+                <Link className="btn" href="/report">Peek Inside the Guide</Link>
               </div>
             </div>
           </div>
@@ -492,9 +493,9 @@ export default async function Home() {
             <h3>Who&apos;s In? See the Playoff Picture.</h3>
             <p>THE BRACKET, THE RANKINGS, JOSH&apos;S PICKS — AND AN AI TO RUN YOUR OWN</p>
           </div>
-          <a className="btn" href="/playoffs" style={{ borderColor: "var(--lamp)", color: "var(--lamp)" }}>
+          <Link className="btn" href="/playoffs" style={{ borderColor: "var(--lamp)", color: "var(--lamp)" }}>
             Open the Playoffs Page →
-          </a>
+          </Link>
         </div>
       </div>
     </main>

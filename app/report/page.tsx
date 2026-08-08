@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import PreseasonChip from "@/components/PreseasonChip";
 
 export const metadata: Metadata = { title: "The Pate Report" };
@@ -83,7 +84,7 @@ export default function ReportPage() {
                 </div>
               ))}
               <div style={{ marginTop: 22, display: "flex", gap: 12, flexWrap: "wrap" }}>
-                <a className="btn solid" href="/shop">Pre-Order Print — $24.99</a>
+                <Link className="btn solid" href="/shop">Pre-Order Print — $24.99</Link>
                 <button className="btn" disabled>Digital Edition — $14.99</button>
               </div>
               <p style={{ marginTop: 16, fontSize: 14, color: "var(--ink-dim)" }}>
@@ -102,13 +103,13 @@ export default function ReportPage() {
           <PreseasonChip />
           <div className="guide-grid" style={{ gridTemplateColumns: "repeat(3,1fr)" }}>
             {DEMO_SPREADS.map((s) => (
-              <a className="guide on-light-guide" href="/#" key={s.title}>
+              <Link className="guide on-light-guide" href="/#" key={s.title}>
                 <div className="ph" />
                 <div className="body">
                   <h4>{s.title}</h4>
                   <div className="meta">{s.meta}</div>
                 </div>
-              </a>
+              </Link>
             ))}
           </div>
         </div>
@@ -131,9 +132,9 @@ export default function ReportPage() {
             <h3>Who&apos;s In? See the Playoff Picture.</h3>
             <p>THE BRACKET, THE RANKINGS, JOSH&apos;S PICKS — AND AN AI TO RUN YOUR OWN</p>
           </div>
-          <a className="btn" href="/playoffs" style={{ borderColor: "var(--lamp)", color: "var(--lamp)" }}>
+          <Link className="btn" href="/playoffs" style={{ borderColor: "var(--lamp)", color: "var(--lamp)" }}>
             Open the Playoffs Page →
-          </a>
+          </Link>
         </div>
       </div>
     </main>

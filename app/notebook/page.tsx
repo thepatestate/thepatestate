@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
 
 export const metadata: Metadata = { title: "The Notebook" };
 
@@ -175,7 +176,7 @@ export default function NotebookPage() {
             <div>
               <div className="catnav">
                 {DEMO_CATNAV.map((c, i) => (
-                  <a key={c} href="/#" className={i === 0 ? "on" : undefined}>{c}</a>
+                  <Link key={c} href="/#" className={i === 0 ? "on" : undefined}>{c}</Link>
                 ))}
               </div>
 
@@ -228,7 +229,7 @@ export default function NotebookPage() {
                       {n.nudge && (
                         <div className="cit-nudge">
                           Full ballot data &amp; the vote breakdown —{" "}
-                          <a href="/#citizen">claim free citizenship to read</a>.
+                          <Link href="/#citizen">claim free citizenship to read</Link>.
                         </div>
                       )}
                     </div>
@@ -236,7 +237,7 @@ export default function NotebookPage() {
                   </div>
                 ))}
               </div>
-              <div style={{ marginTop: 14 }}><a className="btn" href="/#">Load More Articles</a></div>
+              <div style={{ marginTop: 14 }}><Link className="btn" href="/#">Load More Articles</Link></div>
 
               <p className="eyebrow" style={{ marginTop: 38 }}>Most Popular This Week</p>
               <div style={{ marginTop: 8 }}>
@@ -250,7 +251,7 @@ export default function NotebookPage() {
                   </div>
                 ))}
               </div>
-              <div style={{ marginTop: 14 }}><a className="btn" href="/#">More Popular Articles</a></div>
+              <div style={{ marginTop: 14 }}><Link className="btn" href="/#">More Popular Articles</Link></div>
             </div>
 
             <div className="wire">
@@ -270,9 +271,9 @@ export default function NotebookPage() {
                 the full story within minutes and an editor signs off before it publishes. Speed of a wire service,
                 standards of the porch.
               </div>
-              <a className="btn gold" href="/#" style={{ marginTop: 14, width: "100%", textAlign: "center" }}>
+              <Link className="btn gold" href="/#" style={{ marginTop: 14, width: "100%", textAlign: "center" }}>
                 Load More News
-              </a>
+              </Link>
             </div>
           </div>
         </div>
@@ -326,7 +327,7 @@ export default function NotebookPage() {
               </p>
               <div style={{ marginTop: 18, display: "flex", gap: 12, flexWrap: "wrap" }}>
                 <button className="btn gold" disabled>Claim Free Citizenship</button>
-                <a className="btn" href="/report">Peek Inside the Guide</a>
+                <Link className="btn" href="/report">Peek Inside the Guide</Link>
               </div>
             </div>
           </div>
@@ -339,9 +340,9 @@ export default function NotebookPage() {
             <h3>Who&apos;s In? See the Playoff Picture.</h3>
             <p>THE BRACKET, THE RANKINGS, JOSH&apos;S PICKS — AND AN AI TO RUN YOUR OWN</p>
           </div>
-          <a className="btn" href="/playoffs" style={{ borderColor: "var(--lamp)", color: "var(--lamp)" }}>
+          <Link className="btn" href="/playoffs" style={{ borderColor: "var(--lamp)", color: "var(--lamp)" }}>
             Open the Playoffs Page →
-          </a>
+          </Link>
         </div>
       </div>
     </main>

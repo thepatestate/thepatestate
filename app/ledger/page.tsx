@@ -38,6 +38,7 @@ export default function LedgerPage() {
 
       <section>
         <div className="wrap">
+          <PreseasonChip />
           <div className="record">
             {DEMO_STATS.map((s) => (
               <div className="stat" key={s.lbl}>
@@ -47,7 +48,6 @@ export default function LedgerPage() {
             ))}
           </div>
           <p className="eyebrow">Your Recent Entries</p>
-          <PreseasonChip />
           <div className="log-strip">
             {DEMO_ENTRIES.map((e) => (
               <div className="log-card" key={e.g}>

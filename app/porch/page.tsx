@@ -15,17 +15,17 @@ export const metadata: Metadata = { title: "Pate's Porch" };
 const DEMO_MAILBAG = [
   {
     q: '"Is it ever okay to leave a blowout early?"',
-    from: "— CITIZEN NO. 12,408 · TUSCALOOSA, AL",
+    from: "— A CITIZEN · TUSCALOOSA, AL",
     a: '"You can leave. You just can\'t complain about traffic AND miss the comeback. Pick one." — JP',
   },
   {
     q: '"My wife scheduled our wedding for the third Saturday in October. Thoughts?"',
-    from: "— CITIZEN NO. 3,551 · KNOXVILLE, TN",
+    from: "— A CITIZEN · KNOXVILLE, TN",
     a: '"Congratulations on your engagement and my condolences on your kickoff. There are TVs at receptions now. Be creative." — JP',
   },
   {
     q: '"Settle it: best stadium entrance in the sport?"',
-    from: "— CITIZEN NO. 30,092 · CLEMSON, SC",
+    from: "— A CITIZEN · CLEMSON, SC",
     a: '"You asked from Clemson. You know what you did." — JP',
   },
 ] as const;
@@ -186,7 +186,7 @@ export default function PorchPage() {
                 the flag. Hosts get a State Store kit on us.
               </p>
               <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-                <a className="btn" href="/#">Find a Watch Party Near You</a>
+                <a className="btn" href="/tailgate">Find a Watch Party Near You</a>
                 <Link href="/tailgate" className="btn">Pate Tailgate: 136 Stadium Guides →</Link>
               </div>
             </div>

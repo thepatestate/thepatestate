@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import PreseasonChip from "@/components/PreseasonChip";
 
 export const metadata: Metadata = { title: "Recruiting — The Next Wave" };
@@ -36,30 +37,30 @@ const DEMO_FULL_INDEX = [
 ] as const;
 
 const DEMO_PLAYERS = [
-  { rk: "01", name: "DJ Jacobs", pos: "EDGE", size: "6-5 / 240", hometown: "Roswell, GA", team: "Ohio State" },
-  { rk: "02", name: "Maxwell Hiller", pos: "IOL", size: "6-5 / 300", hometown: "Coatesville, PA", team: "Florida" },
-  { rk: "03", name: "Mark Matthews", pos: "OT", size: "6-5.5 / 300", hometown: "Ft. Lauderdale, FL", team: "Texas A&M" },
-  { rk: "04", name: "Jalen Brewster", pos: "DL", size: "6-3 / 302", hometown: "Cedar Hill, TX", team: "Texas Tech" },
-  { rk: "05", name: "KJ Green", pos: "EDGE", size: "6-4 / 230", hometown: "Stone Mountain, GA", team: "LSU" },
-  { rk: "06", name: "Donte Wright", pos: "CB", size: "6-1 / 170", hometown: "Long Beach, CA", team: "Miami" },
-  { rk: "07", name: "Trae Taylor", pos: "QB", size: "6-3 / 203", hometown: "Omaha, NE", team: "Nebraska" },
-  { rk: "08", name: "Israel Abrams", pos: "QB", size: "6-4 / 187", hometown: "Arlington Hts., IL", team: "Miami" },
-  { rk: "09", name: "Elijah Haven", pos: "QB", size: "6-5 / 235", hometown: "Baton Rouge, LA", team: "Alabama" },
-  { rk: "10", name: "Kemon Spell", pos: "RB", size: "5-9 / 205", hometown: "McKeesport, PA", team: "Georgia" },
-  { rk: "11", name: "David Gabriel Georges", pos: "RB", size: "6-0 / 210", hometown: "Chattanooga, TN", team: "Tennessee" },
-  { rk: "12", name: "Monshun Sales", pos: "WR", size: "6-5 / 195", hometown: "Indianapolis, IN", team: "Indiana" },
+  { rk: "01", name: "Five-Star EDGE", pos: "EDGE", size: "6-5 / 240", hometown: "Southeast", team: "Committed — Big Ten" },
+  { rk: "02", name: "Five-Star IOL", pos: "IOL", size: "6-5 / 300", hometown: "Northeast", team: "Committed — SEC" },
+  { rk: "03", name: "Five-Star OT", pos: "OT", size: "6-5.5 / 300", hometown: "Southeast", team: "Committed — SEC" },
+  { rk: "04", name: "Four-Star DL", pos: "DL", size: "6-3 / 302", hometown: "Texas", team: "Committed — Big 12" },
+  { rk: "05", name: "Five-Star EDGE", pos: "EDGE", size: "6-4 / 230", hometown: "Southeast", team: "Committed — SEC" },
+  { rk: "06", name: "Four-Star CB", pos: "CB", size: "6-1 / 170", hometown: "West Coast", team: "Committed — ACC" },
+  { rk: "07", name: "Four-Star QB", pos: "QB", size: "6-3 / 203", hometown: "Midwest", team: "Committed — Big Ten" },
+  { rk: "08", name: "Four-Star QB", pos: "QB", size: "6-4 / 187", hometown: "Midwest", team: "Committed — ACC" },
+  { rk: "09", name: "Five-Star QB", pos: "QB", size: "6-5 / 235", hometown: "Southeast", team: "Committed — SEC" },
+  { rk: "10", name: "Four-Star RB", pos: "RB", size: "5-9 / 205", hometown: "Northeast", team: "Committed — SEC" },
+  { rk: "11", name: "Four-Star RB", pos: "RB", size: "6-0 / 210", hometown: "Southeast", team: "Committed — SEC" },
+  { rk: "12", name: "Four-Star WR", pos: "WR", size: "6-5 / 195", hometown: "Midwest", team: "Committed — Big Ten" },
 ] as const;
 
 const DEMO_RECRUITING_NEWS = [
   {
     headline: "The last 2027 five-stars are off the board",
     body: "The final two uncommitted five-stars made their calls: a five-star WR chose Indiana and a five-star RB stayed home with Tennessee — pivotal in-state wins that moved both classes up the rankings.",
-    src: "VIA ESPN RECRUITING · THIS WEEK",
+    src: "SAMPLE — RECRUITING WIRE",
   },
   {
     headline: "A&M is building a monster",
     body: "Texas A&M sits No. 1 on both major services with 26 commits — six five-stars and 19 blue-chips — putting Mike Elko in position for his second top-five class in three cycles.",
-    src: "VIA 247SPORTS & ON3 · UPDATED TODAY",
+    src: "SAMPLE — RECRUITING WIRE",
   },
   {
     headline: "Blue bloods lurking, not leading",
@@ -76,8 +77,8 @@ export default function RecruitingPage() {
           <p className="crumb">The Pate State / Recruiting</p>
           <h1>The Next Wave</h1>
           <p className="lede">
-            Recruiting and the portal without the message-board panic. The Pate Index below is real: it averages
-            the 247Sports Composite and the On3/Rivals Industry rankings, pulled live.
+            Recruiting and the portal without the message-board panic. The Pate Index below will average the
+            247Sports Composite and On3 Industry rankings, pulled nightly once the season engine is live.
           </p>
         </div>
       </header>
@@ -147,8 +148,8 @@ export default function RecruitingPage() {
             <h2 className="display" style={{ fontSize: 34 }}>The Top Players in America</h2>
             <PreseasonChip />
             <p className="lede">
-              The nation&apos;s best, per 247Sports&apos; Top247 — pulled live today. On production, On3/Rivals
-              industry player ranks merge in nightly to complete the index.
+              The nation&apos;s best, per 247Sports&apos; Top247 — will be pulled nightly once the season engine is
+              live. On production, On3/Rivals industry player ranks merge in nightly to complete the index.
             </p>
             <table style={{ marginTop: 18 }}>
               <thead>
@@ -168,9 +169,9 @@ export default function RecruitingPage() {
               </tbody>
             </table>
             <div style={{ marginTop: 14, fontFamily: "var(--mono)", fontSize: 12, color: "var(--ink-dim)" }}>
-              Showing 1–12 · <a href="/#" style={{ color: "var(--lamp-deep)" }}>Top 100 →</a> ·{" "}
-              <a href="/#" style={{ color: "var(--lamp-deep)" }}>By Position</a> ·{" "}
-              <a href="/#" style={{ color: "var(--lamp-deep)" }}>By State</a>
+              Showing 1–12 · <Link href="/#" style={{ color: "var(--lamp-deep)" }}>Top 100 →</Link> ·{" "}
+              <Link href="/#" style={{ color: "var(--lamp-deep)" }}>By Position</Link> ·{" "}
+              <Link href="/#" style={{ color: "var(--lamp-deep)" }}>By State</Link>
             </div>
           </div>
         </div>
@@ -200,13 +201,9 @@ export default function RecruitingPage() {
                 the one signing nobody&apos;s talking about that matters most. Weekly portal tracker in season, with
                 Josh&apos;s &quot;keep an eye on this&quot; flags.
               </p>
-              <p>
-                On the live site this page auto-refreshes each morning: rankings re-scraped, the index recomputed,
-                and the wire updated — so the Pate Index is always current without anyone touching it.
-              </p>
-              <a className="btn" href="/show" style={{ borderColor: "var(--navy)", color: "var(--navy)" }}>
+              <Link className="btn" href="/show" style={{ borderColor: "var(--navy)", color: "var(--navy)" }}>
                 Watch the Recruiting Breakdown
-              </a>
+              </Link>
             </div>
           </div>
         </div>
@@ -218,9 +215,9 @@ export default function RecruitingPage() {
             <h3>Who&apos;s In? See the Playoff Picture.</h3>
             <p>THE BRACKET, THE RANKINGS, JOSH&apos;S PICKS — AND AN AI TO RUN YOUR OWN</p>
           </div>
-          <a className="btn" href="/playoffs" style={{ borderColor: "var(--lamp)", color: "var(--lamp)" }}>
+          <Link className="btn" href="/playoffs" style={{ borderColor: "var(--lamp)", color: "var(--lamp)" }}>
             Open the Playoffs Page →
-          </a>
+          </Link>
         </div>
       </div>
     </main>

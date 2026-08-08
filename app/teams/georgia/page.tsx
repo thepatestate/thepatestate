@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import PreseasonChip from "@/components/PreseasonChip";
 
 export const metadata: Metadata = { title: "Georgia — Team Page" };
@@ -83,9 +84,9 @@ function RecruitingClass({ team }: { team: Team }) {
       <p className="eyebrow">The 2027 Class</p>
       <h3>Pate Index: {team.recruiting.rank}</h3>
       <p>{team.recruiting.body}</p>
-      <a className="btn" href="/recruiting" style={{ borderColor: "var(--navy)", color: "var(--navy)" }}>
+      <Link className="btn" href="/recruiting" style={{ borderColor: "var(--navy)", color: "var(--navy)" }}>
         Full Recruiting Index
-      </a>
+      </Link>
     </div>
   );
 }
@@ -96,9 +97,9 @@ function TailgateGuide({ team }: { team: Team }) {
       <p className="eyebrow">Do {team.city} Right</p>
       <h3>{team.stadium} Guide</h3>
       <p>{team.tailgate.body}</p>
-      <a className="btn" href="/tailgate" style={{ borderColor: "var(--navy)", color: "var(--navy)" }}>
+      <Link className="btn" href="/tailgate" style={{ borderColor: "var(--navy)", color: "var(--navy)" }}>
         Open the Guide
-      </a>
+      </Link>
     </div>
   );
 }
@@ -110,14 +111,14 @@ function LatestArticles({ team }: { team: Team }) {
       <div style={{ display: "flex", flexDirection: "column", gap: 12, maxWidth: 760, marginTop: 12 }}>
         {team.articles.map((a) =>
           a.href ? (
-            <a className="art" href={a.href} key={a.title}>
+            <Link className="art" href={a.href} key={a.title}>
               <div className={a.navy ? "art-thumb navy" : "art-thumb"} />
               <div className="art-body">
                 <span className="kick">{a.kick}</span>
                 <h4>{a.title}</h4>
                 <span className="meta">{a.meta}</span>
               </div>
-            </a>
+            </Link>
           ) : (
             <div className="art" key={a.title}>
               <div className={a.navy ? "art-thumb navy" : "art-thumb"} />
@@ -177,9 +178,9 @@ export default function GeorgiaTeamPage() {
             <h3>Who&apos;s In? See the Playoff Picture.</h3>
             <p>THE BRACKET, THE RANKINGS, JOSH&apos;S PICKS — AND AN AI TO RUN YOUR OWN</p>
           </div>
-          <a className="btn" href="/playoffs" style={{ borderColor: "var(--lamp)", color: "var(--lamp)" }}>
+          <Link className="btn" href="/playoffs" style={{ borderColor: "var(--lamp)", color: "var(--lamp)" }}>
             Open the Playoffs Page →
-          </a>
+          </Link>
         </div>
       </div>
     </main>

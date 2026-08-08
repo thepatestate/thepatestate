@@ -32,6 +32,7 @@ export default function ShopPage() {
           <p className="crumb">The Pate State / The State Store</p>
           <h1>The State Store</h1>
           <p className="lede">Wear the flag. Fly the colors. Every order funds more porch.</p>
+          <span className="note">Preseason preview — orders run through patestatematerial.com until the State Store opens</span>
         </div>
       </header>
 
@@ -67,7 +68,7 @@ export default function ShopPage() {
                 shirt of the State.
               </p>
               <div style={{ marginTop: 16, display: "flex", gap: 12, flexWrap: "wrap" }}>
-                <a className="btn solid" href={STORE_URL} target="_blank" rel="noopener">Add to Cart — $28</a>
+                <a className="btn solid" href={STORE_URL} target="_blank" rel="noopener">Get It at the State Store — $28</a>
                 <a className="btn" href={STORE_URL} target="_blank" rel="noopener">See All Colors</a>
               </div>
             </div>

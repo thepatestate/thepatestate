@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import PreseasonChip from "@/components/PreseasonChip";
 
 export const metadata: Metadata = { title: "The Playoffs" };
@@ -256,7 +257,7 @@ export default function PlayoffsPage() {
                 <b style={{ color: "var(--chalk)" }}>Indiana</b> winning at Texas in the first round and crashing
                 all the way to the Cotton Bowl semifinal.
               </p>
-              <a className="btn" href="/show">Hear the Full Argument</a>
+              <Link className="btn" href="/show">Hear the Full Argument</Link>
             </div>
             <div className="panel panel-dark">
               <p className="eyebrow">The AI Predictor&apos;s Board</p>
@@ -303,9 +304,9 @@ export default function PlayoffsPage() {
             <h3>Who&apos;s In? See the Playoff Picture.</h3>
             <p>THE BRACKET, THE RANKINGS, JOSH&apos;S PICKS — AND AN AI TO RUN YOUR OWN</p>
           </div>
-          <a className="btn" href="/playoffs" style={{ borderColor: "var(--lamp)", color: "var(--lamp)" }}>
+          <Link className="btn" href="/playoffs" style={{ borderColor: "var(--lamp)", color: "var(--lamp)" }}>
             Open the Playoffs Page →
-          </a>
+          </Link>
         </div>
       </div>
     </main>

@@ -386,7 +386,7 @@ td.star{color:var(--lamp-deep);font-weight:600}
 .stars{color:var(--lamp-deep);letter-spacing:2px;margin:6px 0}
 .log-card p{font-size:13px;color:var(--ink-dim);font-style:italic}
 .card{max-width:640px;margin:28px auto 0;border:1.5px solid var(--lamp);border-radius:6px;padding:34px;background:var(--navy);color:var(--chalk);position:relative;text-align:left}
-.card::before{content:"CITIZEN NO. 48,117";position:absolute;top:14px;right:16px;font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--chalk-dim)}
+.card::before{content:"CITIZEN CARD";position:absolute;top:14px;right:16px;font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--chalk-dim)}
 .card h3{font-family:var(--display);font-weight:800;font-size:33px;text-transform:uppercase}
 .card p{color:var(--chalk-dim);margin:10px 0 20px;font-size:15px}
 .signup{display:flex;gap:10px;flex-wrap:wrap}

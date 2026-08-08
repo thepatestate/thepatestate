@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import PreseasonChip from "@/components/PreseasonChip";
 
 export const metadata: Metadata = { title: "Scores & Schedule" };
@@ -146,7 +147,7 @@ export default function ScoresPage() {
           <div className="score-strip" style={{ marginTop: 12 }}>
             {DEMO_UPCOMING_SCORES.map((c) => <ScoreCard card={c} key={c.st + c.net} />)}
           </div>
-          <div style={{ marginTop: 18 }}><a className="btn" href="/#">Full Scoreboard — All 136 Teams</a></div>
+          <div style={{ marginTop: 18 }}><Link className="btn" href="/teams">Full Scoreboard — All 136 Teams</Link></div>
         </div>
       </section>
 
@@ -180,14 +181,10 @@ export default function ScoresPage() {
           </p>
           <div className="tool" style={{ margin: "20px 0 0", maxWidth: 820 }}>
             <label htmlFor="teamSel">Your team</label>
-            {/* No shared defaultValue on the <select>: DEMO_TEAM_TOP25 and DEMO_TEAM_ALL both
-                list Georgia (matching the wireframe's quick-pick + full-alphabetical groups), so
-                selecting by value would mark both matching <option>s as selected. Each option's
-                own `selected` attribute mirrors the wireframe's single hardcoded selection. */}
-            <select id="teamSel" disabled>
+            <select id="teamSel" disabled defaultValue="georgia">
               <optgroup label="THE JP TOP 25">
-                {DEMO_TEAM_TOP25.map((o, i) => (
-                  <option value={o.value} selected={i === 0} key={o.value}>{o.label}</option>
+                {DEMO_TEAM_TOP25.map((o) => (
+                  <option value={o.value} key={o.value}>{o.label}</option>
                 ))}
               </optgroup>
               <optgroup label="ALL 136 TEAMS, A–Z">
@@ -232,9 +229,9 @@ export default function ScoresPage() {
             <h3>Who&apos;s In? See the Playoff Picture.</h3>
             <p>THE BRACKET, THE RANKINGS, JOSH&apos;S PICKS — AND AN AI TO RUN YOUR OWN</p>
           </div>
-          <a className="btn" href="/playoffs" style={{ borderColor: "var(--lamp)", color: "var(--lamp)" }}>
+          <Link className="btn" href="/playoffs" style={{ borderColor: "var(--lamp)", color: "var(--lamp)" }}>
             Open the Playoffs Page →
-          </a>
+          </Link>
         </div>
       </div>
     </main>

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import PreseasonChip from "@/components/PreseasonChip";
 
 export const metadata: Metadata = { title: "All 136 Teams" };
@@ -44,10 +45,10 @@ export default function TeamsPage() {
           <p className="eyebrow">Browse the State</p>
           <div className="team-grid">
             {DEMO_TEAMS.map((t) => (
-              <a className="team-tile" href={t.href ?? "/#"} key={t.name}>
+              <Link className="team-tile" href={t.href ?? "/#"} key={t.name}>
                 {t.name}
                 <span className="m">{t.note}</span>
-              </a>
+              </Link>
             ))}
           </div>
           <p style={{ marginTop: 18, fontFamily: "var(--mono)", fontSize: 12, color: "var(--ink-dim)" }}>
@@ -62,9 +63,9 @@ export default function TeamsPage() {
             <h3>Who&apos;s In? See the Playoff Picture.</h3>
             <p>THE BRACKET, THE RANKINGS, JOSH&apos;S PICKS — AND AN AI TO RUN YOUR OWN</p>
           </div>
-          <a className="btn" href="/playoffs" style={{ borderColor: "var(--lamp)", color: "var(--lamp)" }}>
+          <Link className="btn" href="/playoffs" style={{ borderColor: "var(--lamp)", color: "var(--lamp)" }}>
             Open the Playoffs Page →
-          </a>
+          </Link>
         </div>
       </div>
     </main>

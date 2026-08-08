@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import PreseasonChip from "@/components/PreseasonChip";
 
 export const metadata: Metadata = { title: "Porch Pick'Em" };
@@ -30,26 +31,26 @@ const DEMO_PRIZES = [
 ] as const;
 
 const DEMO_PUNDITS = [
-  { rk: 1, initials: "JP", name: "Josh Pate", aff: "THE PATE STATE", rec: "71–43", pct: "62.3%", josh: true },
-  { rk: 2, initials: "CF", name: 'Chris "The Bear" Fallica', aff: "FOX · BIG NOON", rec: "69–45", pct: "60.5%", josh: false },
-  { rk: 3, initials: "JK", name: "Joel Klatt", aff: "FOX", rec: "66–48", pct: "57.9%", josh: false },
-  { rk: 4, initials: "KH", name: "Kirk Herbstreit", aff: "ESPN · GAMEDAY", rec: "65–49", pct: "57.0%", josh: false },
-  { rk: 5, initials: "NS", name: "Nick Saban", aff: "ESPN · GAMEDAY", rec: "64–50", pct: "56.1%", josh: false },
-  { rk: 6, initials: "BQ", name: "Brady Quinn", aff: "FOX · BIG NOON", rec: "62–52", pct: "54.4%", josh: false },
-  { rk: 7, initials: "DH", name: "Desmond Howard", aff: "ESPN · GAMEDAY", rec: "61–53", pct: "53.5%", josh: false },
-  { rk: 8, initials: "RD", name: "Rece Davis", aff: "ESPN · GAMEDAY", rec: "60–54", pct: "52.6%", josh: false },
-  { rk: 9, initials: "UM", name: "Urban Meyer", aff: "FOX · BIG NOON", rec: "59–55", pct: "51.8%", josh: false },
-  { rk: 10, initials: "TT", name: "Tim Tebow", aff: "ESPN · GAMEDAY", rec: "58–56", pct: "50.9%", josh: false },
-  { rk: 11, initials: "ML", name: "Matt Leinart", aff: "FOX · BIG NOON", rec: "57–57", pct: "50.0%", josh: false },
-  { rk: 12, initials: "PM", name: "Pat McAfee", aff: "ESPN · GAMEDAY", rec: "56–58", pct: "49.1%", josh: false },
-  { rk: 13, initials: "GM", name: "Greg McElroy", aff: "ESPN · SEC NETWORK", rec: "56–58", pct: "49.1%", josh: false },
-  { rk: 14, initials: "DK", name: 'Dan "Big Cat" Katz', aff: "BARSTOOL", rec: "55–59", pct: "48.2%", josh: false },
-  { rk: 15, initials: "DKn", name: "Danny Kanell", aff: "CBS SPORTS", rec: "55–59", pct: "48.2%", josh: false },
-  { rk: 16, initials: "MI", name: "Mark Ingram II", aff: "FOX · BIG NOON", rec: "54–60", pct: "47.4%", josh: false },
-  { rk: 17, initials: "PF", name: "Paul Finebaum", aff: "ESPN · SEC NETWORK", rec: "53–61", pct: "46.5%", josh: false },
-  { rk: 18, initials: "TL", name: "Taylor Lewan", aff: "BUSSIN' WITH THE BOYS", rec: "52–62", pct: "45.6%", josh: false },
-  { rk: 19, initials: "WC", name: "Will Compton", aff: "BUSSIN' WITH THE BOYS", rec: "51–63", pct: "44.7%", josh: false },
-  { rk: 20, initials: "DP", name: "Dave Portnoy", aff: "BARSTOOL", rec: "50–64", pct: "43.9%", josh: false },
+  { rk: 1, initials: "JP", name: "Josh Pate", aff: "THE PATE STATE", josh: true },
+  { rk: 2, initials: "CF", name: 'Chris "The Bear" Fallica', aff: "FOX · BIG NOON", josh: false },
+  { rk: 3, initials: "JK", name: "Joel Klatt", aff: "FOX", josh: false },
+  { rk: 4, initials: "KH", name: "Kirk Herbstreit", aff: "ESPN · GAMEDAY", josh: false },
+  { rk: 5, initials: "NS", name: "Nick Saban", aff: "ESPN · GAMEDAY", josh: false },
+  { rk: 6, initials: "BQ", name: "Brady Quinn", aff: "FOX · BIG NOON", josh: false },
+  { rk: 7, initials: "DH", name: "Desmond Howard", aff: "ESPN · GAMEDAY", josh: false },
+  { rk: 8, initials: "RD", name: "Rece Davis", aff: "ESPN · GAMEDAY", josh: false },
+  { rk: 9, initials: "UM", name: "Urban Meyer", aff: "FOX · BIG NOON", josh: false },
+  { rk: 10, initials: "TT", name: "Tim Tebow", aff: "ESPN · GAMEDAY", josh: false },
+  { rk: 11, initials: "ML", name: "Matt Leinart", aff: "FOX · BIG NOON", josh: false },
+  { rk: 12, initials: "PM", name: "Pat McAfee", aff: "ESPN · GAMEDAY", josh: false },
+  { rk: 13, initials: "GM", name: "Greg McElroy", aff: "ESPN · SEC NETWORK", josh: false },
+  { rk: 14, initials: "DK", name: 'Dan "Big Cat" Katz', aff: "BARSTOOL", josh: false },
+  { rk: 15, initials: "DKn", name: "Danny Kanell", aff: "CBS SPORTS", josh: false },
+  { rk: 16, initials: "MI", name: "Mark Ingram II", aff: "FOX · BIG NOON", josh: false },
+  { rk: 17, initials: "PF", name: "Paul Finebaum", aff: "ESPN · SEC NETWORK", josh: false },
+  { rk: 18, initials: "TL", name: "Taylor Lewan", aff: "BUSSIN' WITH THE BOYS", josh: false },
+  { rk: 19, initials: "WC", name: "Will Compton", aff: "BUSSIN' WITH THE BOYS", josh: false },
+  { rk: 20, initials: "DP", name: "Dave Portnoy", aff: "BARSTOOL", josh: false },
 ] as const;
 
 function Pundit({ p }: { p: (typeof DEMO_PUNDITS)[number] }) {
@@ -58,7 +59,7 @@ function Pundit({ p }: { p: (typeof DEMO_PUNDITS)[number] }) {
       <div className="prk">{p.rk}</div>
       <div className="avatar">{p.initials}</div>
       <div className="who"><b>{p.name}</b><span className="aff">{p.aff}</span></div>
-      <div className="rec">{p.rec}<span className="pct">{p.pct}</span></div>
+      <div className="rec">—</div>
     </div>
   );
 }
@@ -70,7 +71,7 @@ export default function PickemPage() {
         <div className="wrap">
           <p className="crumb">The Pate State / Porch Pick&apos;Em</p>
           <h1>Porch Pick&apos;Em</h1>
-          <p className="lede">Ten games a week against Josh and 48,000 citizens. Free forever. The prizes are real.</p>
+          <p className="lede">Ten games a week against Josh and the whole State. Free forever. The prizes are real.</p>
         </div>
       </header>
 
@@ -99,9 +100,9 @@ export default function PickemPage() {
                 </div>
               </div>
               <div style={{ marginTop: 12 }}>
-                <a href="/#" style={{ fontFamily: "var(--mono)", fontSize: 12, color: "var(--lamp-deep)", letterSpacing: ".06em" }}>
-                  SEE THE FULL RANKINGS — ALL 48,112 CITIZENS →
-                </a>
+                <Link href="/#" style={{ fontFamily: "var(--mono)", fontSize: 12, color: "var(--lamp-deep)", letterSpacing: ".06em" }}>
+                  SEE THE FULL RANKINGS →
+                </Link>
               </div>
               <div style={{ marginTop: 20, display: "flex", gap: 14, alignItems: "center", flexWrap: "wrap" }}>
                 <button className="btn solid" disabled>Make This Week&apos;s Picks</button>
@@ -126,7 +127,7 @@ export default function PickemPage() {
               </p>
               <p style={{ marginTop: 10, fontSize: 14 }}>
                 Want a second trophy chase?{" "}
-                <a href="/playoffs" style={{ color: "var(--lamp-deep)", fontWeight: 600 }}>The Citizens&apos; Bracket Challenge →</a>
+                <Link href="/playoffs" style={{ color: "var(--lamp-deep)", fontWeight: 600 }}>The Citizens&apos; Bracket Challenge →</Link>
               </p>
             </div>
           </div>
@@ -140,8 +141,11 @@ export default function PickemPage() {
           <PreseasonChip />
           <p className="lede">
             Up top it&apos;s Josh against the citizens. Down here it&apos;s Josh against the pros — twenty of the
-            biggest names on your TV, GameDay to FOX to Barstool to CBS — season records against the spread,
-            tracked all year, receipts kept.
+            biggest names on your TV, GameDay to FOX to Barstool to CBS. Season records against the spread will be
+            tracked all year, starting Week 1, receipts kept.
+          </p>
+          <p style={{ marginTop: 14, fontFamily: "var(--mono)", fontSize: 11, color: "var(--ink-dim)" }}>
+            Records start accruing Week 1 — every pick sourced and receipts kept.
           </p>
           <div className="duo" style={{ marginTop: 26 }}>
             <div className="wire" style={{ padding: 22 }}>
@@ -163,9 +167,9 @@ export default function PickemPage() {
             <h3>Who&apos;s In? See the Playoff Picture.</h3>
             <p>THE BRACKET, THE RANKINGS, JOSH&apos;S PICKS — AND AN AI TO RUN YOUR OWN</p>
           </div>
-          <a className="btn" href="/playoffs" style={{ borderColor: "var(--lamp)", color: "var(--lamp)" }}>
+          <Link className="btn" href="/playoffs" style={{ borderColor: "var(--lamp)", color: "var(--lamp)" }}>
             Open the Playoffs Page →
-          </a>
+          </Link>
         </div>
       </div>
     </main>
