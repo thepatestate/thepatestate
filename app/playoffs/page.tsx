@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import PreseasonChip from "@/components/PreseasonChip";
+import { slugifyTeam, teamLogoUrl } from "@/lib/teams-meta";
 
 export const metadata: Metadata = { title: "The Playoffs" };
 
@@ -122,9 +124,23 @@ function SeedTable({ rows }: { rows: typeof DEMO_SEEDS_COL1 | typeof DEMO_SEEDS_
     <table>
       <thead><tr><th>SEED</th><th>TEAM</th><th>NOTE</th></tr></thead>
       <tbody>
-        {rows.map((r) => (
-          <tr key={r.seed}><td className="rk">{r.seed}</td><td><b>{r.team}</b></td><td>{r.note}</td></tr>
-        ))}
+        {rows.map((r) => {
+          const logoUrl = teamLogoUrl(slugifyTeam(r.team));
+          return (
+            <tr key={r.seed}>
+              <td className="rk">{r.seed}</td>
+              <td>
+                <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
+                  {logoUrl && (
+                    <Image src={logoUrl} alt={`${r.team} logo`} width={24} height={24} style={{ objectFit: "contain" }} />
+                  )}
+                  <b>{r.team}</b>
+                </span>
+              </td>
+              <td>{r.note}</td>
+            </tr>
+          );
+        })}
       </tbody>
     </table>
   );

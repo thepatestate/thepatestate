@@ -1,8 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
-import { getVideos, isEpisode, CHANNEL_URL, APPLE_PODCASTS_URL, SPOTIFY_URL } from "@/lib/youtube";
+import { getVideos, isEpisode, CHANNEL_URL, APPLE_PODCASTS_URL, SPOTIFY_URL, SOCIAL_LINKS } from "@/lib/youtube";
 import { getPublishedArticles } from "@/lib/sanity";
 import { formatDate } from "@/lib/format";
+import { slugifyTeam, teamLogoUrl } from "@/lib/teams-meta";
 import EpisodeHero from "@/components/EpisodeHero";
 import VideoGrid from "@/components/VideoGrid";
 import SubscribeCTA from "@/components/SubscribeCTA";
@@ -237,10 +238,16 @@ export default async function Home() {
               <h3>The People&apos;s Power Ranking</h3>
               <PreseasonChip />
               <p>One board, voted by those who actually watch, revealed every Tuesday. The top of this week&apos;s:</p>
-              {DEMO_POLL.map((t) => (
+              {DEMO_POLL.map((t) => {
+                const logoUrl = teamLogoUrl(slugifyTeam(t.team));
+                return (
                 <div className="rankcard dark" key={t.rank}>
                   <div className="rk-num">{t.rank}</div>
-                  <div className="logo-box">{t.code}</div>
+                  {logoUrl ? (
+                    <Image src={logoUrl} alt={`${t.team} logo`} width={60} height={60} className="logo-img" />
+                  ) : (
+                    <div className="logo-box">{t.code}</div>
+                  )}
                   <div className="rk-main">
                     <b>{t.team}</b>
                     <span className="rk-rec">PRESEASON</span>
@@ -260,7 +267,8 @@ export default async function Home() {
                     <span className="lbl">JP RATING</span>
                   </div>
                 </div>
-              ))}
+                );
+              })}
               <Link className="btn" href="/poll" style={{ width: "100%", textAlign: "center" }}>VIEW ALL 136 →</Link>
             </div>
 
@@ -557,6 +565,18 @@ export default async function Home() {
                 <Link className="btn" href="/report">Peek Inside the Guide</Link>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="on-dark tight">
+        <div className="wrap" style={{ textAlign: "center" }}>
+          <p className="eyebrow">Follow the Porch Everywhere</p>
+          <div className="platforms" style={{ justifyContent: "center" }}>
+            <a className="chip" href={CHANNEL_URL} target="_blank" rel="noopener">YouTube</a>
+            <a className="chip" href={SOCIAL_LINKS.x} target="_blank" rel="noopener">𝕏 X</a>
+            <a className="chip" href={SOCIAL_LINKS.instagram} target="_blank" rel="noopener">Instagram</a>
+            <a className="chip" href={SOCIAL_LINKS.tiktok} target="_blank" rel="noopener">TikTok</a>
           </div>
         </div>
       </section>

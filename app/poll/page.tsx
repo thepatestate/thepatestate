@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import PreseasonChip from "@/components/PreseasonChip";
+import { slugifyTeam, teamLogoUrl } from "@/lib/teams-meta";
 
 export const metadata: Metadata = { title: "The JP Poll" };
 
@@ -78,10 +80,16 @@ export default function PollPage() {
           <h2 className="display" style={{ fontSize: 38 }}>The Top Five</h2>
           <PreseasonChip />
           <div style={{ maxWidth: 860, marginTop: 16 }}>
-            {DEMO_TOP5.map((t) => (
+            {DEMO_TOP5.map((t) => {
+              const logoUrl = teamLogoUrl(slugifyTeam(t.team));
+              return (
               <div className="rankcard" key={t.rank}>
                 <div className="rk-num">{t.rank}</div>
-                <div className="logo-box">{t.code}</div>
+                {logoUrl ? (
+                  <Image src={logoUrl} alt={`${t.team} logo`} width={60} height={60} className="logo-img" />
+                ) : (
+                  <div className="logo-box">{t.code}</div>
+                )}
                 <div className="rk-main">
                   <b>{t.team}</b>
                   <span className="rk-rec">{t.rec}</span>
@@ -99,7 +107,8 @@ export default function PollPage() {
                   <span className="lbl">JP RATING</span>
                 </div>
               </div>
-            ))}
+              );
+            })}
           </div>
           <div style={{ marginTop: 8 }}><Link className="btn" href="/teams">VIEW ALL 136 →</Link></div>
         </div>

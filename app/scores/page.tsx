@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import PreseasonChip from "@/components/PreseasonChip";
 import { TEAMS_TOP25, TEAMS_ALL } from "@/lib/teams";
+import { slugifyTeam, teamLogoUrl } from "@/lib/teams-meta";
 
 export const metadata: Metadata = { title: "Scores & Schedule" };
 
@@ -26,6 +28,12 @@ const DEMO_UPCOMING_SCORES: readonly ScoreCardData[] = [
   { st: "FINAL — NOON", live: false, net: "BIG NOON", teams: [{ label: "#2 Ohio State", pts: "41", lead: true }, { label: "Penn State", pts: "20", lead: false }] },
 ] as const;
 
+// Score-card labels carry a "#<rank> " prefix (e.g. "#1 Georgia"); strip it
+// before slugifying so the lookup matches lib/teams-meta's plain team names.
+function teamNameFromLabel(label: string): string {
+  return label.replace(/^#\d+\s+/, "");
+}
+
 function ScoreCard({ card }: { card: ScoreCardData }) {
   return (
     <div className="score-card">
@@ -33,12 +41,20 @@ function ScoreCard({ card }: { card: ScoreCardData }) {
         {card.live ? <span className="live">{card.st}</span> : <span>{card.st}</span>}
         <span>{card.net}</span>
       </div>
-      {card.teams.map((t) => (
-        <div className={t.lead ? "tm lead" : "tm"} key={t.label}>
-          <b>{t.label}</b>
-          <span className="pts">{t.pts}</span>
-        </div>
-      ))}
+      {card.teams.map((t) => {
+        const logoUrl = teamLogoUrl(slugifyTeam(teamNameFromLabel(t.label)));
+        return (
+          <div className={t.lead ? "tm lead" : "tm"} key={t.label}>
+            <span style={{ display: "flex", alignItems: "center", gap: 6 }}>
+              {logoUrl && (
+                <Image src={logoUrl} alt="" width={20} height={20} style={{ objectFit: "contain" }} />
+              )}
+              <b>{t.label}</b>
+            </span>
+            <span className="pts">{t.pts}</span>
+          </div>
+        );
+      })}
     </div>
   );
 }
@@ -89,8 +105,9 @@ const DEMO_TEAM_ALL: ReadonlyArray<{ value: string | null; label: string }> = [
   ...TEAMS_ALL.slice(1).map((t) => ({ value: `${t.value}-all`, label: t.label })),
 ];
 
-// The wireframe repeats a mirrored pair of placeholder helmet SVGs per
-// watch-list row, varying only the two teams' fill/mask colors.
+// Fallback for any team not yet in lib/teams-meta's TEAM_LOGOS map — the
+// wireframe's original mirrored pair of placeholder helmet SVGs, varying
+// only the two teams' fill/mask colors.
 function Helmet({ fill, mask, flip }: { fill: string; mask: string; flip?: boolean }) {
   return (
     <svg width="38" height="30" viewBox="0 0 40 32" aria-hidden="true">
@@ -106,17 +123,28 @@ function Helmet({ fill, mask, flip }: { fill: string; mask: string; flip?: boole
   );
 }
 
+// Real team logo when mapped in lib/teams-meta, ~20% larger than the old
+// 38x30 Helmet placeholder it replaces; falls back to the Helmet SVG for
+// any team not yet in TEAM_LOGOS.
+function TeamIcon({ team, fill, mask, flip }: { team: string; fill: string; mask: string; flip?: boolean }) {
+  const logoUrl = teamLogoUrl(slugifyTeam(team));
+  if (logoUrl) {
+    return <Image src={logoUrl} alt={`${team} logo`} width={46} height={36} style={{ objectFit: "contain" }} />;
+  }
+  return <Helmet fill={fill} mask={mask} flip={flip} />;
+}
+
 const DEMO_WATCHLIST = [
-  { n: "01", left: { fill: "#BA0C2F", mask: "#000000" }, right: { fill: "#9E1B32", mask: "#FFFFFF" }, title: "#1 Georgia at #9 Alabama", meta: "THE STANDARD VS. THE STANDARD · BRYANT-DENNY", tv: "CBS · 7:30" },
-  { n: "02", left: { fill: "#154733", mask: "#FEE123" }, right: { fill: "#00274C", mask: "#FFCB05" }, title: "#6 Oregon at #12 Michigan", meta: "WINNER CONTROLS THE BIG TEN RACE", tv: "FOX · 3:30" },
-  { n: "03", left: { fill: "#BB0000", mask: "#B0B7BF" }, right: { fill: "#041E42", mask: "#FFFFFF" }, title: "#2 Ohio State vs Penn State", meta: "WHITE OUT ENERGY, COLUMBUS EDITION", tv: "FOX · NOON" },
-  { n: "04", left: { fill: "#F56600", mask: "#FFFFFF" }, right: { fill: "#782F40", mask: "#CEB888" }, title: "#7 Clemson at Florida State", meta: "THE ACC RUNS THROUGH ONE OF THESE", tv: "ACCN · 7:00" },
-  { n: "05", left: { fill: "#0C2340", mask: "#C99700" }, right: { fill: "#990000", mask: "#FFC72C" }, title: "#8 Notre Dame vs USC", meta: "THE CROSS-COUNTRY CLASSIC, UNDER THE LIGHTS", tv: "NBC · 7:30" },
-  { n: "06", left: { fill: "#461D7C", mask: "#FDD023" }, right: { fill: "#14213D", mask: "#CE1126" }, title: "#8 LSU at Ole Miss", meta: "MAGNOLIA STATE CHAOS GUARANTEED", tv: "SECN · NOON" },
-  { n: "07", left: { fill: "#990000", mask: "#FFFFFF" }, right: { fill: "#000000", mask: "#FFCD00" }, title: "#11 Indiana vs Iowa", meta: "THE CINDERELLA AUDIT CONTINUES", tv: "BTN · 4:00" },
-  { n: "08", left: { fill: "#CC0000", mask: "#000000" }, right: { fill: "#FF7300", mask: "#000000" }, title: "Texas Tech at Oklahoma State", meta: "BIG 12 ELIMINATION STAKES", tv: "ESPN2 · 4:00" },
-  { n: "09", left: { fill: "#0033A0", mask: "#D64309" }, right: { fill: "#CF0A2C", mask: "#666666" }, title: "#4 Boise State at UNLV", meta: "THE G5 BYE ON THE LINE, LATE NIGHT", tv: "ESPN · 10:15" },
-  { n: "10", left: { fill: "#CC0000", mask: "#FFFFFF" }, right: { fill: "#512888", mask: "#D1D1D1" }, title: "Utah at Kansas State", meta: "SLEEPER OF THE WEEK — DVR INSURANCE", tv: "FS1 · 8:00" },
+  { n: "01", teamA: "Georgia", teamB: "Alabama", left: { fill: "#BA0C2F", mask: "#000000" }, right: { fill: "#9E1B32", mask: "#FFFFFF" }, title: "#1 Georgia at #9 Alabama", meta: "THE STANDARD VS. THE STANDARD · BRYANT-DENNY", tv: "CBS · 7:30" },
+  { n: "02", teamA: "Oregon", teamB: "Michigan", left: { fill: "#154733", mask: "#FEE123" }, right: { fill: "#00274C", mask: "#FFCB05" }, title: "#6 Oregon at #12 Michigan", meta: "WINNER CONTROLS THE BIG TEN RACE", tv: "FOX · 3:30" },
+  { n: "03", teamA: "Ohio State", teamB: "Penn State", left: { fill: "#BB0000", mask: "#B0B7BF" }, right: { fill: "#041E42", mask: "#FFFFFF" }, title: "#2 Ohio State vs Penn State", meta: "WHITE OUT ENERGY, COLUMBUS EDITION", tv: "FOX · NOON" },
+  { n: "04", teamA: "Clemson", teamB: "Florida State", left: { fill: "#F56600", mask: "#FFFFFF" }, right: { fill: "#782F40", mask: "#CEB888" }, title: "#7 Clemson at Florida State", meta: "THE ACC RUNS THROUGH ONE OF THESE", tv: "ACCN · 7:00" },
+  { n: "05", teamA: "Notre Dame", teamB: "USC", left: { fill: "#0C2340", mask: "#C99700" }, right: { fill: "#990000", mask: "#FFC72C" }, title: "#8 Notre Dame vs USC", meta: "THE CROSS-COUNTRY CLASSIC, UNDER THE LIGHTS", tv: "NBC · 7:30" },
+  { n: "06", teamA: "LSU", teamB: "Ole Miss", left: { fill: "#461D7C", mask: "#FDD023" }, right: { fill: "#14213D", mask: "#CE1126" }, title: "#8 LSU at Ole Miss", meta: "MAGNOLIA STATE CHAOS GUARANTEED", tv: "SECN · NOON" },
+  { n: "07", teamA: "Indiana", teamB: "Iowa", left: { fill: "#990000", mask: "#FFFFFF" }, right: { fill: "#000000", mask: "#FFCD00" }, title: "#11 Indiana vs Iowa", meta: "THE CINDERELLA AUDIT CONTINUES", tv: "BTN · 4:00" },
+  { n: "08", teamA: "Texas Tech", teamB: "Oklahoma State", left: { fill: "#CC0000", mask: "#000000" }, right: { fill: "#FF7300", mask: "#000000" }, title: "Texas Tech at Oklahoma State", meta: "BIG 12 ELIMINATION STAKES", tv: "ESPN2 · 4:00" },
+  { n: "09", teamA: "Boise State", teamB: "UNLV", left: { fill: "#0033A0", mask: "#D64309" }, right: { fill: "#CF0A2C", mask: "#666666" }, title: "#4 Boise State at UNLV", meta: "THE G5 BYE ON THE LINE, LATE NIGHT", tv: "ESPN · 10:15" },
+  { n: "10", teamA: "Utah", teamB: "Kansas State", left: { fill: "#CC0000", mask: "#FFFFFF" }, right: { fill: "#512888", mask: "#D1D1D1" }, title: "Utah at Kansas State", meta: "SLEEPER OF THE WEEK — DVR INSURANCE", tv: "FS1 · 8:00" },
 ] as const;
 
 export default function ScoresPage() {
@@ -194,7 +222,7 @@ export default function ScoresPage() {
       <section>
         <div className="wrap" style={{ maxWidth: 860 }}>
           <p className="eyebrow">The Watch List</p>
-          <h2 className="display" style={{ fontSize: 36 }}>Top 10 Games of the Week, In Watch Order</h2>
+          <h2 className="display" style={{ fontSize: 36 }}>Top 10 Games of the Week</h2>
           <PreseasonChip />
           <p className="lede">
             Not the biggest brands — the games most worth your Saturday this week, ranked by the porch. Re-ranked
@@ -205,9 +233,9 @@ export default function ScoresPage() {
               <div className="wk" key={g.n}>
                 <div className="n">{g.n}</div>
                 <div className="helms">
-                  <Helmet fill={g.left.fill} mask={g.left.mask} />
+                  <TeamIcon team={g.teamA} fill={g.left.fill} mask={g.left.mask} />
                   <span className="at">AT</span>
-                  <Helmet fill={g.right.fill} mask={g.right.mask} flip />
+                  <TeamIcon team={g.teamB} fill={g.right.fill} mask={g.right.mask} flip />
                 </div>
                 <div className="who"><b>{g.title}</b><div className="meta">{g.meta}</div></div>
                 <div className="tv">{g.tv}</div>

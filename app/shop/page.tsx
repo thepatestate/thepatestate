@@ -53,9 +53,8 @@ export default function ShopPage() {
                   d="M120,26 C128,40 172,40 180,26 L204,38 C188,54 112,54 96,38 Z"
                   fill="rgba(0,0,0,.25)"
                 />
-                <text x="150" y="128" textAnchor="middle" fontFamily="Georgia,serif" fontStyle="italic" fontSize="21" fill="#E8A33D">God,</text>
-                <text x="150" y="162" textAnchor="middle" fontFamily="Arial Black,sans-serif" fontWeight="900" fontSize="24" fill="#F3EFE6" letterSpacing="1">FAMILY,</text>
-                <text x="150" y="200" textAnchor="middle" fontFamily="Arial Black,sans-serif" fontWeight="900" fontSize="27" fill="#E8A33D" letterSpacing="2">FOOTBALL</text>
+                <text x="150" y="150" textAnchor="middle" fontFamily="Georgia,serif" fontStyle="italic" fontSize="22" fill="#E8A33D">No</text>
+                <text x="150" y="192" textAnchor="middle" fontFamily="Arial Black,sans-serif" fontWeight="900" fontSize="30" fill="#F3EFE6" letterSpacing="1">OFFSEASON</text>
                 <line x1="112" y1="214" x2="188" y2="214" stroke="#F3EFE6" strokeWidth="2" />
                 <text x="150" y="232" textAnchor="middle" fontFamily="monospace" fontSize="9" fill="#B9B4A6" letterSpacing="3">EST. THE PATE STATE</text>
               </svg>
@@ -64,7 +63,7 @@ export default function ShopPage() {
               <h2 className="display" style={{ fontSize: 44 }}>The Creed Tee</h2>
               <PreseasonChip />
               <p className="lede">
-                Three words, in order. Tri-blend and ridiculously soft — field green with porch-lamp gold. The
+                Two words, year-round. Tri-blend and ridiculously soft — field green with porch-lamp gold. The
                 shirt of the State.
               </p>
               <div style={{ marginTop: 16, display: "flex", gap: 12, flexWrap: "wrap" }}>

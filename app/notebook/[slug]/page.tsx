@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getArticleBySlug } from "@/lib/sanity";
 import ArticleBody from "@/components/ArticleBody";
+import { CHANNEL_URL, SOCIAL_LINKS } from "@/lib/youtube";
 
 export const revalidate = 300;
 
@@ -95,6 +96,18 @@ export default async function ArticlePage({
                 <Link className="btn" href={teamHref} style={{ width: "100%", textAlign: "center", display: "block" }}>
                   {article.primaryTeam === "georgia" ? "Georgia's Team Page" : "Browse All Teams"}
                 </Link>
+              </div>
+
+              <div className="aside-card" style={{ marginTop: 16 }}>
+                <h4>Follow the Porch</h4>
+                <div className="on-light">
+                  <div className="platforms">
+                    <a className="chip" href={CHANNEL_URL} target="_blank" rel="noopener">YouTube</a>
+                    <a className="chip" href={SOCIAL_LINKS.x} target="_blank" rel="noopener">𝕏 X</a>
+                    <a className="chip" href={SOCIAL_LINKS.instagram} target="_blank" rel="noopener">Instagram</a>
+                    <a className="chip" href={SOCIAL_LINKS.tiktok} target="_blank" rel="noopener">TikTok</a>
+                  </div>
+                </div>
               </div>
             </aside>
           </div>

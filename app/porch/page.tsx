@@ -80,6 +80,14 @@ export default async function PorchPage() {
           <div className="duo">
             <div>
               <p className="eyebrow">From the Mailbag</p>
+              <div className="on-light" style={{ marginTop: 10 }}>
+                <div className="platforms">
+                  <a className="chip" href={CHANNEL_URL} target="_blank" rel="noopener">YouTube</a>
+                  <a className="chip" href={SOCIAL_LINKS.x} target="_blank" rel="noopener">𝕏 X</a>
+                  <a className="chip" href={SOCIAL_LINKS.instagram} target="_blank" rel="noopener">Instagram</a>
+                  <a className="chip" href={SOCIAL_LINKS.tiktok} target="_blank" rel="noopener">TikTok</a>
+                </div>
+              </div>
               <div style={{ marginTop: 14 }}>
                 <span className="note">Preseason preview — the real mailbag opens with citizenship</span>
                 {DEMO_MAILBAG.map((m) => (
