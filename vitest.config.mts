@@ -9,7 +9,7 @@ export default defineConfig({
   },
   test: {
     env: {
-      CRON_SECRET: "test-cron-secret",
+      PLAYBOOK_SIGNING_KEY: "test-playbook-signing-key",
     },
   },
 });

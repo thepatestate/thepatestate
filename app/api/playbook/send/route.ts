@@ -3,13 +3,14 @@ import { requireCronSecret } from "@/lib/cron-auth";
 import { createAdminClient, isAdminConfigured } from "@/lib/supabase/admin";
 import { readClient, getPublishedArticles } from "@/lib/sanity";
 import { draftPlaybookIntro } from "@/lib/generate";
-import { signUid, renderPlaybookHtml, renderPlaybookText, type PlaybookContent } from "@/lib/playbook";
+import { signUid, hasSigningKey, renderPlaybookHtml, renderPlaybookText, type PlaybookContent } from "@/lib/playbook";
 import { SITE_URL } from "@/lib/site";
 
 export const maxDuration = 120;
 export const dynamic = "force-dynamic";
 
 const FROM = "The Pate State <porch@thepatestate.com>";
+const LISTUSERS_PAGE_SIZE = 1000;
 
 interface Recipient {
   id: string;
@@ -45,20 +46,37 @@ export async function POST(request: Request) {
     if (error) console.error("[playbook] claim rollback failed", error);
   };
 
+  // Sends across the loop below — declared above the outer try so the catch
+  // can tell a clean pre-send failure (roll the claim back, safe to retry)
+  // apart from a failure after mail already went out (keep the claim; a
+  // retry would re-send to everyone who already got today's Playbook).
+  let successCount = 0;
+
   try {
+    if (!hasSigningKey()) {
+      console.error("[playbook] PLAYBOOK_SIGNING_KEY not configured");
+      await abortClaim();
+      return NextResponse.json({ ok: false, skipped: "no-signing-key" });
+    }
+
     // Recipients: confirmed auth users ∩ citizens ∩ not opted out.
-    const { data: usersRes, error: usersError } = await admin.auth.admin.listUsers({ perPage: 1000 });
+    const { data: usersRes, error: usersError } = await admin.auth.admin.listUsers({ perPage: LISTUSERS_PAGE_SIZE });
     if (usersError) throw usersError;
+    const users = usersRes?.users ?? [];
+    if (users.length === LISTUSERS_PAGE_SIZE) {
+      console.warn("[playbook] listUsers returned exactly", LISTUSERS_PAGE_SIZE, "rows — may be truncated, pagination not implemented");
+    }
     const confirmedEmailById = new Map(
-      (usersRes?.users ?? [])
-        .filter((u) => u.email_confirmed_at && u.email)
-        .map((u) => [u.id, u.email as string])
+      users.filter((u) => u.email_confirmed_at && u.email).map((u) => [u.id, u.email as string])
     );
 
     const { data: citizens, error: citizensError } = await admin
       .from("citizens")
       .select("id, playbook_opt_out");
     if (citizensError) throw citizensError;
+    if ((citizens ?? []).length === LISTUSERS_PAGE_SIZE) {
+      console.warn("[playbook] citizens query returned exactly", LISTUSERS_PAGE_SIZE, "rows — may be truncated");
+    }
 
     const recipients: Recipient[] = [];
     for (const c of citizens ?? []) {
@@ -80,6 +98,9 @@ export async function POST(request: Request) {
       episode = await readClient.fetch(
         `*[_type == "episode"] | order(publishedAt desc)[0]{ ytId, title, thumbnailUrl }`
       );
+      // An episode doc missing its ytId can't render a watch link or a
+      // stable content-key component — treat it as no episode at all.
+      if (episode && !episode.ytId) episode = null;
       const sanityArticles = await getPublishedArticles(3);
       articles = sanityArticles.map((a) => ({ headline: a.headline, dek: a.dek, slug: a.slug.current }));
     } catch (err) {
@@ -88,16 +109,40 @@ export async function POST(request: Request) {
       return NextResponse.json({ ok: false, skipped: "sanity-unreachable" });
     }
 
+    if (!episode && articles.length === 0) {
+      await abortClaim();
+      return NextResponse.json({ ok: true, skipped: "no-content" });
+    }
+
     const content: PlaybookContent = { episode, articles };
 
+    // Skip the send if today's content is identical to the last send's —
+    // no point re-mailing the same episode/articles because nothing new
+    // published since.
+    const contentKey = [episode?.ytId ?? "", ...articles.map((a) => a.slug)].join("|");
+    const { data: lastSend, error: lastSendError } = await admin
+      .from("playbook_sends")
+      .select("content_key")
+      .lt("send_date", sendDate)
+      .order("send_date", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+    if (lastSendError) throw lastSendError;
+    if (lastSend?.content_key && lastSend.content_key === contentKey) {
+      await abortClaim();
+      return NextResponse.json({ ok: true, skipped: "nothing-new" });
+    }
+
     const weekday = new Date().toLocaleDateString("en-US", { weekday: "long", timeZone: "America/New_York" });
-    const { subject, intro } = await draftPlaybookIntro({
+    const { subject: rawSubject, intro } = await draftPlaybookIntro({
       weekday,
       episodeTitle: episode?.title ?? null,
       articleHeadlines: articles.map((a) => a.headline),
     });
+    // Resend rejects (or worse, header-injects on) a subject carrying raw
+    // CR/LF — the intro is model-drafted, so don't trust it not to.
+    const subject = rawSubject.replace(/[\r\n]+/g, " ");
 
-    let successCount = 0;
     for (const r of recipients) {
       try {
         const sig = signUid(r.id);
@@ -113,16 +158,21 @@ export async function POST(request: Request) {
           },
           body: JSON.stringify({
             from: FROM,
+            reply_to: "porch@thepatestate.com",
             to: [r.email],
             subject,
             html,
             text,
-            headers: { "List-Unsubscribe": `<${unsubscribeUrl}>` },
+            headers: {
+              "List-Unsubscribe": `<${unsubscribeUrl}>`,
+              "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
+            },
           }),
         });
 
         if (!res.ok) {
-          console.error("[playbook] resend send failed", r.id, res.status, await res.text());
+          const bodyText = await res.text();
+          console.error("[playbook] resend send failed", r.id, res.status, bodyText.slice(0, 200));
           continue;
         }
         successCount++;
@@ -140,14 +190,18 @@ export async function POST(request: Request) {
 
     const { error: patchError } = await admin
       .from("playbook_sends")
-      .update({ recipients: successCount })
+      .update({ recipients: successCount, content_key: contentKey })
       .eq("send_date", sendDate);
     if (patchError) console.error("[playbook] claim patch failed", patchError);
 
     return NextResponse.json({ ok: true, sent: successCount, attempted: recipients.length });
   } catch (err) {
     console.error("[playbook] send failed", err);
-    await abortClaim();
+    if (successCount === 0) {
+      await abortClaim();
+    } else {
+      console.error("[playbook] error after", successCount, "successful sends — keeping claim, not retrying");
+    }
     return NextResponse.json({ ok: false, skipped: "error" });
   }
 }

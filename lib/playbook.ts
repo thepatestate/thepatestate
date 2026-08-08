@@ -1,14 +1,24 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
 import { SITE_URL } from "@/lib/site";
 
-const HMAC_KEY = () => process.env.CRON_SECRET ?? "";
+// Dedicated signing key for playbook unsubscribe links — deliberately NOT
+// CRON_SECRET, so rotating one never invalidates the other's tokens.
+const HMAC_KEY = () => process.env.PLAYBOOK_SIGNING_KEY ?? "";
+
+export function hasSigningKey(): boolean {
+  return HMAC_KEY().length > 0;
+}
 
 export function signUid(uid: string): string {
-  return createHmac("sha256", HMAC_KEY()).update(uid).digest("hex");
+  const key = HMAC_KEY();
+  if (!key) throw new Error("PLAYBOOK_SIGNING_KEY is not set");
+  return createHmac("sha256", key).update(uid).digest("hex");
 }
 
 export function verifyUid(uid: string, sig: string): boolean {
-  const expected = signUid(uid);
+  const key = HMAC_KEY();
+  if (!key) return false;
+  const expected = createHmac("sha256", key).update(uid).digest("hex");
   const expectedBuf = Buffer.from(expected, "hex");
   const sigBuf = Buffer.from(sig, "hex");
   if (sigBuf.length !== expectedBuf.length) return false;
@@ -44,9 +54,11 @@ function escapeHtml(s: string): string {
   return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 }
 
-// URLs used in href/src attributes are all internally constructed (SITE_URL,
-// known YouTube hosts, or the caller-supplied unsubscribeUrl) rather than
-// free-text user input, so they are emitted verbatim rather than entity-escaped.
+// URLs used in href/src attributes are mostly internally constructed (SITE_URL,
+// known YouTube hosts), but thumbnailUrl comes from Sanity/YouTube metadata and
+// unsubscribeUrl is caller-supplied, so both are run through escapeHtml at their
+// interpolation sites too — escapeHtml is attribute-safe (see above) and applying
+// it here as well means a stray `"` in either can't break out of its attribute.
 
 function watchUrl(ytId: string): string {
   return `https://www.youtube.com/watch?v=${ytId}`;
@@ -80,7 +92,7 @@ function episodeCardHtml(episode: PlaybookContent["episode"]): string {
   const thumb = episode.thumbnailUrl
     ? `<tr><td style="padding: 0 0 16px 0;">` +
       `<a href="${url}" target="_blank" rel="noopener">` +
-      `<img src="${episode.thumbnailUrl}" alt="${escapeHtml(episode.title)}" width="560" ` +
+      `<img src="${escapeHtml(episode.thumbnailUrl)}" alt="${escapeHtml(episode.title)}" width="560" ` +
       `style="display: block; width: 100%; max-width: 560px; height: auto; border: 0; border-radius: 6px;" /></a>` +
       `</td></tr>`
     : "";
@@ -103,7 +115,7 @@ function articlesHtml(articles: PlaybookContent["articles"]): string {
       const dek = a.dek ? `<p style="${BODY_TEXT_STYLE} margin: 4px 0 0 0;">${escapeHtml(a.dek)}</p>` : "";
       return (
         `<tr><td style="padding: 0 0 16px 0;">` +
-        `<a href="${articleUrl(a.slug)}" style="color: ${COLOR_NAVY}; font-family: Georgia, 'Times New Roman', serif; ` +
+        `<a href="${escapeHtml(articleUrl(a.slug))}" style="color: ${COLOR_NAVY}; font-family: Georgia, 'Times New Roman', serif; ` +
         `font-size: 17px; font-weight: bold; text-decoration: none;">${escapeHtml(a.headline)}</a>` +
         dek +
         `</td></tr>`
@@ -123,6 +135,9 @@ function articlesHtml(articles: PlaybookContent["articles"]): string {
 export function renderPlaybookHtml(c: PlaybookContent, opts: PlaybookRenderOpts): string {
   const channelUrl = "https://www.youtube.com/@JoshPateCFB";
   const joinUrl = "https://thepatestate.com/join";
+  // Postal address is provided by the owner (CAN-SPAM); omitted until then —
+  // the list is small enough that this is not yet a compliance requirement.
+  const postalAddressLine = process.env.PLAYBOOK_POSTAL_ADDRESS;
   return `<!doctype html>
 <html lang="en">
 <head>
@@ -148,8 +163,9 @@ ${articlesHtml(c.articles)}
 <tr><td style="padding: 20px 32px; background-color: ${COLOR_NAVY};">
 <p style="font-family: Arial, Helvetica, sans-serif; font-size: 12px; line-height: 1.6; color: #9AA5B1; margin: 0 0 8px 0;">The Front Porch of College Football</p>
 <p style="font-family: Arial, Helvetica, sans-serif; font-size: 12px; line-height: 1.6; color: #9AA5B1; margin: 0;">
-<a href="${opts.unsubscribeUrl}" style="color: #9AA5B1; text-decoration: underline;">Unsubscribe from the Playbook</a>
+<a href="${escapeHtml(opts.unsubscribeUrl)}" style="color: #9AA5B1; text-decoration: underline;">Unsubscribe from the Playbook</a>
 </p>
+${postalAddressLine ? `<p style="font-family: Arial, Helvetica, sans-serif; font-size: 12px; line-height: 1.6; color: #9AA5B1; margin: 8px 0 0 0;">${escapeHtml(postalAddressLine)}</p>` : ""}
 </td></tr>
 </table>
 </td></tr>
@@ -186,5 +202,8 @@ export function renderPlaybookText(c: PlaybookContent, opts: PlaybookRenderOpts)
   lines.push("");
   lines.push("The Front Porch of College Football");
   lines.push(`Unsubscribe from the Playbook: ${opts.unsubscribeUrl}`);
+  if (process.env.PLAYBOOK_POSTAL_ADDRESS) {
+    lines.push(process.env.PLAYBOOK_POSTAL_ADDRESS);
+  }
   return lines.join("\n");
 }
