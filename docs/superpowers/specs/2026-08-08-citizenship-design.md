@@ -50,8 +50,10 @@ custom domain end-to-end, since branded auth email requires it.
 - **/me** — handle, email, favorite team (editable), sign out. Porch "Open My
   Profile" points here.
 - **Nav:** signed-out → "Become a Citizen" CTA → `/join`; signed-in → handle
-  chip → `/me`. (Nav is already a client component; session arrives via a
-  server-layout prop, not a client fetch.)
+  chip → `/me`. (Nav is already a client component; it checks the session
+  client-side after hydration. Reading cookies in the root layout would force
+  every route dynamic and destroy ISR caching — only individually gated
+  surfaces, e.g. `/porch`, `/me`, `/welcome`, may render dynamically.)
 
 ## Handle rules (pure lib, `lib/handle.ts`, vitest-covered)
 
