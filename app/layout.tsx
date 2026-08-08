@@ -21,6 +21,7 @@ export const metadata: Metadata = {
   title: { default: "The Pate State — The Front Porch of College Football", template: "%s — The Pate State" },
   description:
     "The online home of Josh Pate's College Football Show. New episodes all week, all season. Pull up a chair.",
+  metadataBase: new URL("https://thepatestate.vercel.app"),
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
