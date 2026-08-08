@@ -326,7 +326,7 @@ export default function NotebookPage() {
                 claim citizenship.
               </p>
               <div style={{ marginTop: 18, display: "flex", gap: 12, flexWrap: "wrap" }}>
-                <button className="btn gold" disabled>Claim Free Citizenship</button>
+                <Link className="btn gold" href="/join">Claim Free Citizenship</Link>
                 <Link className="btn" href="/report">Peek Inside the Guide</Link>
               </div>
             </div>

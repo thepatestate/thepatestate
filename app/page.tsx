@@ -375,8 +375,7 @@ export default async function Home() {
               worth your Saturday. Written like Josh talks. Free forever.
             </p>
             <div className="signup">
-              <input type="email" placeholder="your@email.com" aria-label="Email address" disabled />
-              <button className="btn" disabled>Claim Citizenship</button>
+              <Link className="btn gold" href="/join">Become a Citizen — Free</Link>
             </div>
             <p style={{ margin: "16px 0 0", fontSize: 13 }}>
               Citizens get early poll access, pick&apos;em invites, first dibs on tour tickets — and the digital
@@ -479,7 +478,7 @@ export default async function Home() {
                 citizenship.
               </p>
               <div style={{ marginTop: 18, display: "flex", gap: 12, flexWrap: "wrap" }}>
-                <button className="btn gold" disabled>Claim Free Citizenship</button>
+                <Link className="btn gold" href="/join">Claim Free Citizenship</Link>
                 <Link className="btn" href="/report">Peek Inside the Guide</Link>
               </div>
             </div>

@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import GateCard from "@/components/GateCard";
+import KeyBadge from "@/components/KeyBadge";
 import PreseasonChip from "@/components/PreseasonChip";
+import { getCitizen } from "@/lib/supabase/server";
 import { CHANNEL_URL, SOCIAL_LINKS } from "@/lib/youtube";
 
 export const metadata: Metadata = { title: "Pate's Porch" };
@@ -56,7 +59,9 @@ const FOLLOW_LINKS = [
   { href: SOCIAL_LINKS.tiktok, label: "♪ TIKTOK — 60-SECOND PORCH" },
 ] as const;
 
-export default function PorchPage() {
+export default async function PorchPage() {
+  const citizen = await getCitizen();
+
   return (
     <main>
       <header className="page-head">
@@ -85,7 +90,34 @@ export default function PorchPage() {
                   </div>
                 ))}
               </div>
-              <button className="btn" disabled>Submit Your Question</button>
+              {citizen ? (
+                <div style={{ marginTop: 14 }}>
+                  <KeyBadge />
+                  <textarea
+                    placeholder="Ask Josh something..."
+                    disabled
+                    rows={3}
+                    style={{
+                      width: "100%",
+                      marginTop: 10,
+                      padding: "12px 14px",
+                      fontFamily: "var(--mono)",
+                      fontSize: 13,
+                      border: "1px solid var(--line-l)",
+                      borderRadius: 4,
+                      resize: "vertical",
+                    }}
+                  />
+                  <div style={{ marginTop: 10, display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+                    <button className="btn" disabled>Submit Your Question</button>
+                    <PreseasonChip label="Mailbag submissions" />
+                  </div>
+                </div>
+              ) : (
+                <div style={{ marginTop: 14 }}>
+                  <GateCard next="/porch" />
+                </div>
+              )}
             </div>
             <div>
               <div className="panel" style={{ marginBottom: 16 }}>
@@ -234,7 +266,7 @@ export default function PorchPage() {
                 claim citizenship.
               </p>
               <div style={{ marginTop: 18, display: "flex", gap: 12, flexWrap: "wrap" }}>
-                <button className="btn gold" disabled>Claim Free Citizenship</button>
+                <Link className="btn gold" href="/join">Claim Free Citizenship</Link>
                 <Link href="/report" className="btn">Peek Inside the Guide</Link>
               </div>
             </div>
