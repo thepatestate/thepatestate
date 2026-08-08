@@ -145,3 +145,56 @@ export async function draftCompanion(input: {
   }
   return null;
 }
+
+export interface PlaybookIntro {
+  subject: string;
+  intro: string;
+}
+
+const PLAYBOOK_FALLBACK: PlaybookIntro = {
+  subject: "The Playbook — The Pate State",
+  intro: "Here's what's new on the porch.",
+};
+
+const PLAYBOOK_SCHEMA = {
+  type: "object",
+  properties: {
+    subject: { type: "string" },
+    intro: { type: "string" },
+  },
+  required: ["subject", "intro"],
+  additionalProperties: false,
+} as const;
+
+export async function draftPlaybookIntro(input: {
+  weekday: string; episodeTitle: string | null; articleHeadlines: string[];
+}): Promise<PlaybookIntro> {
+  // Everything — including the prompt-file reads — stays inside this try/catch
+  // so this function can NEVER throw; any failure falls back to the constants.
+  try {
+    const c = client();
+    if (!c) return PLAYBOOK_FALLBACK;
+    const system = `${prompt("global-preamble.md")}\n\n${prompt("playbook.md")}`;
+    const user = [
+      `Weekday: ${input.weekday}`,
+      `Episode title: ${input.episodeTitle ?? "(none today)"}`,
+      `Article headlines:\n${input.articleHeadlines.length ? input.articleHeadlines.map((h) => `- ${h}`).join("\n") : "(none today)"}`,
+    ].join("\n\n");
+
+    const res = await c.messages.create({
+      model: MODEL,
+      max_tokens: 256,
+      output_config: { effort: "low", format: { type: "json_schema", schema: PLAYBOOK_SCHEMA } },
+      system,
+      messages: [{ role: "user", content: user }],
+    });
+    const parsed = JSON.parse(textOf(res)) as { subject?: string; intro?: string };
+    const subject = typeof parsed.subject === "string" ? parsed.subject.trim() : "";
+    const intro = typeof parsed.intro === "string" ? parsed.intro.trim() : "";
+    if (!subject || !intro) return PLAYBOOK_FALLBACK;
+    return { subject: subject.length > 45 ? subject.slice(0, 45) : subject, intro };
+  } catch (err) {
+    console.error("[generate:draftPlaybookIntro]", err);
+    return PLAYBOOK_FALLBACK;
+  }
+}
