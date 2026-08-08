@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import PreseasonChip from "@/components/PreseasonChip";
 
 export const metadata: Metadata = { title: "The Notebook" };
 
@@ -164,7 +163,9 @@ export default function NotebookPage() {
             Breaking news, the newest columns, and what the citizens are reading most — the written record of the
             sport, new every weekday.
           </p>
-          <PreseasonChip label="Preseason preview — the Notebook opens with the season" />
+          {/* Hardcoded: PreseasonChip always appends "— live data arrives with the
+              season", which would duplicate the trailing clause here. */}
+          <span className="note">Preseason preview — the Notebook opens with the season</span>
         </div>
       </header>
 

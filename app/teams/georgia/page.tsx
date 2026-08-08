@@ -15,6 +15,8 @@ export const metadata: Metadata = { title: "Georgia — Team Page" };
 
 const GEORGIA = {
   name: "Georgia",
+  stadium: "Sanford Stadium",
+  city: "Athens",
   rankHistory: [
     { wk: "1", jp: "01", ap: "1", cfp: "—" },
     { wk: "PRE", jp: "02", ap: "2", cfp: "—" },
@@ -91,8 +93,8 @@ function RecruitingClass({ team }: { team: Team }) {
 function TailgateGuide({ team }: { team: Team }) {
   return (
     <div className="panel">
-      <p className="eyebrow">Do {team.name === "Georgia" ? "Athens" : team.name} Right</p>
-      <h3>Sanford Stadium Guide</h3>
+      <p className="eyebrow">Do {team.city} Right</p>
+      <h3>{team.stadium} Guide</h3>
       <p>{team.tailgate.body}</p>
       <a className="btn" href="/tailgate" style={{ borderColor: "var(--navy)", color: "var(--navy)" }}>
         Open the Guide
