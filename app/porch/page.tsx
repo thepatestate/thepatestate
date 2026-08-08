@@ -95,9 +95,9 @@ export default function PorchPage() {
                   Your logged games, your pick&apos;em leagues, your stadium passport, and your poll-vote streak —
                   all in one profile.
                 </p>
-                <button className="btn" style={{ borderColor: "var(--navy)", color: "var(--navy)" }} disabled>
+                <Link href="/me" className="btn" style={{ borderColor: "var(--navy)", color: "var(--navy)" }}>
                   Open My Profile
-                </button>
+                </Link>
               </div>
               <div className="panel" style={{ marginBottom: 16 }}>
                 <p className="eyebrow">Follow the Mayor</p>

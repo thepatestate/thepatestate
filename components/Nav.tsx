@@ -3,6 +3,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { SUBSCRIBE_URL } from "@/lib/youtube";
+import NavSession from "@/components/NavSession";
 
 const LINKS = [
   { href: "/show", label: "The Show" },
@@ -30,10 +31,17 @@ export default function Nav() {
               {l.label}
             </Link>
           ))}
+          <Link href="/join" className={pathname === "/join" ? "active" : undefined}>
+            Become a Citizen
+          </Link>
         </div>
-        <a className="btn gold nav-cta" href={SUBSCRIBE_URL} target="_blank" rel="noopener">
-          Subscribe on YouTube
-        </a>
+        <NavSession
+          fallback={
+            <a className="btn gold nav-cta" href={SUBSCRIBE_URL} target="_blank" rel="noopener">
+              Subscribe on YouTube
+            </a>
+          }
+        />
         <button className="menu-btn" aria-expanded={open} onClick={() => setOpen(!open)}>Menu</button>
       </div>
       <div className={open ? "drawer open" : "drawer"}>
@@ -47,6 +55,13 @@ export default function Nav() {
             {l.label}
           </Link>
         ))}
+        <Link
+          href="/join"
+          className={pathname === "/join" ? "active" : undefined}
+          onClick={() => setOpen(false)}
+        >
+          Become a Citizen
+        </Link>
       </div>
     </nav>
   );
