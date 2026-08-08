@@ -5,6 +5,7 @@ export const CHANNEL_URL = "https://www.youtube.com/@JoshPateCFB";
 export const SUBSCRIBE_URL = `${CHANNEL_URL}?sub_confirmation=1`;
 export const APPLE_PODCASTS_URL =
   "https://podcasts.apple.com/us/podcast/josh-pates-college-football-show/id1485905502";
+export const SPOTIFY_URL = "https://open.spotify.com/show/553DKKHsBSCOkrZdppJpeB";
 
 export const SOCIAL_LINKS = {
   x: "https://x.com/JoshPateCFB",
