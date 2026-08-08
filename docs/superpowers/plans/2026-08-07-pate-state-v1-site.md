@@ -15,7 +15,7 @@
 - Apple Podcasts URL (verified real): `https://podcasts.apple.com/us/podcast/josh-pates-college-football-show/id1485905502`
 - Subscribe URL: `https://www.youtube.com/@JoshPateCFB?sub_confirmation=1`
 - ISR revalidation: `21600` seconds (6 hours), exactly once, in `lib/youtube.ts`.
-- **De-faking rule (from spec):** anything that claims to be live data must actually come from the feed, or it gets cut/reworded as evergreen. No fake view counts, poll rankings, leaderboards, subscriber numbers, citizen counts, or mailbag quotes anywhere.
+- **De-faking rule (live surfaces):** on YouTube-driven surfaces (home hero/episode blocks, Show page, clips) every title/thumbnail/date comes from the feed; no fake view counts or subscriber numbers anywhere on the site. Real-world stat claims (subscriber totals, press quotes) are cut. Sample sports data on preview pages is governed by the Demo-state rule below, not this rule.
 - Runtime deps limited to `next react react-dom`. Dev deps: `typescript @types/node @types/react @types/react-dom vitest`.
 - The repo has a local git identity (`thepatestate <thepatestate@users.noreply.github.com>`) already configured — do not change it, do not commit with any other identity.
 - Design source of truth: `wireframes/*.html` (Josh's approved v1.1 set — `index.html`, not the old `index_43.html`). Fonts: Big Shoulders Display (display), Newsreader (body), IBM Plex Mono (mono) — loaded via `next/font/google`, NOT `<link>` tags.
@@ -572,7 +572,7 @@ git add components lib && git commit -m "feat: video components + date formattin
 
 **Files:**
 - Modify: `app/page.tsx`
-- Reference: `wireframes/index.html` (design), sections to KEEP: hero, "the show is the anchor tenant" episode block, weekly schedule; CUT: JP Poll ticker/board, pick'em panels, notebook/art grid, shop, porch, citizen CTA.
+- Reference: `wireframes/index.html` — this is a FULL port of the v1.1 homepage. Live sections (hero, latest-episode block, recent drops) use the code below with real feed data. Every other wireframe section (JP Poll top-5 rank cards, Pick'Em/Porch panels, Notebook article grid, shop/citizen band) is ported pixel-faithful per the Task 7a-7c port recipe: sample data in `const DEMO_*` arrays, a `<PreseasonChip />` under each section heading, interactive controls disabled. "Become a Citizen" CTAs render disabled with the chip (citizenship arrives in sub-project B).
 
 **Interfaces:**
 - Consumes: `getVideos`, `isEpisode`, `CHANNEL_URL` from `lib/youtube.ts`; `EpisodeHero`, `VideoGrid`, `SubscribeCTA` components.
@@ -640,14 +640,16 @@ export default async function Home() {
 }
 ```
 
-- [ ] **Step 2: Visual pass against the mockup** — run `npm run dev`, compare with `wireframes/index.html` in a browser. Adjust spacing/section classes (`on-dark`, `yardline`, `tight`) to match the mockup's rhythm. Fix any missing CSS classes by porting them from the mockup style block.
+- [ ] **Step 2: Port the remaining wireframe sections** — JP Poll top-5 cards, Pick'Em/Porch duo panels, Notebook art-grid, shop band, in wireframe order, per the port recipe (DEMO_* consts + PreseasonChip + disabled controls).
 
-- [ ] **Step 3: Verify build + tests** — `npm run build && npm test` → both pass.
+- [ ] **Step 3: Visual pass against the mockup** — run `npm run dev`, compare with `wireframes/index.html` in a browser. Adjust spacing/section classes (`on-dark`, `yardline`, `tight`) to match the mockup's rhythm. Fix any missing CSS classes by porting them from the mockup style block.
 
-- [ ] **Step 4: Commit**
+- [ ] **Step 4: Verify build + tests** — `npm run build && npm test` → both pass.
+
+- [ ] **Step 5: Commit**
 
 ```bash
-git add app && git commit -m "feat: home page with live latest episode + recent drops"
+git add app && git commit -m "feat: full homepage — live episode surfaces + preseason-preview sections"
 ```
 
 ---

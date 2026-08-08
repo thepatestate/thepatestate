@@ -1,0 +1,350 @@
+import type { Metadata } from "next";
+import Image from "next/image";
+import Link from "next/link";
+
+export const metadata: Metadata = { title: "The Notebook" };
+
+// --- Preseason-preview sample data ---------------------------------------
+// Stands in for the Notebook CMS (articles, the wire feed, most-popular
+// tracking). Swap for live queries when the CMS ships; the JSX below only
+// touches these arrays.
+
+type IconColors = { bg: string; diag: string; mask: string };
+
+// The wireframe repeats a placeholder "helmet" SVG per news/wire item,
+// varying only these three fill colors.
+function HelmetIcon({ bg, diag, mask }: IconColors) {
+  return (
+    <svg viewBox="0 0 160 100" preserveAspectRatio="xMidYMid slice">
+      <rect width="160" height="100" fill={bg} />
+      <path d="M160,0 L160,100 L70,100 Z" fill={diag} opacity=".28" />
+      <rect y="86" width="160" height="2" fill="rgba(255,255,255,.35)" />
+      <g transform="translate(44,20) scale(1.9)">
+        <path
+          d="M4,17 C4,8 10,3 18,3 C27,3 33,9 33,17 L33,23 C33,25 31,26 29,26 L24,26 L24,29 L14,29 C8,29 4,24 4,17 Z"
+          fill={bg}
+        />
+        <rect x="15" y="3" width="6" height="23" rx="3" fill={mask} />
+        <path
+          d="M27,15 L38,15 M27,21 L38,21 M33,12 L33,24"
+          stroke="#DADDE2"
+          strokeWidth="2.6"
+          fill="none"
+          strokeLinecap="round"
+        />
+      </g>
+    </svg>
+  );
+}
+
+const DEMO_CATNAV = ["Latest", "Josh Pate", "News", "Recruiting & Portal", "Rankings", "Teams", "Columns"] as const;
+
+const DEMO_FEATURED = [
+  { title: "Why the Citizens Jumped Texas to No. 3", meta: "POLL DAY, EXPLAINED · TUE", dark: false },
+  { title: "The Week 1 Honor Roll", meta: "TOP PERFORMERS · WED", dark: true },
+  { title: "Wedding Season vs. Football Season", meta: "THE MAILBAG · FRI", dark: false },
+] as const;
+
+type NewsItem = {
+  logoText: string;
+  logoBg: string;
+  logoColor: string;
+  headline: string;
+  locked: boolean;
+  citizenBadge: string | null;
+  by: string;
+  date: string;
+  nudge: boolean;
+  thumb: IconColors | null;
+};
+
+// Sample headlines only — never linked to article.html (that template
+// belongs to sub-project C) or anywhere else; these render as non-link
+// cards.
+const DEMO_NEWS: readonly NewsItem[] = [
+  {
+    logoText: "UGA", logoBg: "#BA0C2F", logoColor: "#fff",
+    headline: "Georgia's Margin for Error Is a Myth", locked: false, citizenBadge: null,
+    by: "Josh Pate", date: "AUG 7, 2026", nudge: false,
+    thumb: { bg: "#BA0C2F", diag: "#000000", mask: "#000000" },
+  },
+  {
+    logoText: "JP", logoBg: "var(--navy)", logoColor: "var(--lamp)",
+    headline: "The JP Poll Still Doesn't Trust Alabama — Here's the Math", locked: true,
+    citizenBadge: "Citizens Only · Free", by: "Staff", date: "AUG 7, 2026", nudge: true,
+    thumb: { bg: "#9E1B32", diag: "#FFFFFF", mask: "#FFFFFF" },
+  },
+  {
+    logoText: "A&M", logoBg: "#500000", logoColor: "#fff",
+    headline: "Aggies Hold No. 1 on Both Boards With Six Five-Stars", locked: false, citizenBadge: null,
+    by: "Staff", date: "AUG 6, 2026", nudge: false, thumb: null,
+  },
+  {
+    logoText: "IU", logoBg: "#990000", logoColor: "#fff",
+    headline: "Indiana Closes the 2027 Board With a Five-Star WR", locked: false, citizenBadge: null,
+    by: "Staff", date: "AUG 6, 2026", nudge: false,
+    thumb: { bg: "#990000", diag: "#EEEDEB", mask: "#FFFFFF" },
+  },
+  {
+    logoText: "★", logoBg: "var(--field)", logoColor: "var(--lamp)",
+    headline: "Watch Parties Expand to 40 Cities — Three New Chapters Open", locked: false, citizenBadge: null,
+    by: "The Porch Desk", date: "AUG 6, 2026", nudge: false, thumb: null,
+  },
+  {
+    logoText: "LSU", logoBg: "#461D7C", logoColor: "#FDD023",
+    headline: "Night Games in Death Valley: The Survival Guide, Updated", locked: true,
+    citizenBadge: "Citizens Only · Free", by: "Staff", date: "AUG 5, 2026", nudge: false,
+    thumb: { bg: "#461D7C", diag: "#FDD023", mask: "#FDD023" },
+  },
+];
+
+const DEMO_POPULAR = [
+  { n: "01", title: "The 5 Programs Under the Most Pressure This Fall", meta: "48K READS · PAIRS WITH EP 1,204" },
+  { n: "02", title: "Why the JP Poll Doesn't Trust Alabama Yet", meta: "31K READS · POLL DAY COLUMN" },
+  { n: "03", title: "The Grove, Ranked: A Tailgate Masterclass", meta: "27K READS · PATE TAILGATE" },
+  { n: "04", title: "Portal Winners Nobody's Pricing In", meta: "22K READS · THE NEXT WAVE" },
+] as const;
+
+const DEMO_WIRE = [
+  {
+    time: "2 HRS AGO", category: "RECRUITING", headline: "Texas A&M holds No. 1 on both major boards",
+    badge: "Full Story Ready", body: "26 commits and six five-stars in the 2027 class.",
+    icon: { bg: "#500000", diag: "#FFFFFF", mask: "#FFFFFF" },
+  },
+  {
+    time: "THIS WEEK", category: "RECRUITING", headline: "Final 2027 five-stars commit", badge: null,
+    body: "A five-star WR picks Indiana; a five-star RB stays with Tennessee.",
+    icon: { bg: "#990000", diag: "#EEEDEB", mask: "#FFFFFF" },
+  },
+  {
+    time: "2 WKS AGO", category: "MEDIA", headline: "New ESPN Friday show announced", badge: null,
+    body: "Josh pairs with Bussin' With The Boys, sometimes live from GameDay sites.",
+    icon: { bg: "#0F1B2D", diag: "#E8A33D", mask: "#E8A33D" },
+  },
+  {
+    time: "TODAY", category: "THE STATE", headline: "Porch Pick'Em opens for the season", badge: null,
+    body: "Season champion watches a game with Josh; top 10 win tickets.",
+    icon: { bg: "#1E3B2E", diag: "#E8A33D", mask: "#E8A33D" },
+  },
+  {
+    time: "THIS WEEK", category: "THE POLL", headline: "Ballots open Sunday 8PM ET", badge: null,
+    body: "Week 1 reveal comes Tuesday on the show.",
+    icon: { bg: "#15243B", diag: "#F3EFE6", mask: "#E8A33D" },
+  },
+  {
+    time: "TODAY", category: "COACHING", headline: "Hot-seat watch: three ADs go quiet", badge: null,
+    body: "Buyout math is moving in two SEC towns and one in the Big 12.",
+    icon: { bg: "#3E2723", diag: "#D7CCC8", mask: "#D7CCC8" },
+  },
+  {
+    time: "YESTERDAY", category: "PORTAL", headline: "August portal ripple begins", badge: null,
+    body: "Two projected starters enter; three contenders circle.",
+    icon: { bg: "#263238", diag: "#90A4AE", mask: "#90A4AE" },
+  },
+  {
+    time: "YESTERDAY", category: "THE STATE", headline: "Watch parties hit 40 cities", badge: null,
+    body: "New chapters open in Charlotte, Boise, and San Diego.",
+    icon: { bg: "#1E3B2E", diag: "#F3EFE6", mask: "#F3EFE6" },
+  },
+  {
+    time: "THIS WEEK", category: "TV", headline: "Week 1 kick times locked", badge: "Full Story Ready",
+    body: "Georgia–Bama gets the 7:30 CBS window; Oregon–Michigan at 3:30.",
+    icon: { bg: "#101820", diag: "#E8A33D", mask: "#E8A33D" },
+  },
+] as const;
+
+export default function NotebookPage() {
+  return (
+    <main>
+      <header className="page-head">
+        <div className="wrap">
+          <p className="crumb">The Pate State / The Notebook</p>
+          <h1>The Notebook</h1>
+          <p className="lede">
+            Breaking news, the newest columns, and what the citizens are reading most — the written record of the
+            sport, new every weekday.
+          </p>
+          {/* Hardcoded: PreseasonChip always appends "— live data arrives with the
+              season", which would duplicate the trailing clause here. */}
+          <span className="note">Preseason preview — the Notebook opens with the season</span>
+        </div>
+      </header>
+
+      <section>
+        <div className="wrap">
+          <div className="duo" style={{ gridTemplateColumns: "2fr 1fr" }}>
+            <div>
+              <div className="catnav">
+                {DEMO_CATNAV.map((c, i) => (
+                  <Link key={c} href="/#" className={i === 0 ? "on" : undefined}>{c}</Link>
+                ))}
+              </div>
+
+              <div className="lead-story">
+                <div className="ph">
+                  <button className="playbtn" aria-label="Play" disabled>▶</button>
+                </div>
+                <div>
+                  <span className="fr">📝 WEEKEND TRUTHS</span>
+                  <h3>What Saturday Actually Told Us</h3>
+                  <p className="deck">
+                    Five things that were real, three overreactions to ignore, and the one stat nobody&apos;s
+                    talking about — the written spine of the whole week.
+                  </p>
+                  <div className="meta">JOSH PATE · 6 MIN READ · TODAY 7:00 AM</div>
+                </div>
+              </div>
+
+              <div className="feat-grid">
+                {DEMO_FEATURED.map((f) => (
+                  <div className="feat" key={f.title}>
+                    <div
+                      className="ph"
+                      style={f.dark ? { background: "repeating-linear-gradient(-45deg,var(--navy-2) 0 10px,#1A2E47 10px 20px)" } : undefined}
+                    />
+                    <div className="bd">
+                      <h4>{f.title}</h4>
+                      <div className="meta">{f.meta}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <p className="eyebrow" style={{ marginTop: 38 }}>Latest News</p>
+              <div style={{ marginTop: 4 }}>
+                {DEMO_NEWS.map((n) => (
+                  <div className={n.locked ? "newsitem locked" : "newsitem"} key={n.headline}>
+                    <div className="nx">
+                      <div
+                        className="logo-box sm"
+                        style={{ background: n.logoBg, color: n.logoColor, border: "none", width: 36, height: 36, fontSize: 12, marginBottom: 10 }}
+                      >
+                        {n.logoText}
+                      </div>
+                      <h4>
+                        {n.headline}
+                        {n.citizenBadge && <span className="cit-badge">{n.citizenBadge}</span>}
+                      </h4>
+                      <div className="by"><b>{n.by}</b> · {n.date}</div>
+                      {n.nudge && (
+                        <div className="cit-nudge">
+                          Full ballot data &amp; the vote breakdown —{" "}
+                          <Link href="/#citizen">claim free citizenship to read</Link>.
+                        </div>
+                      )}
+                    </div>
+                    {n.thumb && <div className="newsthumb"><HelmetIcon {...n.thumb} /></div>}
+                  </div>
+                ))}
+              </div>
+              <div style={{ marginTop: 14 }}><Link className="btn" href="/#">Load More Articles</Link></div>
+
+              <p className="eyebrow" style={{ marginTop: 38 }}>Most Popular This Week</p>
+              <div style={{ marginTop: 8 }}>
+                {DEMO_POPULAR.map((p) => (
+                  <div className="perf" key={p.n}>
+                    <div className="n">{p.n}</div>
+                    <div className="who">
+                      <b>{p.title}</b>
+                      <div className="meta">{p.meta}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div style={{ marginTop: 14 }}><Link className="btn" href="/#">More Popular Articles</Link></div>
+            </div>
+
+            <div className="wire">
+              <h3><span className="dot" />Breaking News</h3>
+              {DEMO_WIRE.map((w) => (
+                <div className="wire-item" key={w.headline}>
+                  <div className="wire-thumb2"><HelmetIcon {...w.icon} /></div>
+                  <div className="wtxt">
+                    <span className="t">{w.time} · {w.category}</span>
+                    <b>{w.headline}{w.badge && <span className="ai-badge">{w.badge}</span>}</b>
+                    <p>{w.body}</p>
+                  </div>
+                </div>
+              ))}
+              <div style={{ marginTop: 14, padding: 12, border: "1px dashed var(--line-l)", borderRadius: 4, fontFamily: "var(--mono)", fontSize: 11, color: "var(--ink-dim)", lineHeight: 1.6 }}>
+                ⚡ <b style={{ color: "var(--field)" }}>THE WIRE DESK</b> — when news is big enough, our AI drafts
+                the full story within minutes and an editor signs off before it publishes. Speed of a wire service,
+                standards of the porch.
+              </div>
+              <Link className="btn gold" href="/#" style={{ marginTop: 14, width: "100%", textAlign: "center" }}>
+                Load More News
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="on-dark tight">
+        <div className="wrap">
+          <p className="eyebrow">Why This Exists</p>
+          <h2 className="display" style={{ fontSize: 32 }}>Video Builds the Audience. Words Build the Archive.</h2>
+          <p className="lede">
+            Search engines and AI assistants can&apos;t quote a video. Every episode&apos;s written companion is
+            what gets found, cited, and shared — and every article embeds its clips, so there&apos;s no separate
+            social feed to maintain.
+          </p>
+          <p className="lede" style={{ marginTop: 14 }}>
+            And a few columns each week — the mailbag, the ballot data, the deep guides — are{" "}
+            <b style={{ color: "var(--lamp)" }}>Citizens Only</b>. Still free, forever. Citizenship is just how the
+            porch knows who&apos;s home.
+          </p>
+        </div>
+      </section>
+
+      <section className="on-dark">
+        <div className="wrap">
+          <div style={{ display: "flex", alignItems: "center", gap: 40, flexWrap: "wrap" }}>
+            <Image
+              src="/citizen-gift-cover.png"
+              alt="The 2026 JP Preseason Football Guide cover"
+              width={280}
+              height={350}
+              style={{
+                width: 280,
+                maxWidth: "80vw",
+                height: "auto",
+                borderRadius: 6,
+                border: "1px solid var(--line-d)",
+                boxShadow: "0 18px 50px rgba(0,0,0,.45)",
+                transform: "rotate(-2deg)",
+              }}
+            />
+            <div style={{ flex: 1, minWidth: 280 }}>
+              <span className="fr">🎁 THE CITIZEN GIFT</span>
+              <p className="eyebrow">Free the Moment You Join</p>
+              <h2 className="display" style={{ fontSize: "clamp(30px,4vw,44px)" }}>
+                Become a Citizen,<br />Get the Guide.
+              </h2>
+              <p className="lede">
+                The 2026 JP Preseason Football Guide — the Top 50 ranked, analyzed, and explained, the playoff
+                picture, the X-factors, and the breakout players — yours free (digital edition) the moment you
+                claim citizenship.
+              </p>
+              <div style={{ marginTop: 18, display: "flex", gap: 12, flexWrap: "wrap" }}>
+                <button className="btn gold" disabled>Claim Free Citizenship</button>
+                <Link className="btn" href="/report">Peek Inside the Guide</Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div className="cta-band">
+        <div className="wrap row">
+          <div>
+            <h3>Who&apos;s In? See the Playoff Picture.</h3>
+            <p>THE BRACKET, THE RANKINGS, JOSH&apos;S PICKS — AND AN AI TO RUN YOUR OWN</p>
+          </div>
+          <Link className="btn" href="/playoffs" style={{ borderColor: "var(--lamp)", color: "var(--lamp)" }}>
+            Open the Playoffs Page →
+          </Link>
+        </div>
+      </div>
+    </main>
+  );
+}
