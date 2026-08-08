@@ -6,8 +6,10 @@ export const metadata: Metadata = { title: "The State Store" };
 
 // --- Preseason-preview sample data ---------------------------------------
 // Stands in for the real shelf (prices, gear list). The State Store already
-// exists at patestatematerial.com — every buy CTA below routes there in a
-// new tab per the brief rather than faking a cart on this domain. Note: the
+// exists at patestatematerial.com — every product CTA and tile below routes
+// there in a new tab per the brief rather than faking a cart on this
+// domain (the Pate Report tile is the one exception: it's an internal
+// editorial product with its own real page at /report). Note: the
 // wireframe's Pate Report cover art (pate-report-cover.svg) doesn't exist
 // as an asset anywhere in wireframes/ or public/ — same gap already flagged
 // on /report — so it's rendered here as a styled placeholder box instead of
@@ -74,10 +76,10 @@ export default function ShopPage() {
           <p className="eyebrow" style={{ marginTop: 44 }}>Gear</p>
           <div className="shop-items shop4" style={{ marginTop: 12 }}>
             {DEMO_GEAR.map((g) => (
-              <div className="item" key={g.label}>
+              <a className="item" href={STORE_URL} target="_blank" rel="noopener" style={{ textDecoration: "none" }} key={g.label}>
                 <div style={{ flex: 1 }} />
                 <b>{g.label}</b>
-              </div>
+              </a>
             ))}
           </div>
 
@@ -105,9 +107,9 @@ export default function ShopPage() {
               </div>
               <b>THE PATE REPORT — $24.99 · DIGITAL FREE FOR CITIZENS</b>
             </Link>
-            <div className="item"><div style={{ flex: 1 }} /><b>STADIUM PASSPORT — $19</b></div>
-            <div className="item"><div style={{ flex: 1 }} /><b>POLL DAY MUG — $22</b></div>
-            <div className="item"><div style={{ flex: 1 }} /><b>WALL OF CHAMPIONS PRINT — $29</b></div>
+            <a className="item" href={STORE_URL} target="_blank" rel="noopener" style={{ textDecoration: "none" }}><div style={{ flex: 1 }} /><b>STADIUM PASSPORT — $19</b></a>
+            <a className="item" href={STORE_URL} target="_blank" rel="noopener" style={{ textDecoration: "none" }}><div style={{ flex: 1 }} /><b>POLL DAY MUG — $22</b></a>
+            <a className="item" href={STORE_URL} target="_blank" rel="noopener" style={{ textDecoration: "none" }}><div style={{ flex: 1 }} /><b>WALL OF CHAMPIONS PRINT — $29</b></a>
           </div>
           <p style={{ marginTop: 24, fontSize: 15, color: "var(--ink-dim)" }}>
             Citizens get free shipping, always. Pick&apos;em champions shop free for a year.
