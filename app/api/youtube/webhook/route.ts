@@ -15,9 +15,12 @@ export async function POST(request: Request) {
   try {
     const xml = await request.text();
     if (!xml.includes("UCg-q_MDeWQrjizr1VPLEpYg")) return new Response("ignored", { status: 200 });
-    const id = xml.match(/<yt:videoId>([\w-]{11})<\/yt:videoId>/)?.[1];
-    const title = xml.match(/<title>([^<]+)<\/title>/g)?.slice(-1)[0]?.replace(/<\/?title>/g, "");
-    const published = xml.match(/<published>([^<]+)<\/published>/)?.[1];
+    // Extract from the first <entry> block only, so id/title/published can never be
+    // pulled from different entries when a notification carries more than one.
+    const entry = xml.split("<entry>")[1] ?? xml;
+    const id = entry.match(/<yt:videoId>([\w-]{11})<\/yt:videoId>/)?.[1];
+    const title = entry.match(/<title>([^<]+)<\/title>/)?.[1];
+    const published = entry.match(/<published>([^<]+)<\/published>/)?.[1];
     if (id) {
       await ingestEpisode({
         id,
