@@ -21,6 +21,7 @@ const SOCIAL = [
   { href: SOCIAL_LINKS.x, label: "𝕏 @JOSHPATECFB" },
   { href: SOCIAL_LINKS.instagram, label: "◉ INSTAGRAM" },
   { href: SOCIAL_LINKS.tiktok, label: "♪ TIKTOK" },
+  { href: SOCIAL_LINKS.merch, label: "🛒 STATE STORE" },
 ];
 
 const pillStyle: CSSProperties = {
