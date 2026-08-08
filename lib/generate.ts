@@ -178,7 +178,7 @@ export async function draftPlaybookIntro(input: {
     const user = [
       `Weekday: ${input.weekday}`,
       `Episode title: ${input.episodeTitle ?? "(none today)"}`,
-      `Article headlines:\n${input.articleHeadlines.length ? input.articleHeadlines.map((h) => `- ${h}`).join("\n") : "(none today)"}`,
+      `Article headlines:\n${input.articleHeadlines.length ? input.articleHeadlines.slice(0, 3).map((h) => `- ${h}`).join("\n").slice(0, 500) : "(none today)"}`,
     ].join("\n\n");
 
     const res = await c.messages.create({
@@ -192,7 +192,9 @@ export async function draftPlaybookIntro(input: {
     const subject = typeof parsed.subject === "string" ? parsed.subject.trim() : "";
     const intro = typeof parsed.intro === "string" ? parsed.intro.trim() : "";
     if (!subject || !intro) return PLAYBOOK_FALLBACK;
-    return { subject: subject.length > 45 ? subject.slice(0, 45) : subject, intro };
+    const cut = subject.slice(0, 45);
+    const truncatedSubject = cut.length < subject.length ? cut.replace(/\s+\S*$/, "") : cut;
+    return { subject: truncatedSubject, intro };
   } catch (err) {
     console.error("[generate:draftPlaybookIntro]", err);
     return PLAYBOOK_FALLBACK;
