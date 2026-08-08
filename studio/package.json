@@ -1,0 +1,12 @@
+{
+  "name": "thepatestate-studio",
+  "private": true,
+  "scripts": { "dev": "sanity dev", "deploy": "sanity deploy" },
+  "dependencies": {
+    "sanity": "^4",
+    "@sanity/vision": "^4",
+    "react": "^19",
+    "react-dom": "^19",
+    "styled-components": "^6"
+  }
+}
