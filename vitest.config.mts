@@ -7,4 +7,9 @@ export default defineConfig({
       "@": fileURLToPath(new URL(".", import.meta.url)),
     },
   },
+  test: {
+    env: {
+      PLAYBOOK_SIGNING_KEY: "test-playbook-signing-key",
+    },
+  },
 });
