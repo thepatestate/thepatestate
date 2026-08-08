@@ -1,6 +1,50 @@
+// Type-only import: erased at compile time, so it never triggers a runtime `require("undici")`.
+// That matters — merely loading the undici module (even unused) has been observed to interfere
+// with Node's built-in global fetch decompression. Loading it is deferred to getProxyAgent()
+// below, and only when TRANSCRIPT_PROXY_URL is actually set, so the no-proxy path never touches
+// the module at all and stays byte-identical to before this feature existed.
+import type { ProxyAgent } from "undici";
+
 export interface TranscriptSegment {
   start: number;
   text: string;
+}
+
+/** `dispatcher` isn't part of the DOM fetch types Next.js pulls in, but Node's runtime fetch
+ * (undici-based) accepts it. FetchOpts widens RequestInit to allow it through without `any`. */
+type FetchOpts = RequestInit & { dispatcher?: ProxyAgent };
+
+let proxyAgentPromise: Promise<ProxyAgent | undefined> | undefined;
+
+/** Lazily builds (once) and caches a ProxyAgent from TRANSCRIPT_PROXY_URL, e.g.
+ * "http://user:pass@host:port". Resolves to undefined — without ever importing undici or
+ * constructing an agent — when the env var is unset, so behavior stays byte-identical to today
+ * when proxying isn't configured. */
+function getProxyAgent(): Promise<ProxyAgent | undefined> {
+  if (!proxyAgentPromise) {
+    const url = process.env.TRANSCRIPT_PROXY_URL;
+    proxyAgentPromise = url
+      ? import("undici").then(({ ProxyAgent: ProxyAgentCtor }) => new ProxyAgentCtor(url))
+      : Promise.resolve(undefined);
+  }
+  return proxyAgentPromise;
+}
+
+/** Fetches via the configured proxy (TRANSCRIPT_PROXY_URL) when set; falls through to a direct
+ * fetch if the proxy attempt throws, or if no proxy is configured at all. Cheap resilience: try
+ * the proxy first (that's the point of configuring one), but never let a bad proxy take down
+ * transcript fetching entirely. */
+async function proxiedFetch(url: string, opts: RequestInit): Promise<Response> {
+  const agent = await getProxyAgent();
+  if (agent) {
+    try {
+      const withDispatcher: FetchOpts = { ...opts, dispatcher: agent };
+      return await fetch(url, withDispatcher);
+    } catch (err) {
+      console.error("[transcript] proxy fetch failed", err);
+    }
+  }
+  return fetch(url, opts);
 }
 
 function decodeEntities(s: string): string {
@@ -135,7 +179,7 @@ const INNERTUBE_CLIENTS: InnertubeClient[] = [
 async function fetchTranscriptViaInnerTube(ytId: string): Promise<TranscriptSegment[] | null> {
   let tracks: CaptionTrack[] | undefined;
   for (const client of INNERTUBE_CLIENTS) {
-    const res = await fetch("https://www.youtube.com/youtubei/v1/player", {
+    const res = await proxiedFetch("https://www.youtube.com/youtubei/v1/player", {
       method: "POST",
       headers: client.headers,
       body: JSON.stringify(client.body(ytId)),
@@ -158,7 +202,7 @@ async function fetchTranscriptViaInnerTube(ytId: string): Promise<TranscriptSegm
   if (!tracks || tracks.length === 0) return null;
   const track = pickTrack(tracks);
   if (!track?.baseUrl) return null;
-  const xmlRes = await fetch(track.baseUrl, { headers: { "User-Agent": UA }, cache: "no-store" });
+  const xmlRes = await proxiedFetch(track.baseUrl, { headers: { "User-Agent": UA }, cache: "no-store" });
   if (!xmlRes.ok) return null;
   const body = await xmlRes.text();
   const srv3Segs = parseSrv3(body);
@@ -169,7 +213,7 @@ async function fetchTranscriptViaInnerTube(ytId: string): Promise<TranscriptSegm
 
 /** Unofficial caption fetch: watch page -> captionTracks -> timedtext XML. Null on any failure. */
 async function fetchTranscriptViaWatchPage(ytId: string): Promise<TranscriptSegment[] | null> {
-  const page = await fetch(`https://www.youtube.com/watch?v=${ytId}`, {
+  const page = await proxiedFetch(`https://www.youtube.com/watch?v=${ytId}`, {
     headers: { "User-Agent": UA, "Accept-Language": "en-US,en" },
     cache: "no-store",
   });
@@ -180,7 +224,7 @@ async function fetchTranscriptViaWatchPage(ytId: string): Promise<TranscriptSegm
   const tracks = JSON.parse(trackMatch[1].replace(/\\u0026/g, "&")) as CaptionTrack[];
   const track = pickTrack(tracks);
   if (!track?.baseUrl) return null;
-  const xmlRes = await fetch(track.baseUrl, { headers: { "User-Agent": UA }, cache: "no-store" });
+  const xmlRes = await proxiedFetch(track.baseUrl, { headers: { "User-Agent": UA }, cache: "no-store" });
   if (!xmlRes.ok) return null;
   const segs = parseTimedText(await xmlRes.text());
   return segs.length > 0 ? segs : null;
