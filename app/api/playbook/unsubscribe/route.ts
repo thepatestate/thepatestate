@@ -7,26 +7,42 @@ const COLOR_BG = "#FDFCF8";
 const COLOR_NAVY = "#0F1B2D";
 const COLOR_LAMP = "#E8A33D";
 
-function confirmationPage(): string {
+function pageShell(title: string, heading: string, body: string): string {
   return `<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Unsubscribed — The Pate State</title>
+<title>${title} — The Pate State</title>
 </head>
 <body style="margin: 0; padding: 0; background-color: ${COLOR_BG}; font-family: Georgia, 'Times New Roman', serif;">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: ${COLOR_BG};">
 <tr><td align="center" style="padding: 64px 16px;">
 <table role="presentation" width="480" cellpadding="0" cellspacing="0" border="0" style="width: 480px; max-width: 100%; text-align: center;">
 <tr><td style="padding-bottom: 8px; font-family: 'Courier New', Courier, monospace; font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: ${COLOR_LAMP}; font-weight: bold;">The Pate Playbook</td></tr>
-<tr><td style="padding-bottom: 16px; color: ${COLOR_NAVY}; font-size: 22px; font-weight: bold;">You're off the Playbook list.</td></tr>
-<tr><td style="color: ${COLOR_NAVY}; font-family: Arial, Helvetica, sans-serif; font-size: 15px; line-height: 1.6;">The porch light stays on — resubscribe anytime by asking at <a href="mailto:porch@thepatestate.com" style="color: ${COLOR_LAMP};">porch@thepatestate.com</a>.</td></tr>
+<tr><td style="padding-bottom: 16px; color: ${COLOR_NAVY}; font-size: 22px; font-weight: bold;">${heading}</td></tr>
+<tr><td style="color: ${COLOR_NAVY}; font-family: Arial, Helvetica, sans-serif; font-size: 15px; line-height: 1.6;">${body}</td></tr>
 </table>
 </td></tr>
 </table>
 </body>
 </html>`;
+}
+
+function confirmationPage(): string {
+  return pageShell(
+    "Unsubscribed",
+    "You're off the Playbook list.",
+    `The porch light stays on — resubscribe anytime by asking at <a href="mailto:porch@thepatestate.com" style="color: ${COLOR_LAMP};">porch@thepatestate.com</a>.`
+  );
+}
+
+function failurePage(): string {
+  return pageShell(
+    "Unsubscribe error",
+    "That didn't go through on our end.",
+    `Try the link once more, or email <a href="mailto:porch@thepatestate.com" style="color: ${COLOR_LAMP};">porch@thepatestate.com</a> and we'll take you off by hand.`
+  );
 }
 
 export async function GET(request: Request) {
@@ -46,9 +62,19 @@ export async function GET(request: Request) {
   try {
     const admin = createAdminClient();
     const { error } = await admin.from("citizens").update({ playbook_opt_out: true }).eq("id", uid);
-    if (error) console.error("[playbook] unsubscribe update failed", error);
+    if (error) {
+      console.error("[playbook] unsubscribe update failed", error);
+      return new Response(failurePage(), {
+        status: 500,
+        headers: { "Content-Type": "text/html; charset=utf-8" },
+      });
+    }
   } catch (err) {
-    console.error("[playbook] unsubscribe failed", err);
+    console.error("[playbook] unsubscribe update failed", err);
+    return new Response(failurePage(), {
+      status: 500,
+      headers: { "Content-Type": "text/html; charset=utf-8" },
+    });
   }
 
   return new Response(confirmationPage(), {
