@@ -1,5 +1,5 @@
 <!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0"><title>The Pate Report — The Pate State</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Porch Pick'Em — The Pate State</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@500;700;800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -235,6 +235,42 @@ td.rk{color:var(--lamp-deep);font-weight:600;width:44px}td.rating{text-align:rig
 .cit-nudge a{color:var(--lamp-deep);text-decoration:underline}
 .ai-badge{display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--field);border:1px solid var(--field);padding:2px 7px;border-radius:3px;margin-left:6px}
 .ai-badge::before{content:"⚡"}
+/* --- article page --- */
+.story-grid{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:44px;align-items:start}
+@media(max-width:960px){.story-grid{grid-template-columns:1fr}}
+.story h1{font-family:var(--display);font-weight:800;font-size:clamp(34px,5vw,54px);line-height:.96;text-transform:uppercase;margin:14px 0 12px}
+.story .dek{font-size:19px;color:var(--ink-dim);line-height:1.5;max-width:62ch}
+.byline{display:flex;align-items:center;gap:12px;margin:18px 0 6px;padding:14px 0;border-top:1px solid var(--line-l);border-bottom:1px solid var(--line-l)}
+.byline .avatar{width:40px;height:40px;font-size:14px}
+.byline .who b{font-size:14px;display:block}
+.byline .who span{font-family:var(--mono);font-size:11px;color:var(--ink-dim)}
+.byline .share{margin-left:auto;display:flex;gap:8px}
+.byline .share a{width:34px;height:34px;border:1px solid var(--line-l);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--ink)}
+.byline .share a:hover{border-color:var(--lamp-deep);color:var(--lamp-deep)}
+.story-media{aspect-ratio:16/9;border-radius:6px;margin:22px 0;background:linear-gradient(150deg,#BA0C2F 0%,#7A0820 55%,#000 100%);border:1px solid var(--line-l);display:flex;align-items:center;justify-content:center;position:relative}
+.story-media .cap{position:absolute;bottom:10px;left:14px;font-family:var(--mono);font-size:10px;letter-spacing:.08em;color:rgba(255,255,255,.8)}
+.story-body p{font-size:18px;line-height:1.8;margin:0 0 24px;max-width:66ch}
+.story-body h3{font-family:var(--display);font-weight:800;font-size:27px;text-transform:uppercase;margin:34px 0 14px}
+.story-body a{color:var(--lamp-deep);text-decoration:underline;text-underline-offset:3px}
+.pullquote{border-left:4px solid var(--lamp);padding:6px 0 6px 22px;margin:30px 0;font-family:var(--display);font-weight:700;font-size:27px;line-height:1.15;text-transform:uppercase;color:var(--navy);max-width:56ch}
+.pullquote .who{display:block;font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--ink-dim);margin-top:10px}
+.databox{border:1px solid var(--line-l);border-radius:6px;background:var(--paper-2);padding:20px;margin:30px 0;max-width:560px}
+.databox .eyebrow{margin-bottom:10px}
+.videobox{border:1px solid var(--line-d);border-radius:6px;background:var(--navy);color:var(--chalk);padding:18px;display:flex;gap:16px;align-items:center;margin:30px 0;max-width:640px}
+.videobox .vthumb{flex:0 0 150px;aspect-ratio:16/9;border-radius:4px;background:linear-gradient(150deg,var(--navy-2),#0B1523);display:flex;align-items:center;justify-content:center}
+.videobox h4{font-family:var(--display);font-weight:700;font-size:19px;text-transform:uppercase;line-height:1}
+.videobox .meta{font-family:var(--mono);font-size:10px;color:var(--chalk-dim);margin-top:6px;letter-spacing:.1em}
+.aside-card{border:1px solid var(--line-l);border-radius:6px;background:#fff;padding:20px;margin-bottom:18px}
+.aside-card h4{font-family:var(--display);font-weight:800;font-size:20px;text-transform:uppercase;margin-bottom:12px}
+.aside-sticky{position:sticky;top:84px}
+.rel-row{display:flex;gap:12px;align-items:flex-start;padding:11px 0;border-bottom:1px solid var(--line-l)}
+.rel-row:last-child{border-bottom:none}
+.rel-row .n{font-family:var(--display);font-weight:800;font-size:20px;color:#C9C3B4}
+.rel-row b{font-size:14px;line-height:1.35;font-weight:600}
+.rel-row .meta{font-family:var(--mono);font-size:10px;color:var(--ink-dim);margin-top:3px}
+.tagrow{display:flex;gap:8px;flex-wrap:wrap;margin:26px 0}
+.tagrow a{font-family:var(--mono);font-size:11px;letter-spacing:.08em;border:1px solid var(--line-l);border-radius:20px;padding:6px 13px;color:var(--ink-dim)}
+.tagrow a:hover{border-color:var(--lamp-deep);color:var(--lamp-deep)}
 .newsitem h4{font-family:var(--display);font-weight:800;font-size:clamp(21px,2.6vw,28px);line-height:.98;text-transform:uppercase}
 .newsitem h4 a:hover{color:var(--lamp-deep)}
 .newsitem .by{font-family:var(--mono);font-size:11px;color:var(--ink-dim);margin-top:9px}
@@ -427,43 +463,81 @@ footer{background:var(--navy);color:var(--chalk-dim);padding:44px 0 60px;font-fa
 </div></div>
 <nav><div class="nav-row">
 <a class="wordmark" href="index.html">THE PATE <em>STATE</em></a>
-<div class="nav-links"><a href="show.html" class="">The Show</a><a href="scores.html" class="">Scores</a><a href="pickem.html" class="">Pick'Em</a><a href="poll.html" class="">JP Poll</a><a href="playoffs.html" class="">Playoffs</a><a href="recruiting.html" class="">Recruiting</a><a href="notebook.html" class="">Notebook</a><a href="porch.html" class="">The Porch</a><a href="tailgate.html" class="">Tailgate</a><a href="shop.html" class="">Shop</a></div>
+<div class="nav-links"><a href="show.html" class="">The Show</a><a href="scores.html" class="">Scores</a><a href="pickem.html" class="active">Pick'Em</a><a href="poll.html" class="">JP Poll</a><a href="playoffs.html" class="">Playoffs</a><a href="recruiting.html" class="">Recruiting</a><a href="notebook.html" class="">Notebook</a><a href="porch.html" class="">The Porch</a><a href="shop.html" class="">Shop</a></div>
 <button class="menu-btn" id="menuBtn" aria-expanded="false">MENU</button>
 <a class="btn gold nav-cta" href="index.html#citizen">Become a Citizen</a>
-</div><div class="drawer" id="drawer"><a href="show.html">The Show</a><a href="scores.html">Scores</a><a href="pickem.html">Pick'Em</a><a href="poll.html">JP Poll</a><a href="playoffs.html">Playoffs</a><a href="recruiting.html">Recruiting</a><a href="notebook.html">Notebook</a><a href="porch.html">The Porch</a><a href="tailgate.html">Tailgate</a><a href="shop.html">Shop</a></div></nav>
+</div><div class="drawer" id="drawer"><a href="show.html">The Show</a><a href="scores.html">Scores</a><a href="pickem.html">Pick'Em</a><a href="poll.html">JP Poll</a><a href="playoffs.html">Playoffs</a><a href="recruiting.html">Recruiting</a><a href="notebook.html">Notebook</a><a href="porch.html">The Porch</a><a href="shop.html">Shop</a></div></nav>
 <script>document.getElementById("menuBtn").addEventListener("click",function(){var d=document.getElementById("drawer");var o=d.classList.toggle("open");this.setAttribute("aria-expanded",o)});</script>
 
-<div class="page-head"><div class="wrap"><div class="crumb">THE PATE STATE / THE PATE REPORT</div>
-<h1>The Pate Report</h1><p class="lede">The annual preseason bible — a Top 40 magazine that goes a level beyond anything on the newsstand. Print and digital, every July.</p></div></div>
-<section><div class="wrap"><div class="mag">
-<div><img class="cover-img" src="pate-report-cover.svg" alt="The Pate Report 2026 preseason magazine cover featuring Jeremiah Smith, Arch Manning, and CJ Carr"></div>
-<div><p class="eyebrow">Inside the 2026 Edition</p>
-<h2 class="display" style="font-size:36px">Smith. Manning. Carr.<br>The Faces of the Fall.</h2>
-<p class="lede" style="margin-bottom:16px">The cover tells you the story: the best receiver of his generation in Columbus, the most famous name in the sport in Austin, and the quarterback in South Bend everyone's picking for the Heisman. Inside, all 40 contenders get the X-ray.</p>
-<div class="toc-row"><span>The Top 40, ranked and X-rayed — roster, schedule, ceiling, floor</span><span class="pg">P. 12</span></div>
-<div class="toc-row"><span>The JP Poll preseason board — all 136 teams ranked</span><span class="pg">P. 96</span></div>
-<div class="toc-row"><span>The 10 games that will decide the playoff</span><span class="pg">P. 118</span></div>
-<div class="toc-row"><span>Portal winners &amp; losers — the honest audit</span><span class="pg">P. 134</span></div>
-<div class="toc-row"><span>Coordinator changes nobody's pricing in</span><span class="pg">P. 152</span></div>
-<div class="toc-row"><span>Every conference, bottom to top, with win projections</span><span class="pg">P. 168</span></div>
-<div style="margin-top:22px;display:flex;gap:12px;flex-wrap:wrap">
-<a class="btn solid" href="shop.html">Pre-Order Print — $24.99</a>
-<a class="btn" href="#">Digital Edition — $14.99</a></div>
-<p style="margin-top:16px;font-size:14px;color:var(--ink-dim)">Print ships every July. The digital edition is free for every citizen — join the Playbook and it lands in your inbox.</p>
-</div></div></div></section>
-<section><div class="wrap">
-<p class="eyebrow">Inside the Pages</p>
-<h2 class="display" style="font-size:34px">Sample Spreads</h2>
-<div class="guide-grid" style="grid-template-columns:repeat(3,1fr)">
-<a class="guide on-light-guide" href="#"><div class="ph"></div><div class="body"><h4>No. 1: Georgia, X-Rayed</h4><div class="meta">8-PAGE TEAM CAPSULE</div></div></a>
-<a class="guide on-light-guide" href="#"><div class="ph"></div><div class="body"><h4>The 10 Games That Decide It</h4><div class="meta">FOLD-OUT SCHEDULE MAP</div></div></a>
-<a class="guide on-light-guide" href="#"><div class="ph"></div><div class="body"><h4>All 136, One Page Each</h4><div class="meta">THE JP POLL PRESEASON BOARD</div></div></a>
+<div class="page-head"><div class="wrap"><div class="crumb">THE PATE STATE / PORCH PICK'EM</div>
+<h1>Porch Pick'Em</h1><p class="lede">Ten games a week against Josh and 48,000 citizens. Free forever. The prizes are real.</p></div></div>
+<section><div class="wrap"><div class="duo">
+<div>
+<p class="eyebrow">How It Works</p>
+<h2 class="display" style="font-size:34px">Pick. Streak. Climb.</h2>
+<p class="lede">Every Thursday the board drops — ten games, straight up or against the spread. Points for wins, bonuses for streaks and upsets, small-group leagues for your crew, and one big season leaderboard for the whole State.</p>
+<div style="margin-top:22px">
+<div class="lb-row"><span>1. SicEmSaturdays</span><span class="streak">1,842 PTS · 🔥 W14</span></div>
+<div class="lb-row"><span>2. PorchSwingProphet</span><span class="streak">1,791 PTS · 🔥 W11</span></div>
+<div class="lb-row"><span>3. Josh Pate</span><span class="streak">1,764 PTS · 🔥 W9</span></div>
+<div class="lb-row"><span>4. GroveGoblin</span><span class="streak">1,733 PTS</span></div>
+<div class="lb-row"><span>5. ChalkEater88</span><span class="streak">1,700 PTS</span></div>
+<div class="lb-row"><span>6. HailStateHattie</span><span class="streak">1,688 PTS</span></div>
+<div class="lb-row"><span>7. DesertSwarm</span><span class="streak">1,671 PTS</span></div>
+<div class="lb-row"><span>8. BuckeyeBev</span><span class="streak">1,660 PTS</span></div>
+<div class="lb-row"><span>9. UpsetUncle</span><span class="streak">1,655 PTS</span></div>
+<div class="lb-row"><span>10. FourthAndForever</span><span class="streak">1,649 PTS</span></div>
+<div class="lb-row" style="background:var(--field-lt);border-radius:4px;padding-left:10px;padding-right:10px"><span><b>212. You</b></span><span class="streak"><b>1,214 PTS</b></span></div>
 </div>
-</div></section>
-<section class="on-field tight"><div class="wrap">
-<p class="eyebrow">Beyond the Newsstand</p>
-<h2 class="display" style="font-size:32px">The Next Level Past Phil Steele</h2>
-<p class="lede">Same obsessive depth, none of the eye-chart. Every number explained, every projection accountable — graded publicly against results in December, because the porch keeps receipts.</p>
+<div style="margin-top:12px"><a href="#" style="font-family:var(--mono);font-size:12px;color:var(--lamp-deep);letter-spacing:.06em">SEE THE FULL RANKINGS — ALL 48,112 CITIZENS →</a></div>
+<div style="margin-top:20px;display:flex;gap:14px;align-items:center;flex-wrap:wrap"><a class="btn solid" href="#">Make This Week's Picks</a>
+<span style="font-family:var(--mono);font-size:12px;color:var(--ink-dim)">YOUR SEASON: <b style="color:var(--field)">44–28 · 61.1% CORRECT</b></span></div>
+</div>
+<div>
+<p class="eyebrow">The Prize Ladder</p>
+<h2 class="display" style="font-size:34px">Win the Porch</h2>
+<div style="margin-top:10px">
+<div class="prize-row"><div class="tier">Weekly</div><div class="what"><b>Merch + a shoutout on the show</b><p>Best score of the week gets State Store gear and your handle read on Monday's episode.</p></div></div>
+<div class="prize-row"><div class="tier">Monthly</div><div class="what"><b>Signed Pate Report + Poll spotlight</b><p>Top citizen each month gets a signed annual and their ballot featured on Poll Day.</p></div></div>
+<div class="prize-row"><div class="tier">Top 10</div><div class="what"><b>Game tickets</b><p>Finish the season top 10 and pick a game — we cover the tickets.</p></div></div>
+<div class="prize-row"><div class="tier">Champion</div><div class="what"><b>Watch a game with Josh</b><p>The season champ gets a seat next to Josh for a Saturday — plus their name on the Wall of Champions, forever.</p></div></div>
+</div>
+<p style="margin-top:16px;font-family:var(--mono);font-size:11px;color:var(--ink-dim)">FREE TO PLAY · NO PURCHASE NECESSARY · PARTNER/SPONSOR SLOT LIVES HERE</p>
+<p style="margin-top:10px;font-size:14px">Want a second trophy chase? <a href="playoffs.html" style="color:var(--lamp-deep);font-weight:600">The Citizens' Bracket Challenge →</a></p>
+</div>
+</div></div></section>
+<section class="on-soft"><div class="wrap">
+<span class="note">Photo placeholders shown as initials — real headshots get licensed for production. Records tracked from each personality's public weekly picks.</span>
+<p class="eyebrow">The Other Leaderboard</p>
+<h2 class="display" style="font-size:38px">Josh vs. The Pros</h2>
+<p class="lede">Up top it's Josh against the citizens. Down here it's Josh against the pros — twenty of the biggest names on your TV, GameDay to FOX to Barstool to CBS — season records against the spread, tracked all year, receipts kept.</p>
+<div class="duo" style="margin-top:26px">
+<div class="wire" style="padding:22px">
+<div class="pundit josh"><div class="prk">1</div><div class="avatar">JP</div><div class="who"><b>Josh Pate</b><span class="aff">THE PATE STATE</span></div><div class="rec">71–43<span class="pct">62.3%</span></div></div>
+<div class="pundit"><div class="prk">2</div><div class="avatar">CF</div><div class="who"><b>Chris "The Bear" Fallica</b><span class="aff">FOX · BIG NOON</span></div><div class="rec">69–45<span class="pct">60.5%</span></div></div>
+<div class="pundit"><div class="prk">3</div><div class="avatar">JK</div><div class="who"><b>Joel Klatt</b><span class="aff">FOX</span></div><div class="rec">66–48<span class="pct">57.9%</span></div></div>
+<div class="pundit"><div class="prk">4</div><div class="avatar">KH</div><div class="who"><b>Kirk Herbstreit</b><span class="aff">ESPN · GAMEDAY</span></div><div class="rec">65–49<span class="pct">57.0%</span></div></div>
+<div class="pundit"><div class="prk">5</div><div class="avatar">NS</div><div class="who"><b>Nick Saban</b><span class="aff">ESPN · GAMEDAY</span></div><div class="rec">64–50<span class="pct">56.1%</span></div></div>
+<div class="pundit"><div class="prk">6</div><div class="avatar">BQ</div><div class="who"><b>Brady Quinn</b><span class="aff">FOX · BIG NOON</span></div><div class="rec">62–52<span class="pct">54.4%</span></div></div>
+<div class="pundit"><div class="prk">7</div><div class="avatar">DH</div><div class="who"><b>Desmond Howard</b><span class="aff">ESPN · GAMEDAY</span></div><div class="rec">61–53<span class="pct">53.5%</span></div></div>
+</div>
+<div class="wire" style="padding:22px">
+<div class="pundit"><div class="prk">8</div><div class="avatar">RD</div><div class="who"><b>Rece Davis</b><span class="aff">ESPN · GAMEDAY</span></div><div class="rec">60–54<span class="pct">52.6%</span></div></div>
+<div class="pundit"><div class="prk">9</div><div class="avatar">UM</div><div class="who"><b>Urban Meyer</b><span class="aff">FOX · BIG NOON</span></div><div class="rec">59–55<span class="pct">51.8%</span></div></div>
+<div class="pundit"><div class="prk">10</div><div class="avatar">TT</div><div class="who"><b>Tim Tebow</b><span class="aff">ESPN · GAMEDAY</span></div><div class="rec">58–56<span class="pct">50.9%</span></div></div>
+<div class="pundit"><div class="prk">11</div><div class="avatar">ML</div><div class="who"><b>Matt Leinart</b><span class="aff">FOX · BIG NOON</span></div><div class="rec">57–57<span class="pct">50.0%</span></div></div>
+<div class="pundit"><div class="prk">12</div><div class="avatar">PM</div><div class="who"><b>Pat McAfee</b><span class="aff">ESPN · GAMEDAY</span></div><div class="rec">56–58<span class="pct">49.1%</span></div></div>
+<div class="pundit"><div class="prk">13</div><div class="avatar">GM</div><div class="who"><b>Greg McElroy</b><span class="aff">ESPN · SEC NETWORK</span></div><div class="rec">56–58<span class="pct">49.1%</span></div></div>
+<div class="pundit"><div class="prk">14</div><div class="avatar">DK</div><div class="who"><b>Dan "Big Cat" Katz</b><span class="aff">BARSTOOL</span></div><div class="rec">55–59<span class="pct">48.2%</span></div></div>
+<div class="pundit"><div class="prk">15</div><div class="avatar">DKn</div><div class="who"><b>Danny Kanell</b><span class="aff">CBS SPORTS</span></div><div class="rec">55–59<span class="pct">48.2%</span></div></div>
+<div class="pundit"><div class="prk">16</div><div class="avatar">MI</div><div class="who"><b>Mark Ingram II</b><span class="aff">FOX · BIG NOON</span></div><div class="rec">54–60<span class="pct">47.4%</span></div></div>
+<div class="pundit"><div class="prk">17</div><div class="avatar">PF</div><div class="who"><b>Paul Finebaum</b><span class="aff">ESPN · SEC NETWORK</span></div><div class="rec">53–61<span class="pct">46.5%</span></div></div>
+<div class="pundit"><div class="prk">18</div><div class="avatar">TL</div><div class="who"><b>Taylor Lewan</b><span class="aff">BUSSIN' WITH THE BOYS</span></div><div class="rec">52–62<span class="pct">45.6%</span></div></div>
+<div class="pundit"><div class="prk">19</div><div class="avatar">WC</div><div class="who"><b>Will Compton</b><span class="aff">BUSSIN' WITH THE BOYS</span></div><div class="rec">51–63<span class="pct">44.7%</span></div></div>
+<div class="pundit"><div class="prk">20</div><div class="avatar">DP</div><div class="who"><b>Dave Portnoy</b><span class="aff">BARSTOOL</span></div><div class="rec">50–64<span class="pct">43.9%</span></div></div>
+</div>
+</div>
+<p style="margin-top:16px;font-family:var(--mono);font-size:11px;color:var(--ink-dim)">SEASON ATS · UPDATED EVERY SUNDAY NIGHT · SHARE GRAPHIC AUTO-GENERATES AFTER WEEK 6</p>
 </div></section>
 
 <div class="cta-band"><div class="wrap row">
@@ -473,6 +547,13 @@ footer{background:var(--navy);color:var(--chalk-dim);padding:44px 0 60px;font-fa
 <footer><div class="wrap foot-row">
 <div><div class="wordmark" style="font-size:20px;color:var(--chalk)">THE PATE <em style="color:var(--lamp)">STATE</em></div>
 <p style="margin-top:8px">The front porch of college football.<br>&copy; The Pate State. All picks logged. All poll results archived.</p></div>
+<div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:22px">
+<a href="https://youtube.com/@JoshPateCFB" style="display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line-d);border-radius:20px;padding:8px 16px;color:var(--chalk);font-family:var(--mono);font-size:11px;letter-spacing:.06em">▶ YOUTUBE</a>
+<a href="https://x.com/JoshPateCFB" style="display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line-d);border-radius:20px;padding:8px 16px;color:var(--chalk);font-family:var(--mono);font-size:11px;letter-spacing:.06em">𝕏 @JOSHPATECFB</a>
+<a href="https://instagram.com/joshpatecfb" style="display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line-d);border-radius:20px;padding:8px 16px;color:var(--chalk);font-family:var(--mono);font-size:11px;letter-spacing:.06em">◉ INSTAGRAM</a>
+<a href="#" style="display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line-d);border-radius:20px;padding:8px 16px;color:var(--chalk);font-family:var(--mono);font-size:11px;letter-spacing:.06em">♪ TIKTOK</a>
+<a href="#" style="display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line-d);border-radius:20px;padding:8px 16px;color:var(--chalk);font-family:var(--mono);font-size:11px;letter-spacing:.06em">🎙 THE LOCKER ROOM: CFB</a>
+</div>
 <div class="foot-links"><a href="show.html">The Show</a><a href="scores.html">Scores</a><a href="poll.html">JP Poll</a><a href="playoffs.html">Playoffs</a><a href="recruiting.html">Recruiting</a><a href="notebook.html">Notebook</a><a href="tailgate.html">Tailgate</a><a href="report.html">The Pate Report</a><a href="porch.html">The Porch</a><a href="shop.html">Shop</a><a href="ledger.html">Ledger</a><a href="teams.html">Teams</a><a href="about.html">About</a></div>
 </div></footer>
 

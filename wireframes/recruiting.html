@@ -1,5 +1,5 @@
 <!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0"><title>The State Store — The Pate State</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Recruiting — The Next Wave — The Pate State</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@500;700;800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -235,6 +235,42 @@ td.rk{color:var(--lamp-deep);font-weight:600;width:44px}td.rating{text-align:rig
 .cit-nudge a{color:var(--lamp-deep);text-decoration:underline}
 .ai-badge{display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--field);border:1px solid var(--field);padding:2px 7px;border-radius:3px;margin-left:6px}
 .ai-badge::before{content:"⚡"}
+/* --- article page --- */
+.story-grid{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:44px;align-items:start}
+@media(max-width:960px){.story-grid{grid-template-columns:1fr}}
+.story h1{font-family:var(--display);font-weight:800;font-size:clamp(34px,5vw,54px);line-height:.96;text-transform:uppercase;margin:14px 0 12px}
+.story .dek{font-size:19px;color:var(--ink-dim);line-height:1.5;max-width:62ch}
+.byline{display:flex;align-items:center;gap:12px;margin:18px 0 6px;padding:14px 0;border-top:1px solid var(--line-l);border-bottom:1px solid var(--line-l)}
+.byline .avatar{width:40px;height:40px;font-size:14px}
+.byline .who b{font-size:14px;display:block}
+.byline .who span{font-family:var(--mono);font-size:11px;color:var(--ink-dim)}
+.byline .share{margin-left:auto;display:flex;gap:8px}
+.byline .share a{width:34px;height:34px;border:1px solid var(--line-l);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--ink)}
+.byline .share a:hover{border-color:var(--lamp-deep);color:var(--lamp-deep)}
+.story-media{aspect-ratio:16/9;border-radius:6px;margin:22px 0;background:linear-gradient(150deg,#BA0C2F 0%,#7A0820 55%,#000 100%);border:1px solid var(--line-l);display:flex;align-items:center;justify-content:center;position:relative}
+.story-media .cap{position:absolute;bottom:10px;left:14px;font-family:var(--mono);font-size:10px;letter-spacing:.08em;color:rgba(255,255,255,.8)}
+.story-body p{font-size:18px;line-height:1.8;margin:0 0 24px;max-width:66ch}
+.story-body h3{font-family:var(--display);font-weight:800;font-size:27px;text-transform:uppercase;margin:34px 0 14px}
+.story-body a{color:var(--lamp-deep);text-decoration:underline;text-underline-offset:3px}
+.pullquote{border-left:4px solid var(--lamp);padding:6px 0 6px 22px;margin:30px 0;font-family:var(--display);font-weight:700;font-size:27px;line-height:1.15;text-transform:uppercase;color:var(--navy);max-width:56ch}
+.pullquote .who{display:block;font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--ink-dim);margin-top:10px}
+.databox{border:1px solid var(--line-l);border-radius:6px;background:var(--paper-2);padding:20px;margin:30px 0;max-width:560px}
+.databox .eyebrow{margin-bottom:10px}
+.videobox{border:1px solid var(--line-d);border-radius:6px;background:var(--navy);color:var(--chalk);padding:18px;display:flex;gap:16px;align-items:center;margin:30px 0;max-width:640px}
+.videobox .vthumb{flex:0 0 150px;aspect-ratio:16/9;border-radius:4px;background:linear-gradient(150deg,var(--navy-2),#0B1523);display:flex;align-items:center;justify-content:center}
+.videobox h4{font-family:var(--display);font-weight:700;font-size:19px;text-transform:uppercase;line-height:1}
+.videobox .meta{font-family:var(--mono);font-size:10px;color:var(--chalk-dim);margin-top:6px;letter-spacing:.1em}
+.aside-card{border:1px solid var(--line-l);border-radius:6px;background:#fff;padding:20px;margin-bottom:18px}
+.aside-card h4{font-family:var(--display);font-weight:800;font-size:20px;text-transform:uppercase;margin-bottom:12px}
+.aside-sticky{position:sticky;top:84px}
+.rel-row{display:flex;gap:12px;align-items:flex-start;padding:11px 0;border-bottom:1px solid var(--line-l)}
+.rel-row:last-child{border-bottom:none}
+.rel-row .n{font-family:var(--display);font-weight:800;font-size:20px;color:#C9C3B4}
+.rel-row b{font-size:14px;line-height:1.35;font-weight:600}
+.rel-row .meta{font-family:var(--mono);font-size:10px;color:var(--ink-dim);margin-top:3px}
+.tagrow{display:flex;gap:8px;flex-wrap:wrap;margin:26px 0}
+.tagrow a{font-family:var(--mono);font-size:11px;letter-spacing:.08em;border:1px solid var(--line-l);border-radius:20px;padding:6px 13px;color:var(--ink-dim)}
+.tagrow a:hover{border-color:var(--lamp-deep);color:var(--lamp-deep)}
 .newsitem h4{font-family:var(--display);font-weight:800;font-size:clamp(21px,2.6vw,28px);line-height:.98;text-transform:uppercase}
 .newsitem h4 a:hover{color:var(--lamp-deep)}
 .newsitem .by{font-family:var(--mono);font-size:11px;color:var(--ink-dim);margin-top:9px}
@@ -427,38 +463,82 @@ footer{background:var(--navy);color:var(--chalk-dim);padding:44px 0 60px;font-fa
 </div></div>
 <nav><div class="nav-row">
 <a class="wordmark" href="index.html">THE PATE <em>STATE</em></a>
-<div class="nav-links"><a href="show.html" class="">The Show</a><a href="scores.html" class="">Scores</a><a href="pickem.html" class="">Pick'Em</a><a href="poll.html" class="">JP Poll</a><a href="playoffs.html" class="">Playoffs</a><a href="recruiting.html" class="">Recruiting</a><a href="notebook.html" class="">Notebook</a><a href="porch.html" class="">The Porch</a><a href="tailgate.html" class="">Tailgate</a><a href="shop.html" class="active">Shop</a></div>
+<div class="nav-links"><a href="show.html" class="">The Show</a><a href="scores.html" class="">Scores</a><a href="pickem.html" class="">Pick'Em</a><a href="poll.html" class="">JP Poll</a><a href="playoffs.html" class="">Playoffs</a><a href="recruiting.html" class="active">Recruiting</a><a href="notebook.html" class="">Notebook</a><a href="porch.html" class="">The Porch</a><a href="shop.html" class="">Shop</a></div>
 <button class="menu-btn" id="menuBtn" aria-expanded="false">MENU</button>
 <a class="btn gold nav-cta" href="index.html#citizen">Become a Citizen</a>
-</div><div class="drawer" id="drawer"><a href="show.html">The Show</a><a href="scores.html">Scores</a><a href="pickem.html">Pick'Em</a><a href="poll.html">JP Poll</a><a href="playoffs.html">Playoffs</a><a href="recruiting.html">Recruiting</a><a href="notebook.html">Notebook</a><a href="porch.html">The Porch</a><a href="tailgate.html">Tailgate</a><a href="shop.html">Shop</a></div></nav>
+</div><div class="drawer" id="drawer"><a href="show.html">The Show</a><a href="scores.html">Scores</a><a href="pickem.html">Pick'Em</a><a href="poll.html">JP Poll</a><a href="playoffs.html">Playoffs</a><a href="recruiting.html">Recruiting</a><a href="notebook.html">Notebook</a><a href="porch.html">The Porch</a><a href="shop.html">Shop</a></div></nav>
 <script>document.getElementById("menuBtn").addEventListener("click",function(){var d=document.getElementById("drawer");var o=d.classList.toggle("open");this.setAttribute("aria-expanded",o)});</script>
 
-<div class="page-head"><div class="wrap"><div class="crumb">THE PATE STATE / THE STATE STORE</div>
-<h1>The State Store</h1><p class="lede">Wear the flag. Fly the colors. Every order funds more porch.</p></div></div>
+<div class="page-head"><div class="wrap"><div class="crumb">THE PATE STATE / RECRUITING</div>
+<h1>The Next Wave</h1><p class="lede">Recruiting and the portal without the message-board panic. The Pate Index below is real: it averages the 247Sports Composite and the On3/Rivals Industry rankings, pulled live.</p></div></div>
 <section><div class="wrap">
-<p class="eyebrow">The Flagship</p>
-<div class="duo" style="align-items:center">
-<div style="background:var(--paper-2);border:1px solid var(--line-l);border-radius:6px;padding:20px"><svg class="tee-svg" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg"><path d="M96,38 L120,26 C128,40 172,40 180,26 L204,38 L246,64 L226,104 L204,92 L204,262 C204,270 198,274 190,274 L110,274 C102,274 96,270 96,262 L96,92 L74,104 L54,64 Z" fill="#1E3B2E" stroke="#16302 4" stroke-width="0"/><path d="M96,38 L120,26 C128,40 172,40 180,26 L204,38 L246,64 L226,104 L204,92 L204,262 C204,270 198,274 190,274 L110,274 C102,274 96,270 96,262 L96,92 L74,104 L54,64 Z" fill="#1E3B2E"/><path d="M120,26 C128,40 172,40 180,26 L204,38 C188,54 112,54 96,38 Z" fill="rgba(0,0,0,.25)"/><text x="150" y="128" text-anchor="middle" font-family="Georgia,serif" font-style="italic" font-size="21" fill="#E8A33D">God,</text><text x="150" y="162" text-anchor="middle" font-family="Arial Black,sans-serif" font-weight="900" font-size="24" fill="#F3EFE6" letter-spacing="1">FAMILY,</text><text x="150" y="200" text-anchor="middle" font-family="Arial Black,sans-serif" font-weight="900" font-size="27" fill="#E8A33D" letter-spacing="2">FOOTBALL</text><line x1="112" y1="214" x2="188" y2="214" stroke="#F3EFE6" stroke-width="2"/><text x="150" y="232" text-anchor="middle" font-family="monospace" font-size="9" fill="#B9B4A6" letter-spacing="3">EST. THE PATE STATE</text></svg></div>
-<div><h2 class="display" style="font-size:44px">The Creed Tee</h2>
-<p class="lede">Three words, in order. Tri-blend and ridiculously soft — field green with porch-lamp gold. The shirt of the State.</p>
-<div style="margin-top:16px;display:flex;gap:12px;flex-wrap:wrap"><a class="btn solid" href="#">Add to Cart — $28</a><a class="btn" href="#">See All Colors</a></div></div>
+<span class="note">LIVE DATA — 2027 class · 247Sports Composite &amp; On3/Rivals Industry rankings, both updated Aug 6, 2026. On the production site this refreshes automatically every morning.</span>
+<p class="eyebrow">The Pate Recruiting Index — Class of 2027</p>
+<h2 class="display" style="font-size:38px">Two Services. One Honest Number.</h2>
+<p class="lede">Every outlet ranks classes a little differently. We average the two biggest — 247Sports' Composite and On3/Rivals' Industry ranking — into one index, and show you both, so nobody can accuse the number of wearing team colors.</p>
+<div style="max-width:860px;margin-top:20px"><div class="rankcard"><div class="rk-num">01</div><div class="logo-box">A&M</div><div class="rk-main"><b>Texas A&amp;M</b><span class="rk-rec">2027 CLASS</span><div class="pills"><span class="pill">26 COMMITS</span><span class="pill">6 FIVE★</span><span class="pill">19 BLUE-CHIP</span></div></div><div class="rk-score"><span class="val">315.5</span><span class="lbl">247 PTS</span></div></div><div class="rankcard"><div class="rk-num">02</div><div class="logo-box">ND</div><div class="rk-main"><b>Notre Dame</b><span class="rk-rec">2027 CLASS</span><div class="pills"><span class="pill">23 COMMITS</span><span class="pill">4 FIVE★</span></div></div><div class="rk-score"><span class="val">302.5</span><span class="lbl">247 PTS</span></div></div><div class="rankcard"><div class="rk-num">03</div><div class="logo-box">MIA</div><div class="rk-main"><b>Miami</b><span class="rk-rec">2027 CLASS</span><div class="pills"><span class="pill">21 COMMITS</span><span class="pill">5 FIVE★</span></div></div><div class="rk-score"><span class="val">298.0</span><span class="lbl">247 PTS</span></div></div><div class="rankcard"><div class="rk-num">04</div><div class="logo-box">ORE</div><div class="rk-main"><b>Oregon</b><span class="rk-rec">2027 CLASS</span><div class="pills"><span class="pill">24 COMMITS</span><span class="pill">2 FIVE★</span></div></div><div class="rk-score"><span class="val">295.6</span><span class="lbl">247 PTS</span></div></div><div class="rankcard"><div class="rk-num">05</div><div class="logo-box">OSU</div><div class="rk-main"><b>Ohio State</b><span class="rk-rec">2027 CLASS</span><div class="pills"><span class="pill">19 COMMITS</span><span class="pill">3 FIVE★</span></div></div><div class="rk-score"><span class="val">282.4</span><span class="lbl">247 PTS</span></div></div></div>
+<p class="eyebrow" style="margin-top:30px">The Full Index</p>
+<table style="margin-top:20px">
+<thead><tr><th>PATE IDX</th><th>TEAM</th><th>247 COMP</th><th>ON3/RIVALS</th><th>COMMITS</th><th>5★</th><th style="text-align:right">247 PTS / ON3 SCORE</th></tr></thead><tbody>
+<tr><td class="rk">01</td><td><b>Texas A&amp;M</b></td><td>1</td><td>1</td><td>26</td><td>6</td><td class="rating">315.48 / 94.17</td></tr>
+<tr><td class="rk">02</td><td><b>Notre Dame</b></td><td>2</td><td>2</td><td>23</td><td>4</td><td class="rating">302.50 / 93.17</td></tr>
+<tr><td class="rk">03</td><td><b>Miami</b></td><td>3</td><td>3</td><td>21</td><td>5</td><td class="rating">298.03 / 93.06</td></tr>
+<tr><td class="rk">04</td><td><b>Oregon</b></td><td>4</td><td>4</td><td>24</td><td>2</td><td class="rating">295.59 / 92.51</td></tr>
+<tr><td class="rk">05</td><td><b>Ohio State</b></td><td>7</td><td>5</td><td>19</td><td>3</td><td class="rating">282.41 / 92.19</td></tr>
+<tr><td class="rk">06</td><td><b>Texas</b></td><td>6</td><td>6</td><td>22</td><td>3</td><td class="rating">288.01 / 92.04</td></tr>
+<tr><td class="rk">07</td><td><b>Oklahoma</b></td><td>5</td><td>7</td><td>27</td><td>3</td><td class="rating">289.68 / 92.03</td></tr>
+<tr><td class="rk">08</td><td><b>Florida</b></td><td>8</td><td>8</td><td>25</td><td>1</td><td class="rating">280.97 / 91.72</td></tr>
+<tr><td class="rk">09</td><td><b>Texas Tech</b></td><td>9</td><td>9</td><td>19</td><td>2</td><td class="rating">279.90 / 91.41</td></tr>
+<tr><td class="rk">10</td><td><b>Michigan</b></td><td>11</td><td>11</td><td>21</td><td>0</td><td class="rating">266.16 / 90.88</td></tr>
+<tr><td class="rk">11</td><td><b>Auburn</b></td><td>10</td><td>12</td><td>25</td><td>0</td><td class="rating">270.07 / 90.86</td></tr>
+<tr><td class="rk">12</td><td><b>LSU</b></td><td>15</td><td>10</td><td>16</td><td>1</td><td class="rating">257.92 / 90.91</td></tr>
+<tr><td class="rk">13</td><td><b>Georgia</b></td><td>12</td><td>14</td><td>20</td><td>2</td><td class="rating">262.42 / 90.68</td></tr>
+<tr><td class="rk">14</td><td><b>Ole Miss</b></td><td>14</td><td>15</td><td>22</td><td>0</td><td class="rating">258.88 / 90.55</td></tr>
+<tr><td class="rk">15</td><td><b>Clemson</b></td><td>13</td><td>16</td><td>25</td><td>0</td><td class="rating">258.89 / 90.54</td></tr>
+</tbody></table>
+<p style="margin-top:12px;font-family:var(--mono);font-size:11px;color:var(--ink-dim)">Pate Index = average of the two service ranks; ties broken by scores. Sources: 247Sports Composite &amp; On3/Rivals Industry team rankings.</p>
+
+<div style="margin-top:44px">
+<p class="eyebrow">The Pate Player Index — Class of 2027</p>
+<h2 class="display" style="font-size:34px">The Top Players in America</h2>
+<p class="lede">The nation's best, per 247Sports' Top247 — pulled live today. On production, On3/Rivals industry player ranks merge in nightly to complete the index.</p>
+<table style="margin-top:18px">
+<thead><tr><th>RK</th><th>PLAYER</th><th>POS</th><th>HT/WT</th><th>HOMETOWN</th><th>COMMITTED</th></tr></thead><tbody>
+<tr><td class="rk">01</td><td><b>DJ Jacobs</b></td><td>EDGE</td><td>6-5 / 240</td><td>Roswell, GA</td><td>Ohio State</td></tr>
+<tr><td class="rk">02</td><td><b>Maxwell Hiller</b></td><td>IOL</td><td>6-5 / 300</td><td>Coatesville, PA</td><td>Florida</td></tr>
+<tr><td class="rk">03</td><td><b>Mark Matthews</b></td><td>OT</td><td>6-5.5 / 300</td><td>Ft. Lauderdale, FL</td><td>Texas A&amp;M</td></tr>
+<tr><td class="rk">04</td><td><b>Jalen Brewster</b></td><td>DL</td><td>6-3 / 302</td><td>Cedar Hill, TX</td><td>Texas Tech</td></tr>
+<tr><td class="rk">05</td><td><b>KJ Green</b></td><td>EDGE</td><td>6-4 / 230</td><td>Stone Mountain, GA</td><td>LSU</td></tr>
+<tr><td class="rk">06</td><td><b>Donte Wright</b></td><td>CB</td><td>6-1 / 170</td><td>Long Beach, CA</td><td>Miami</td></tr>
+<tr><td class="rk">07</td><td><b>Trae Taylor</b></td><td>QB</td><td>6-3 / 203</td><td>Omaha, NE</td><td>Nebraska</td></tr>
+<tr><td class="rk">08</td><td><b>Israel Abrams</b></td><td>QB</td><td>6-4 / 187</td><td>Arlington Hts., IL</td><td>Miami</td></tr>
+<tr><td class="rk">09</td><td><b>Elijah Haven</b></td><td>QB</td><td>6-5 / 235</td><td>Baton Rouge, LA</td><td>Alabama</td></tr>
+<tr><td class="rk">10</td><td><b>Kemon Spell</b></td><td>RB</td><td>5-9 / 205</td><td>McKeesport, PA</td><td>Georgia</td></tr>
+<tr><td class="rk">11</td><td><b>David Gabriel Georges</b></td><td>RB</td><td>6-0 / 210</td><td>Chattanooga, TN</td><td>Tennessee</td></tr>
+<tr><td class="rk">12</td><td><b>Monshun Sales</b></td><td>WR</td><td>6-5 / 195</td><td>Indianapolis, IN</td><td>Indiana</td></tr>
+</tbody></table>
+<div style="margin-top:14px;font-family:var(--mono);font-size:12px;color:var(--ink-dim)">Showing 1–12 · <a href="#" style="color:var(--lamp-deep)">Top 100 →</a> · <a href="#" style="color:var(--lamp-deep)">By Position</a> · <a href="#" style="color:var(--lamp-deep)">By State</a></div>
 </div>
-<p class="eyebrow" style="margin-top:44px">Gear</p>
-<div class="shop-items shop4" style="margin-top:12px">
-<div class="item"><div style="flex:1"></div><b>PORCH FLAG — $34</b></div>
-<div class="item"><div style="flex:1"></div><b>GAMEDAY HAT — $32</b></div>
-<div class="item"><div style="flex:1"></div><b>CITIZEN HOODIE — $54</b></div>
-<div class="item"><div style="flex:1"></div><b>TAILGATE APRON — $38</b></div>
-</div>
-<p class="eyebrow" style="margin-top:28px">Paper &amp; Porch</p>
-<div class="shop-items shop4" style="margin-top:12px">
-<a class="item" href="report.html" style="text-decoration:none"><div style="flex:1;display:flex;align-items:center;justify-content:center"><img src="pate-report-cover.svg" alt="The Pate Report cover" style="max-height:100%;max-width:70%"></div><b>THE PATE REPORT — $24.99 · DIGITAL FREE FOR CITIZENS</b></a>
-<div class="item"><div style="flex:1"></div><b>STADIUM PASSPORT — $19</b></div>
-<div class="item"><div style="flex:1"></div><b>POLL DAY MUG — $22</b></div>
-<div class="item"><div style="flex:1"></div><b>WALL OF CHAMPIONS PRINT — $29</b></div>
-</div>
-<p style="margin-top:24px;font-size:15px;color:var(--ink-dim)">Citizens get free shipping, always. Pick'em champions shop free for a year.</p>
 </div></section>
+<section class="on-field"><div class="wrap"><div class="duo">
+<div><p class="eyebrow">The Wire — What Just Happened</p>
+<h2 class="display" style="font-size:34px">Recruiting News</h2>
+<div style="margin-top:18px">
+<div class="news-item" style="border-color:var(--lamp)"><b style="color:var(--chalk)">The last 2027 five-stars are off the board</b>
+<p>The final two uncommitted five-stars made their calls: a five-star WR chose Indiana and a five-star RB stayed home with Tennessee — pivotal in-state wins that moved both classes up the rankings.</p>
+<div class="src">VIA ESPN RECRUITING · THIS WEEK</div></div>
+<div class="news-item" style="border-color:var(--lamp)"><b style="color:var(--chalk)">A&amp;M is building a monster</b>
+<p>Texas A&amp;M sits No. 1 on both major services with 26 commits — six five-stars and 19 blue-chips — putting Mike Elko in position for his second top-five class in three cycles.</p>
+<div class="src">VIA 247SPORTS &amp; ON3 · UPDATED TODAY</div></div>
+<div class="news-item" style="border-color:var(--lamp)"><b style="color:var(--chalk)">Blue bloods lurking, not leading</b>
+<p>Georgia (13th on the Pate Index), Alabama (outside the top 30 on both services), and Texas (6th) are unusually quiet this cycle — which historically means a December surge is coming.</p>
+<div class="src">THE PATE READ · AUG 6</div></div>
+</div></div>
+<div class="panel"><p class="eyebrow">The Pate Read</p><h3>What It Means, Not Just Who Signed</h3>
+<p>Every class graded not by stars alone but by roster fit: what the team needed, what they got, and the one signing nobody's talking about that matters most. Weekly portal tracker in season, with Josh's "keep an eye on this" flags.</p>
+<p>On the live site this page auto-refreshes each morning: rankings re-scraped, the index recomputed, and the wire updated — so the Pate Index is always current without anyone touching it.</p>
+<a class="btn" href="show.html" style="border-color:var(--navy);color:var(--navy)">Watch the Recruiting Breakdown</a></div>
+</div></div></section>
 
 <div class="cta-band"><div class="wrap row">
 <div><h3>Who's In? See the Playoff Picture.</h3><p>THE BRACKET, THE RANKINGS, JOSH'S PICKS — AND AN AI TO RUN YOUR OWN</p></div>
@@ -467,6 +547,13 @@ footer{background:var(--navy);color:var(--chalk-dim);padding:44px 0 60px;font-fa
 <footer><div class="wrap foot-row">
 <div><div class="wordmark" style="font-size:20px;color:var(--chalk)">THE PATE <em style="color:var(--lamp)">STATE</em></div>
 <p style="margin-top:8px">The front porch of college football.<br>&copy; The Pate State. All picks logged. All poll results archived.</p></div>
+<div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:22px">
+<a href="https://youtube.com/@JoshPateCFB" style="display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line-d);border-radius:20px;padding:8px 16px;color:var(--chalk);font-family:var(--mono);font-size:11px;letter-spacing:.06em">▶ YOUTUBE</a>
+<a href="https://x.com/JoshPateCFB" style="display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line-d);border-radius:20px;padding:8px 16px;color:var(--chalk);font-family:var(--mono);font-size:11px;letter-spacing:.06em">𝕏 @JOSHPATECFB</a>
+<a href="https://instagram.com/joshpatecfb" style="display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line-d);border-radius:20px;padding:8px 16px;color:var(--chalk);font-family:var(--mono);font-size:11px;letter-spacing:.06em">◉ INSTAGRAM</a>
+<a href="#" style="display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line-d);border-radius:20px;padding:8px 16px;color:var(--chalk);font-family:var(--mono);font-size:11px;letter-spacing:.06em">♪ TIKTOK</a>
+<a href="#" style="display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line-d);border-radius:20px;padding:8px 16px;color:var(--chalk);font-family:var(--mono);font-size:11px;letter-spacing:.06em">🎙 THE LOCKER ROOM: CFB</a>
+</div>
 <div class="foot-links"><a href="show.html">The Show</a><a href="scores.html">Scores</a><a href="poll.html">JP Poll</a><a href="playoffs.html">Playoffs</a><a href="recruiting.html">Recruiting</a><a href="notebook.html">Notebook</a><a href="tailgate.html">Tailgate</a><a href="report.html">The Pate Report</a><a href="porch.html">The Porch</a><a href="shop.html">Shop</a><a href="ledger.html">Ledger</a><a href="teams.html">Teams</a><a href="about.html">About</a></div>
 </div></footer>
 

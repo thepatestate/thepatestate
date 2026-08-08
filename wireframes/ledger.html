@@ -1,5 +1,5 @@
 <!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0"><title>All 136 Teams — The Pate State</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"><title>The Season Ledger — The Pate State</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@500;700;800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -235,6 +235,42 @@ td.rk{color:var(--lamp-deep);font-weight:600;width:44px}td.rating{text-align:rig
 .cit-nudge a{color:var(--lamp-deep);text-decoration:underline}
 .ai-badge{display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--field);border:1px solid var(--field);padding:2px 7px;border-radius:3px;margin-left:6px}
 .ai-badge::before{content:"⚡"}
+/* --- article page --- */
+.story-grid{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:44px;align-items:start}
+@media(max-width:960px){.story-grid{grid-template-columns:1fr}}
+.story h1{font-family:var(--display);font-weight:800;font-size:clamp(34px,5vw,54px);line-height:.96;text-transform:uppercase;margin:14px 0 12px}
+.story .dek{font-size:19px;color:var(--ink-dim);line-height:1.5;max-width:62ch}
+.byline{display:flex;align-items:center;gap:12px;margin:18px 0 6px;padding:14px 0;border-top:1px solid var(--line-l);border-bottom:1px solid var(--line-l)}
+.byline .avatar{width:40px;height:40px;font-size:14px}
+.byline .who b{font-size:14px;display:block}
+.byline .who span{font-family:var(--mono);font-size:11px;color:var(--ink-dim)}
+.byline .share{margin-left:auto;display:flex;gap:8px}
+.byline .share a{width:34px;height:34px;border:1px solid var(--line-l);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--ink)}
+.byline .share a:hover{border-color:var(--lamp-deep);color:var(--lamp-deep)}
+.story-media{aspect-ratio:16/9;border-radius:6px;margin:22px 0;background:linear-gradient(150deg,#BA0C2F 0%,#7A0820 55%,#000 100%);border:1px solid var(--line-l);display:flex;align-items:center;justify-content:center;position:relative}
+.story-media .cap{position:absolute;bottom:10px;left:14px;font-family:var(--mono);font-size:10px;letter-spacing:.08em;color:rgba(255,255,255,.8)}
+.story-body p{font-size:18px;line-height:1.8;margin:0 0 24px;max-width:66ch}
+.story-body h3{font-family:var(--display);font-weight:800;font-size:27px;text-transform:uppercase;margin:34px 0 14px}
+.story-body a{color:var(--lamp-deep);text-decoration:underline;text-underline-offset:3px}
+.pullquote{border-left:4px solid var(--lamp);padding:6px 0 6px 22px;margin:30px 0;font-family:var(--display);font-weight:700;font-size:27px;line-height:1.15;text-transform:uppercase;color:var(--navy);max-width:56ch}
+.pullquote .who{display:block;font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--ink-dim);margin-top:10px}
+.databox{border:1px solid var(--line-l);border-radius:6px;background:var(--paper-2);padding:20px;margin:30px 0;max-width:560px}
+.databox .eyebrow{margin-bottom:10px}
+.videobox{border:1px solid var(--line-d);border-radius:6px;background:var(--navy);color:var(--chalk);padding:18px;display:flex;gap:16px;align-items:center;margin:30px 0;max-width:640px}
+.videobox .vthumb{flex:0 0 150px;aspect-ratio:16/9;border-radius:4px;background:linear-gradient(150deg,var(--navy-2),#0B1523);display:flex;align-items:center;justify-content:center}
+.videobox h4{font-family:var(--display);font-weight:700;font-size:19px;text-transform:uppercase;line-height:1}
+.videobox .meta{font-family:var(--mono);font-size:10px;color:var(--chalk-dim);margin-top:6px;letter-spacing:.1em}
+.aside-card{border:1px solid var(--line-l);border-radius:6px;background:#fff;padding:20px;margin-bottom:18px}
+.aside-card h4{font-family:var(--display);font-weight:800;font-size:20px;text-transform:uppercase;margin-bottom:12px}
+.aside-sticky{position:sticky;top:84px}
+.rel-row{display:flex;gap:12px;align-items:flex-start;padding:11px 0;border-bottom:1px solid var(--line-l)}
+.rel-row:last-child{border-bottom:none}
+.rel-row .n{font-family:var(--display);font-weight:800;font-size:20px;color:#C9C3B4}
+.rel-row b{font-size:14px;line-height:1.35;font-weight:600}
+.rel-row .meta{font-family:var(--mono);font-size:10px;color:var(--ink-dim);margin-top:3px}
+.tagrow{display:flex;gap:8px;flex-wrap:wrap;margin:26px 0}
+.tagrow a{font-family:var(--mono);font-size:11px;letter-spacing:.08em;border:1px solid var(--line-l);border-radius:20px;padding:6px 13px;color:var(--ink-dim)}
+.tagrow a:hover{border-color:var(--lamp-deep);color:var(--lamp-deep)}
 .newsitem h4{font-family:var(--display);font-weight:800;font-size:clamp(21px,2.6vw,28px);line-height:.98;text-transform:uppercase}
 .newsitem h4 a:hover{color:var(--lamp-deep)}
 .newsitem .by{font-family:var(--mono);font-size:11px;color:var(--ink-dim);margin-top:9px}
@@ -427,31 +463,31 @@ footer{background:var(--navy);color:var(--chalk-dim);padding:44px 0 60px;font-fa
 </div></div>
 <nav><div class="nav-row">
 <a class="wordmark" href="index.html">THE PATE <em>STATE</em></a>
-<div class="nav-links"><a href="show.html" class="">The Show</a><a href="scores.html" class="">Scores</a><a href="pickem.html" class="">Pick'Em</a><a href="poll.html" class="">JP Poll</a><a href="playoffs.html" class="">Playoffs</a><a href="recruiting.html" class="">Recruiting</a><a href="notebook.html" class="">Notebook</a><a href="porch.html" class="">The Porch</a><a href="tailgate.html" class="">Tailgate</a><a href="shop.html" class="">Shop</a></div>
+<div class="nav-links"><a href="show.html" class="">The Show</a><a href="scores.html" class="">Scores</a><a href="pickem.html" class="">Pick'Em</a><a href="poll.html" class="">JP Poll</a><a href="playoffs.html" class="">Playoffs</a><a href="recruiting.html" class="">Recruiting</a><a href="notebook.html" class="">Notebook</a><a href="porch.html" class="">The Porch</a><a href="shop.html" class="">Shop</a></div>
 <button class="menu-btn" id="menuBtn" aria-expanded="false">MENU</button>
 <a class="btn gold nav-cta" href="index.html#citizen">Become a Citizen</a>
-</div><div class="drawer" id="drawer"><a href="show.html">The Show</a><a href="scores.html">Scores</a><a href="pickem.html">Pick'Em</a><a href="poll.html">JP Poll</a><a href="playoffs.html">Playoffs</a><a href="recruiting.html">Recruiting</a><a href="notebook.html">Notebook</a><a href="porch.html">The Porch</a><a href="tailgate.html">Tailgate</a><a href="shop.html">Shop</a></div></nav>
+</div><div class="drawer" id="drawer"><a href="show.html">The Show</a><a href="scores.html">Scores</a><a href="pickem.html">Pick'Em</a><a href="poll.html">JP Poll</a><a href="playoffs.html">Playoffs</a><a href="recruiting.html">Recruiting</a><a href="notebook.html">Notebook</a><a href="porch.html">The Porch</a><a href="shop.html">Shop</a></div></nav>
 <script>document.getElementById("menuBtn").addEventListener("click",function(){var d=document.getElementById("drawer");var o=d.classList.toggle("open");this.setAttribute("aria-expanded",o)});</script>
 
-<div class="page-head"><div class="wrap"><div class="crumb">THE PATE STATE / EVERY TEAM</div>
-<h1>All 136 Teams</h1><p class="lede">One page per program: its JP Poll history, Josh's picks record against it, its tailgate guide, and its recruiting class — the whole story in one place.</p></div></div>
+<div class="page-head"><div class="wrap"><div class="crumb">THE PATE STATE / THE SEASON LEDGER</div>
+<h1>The Season Ledger</h1><p class="lede">Log every game you watch. Rate it. Say your piece. Build a lifetime record of your Saturdays — and pin every stadium you've set foot in.</p></div></div>
 <section><div class="wrap">
-<p class="eyebrow">Browse the State</p>
-<div class="team-grid">
-<a class="team-tile" href="team-georgia.html">Georgia<span class="m">JP POLL: NO. 1 · The template page →</span></a>
-<a class="team-tile" href="#">Ohio State<span class="m">JP POLL: NO. 2</span></a>
-<a class="team-tile" href="#">Texas<span class="m">JP POLL: NO. 3</span></a>
-<a class="team-tile" href="#">Oregon<span class="m">JP POLL: NO. 4</span></a>
-<a class="team-tile" href="#">Penn State<span class="m">JP POLL: NO. 5</span></a>
-<a class="team-tile" href="#">LSU<span class="m">JP POLL: NO. 6</span></a>
-<a class="team-tile" href="#">Clemson<span class="m">JP POLL: NO. 7</span></a>
-<a class="team-tile" href="#">Notre Dame<span class="m">JP POLL: NO. 8</span></a>
-<a class="team-tile" href="#">Alabama<span class="m">JP POLL: NO. 9</span></a>
-<a class="team-tile" href="#">Miami<span class="m">JP POLL: NO. 10</span></a>
-<a class="team-tile" href="#">Indiana<span class="m">JP POLL: NO. 11</span></a>
-<a class="team-tile" href="#">Michigan<span class="m">JP POLL: NO. 12</span></a>
+<div class="record"><div class="stat"><div class="num">214</div><div class="lbl">Games Logged</div></div>
+<div class="stat"><div class="num">17</div><div class="lbl">Stadiums Visited</div></div>
+<div class="stat"><div class="num">★4.1</div><div class="lbl">Avg Rating This Season</div></div></div>
+<p class="eyebrow">Your Recent Entries</p>
+<div class="log-strip">
+<div class="log-card"><div class="g">Georgia 31, Bama 28</div><div class="stars">★★★★★</div><p>"Watched on the porch with Dad. Instant classic."</p></div>
+<div class="log-card"><div class="g">Oregon 45, UW 42</div><div class="stars">★★★★☆</div><p>"Stayed up till 2am ET. Worth it."</p></div>
+<div class="log-card"><div class="g">Army 17, Navy 14</div><div class="stars">★★★★★</div><p>"Attended. Bucket list, checked."</p></div>
+<div class="log-card"><div class="g">Vandy 24, UT 21</div><div class="stars">★★★☆☆</div><p>"Chaos. Beautiful chaos."</p></div>
 </div>
-<p style="margin-top:18px;font-family:var(--mono);font-size:12px;color:var(--ink-dim)">Showing 12 of 136 · every FBS program gets a page</p>
+<div style="margin-top:24px;display:flex;gap:12px;flex-wrap:wrap"><a class="btn solid" href="#">Log a Game</a><a class="btn" href="tailgate.html">Open Your Stadium Passport</a></div>
+</div></section>
+<section class="on-field tight"><div class="wrap">
+<p class="eyebrow">Coming This Season</p>
+<h2 class="display" style="font-size:32px">Year-End Wrapped, For Football</h2>
+<p class="lede">Every December: your season in review — hours watched, best game you saw, stadiums pinned, and how your ratings compared to the State's. Made to share.</p>
 </div></section>
 
 <div class="cta-band"><div class="wrap row">
@@ -461,6 +497,13 @@ footer{background:var(--navy);color:var(--chalk-dim);padding:44px 0 60px;font-fa
 <footer><div class="wrap foot-row">
 <div><div class="wordmark" style="font-size:20px;color:var(--chalk)">THE PATE <em style="color:var(--lamp)">STATE</em></div>
 <p style="margin-top:8px">The front porch of college football.<br>&copy; The Pate State. All picks logged. All poll results archived.</p></div>
+<div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:22px">
+<a href="https://youtube.com/@JoshPateCFB" style="display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line-d);border-radius:20px;padding:8px 16px;color:var(--chalk);font-family:var(--mono);font-size:11px;letter-spacing:.06em">▶ YOUTUBE</a>
+<a href="https://x.com/JoshPateCFB" style="display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line-d);border-radius:20px;padding:8px 16px;color:var(--chalk);font-family:var(--mono);font-size:11px;letter-spacing:.06em">𝕏 @JOSHPATECFB</a>
+<a href="https://instagram.com/joshpatecfb" style="display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line-d);border-radius:20px;padding:8px 16px;color:var(--chalk);font-family:var(--mono);font-size:11px;letter-spacing:.06em">◉ INSTAGRAM</a>
+<a href="#" style="display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line-d);border-radius:20px;padding:8px 16px;color:var(--chalk);font-family:var(--mono);font-size:11px;letter-spacing:.06em">♪ TIKTOK</a>
+<a href="#" style="display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line-d);border-radius:20px;padding:8px 16px;color:var(--chalk);font-family:var(--mono);font-size:11px;letter-spacing:.06em">🎙 THE LOCKER ROOM: CFB</a>
+</div>
 <div class="foot-links"><a href="show.html">The Show</a><a href="scores.html">Scores</a><a href="poll.html">JP Poll</a><a href="playoffs.html">Playoffs</a><a href="recruiting.html">Recruiting</a><a href="notebook.html">Notebook</a><a href="tailgate.html">Tailgate</a><a href="report.html">The Pate Report</a><a href="porch.html">The Porch</a><a href="shop.html">Shop</a><a href="ledger.html">Ledger</a><a href="teams.html">Teams</a><a href="about.html">About</a></div>
 </div></footer>
 

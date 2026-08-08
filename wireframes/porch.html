@@ -1,5 +1,5 @@
 <!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0"><title>The Playoffs — The Pate State</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Pate's Porch — The Pate State</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@500;700;800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -235,6 +235,42 @@ td.rk{color:var(--lamp-deep);font-weight:600;width:44px}td.rating{text-align:rig
 .cit-nudge a{color:var(--lamp-deep);text-decoration:underline}
 .ai-badge{display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--field);border:1px solid var(--field);padding:2px 7px;border-radius:3px;margin-left:6px}
 .ai-badge::before{content:"⚡"}
+/* --- article page --- */
+.story-grid{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:44px;align-items:start}
+@media(max-width:960px){.story-grid{grid-template-columns:1fr}}
+.story h1{font-family:var(--display);font-weight:800;font-size:clamp(34px,5vw,54px);line-height:.96;text-transform:uppercase;margin:14px 0 12px}
+.story .dek{font-size:19px;color:var(--ink-dim);line-height:1.5;max-width:62ch}
+.byline{display:flex;align-items:center;gap:12px;margin:18px 0 6px;padding:14px 0;border-top:1px solid var(--line-l);border-bottom:1px solid var(--line-l)}
+.byline .avatar{width:40px;height:40px;font-size:14px}
+.byline .who b{font-size:14px;display:block}
+.byline .who span{font-family:var(--mono);font-size:11px;color:var(--ink-dim)}
+.byline .share{margin-left:auto;display:flex;gap:8px}
+.byline .share a{width:34px;height:34px;border:1px solid var(--line-l);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--ink)}
+.byline .share a:hover{border-color:var(--lamp-deep);color:var(--lamp-deep)}
+.story-media{aspect-ratio:16/9;border-radius:6px;margin:22px 0;background:linear-gradient(150deg,#BA0C2F 0%,#7A0820 55%,#000 100%);border:1px solid var(--line-l);display:flex;align-items:center;justify-content:center;position:relative}
+.story-media .cap{position:absolute;bottom:10px;left:14px;font-family:var(--mono);font-size:10px;letter-spacing:.08em;color:rgba(255,255,255,.8)}
+.story-body p{font-size:18px;line-height:1.8;margin:0 0 24px;max-width:66ch}
+.story-body h3{font-family:var(--display);font-weight:800;font-size:27px;text-transform:uppercase;margin:34px 0 14px}
+.story-body a{color:var(--lamp-deep);text-decoration:underline;text-underline-offset:3px}
+.pullquote{border-left:4px solid var(--lamp);padding:6px 0 6px 22px;margin:30px 0;font-family:var(--display);font-weight:700;font-size:27px;line-height:1.15;text-transform:uppercase;color:var(--navy);max-width:56ch}
+.pullquote .who{display:block;font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--ink-dim);margin-top:10px}
+.databox{border:1px solid var(--line-l);border-radius:6px;background:var(--paper-2);padding:20px;margin:30px 0;max-width:560px}
+.databox .eyebrow{margin-bottom:10px}
+.videobox{border:1px solid var(--line-d);border-radius:6px;background:var(--navy);color:var(--chalk);padding:18px;display:flex;gap:16px;align-items:center;margin:30px 0;max-width:640px}
+.videobox .vthumb{flex:0 0 150px;aspect-ratio:16/9;border-radius:4px;background:linear-gradient(150deg,var(--navy-2),#0B1523);display:flex;align-items:center;justify-content:center}
+.videobox h4{font-family:var(--display);font-weight:700;font-size:19px;text-transform:uppercase;line-height:1}
+.videobox .meta{font-family:var(--mono);font-size:10px;color:var(--chalk-dim);margin-top:6px;letter-spacing:.1em}
+.aside-card{border:1px solid var(--line-l);border-radius:6px;background:#fff;padding:20px;margin-bottom:18px}
+.aside-card h4{font-family:var(--display);font-weight:800;font-size:20px;text-transform:uppercase;margin-bottom:12px}
+.aside-sticky{position:sticky;top:84px}
+.rel-row{display:flex;gap:12px;align-items:flex-start;padding:11px 0;border-bottom:1px solid var(--line-l)}
+.rel-row:last-child{border-bottom:none}
+.rel-row .n{font-family:var(--display);font-weight:800;font-size:20px;color:#C9C3B4}
+.rel-row b{font-size:14px;line-height:1.35;font-weight:600}
+.rel-row .meta{font-family:var(--mono);font-size:10px;color:var(--ink-dim);margin-top:3px}
+.tagrow{display:flex;gap:8px;flex-wrap:wrap;margin:26px 0}
+.tagrow a{font-family:var(--mono);font-size:11px;letter-spacing:.08em;border:1px solid var(--line-l);border-radius:20px;padding:6px 13px;color:var(--ink-dim)}
+.tagrow a:hover{border-color:var(--lamp-deep);color:var(--lamp-deep)}
 .newsitem h4{font-family:var(--display);font-weight:800;font-size:clamp(21px,2.6vw,28px);line-height:.98;text-transform:uppercase}
 .newsitem h4 a:hover{color:var(--lamp-deep)}
 .newsitem .by{font-family:var(--mono);font-size:11px;color:var(--ink-dim);margin-top:9px}
@@ -427,115 +463,80 @@ footer{background:var(--navy);color:var(--chalk-dim);padding:44px 0 60px;font-fa
 </div></div>
 <nav><div class="nav-row">
 <a class="wordmark" href="index.html">THE PATE <em>STATE</em></a>
-<div class="nav-links"><a href="show.html" class="">The Show</a><a href="scores.html" class="">Scores</a><a href="pickem.html" class="">Pick'Em</a><a href="poll.html" class="">JP Poll</a><a href="playoffs.html" class="active">Playoffs</a><a href="recruiting.html" class="">Recruiting</a><a href="notebook.html" class="">Notebook</a><a href="porch.html" class="">The Porch</a><a href="tailgate.html" class="">Tailgate</a><a href="shop.html" class="">Shop</a></div>
+<div class="nav-links"><a href="show.html" class="">The Show</a><a href="scores.html" class="">Scores</a><a href="pickem.html" class="">Pick'Em</a><a href="poll.html" class="">JP Poll</a><a href="playoffs.html" class="">Playoffs</a><a href="recruiting.html" class="">Recruiting</a><a href="notebook.html" class="">Notebook</a><a href="porch.html" class="active">The Porch</a><a href="shop.html" class="">Shop</a></div>
 <button class="menu-btn" id="menuBtn" aria-expanded="false">MENU</button>
 <a class="btn gold nav-cta" href="index.html#citizen">Become a Citizen</a>
-</div><div class="drawer" id="drawer"><a href="show.html">The Show</a><a href="scores.html">Scores</a><a href="pickem.html">Pick'Em</a><a href="poll.html">JP Poll</a><a href="playoffs.html">Playoffs</a><a href="recruiting.html">Recruiting</a><a href="notebook.html">Notebook</a><a href="porch.html">The Porch</a><a href="tailgate.html">Tailgate</a><a href="shop.html">Shop</a></div></nav>
+</div><div class="drawer" id="drawer"><a href="show.html">The Show</a><a href="scores.html">Scores</a><a href="pickem.html">Pick'Em</a><a href="poll.html">JP Poll</a><a href="playoffs.html">Playoffs</a><a href="recruiting.html">Recruiting</a><a href="notebook.html">Notebook</a><a href="porch.html">The Porch</a><a href="shop.html">Shop</a></div></nav>
 <script>document.getElementById("menuBtn").addEventListener("click",function(){var d=document.getElementById("drawer");var o=d.classList.toggle("open");this.setAttribute("aria-expanded",o)});</script>
 
-<div class="page-head"><div class="wrap"><div class="crumb">THE PATE STATE / PLAYOFFS</div>
-<h1>The Playoffs</h1><p class="lede">The playoff picture, four ways: the bracket as it stands, Josh's bracket, the machine's — and a predictor to run your own season.</p></div></div>
-<section><div class="wrap">
-<p class="eyebrow">If the Season Ended Today</p>
-<h2 class="display" style="font-size:38px">Two Brackets. One January.</h2>
-<p class="lede">The full 12-team field, seeded from the JP Poll — both sides of the bracket funneling to the champion in the middle. First the AI Predictor's path, then Josh's. Both are locked and graded publicly.</p>
-<div class="bracket-title"><div class="avatar" style="background:var(--field);border-color:var(--field)">AI</div><h3>The AI Predictor's Bracket</h3></div>
-<div class="tourney-wrap"><div class="tourney7">
-<div class="round"><h5>First Round</h5><div class="game"><div class="tm"><span class="sd">9</span>Notre Dame</div><div class="tm w"><span class="sd">8</span>LSU</div><div class="tag2">AT BATON ROUGE</div></div><div class="game"><div class="tm"><span class="sd">12</span>Indiana</div><div class="tm w"><span class="sd">5</span>Texas</div><div class="tag2">AT AUSTIN</div></div></div>
-<div class="round"><h5>Quarterfinals</h5><div class="game"><div class="tm w"><span class="sd">1</span>Georgia</div><div class="tm"><span class="sd">8</span>LSU</div><div class="tag2">SUGAR</div></div><div class="game"><div class="tm"><span class="sd">4</span>Boise State</div><div class="tm w"><span class="sd">5</span>Texas</div><div class="tag2">FIESTA</div></div></div>
-<div class="round"><h5>Semifinal</h5><div class="game"><div class="tm"><span class="sd">1</span>Georgia</div><div class="tm w"><span class="sd">5</span>Texas</div><div class="tag2">COTTON</div></div></div>
-<div class="round center"><h5>National Championship</h5><div class="game"><div class="tm w"><span class="sd">5</span>Texas</div><div class="tm"><span class="sd">2</span>Ohio State</div><div class="tag2">JAN 18 · MIAMI</div></div>
-<div class="champ"><div class="t">AI PREDICTOR'S CHAMPION</div><div class="n">Texas</div></div></div>
-<div class="round"><h5>Semifinal</h5><div class="game"><div class="tm w"><span class="sd">2</span>Ohio State</div><div class="tm"><span class="sd">6</span>Oregon</div><div class="tag2">ORANGE</div></div></div>
-<div class="round"><h5>Quarterfinals</h5><div class="game"><div class="tm w"><span class="sd">2</span>Ohio State</div><div class="tm"><span class="sd">7</span>Penn State</div><div class="tag2">ROSE</div></div><div class="game"><div class="tm"><span class="sd">3</span>Clemson</div><div class="tm w"><span class="sd">6</span>Oregon</div><div class="tag2">PEACH</div></div></div>
-<div class="round"><h5>First Round</h5><div class="game"><div class="tm"><span class="sd">10</span>Alabama</div><div class="tm w"><span class="sd">7</span>Penn State</div><div class="tag2">AT STATE COLLEGE</div></div><div class="game"><div class="tm"><span class="sd">11</span>Miami</div><div class="tm w"><span class="sd">6</span>Oregon</div><div class="tag2">AT EUGENE</div></div></div>
+<div class="page-head"><div class="wrap"><div class="crumb">THE PATE STATE / PATE'S PORCH</div>
+<h1>Pate's Porch</h1><p class="lede">The community room — your mailbag, your ledger, your leagues, the watch parties, and the tour. This is where citizens live.</p></div></div>
+<section><div class="wrap"><div class="duo"><div>
+<p class="eyebrow">From the Mailbag</p>
+<div style="margin-top:14px">
+<div class="mail"><div class="q">"Is it ever okay to leave a blowout early?"</div><div class="from">— CITIZEN NO. 12,408 · TUSCALOOSA, AL</div><div class="a">"You can leave. You just can't complain about traffic AND miss the comeback. Pick one." — JP</div></div>
+<div class="mail"><div class="q">"My wife scheduled our wedding for the third Saturday in October. Thoughts?"</div><div class="from">— CITIZEN NO. 3,551 · KNOXVILLE, TN</div><div class="a">"Congratulations on your engagement and my condolences on your kickoff. There are TVs at receptions now. Be creative." — JP</div></div>
+<div class="mail"><div class="q">"Settle it: best stadium entrance in the sport?"</div><div class="from">— CITIZEN NO. 30,092 · CLEMSON, SC</div><div class="a">"You asked from Clemson. You know what you did." — JP</div></div>
+</div><a class="btn" href="#">Submit Your Question</a></div>
+<div>
+<div class="panel" style="margin-bottom:16px"><p class="eyebrow">Your Corner of the Porch</p><h3>Ledger · Leagues · Patches</h3>
+<p>Your logged games, your pick'em leagues, your stadium passport, and your poll-vote streak — all in one profile.</p>
+<a class="btn" href="ledger.html" style="border-color:var(--navy);color:var(--navy)">Open My Profile</a></div>
+<div class="panel" style="margin-bottom:16px"><p class="eyebrow">Follow the Mayor</p><h3>Josh, Everywhere</h3>
+<p style="font-size:14px">The show lives on YouTube. The takes live on X. The clips live everywhere else.</p>
+<div style="display:flex;flex-direction:column;gap:8px;margin-top:12px;font-family:var(--mono);font-size:12px">
+<a href="https://youtube.com/@JoshPateCFB" style="color:var(--lamp-deep)">▶ YOUTUBE — JOSH PATE'S CFB SHOW</a>
+<a href="https://x.com/JoshPateCFB" style="color:var(--lamp-deep)">𝕏 @JOSHPATECFB — DAILY TAKES</a>
+<a href="https://instagram.com/joshpatecfb" style="color:var(--lamp-deep)">◉ @JOSHPATECFB — BEHIND THE PORCH</a>
+<a href="#" style="color:var(--lamp-deep)">♪ TIKTOK — 60-SECOND PORCH</a>
+<a href="#" style="color:var(--lamp-deep)">🎙 THE LOCKER ROOM: CFB — W/ COMPTON &amp; LEWAN</a>
 </div></div>
-<div class="bracket-title"><div class="avatar" style="background:var(--lamp);color:var(--navy);border-color:var(--lamp)">JP</div><h3>Josh's Bracket</h3></div>
-<div class="tourney-wrap"><div class="tourney7">
-<div class="round"><h5>First Round</h5><div class="game"><div class="tm"><span class="sd">9</span>Notre Dame</div><div class="tm w"><span class="sd">8</span>LSU</div><div class="tag2">AT BATON ROUGE</div></div><div class="game"><div class="tm w"><span class="sd">12</span>Indiana</div><div class="tm"><span class="sd">5</span>Texas</div><div class="tag2">AT AUSTIN</div></div></div>
-<div class="round"><h5>Quarterfinals</h5><div class="game"><div class="tm w"><span class="sd">1</span>Georgia</div><div class="tm"><span class="sd">8</span>LSU</div><div class="tag2">SUGAR</div></div><div class="game"><div class="tm"><span class="sd">4</span>Boise State</div><div class="tm w"><span class="sd">12</span>Indiana</div><div class="tag2">FIESTA</div></div></div>
-<div class="round"><h5>Semifinal</h5><div class="game"><div class="tm w"><span class="sd">1</span>Georgia</div><div class="tm"><span class="sd">12</span>Indiana</div><div class="tag2">COTTON</div></div></div>
-<div class="round center"><h5>National Championship</h5><div class="game"><div class="tm w"><span class="sd">1</span>Georgia</div><div class="tm"><span class="sd">2</span>Ohio State</div><div class="tag2">JAN 18 · MIAMI</div></div>
-<div class="champ"><div class="t">JOSH'S CHAMPION</div><div class="n">Georgia</div></div></div>
-<div class="round"><h5>Semifinal</h5><div class="game"><div class="tm w"><span class="sd">2</span>Ohio State</div><div class="tm"><span class="sd">6</span>Oregon</div><div class="tag2">ORANGE</div></div></div>
-<div class="round"><h5>Quarterfinals</h5><div class="game"><div class="tm w"><span class="sd">2</span>Ohio State</div><div class="tm"><span class="sd">7</span>Penn State</div><div class="tag2">ROSE</div></div><div class="game"><div class="tm"><span class="sd">3</span>Clemson</div><div class="tm w"><span class="sd">6</span>Oregon</div><div class="tag2">PEACH</div></div></div>
-<div class="round"><h5>First Round</h5><div class="game"><div class="tm"><span class="sd">10</span>Alabama</div><div class="tm w"><span class="sd">7</span>Penn State</div><div class="tag2">AT STATE COLLEGE</div></div><div class="game"><div class="tm"><span class="sd">11</span>Miami</div><div class="tm w"><span class="sd">6</span>Oregon</div><div class="tag2">AT EUGENE</div></div></div>
-</div></div>
-<div style="margin-top:44px">
-<p class="eyebrow">The Committee of the Citizens</p>
-<h2 class="display" style="font-size:34px">Current Playoff Rankings</h2>
-<div class="duo" style="margin-top:18px">
-<table><thead><tr><th>SEED</th><th>TEAM</th><th>NOTE</th></tr></thead><tbody>
-<tr><td class="rk">01</td><td><b>Georgia</b></td><td>SEC champ · bye</td></tr>
-<tr><td class="rk">02</td><td><b>Ohio State</b></td><td>Big Ten champ · bye</td></tr>
-<tr><td class="rk">03</td><td><b>Clemson</b></td><td>ACC champ · bye</td></tr>
-<tr><td class="rk">04</td><td><b>Boise State</b></td><td>G5 champ · bye</td></tr>
-<tr><td class="rk">05</td><td><b>Texas</b></td><td>Hosts first round</td></tr>
-<tr><td class="rk">06</td><td><b>Oregon</b></td><td>Hosts first round</td></tr></tbody></table>
-<table><thead><tr><th>SEED</th><th>TEAM</th><th>NOTE</th></tr></thead><tbody>
-<tr><td class="rk">07</td><td><b>Penn State</b></td><td>Hosts first round</td></tr>
-<tr><td class="rk">08</td><td><b>LSU</b></td><td>Hosts first round</td></tr>
-<tr><td class="rk">09</td><td><b>Notre Dame</b></td><td>At No. 8</td></tr>
-<tr><td class="rk">10</td><td><b>Alabama</b></td><td>At No. 7</td></tr>
-<tr><td class="rk">11</td><td><b>Miami</b></td><td>At No. 6</td></tr>
-<tr><td class="rk">12</td><td><b>Indiana</b></td><td>At No. 5</td></tr></tbody></table>
+<div class="panel"><p class="eyebrow">Wall of Champions</p><h3>The Honored Citizens</h3>
+<div class="lb-row"><span>2025 PICK'EM CHAMP</span><span class="streak">SicEmSaturdays</span></div>
+<div class="lb-row"><span>2025 LEDGER: MOST GAMES</span><span class="streak">GroveGoblin · 96</span></div>
+<div class="lb-row"><span>2025 TRAVELER OF THE YEAR</span><span class="streak">PorchSwingProphet · 14 STADIUMS</span></div>
+<a class="btn" href="pickem.html" style="margin-top:14px;border-color:var(--navy);color:var(--navy)">This Year's Race</a></div>
+</div></div></div></section>
+<section class="on-soft tight"><div class="wrap">
+<p class="eyebrow">Where the Porch Is Loudest</p>
+<h2 class="display" style="font-size:32px">Join the Conversation</h2>
+<div style="max-width:820px;margin-top:14px">
+<div class="hot-row"><div class="hthumb" style="background:repeating-linear-gradient(-45deg,var(--field-lt) 0 8px,#fff 8px 16px)"></div><div class="who"><b>Week 1 Overreactions — the comment section is cooking</b><div class="meta">THE SHOW · EP 1,204</div></div><span class="cc">🔥 2,418 COMMENTS</span></div>
+<div class="hot-row"><div class="hthumb" style="background:repeating-linear-gradient(-45deg,var(--field-lt) 0 8px,#fff 8px 16px)"></div><div class="who"><b>"Why the JP Poll Doesn't Trust Alabama Yet"</b><div class="meta">THE NOTEBOOK · POLL DAY COLUMN</div></div><span class="cc">🔥 1,907 COMMENTS</span></div>
+<div class="hot-row"><div class="hthumb" style="background:repeating-linear-gradient(-45deg,var(--field-lt) 0 8px,#fff 8px 16px)"></div><div class="who"><b>The Indiana argument Josh lost to his own audience</b><div class="meta">POLL DAY · THE REVEAL</div></div><span class="cc">🔥 1,634 COMMENTS</span></div>
 </div>
-<p style="margin-top:14px;font-family:var(--mono);font-size:12px;color:var(--ink-dim)">FIRST FOUR OUT: Michigan · Utah · Tennessee · Texas Tech — SEEDED FROM THE JP POLL + CONFERENCE STANDINGS · UPDATES SUNDAY NIGHTS</p>
+<div class="duo" style="margin-top:26px">
+<div class="panel"><p class="eyebrow">Find Your People</p><h3>City Chapters</h3>
+<p>Citizen-run rooms by city and by team — plan tailgates, fill watch parties, argue in good faith. Atlanta, Dallas, Columbus, Nashville and 36 more.</p>
+<a class="btn" href="#" style="border-color:var(--navy);color:var(--navy)">Browse Chapters</a></div>
+<div class="panel"><p class="eyebrow">Start Something</p><h3>Host a Chapter</h3>
+<p>No chapter in your town? Claim it. Hosts get a State Store kit, early tour tickets, and the founding-citizen badge.</p>
+<a class="btn" href="#" style="border-color:var(--navy);color:var(--navy)">Start a Chapter</a></div>
 </div>
 </div></section>
-<section class="on-field"><div class="wrap">
-<span class="fr">🏆 THE CITIZENS' BRACKET CHALLENGE</span>
-<p class="eyebrow">Free for Every Citizen · Two Windows, One Champion</p>
-<h2 class="display" style="font-size:38px">Build Yours. Beat Everybody.</h2>
-<p class="lede">Call the field before anyone kicks off, then prove it again when the real bracket drops. Scored all season, standings live on the porch, receipts forever.</p>
-<div class="feat-grid" style="margin-top:26px">
-<div class="panel panel-field" style="border:1px solid var(--line-d)"><p class="eyebrow">Window 1 — August</p><h3>The Preseason Bracket</h3>
-<p>Pick your 12, seed your byes, crown a champion — locked at Week 1 kickoff. <b style="color:var(--lamp)">+10</b> for every team that makes the field, <b style="color:var(--lamp)">+25</b> for an exact seed, <b style="color:var(--lamp)">+100</b> if your champ wins it all.</p></div>
-<div class="panel panel-field" style="border:1px solid var(--line-d)"><p class="eyebrow">Window 2 — December</p><h3>The Real Bracket</h3>
-<p>Selection Sunday, the field is set — fill out the actual bracket, round by round. Points double as you go: <b style="color:var(--lamp)">10 · 20 · 40 · 80</b>. Your August foresight plus your December nerve, one combined score.</p></div>
-<div class="panel panel-field" style="border:1px solid var(--line-d)"><p class="eyebrow">The Payout</p><h3>Real Prizes</h3>
-<p>Monthly leaders: merch + a shoutout on the show. Top 10 combined: signed Pate Report. <b style="color:var(--lamp)">The champion watches the National Championship with Josh</b> — and goes on the Wall of Champions, forever.</p></div>
+<section class="on-field tight"><div class="wrap"><div class="duo">
+<div class="panel panel-field" style="border:1px solid var(--line-d)"><p class="eyebrow">Saturdays Together</p><h3>Citizen Watch Parties</h3>
+<p>Citizen-hosted watch parties in 40+ cities every Saturday — find your bar, claim your table, wear the flag. Hosts get a State Store kit on us.</p>
+<div style="display:flex;gap:10px;flex-wrap:wrap"><a class="btn" href="#">Find a Watch Party Near You</a><a class="btn" href="tailgate.html">Pate Tailgate: 136 Stadium Guides →</a></div></div>
+<div class="panel panel-field" style="border:1px solid var(--line-d)"><p class="eyebrow">The Tour</p><h3>The Porch, Live</h3>
+<div class="tour-row"><span>SEP 5 — ATHENS, GA</span><a href="#">Tickets →</a></div>
+<div class="tour-row"><span>SEP 19 — AUSTIN, TX</span><a href="#">Tickets →</a></div>
+<div class="tour-row"><span>OCT 10 — COLUMBUS, OH</span><a href="#">Tickets →</a></div>
+<div class="tour-row"><span>NOV 7 — BATON ROUGE, LA</span><span>Sold Out</span></div></div>
+</div></div></section>
+<section class="on-dark"><div class="wrap">
+<div style="display:flex;align-items:center;gap:40px;flex-wrap:wrap">
+<img src="citizen-gift-cover.png" alt="The 2026 JP Preseason Football Guide cover" style="width:280px;max-width:80vw;border-radius:6px;border:1px solid var(--line-d);box-shadow:0 18px 50px rgba(0,0,0,.45);transform:rotate(-2deg)">
+<div style="flex:1;min-width:280px">
+<span class="fr">🎁 THE CITIZEN GIFT</span>
+<p class="eyebrow">Free the Moment You Join</p>
+<h2 class="display" style="font-size:clamp(30px,4vw,44px)">Become a Citizen,<br>Get the Guide.</h2>
+<p class="lede">The 2026 JP Preseason Football Guide — the Top 50 ranked, analyzed, and explained, the playoff picture, the X-factors, and the breakout players — yours free (digital edition) the moment you claim citizenship.</p>
+<div style="margin-top:18px;display:flex;gap:12px;flex-wrap:wrap"><a class="btn gold" href="index.html#citizen">Claim Free Citizenship</a><a class="btn" href="report.html">Peek Inside the Guide</a></div>
 </div>
-<div class="tool" style="margin-top:26px;background:var(--paper);border-color:var(--line-l)">
-<p class="eyebrow">Start Now — 30 Seconds</p>
-<label for="bkChamp">Your national champion</label>
-<select id="bkChamp"><option>Georgia</option><option>Ohio State</option><option>Texas</option><option>Oregon</option><option>Penn State</option><option>LSU</option><option>Clemson</option><option>Notre Dame</option><option>Alabama</option><option>Miami</option><option>Indiana</option><option>Boise State</option></select>
-<label for="bkDark">Your dark horse to crash the field</label>
-<select id="bkDark"><option>Indiana</option><option>Missouri</option><option>Texas Tech</option><option>Utah</option><option>Tennessee</option><option>Michigan</option><option>Vanderbilt</option><option>Iowa State</option></select>
-<div style="margin-top:16px"><button class="btn solid" id="bkLock">Lock My Picks — Start My Bracket</button></div>
-<div id="bkMsg" style="display:none;margin-top:14px;font-family:var(--mono);font-size:13px;color:var(--field);font-weight:600"></div>
 </div>
 </div></section>
-<script>
-document.addEventListener("DOMContentLoaded",function(){
-var b=document.getElementById("bkLock");
-if(b){b.addEventListener("click",function(){
-var c=document.getElementById("bkChamp").value,d=document.getElementById("bkDark").value,m=document.getElementById("bkMsg");
-m.style.display="block";
-m.textContent="🔒 LOCKED (DEMO): "+c.toUpperCase()+" TO WIN IT ALL, "+d.toUpperCase()+" CRASHES THE PARTY. Citizens get the full 12-slot builder, live standings, and the season-long score.";});}});
-</script>
-<section class="on-dark tight"><div class="wrap"><div class="duo">
-<div class="panel panel-dark"><p class="eyebrow">Josh's Playoff Picks</p><h3>Where Josh Has It</h3>
-<p>Josh's bracket, on the record since August: <b style="color:var(--chalk)">Georgia over Ohio State</b> in the final — with <b style="color:var(--chalk)">Indiana</b> winning at Texas in the first round and crashing all the way to the Cotton Bowl semifinal.</p>
-<a class="btn" href="show.html">Hear the Full Argument</a></div>
-<div class="panel panel-dark"><p class="eyebrow">The AI Predictor's Board</p><h3>Where the AI Predictor Has It</h3>
-<p>The AI Predictor has <b style="color:var(--chalk)">Texas</b> upsetting Georgia in the Cotton Bowl semifinal and beating Ohio State for the title. Josh vs. the AI Predictor gets settled in January — both brackets are locked and graded publicly.</p>
-<a class="btn" href="#tool">Run Your Own Projection ↓</a></div>
-</div></div></section>
-<section class="on-soft" id="tool"><div class="wrap">
-<span class="note">AI-powered tool — the site's signature toy and a daily-return-visit engine.</span>
-<p class="eyebrow">Your Turn</p>
-<h2 class="display" style="font-size:36px">Run the AI Playoff Predictor</h2>
-<div class="tool" style="margin-top:20px"><p class="eyebrow">Set the Scene</p>
-<label for="pWeek">Point in the season</label>
-<select id="pWeek"><option>Preseason — project from talent &amp; schedules</option><option selected>Mid-October — contenders separating</option><option>Selection Sunday — final field</option></select>
-<label for="pInput">What's happened so far? (teams, records, big results — or just ask "what if...")</label>
-<textarea id="pInput" placeholder="e.g. Georgia 7-0, beat Bama by 3. Ohio State 6-1, lost to Oregon. Indiana undefeated again somehow. What does the field look like?"></textarea>
-<div style="margin-top:18px"><button class="btn solid" id="predictBtn">Project the Field</button></div>
-<div class="spin" id="spin">CRUNCHING THE NUMBERS ON THE PORCH…</div>
-<div class="result" id="result"><h4>Projected 12-Team Field</h4><div class="bracket" id="bracket"></div>
-<p class="eyebrow" style="margin-top:10px">The Porch Read</p><p class="analysis" id="analysis"></p></div>
-</div></div></section>
+
 
 <div class="cta-band"><div class="wrap row">
 <div><h3>Who's In? See the Playoff Picture.</h3><p>THE BRACKET, THE RANKINGS, JOSH'S PICKS — AND AN AI TO RUN YOUR OWN</p></div>
@@ -544,20 +545,15 @@ m.textContent="🔒 LOCKED (DEMO): "+c.toUpperCase()+" TO WIN IT ALL, "+d.toUppe
 <footer><div class="wrap foot-row">
 <div><div class="wordmark" style="font-size:20px;color:var(--chalk)">THE PATE <em style="color:var(--lamp)">STATE</em></div>
 <p style="margin-top:8px">The front porch of college football.<br>&copy; The Pate State. All picks logged. All poll results archived.</p></div>
+<div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:22px">
+<a href="https://youtube.com/@JoshPateCFB" style="display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line-d);border-radius:20px;padding:8px 16px;color:var(--chalk);font-family:var(--mono);font-size:11px;letter-spacing:.06em">▶ YOUTUBE</a>
+<a href="https://x.com/JoshPateCFB" style="display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line-d);border-radius:20px;padding:8px 16px;color:var(--chalk);font-family:var(--mono);font-size:11px;letter-spacing:.06em">𝕏 @JOSHPATECFB</a>
+<a href="https://instagram.com/joshpatecfb" style="display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line-d);border-radius:20px;padding:8px 16px;color:var(--chalk);font-family:var(--mono);font-size:11px;letter-spacing:.06em">◉ INSTAGRAM</a>
+<a href="#" style="display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line-d);border-radius:20px;padding:8px 16px;color:var(--chalk);font-family:var(--mono);font-size:11px;letter-spacing:.06em">♪ TIKTOK</a>
+<a href="#" style="display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line-d);border-radius:20px;padding:8px 16px;color:var(--chalk);font-family:var(--mono);font-size:11px;letter-spacing:.06em">🎙 THE LOCKER ROOM: CFB</a>
+</div>
 <div class="foot-links"><a href="show.html">The Show</a><a href="scores.html">Scores</a><a href="poll.html">JP Poll</a><a href="playoffs.html">Playoffs</a><a href="recruiting.html">Recruiting</a><a href="notebook.html">Notebook</a><a href="tailgate.html">Tailgate</a><a href="report.html">The Pate Report</a><a href="porch.html">The Porch</a><a href="shop.html">Shop</a><a href="ledger.html">Ledger</a><a href="teams.html">Teams</a><a href="about.html">About</a></div>
 </div></footer>
 
-<script>
-const demoField=[["1","Georgia (SEC champ — bye)"],["2","Ohio State (B1G champ — bye)"],["3","Clemson (ACC champ — bye)"],["4","Boise State (G5 champ — bye)"],["5","Texas"],["6","Oregon"],["7","Penn State"],["8","LSU"],["9","Notre Dame"],["10","Alabama"],["11","Miami"],["12","Indiana"]];
-const demoAnalysis="Here's the porch read: the top of this field is chalk, and chalk is chalk for a reason — Georgia and Ohio State have the two most complete rosters in the sport. The interesting seats are 9 through 12. Notre Dame's schedule gives them zero margin, Alabama is living off brand equity and one good win, and Indiana just keeps winning games nobody gives them credit for. First team out? The two-loss SEC team screaming about strength of schedule. Some things never change.\n\nBubble watch: Miami needs one more quality win. Utah and Tennessee are alive but need help. And if Clemson slips in the ACC title game, this whole bottom third reshuffles.";
-function renderResult(field,analysis){const br=document.getElementById("bracket");br.innerHTML="";field.forEach(s=>{const d=document.createElement("div");d.className="seed";d.innerHTML="<b>"+s[0]+"</b><span>"+s[1]+"</span>";br.appendChild(d)});document.getElementById("analysis").textContent=analysis;document.getElementById("result").classList.add("show")}
-document.getElementById("predictBtn").addEventListener("click",async()=>{
-const week=document.getElementById("pWeek").value;const input=document.getElementById("pInput").value.trim()||"A typical season at this point.";
-const spin=document.getElementById("spin");document.getElementById("result").classList.remove("show");spin.classList.add("show");
-try{
-const r=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-sonnet-4-6",max_tokens:1000,messages:[{role:"user",content:"You are the Playoff Predictor on a college football website with the voice of a calm, witty Southern analyst: confident, conversational, no hot takes, dry humor. Season context: "+week+". User's description of the season: "+input+"\n\nRespond ONLY with JSON, no markdown fences, in this shape:\n{\"field\":[[\"1\",\"Team (note)\"],[\"2\",\"Team (note)\"]] with 12 entries where seeds 1-4 are conference champs with byes,\"analysis\":\"2 short paragraphs: the porch read on the field, then the bubble watch. Plain text with \\n\\n between paragraphs.\"}"}]})});
-const data=await r.json();const txt=(data.content||[]).filter(b=>b.type==="text").map(b=>b.text).join("");
-const parsed=JSON.parse(txt.replace(/```json|```/g,"").trim());renderResult(parsed.field,parsed.analysis);
-}catch(e){renderResult(demoField,demoAnalysis+"\n\n(Demo projection — the live AI runs when this page is hosted with your API key.)")}finally{spin.classList.remove("show")}});
-</script>
+
 </body></html>
