@@ -28,4 +28,16 @@ describe("safeNextPath", () => {
   it("rejects a nested attack via the auth callback", () => {
     expect(safeNextPath("https://thepatestate.com/auth/callback?next=//evil.com")).toBe("/");
   });
+  it("rejects a tab-injected protocol-relative URL", () => {
+    expect(safeNextPath("/\t/evil.com")).toBe("/");
+  });
+  it("rejects a percent-encoded tab that decodes to a protocol-relative URL", () => {
+    expect(safeNextPath(decodeURIComponent("/%09/evil.com"))).toBe("/");
+  });
+  it("rejects a newline-injected protocol-relative URL", () => {
+    expect(safeNextPath("/\n/evil.com")).toBe("/");
+  });
+  it("leaves a normal path with no control characters unaffected", () => {
+    expect(safeNextPath("/porch/thread-12")).toBe("/porch/thread-12");
+  });
 });
