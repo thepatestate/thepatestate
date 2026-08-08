@@ -65,12 +65,19 @@ function pickTrack(tracks: CaptionTrack[]): CaptionTrack | undefined {
   );
 }
 
-/** InnerTube player API: POST videoId -> captionTracks -> srv3 (or legacy timedtext) XML. Returns null on any failure. */
-async function fetchTranscriptViaInnerTube(ytId: string): Promise<TranscriptSegment[] | null> {
-  const res = await fetch("https://www.youtube.com/youtubei/v1/player", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
+type InnertubeClient = {
+  name: string;
+  body: (videoId: string) => Record<string, unknown>;
+  headers: Record<string, string>;
+};
+
+/** InnerTube client contexts to try in order. YouTube blocks the ANDROID client from
+ * datacenter IPs (works fine from residential), so we fall back to IOS then a TV embedded
+ * client, which tend to be allowed from datacenter/cloud IPs like Vercel's. */
+const INNERTUBE_CLIENTS: InnertubeClient[] = [
+  {
+    name: "ANDROID",
+    body: (videoId) => ({
       context: {
         client: {
           clientName: "ANDROID",
@@ -79,14 +86,75 @@ async function fetchTranscriptViaInnerTube(ytId: string): Promise<TranscriptSegm
           hl: "en",
         },
       },
-      videoId: ytId,
+      videoId,
     }),
-    cache: "no-store",
-  });
-  if (!res.ok) return null;
-  const data = await res.json();
-  const tracks: CaptionTrack[] | undefined =
-    data?.captions?.playerCaptionsTracklistRenderer?.captionTracks;
+    headers: { "Content-Type": "application/json" },
+  },
+  {
+    name: "IOS",
+    body: (videoId) => ({
+      context: {
+        client: {
+          clientName: "IOS",
+          clientVersion: "20.10.4",
+          deviceMake: "Apple",
+          deviceModel: "iPhone16,2",
+          hl: "en",
+        },
+      },
+      videoId,
+    }),
+    headers: {
+      "Content-Type": "application/json",
+      "User-Agent": "com.google.ios.youtube/20.10.4 (iPhone16,2; U; CPU iOS 18_3_2 like Mac OS X;)",
+    },
+  },
+  {
+    name: "TVHTML5_SIMPLY_EMBEDDED_PLAYER",
+    body: (videoId) => ({
+      context: {
+        client: {
+          clientName: "TVHTML5_SIMPLY_EMBEDDED_PLAYER",
+          clientVersion: "2.0",
+          hl: "en",
+        },
+        thirdParty: { embedUrl: "https://www.youtube.com" },
+      },
+      playbackContext: {
+        contentPlaybackContext: { signatureTimestamp: 19950 },
+      },
+      videoId,
+    }),
+    headers: { "Content-Type": "application/json" },
+  },
+];
+
+/** InnerTube player API: POST videoId -> captionTracks -> srv3 (or legacy timedtext) XML.
+ * Tries each client in INNERTUBE_CLIENTS in order, stopping at the first that yields
+ * captionTracks. Returns null on total failure. */
+async function fetchTranscriptViaInnerTube(ytId: string): Promise<TranscriptSegment[] | null> {
+  let tracks: CaptionTrack[] | undefined;
+  for (const client of INNERTUBE_CLIENTS) {
+    const res = await fetch("https://www.youtube.com/youtubei/v1/player", {
+      method: "POST",
+      headers: client.headers,
+      body: JSON.stringify(client.body(ytId)),
+      cache: "no-store",
+    });
+    if (!res.ok) continue;
+    const data = await res.json();
+    const status = data?.playabilityStatus?.status;
+    if (status !== "OK") {
+      console.error("[transcript] client", client.name, status);
+      continue;
+    }
+    const clientTracks: CaptionTrack[] | undefined =
+      data?.captions?.playerCaptionsTracklistRenderer?.captionTracks;
+    if (clientTracks && clientTracks.length > 0) {
+      tracks = clientTracks;
+      break;
+    }
+  }
   if (!tracks || tracks.length === 0) return null;
   const track = pickTrack(tracks);
   if (!track?.baseUrl) return null;
