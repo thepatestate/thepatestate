@@ -5,6 +5,10 @@ import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
 export default function JoinForm({ next }: { next: string }) {
   const [email, setEmail] = useState("");
   const [state, setState] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [errorMessage, setErrorMessage] = useState(
+    "That didn't send — check the address and try again."
+  );
+  const [googlePending, setGooglePending] = useState(false);
 
   if (!isSupabaseConfigured) {
     return <p className="lede">Citizenship opens shortly — the porch is still being wired.</p>;
@@ -20,17 +24,28 @@ export default function JoinForm({ next }: { next: string }) {
         emailRedirectTo: `${location.origin}/auth/callback?next=${encodeURIComponent(next)}`,
       },
     });
-    setState(error ? "error" : "sent");
+    if (error) {
+      setErrorMessage("That didn't send — check the address and try again.");
+      setState("error");
+    } else {
+      setState("sent");
+    }
   }
 
   async function google() {
+    setGooglePending(true);
     const supabase = createClient();
-    await supabase.auth.signInWithOAuth({
+    const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
         redirectTo: `${location.origin}/auth/callback?next=${encodeURIComponent(next)}`,
       },
     });
+    if (error) {
+      setErrorMessage("Google sign-in didn't start — try again, or use the email link.");
+      setState("error");
+      setGooglePending(false);
+    }
   }
 
   if (state === "sent") {
@@ -61,12 +76,14 @@ export default function JoinForm({ next }: { next: string }) {
         </button>
         {state === "error" && (
           <p className="note" style={{ marginTop: 12 }}>
-            That didn&apos;t send — check the address and try again.
+            {errorMessage}
           </p>
         )}
       </form>
       <p style={{ margin: "18px 0 10px", fontFamily: "var(--mono)", fontSize: 11, letterSpacing: ".1em", color: "var(--ink-dim)" }}>OR</p>
-      <button className="btn" onClick={google}>Continue with Google</button>
+      <button className="btn" onClick={google} disabled={googlePending}>
+        {googlePending ? "Redirecting…" : "Continue with Google"}
+      </button>
     </div>
   );
 }

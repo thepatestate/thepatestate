@@ -27,6 +27,11 @@ export default async function JoinPage({
               That link expired or was already used — request a fresh one below.
             </p>
           )}
+          {error === "oauth" && (
+            <p className="note" style={{ marginBottom: 16 }}>
+              Google sign-in didn&apos;t complete — try again, or use the email link instead.
+            </p>
+          )}
           <JoinForm next={next} />
         </div>
       </section>

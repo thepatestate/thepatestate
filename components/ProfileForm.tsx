@@ -20,7 +20,9 @@ export default function ProfileForm({ favoriteTeam }: { favoriteTeam: string | n
           {TEAMS_TOP25.map((t) => <option key={t.value} value={t.value}>{t.label}</option>)}
         </optgroup>
         <optgroup label="All Teams A–Z">
-          {TEAMS_ALL.map((t) => <option key={t.value} value={t.value}>{t.label}</option>)}
+          {TEAMS_ALL.filter((t) => !TEAMS_TOP25.some((x) => x.value === t.value)).map((t) => (
+            <option key={t.value} value={t.value}>{t.label}</option>
+          ))}
         </optgroup>
       </select>
       {state.error && <p className="note" style={{ marginBottom: 12 }}>{state.error}</p>}

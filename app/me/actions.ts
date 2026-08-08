@@ -18,9 +18,11 @@ export async function updateFavoriteTeam(
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return { error: "Session expired — sign in again." };
   const favoriteTeam = String(formData.get("favorite_team") ?? "") || null;
-  const { error } = await supabase
+  const { data, error } = await supabase
     .from("citizens")
     .update({ favorite_team: favoriteTeam })
-    .eq("id", user.id);
-  return error ? { error: "Save failed — try again." } : { saved: true };
+    .eq("id", user.id)
+    .select("id");
+  if (error || !data || data.length === 0) return { error: "Save failed — try again." };
+  return { saved: true };
 }

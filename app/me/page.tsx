@@ -8,7 +8,7 @@ export const metadata: Metadata = { title: "Your Seat" };
 
 export default async function MePage() {
   const citizen = await getCitizen();
-  if (!citizen) redirect("/join?next=/me");
+  if (!citizen) redirect("/welcome?next=/me");
   const user = await getUser();
 
   return (

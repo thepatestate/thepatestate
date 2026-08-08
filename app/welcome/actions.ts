@@ -2,6 +2,7 @@
 import { redirect } from "next/navigation";
 import { validateHandle } from "@/lib/handle";
 import { createClient } from "@/lib/supabase/server";
+import { safeNextPath } from "@/lib/next-path";
 
 export interface WelcomeState {
   error?: string;
@@ -41,6 +42,5 @@ export async function createCitizen(
     return { error: error.code === "23505" ? ERROR_COPY.taken : "Something hiccuped — try again." };
   }
 
-  const rawNext = String(formData.get("next") ?? "/");
-  redirect(rawNext.startsWith("/") ? rawNext : "/");
+  redirect(safeNextPath(String(formData.get("next") ?? "/")));
 }

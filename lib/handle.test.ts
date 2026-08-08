@@ -32,4 +32,13 @@ describe("validateHandle", () => {
   it("every reserved entry is itself lowercase", () => {
     for (const r of RESERVED_HANDLES) expect(r).toBe(r.toLowerCase());
   });
+  it("rejects handles containing blocked slurs, anywhere in the string", () => {
+    expect(validateHandle("chink")).toEqual({ ok: false, error: "reserved" });
+    expect(validateHandle("BigTranny99")).toEqual({ ok: false, error: "reserved" });
+    expect(validateHandle("xx_faggot_xx")).toEqual({ ok: false, error: "reserved" });
+  });
+  it("does not false-positive on ordinary words (Scunthorpe guard)", () => {
+    expect(validateHandle("grass").ok).toBe(true);
+    expect(validateHandle("firstclass").ok).toBe(true);
+  });
 });

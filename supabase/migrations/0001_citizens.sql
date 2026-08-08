@@ -4,7 +4,14 @@ create table public.citizens (
   display_handle text not null,
   favorite_team text,
   joined_at timestamptz not null default now(),
-  constraint handle_format check (handle ~ '^[a-z0-9][a-z0-9_]{1,18}[a-z0-9]$')
+  constraint handle_format check (handle ~ '^[a-z0-9][a-z0-9_]{1,18}[a-z0-9]$'),
+  constraint display_handle_matches check (lower(display_handle) = handle),
+  constraint favorite_team_len check (favorite_team is null or char_length(favorite_team) <= 40),
+  constraint handle_not_reserved check (handle not in (
+    'josh','joshpate','pate','patestate','thepatestate','admin','administrator',
+    'mod','moderator','official','staff','support','wiredesk','thewire',
+    'citizen','porch','mayor','help','api','root','system'
+  ))
 );
 
 create unique index citizens_handle_key on public.citizens (handle);
