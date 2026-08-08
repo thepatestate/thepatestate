@@ -2,15 +2,15 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** A three-page Next.js site (Home, The Show, About) that auto-populates from Josh Pate's YouTube RSS feed via ISR and funnels every click to his channel.
+**Goal:** Project A of the Weeks 1–2 scope: a pixel-faithful Next.js port of all v1.1 wireframe pages, with the YouTube-driven surfaces live (RSS + ISR) and everything else in labeled preseason-preview state.
 
-**Architecture:** Next.js App Router at the repo root. One server-side module (`lib/youtube.ts`) fetches and parses the channel's public RSS feed with `revalidate: 21600`; server components consume its typed `Video[]`. No database, no API keys, no client-side fetching. Design system ported verbatim from the static mockups in `thepatestatesite/`.
+**Architecture:** Next.js App Router at the repo root. One server-side module (`lib/youtube.ts`) fetches and parses the channel's public RSS feed with `revalidate: 21600`; server components consume its typed `Video[]`. No database, no API keys, no client-side fetching. Design system ported verbatim from the approved wireframes in `wireframes/`.
 
 **Tech Stack:** Next.js (latest, App Router, TypeScript), React, vitest (dev only). No other runtime dependencies.
 
 ## Global Constraints
 
-- Spec: `docs/superpowers/specs/2026-08-07-pate-state-site-design.md`. Read it before starting.
+- Spec: `docs/superpowers/specs/2026-08-07-pate-state-weeks-1-2-design.md` (v2). Read it before starting.
 - YouTube channel ID: `UCg-q_MDeWQrjizr1VPLEpYg` (handle `@JoshPateCFB`, "Josh Pate's College Football Show"). Feed URL: `https://www.youtube.com/feeds/videos.xml?channel_id=UCg-q_MDeWQrjizr1VPLEpYg`
 - Apple Podcasts URL (verified real): `https://podcasts.apple.com/us/podcast/josh-pates-college-football-show/id1485905502`
 - Subscribe URL: `https://www.youtube.com/@JoshPateCFB?sub_confirmation=1`
@@ -18,7 +18,10 @@
 - **De-faking rule (from spec):** anything that claims to be live data must actually come from the feed, or it gets cut/reworded as evergreen. No fake view counts, poll rankings, leaderboards, subscriber numbers, citizen counts, or mailbag quotes anywhere.
 - Runtime deps limited to `next react react-dom`. Dev deps: `typescript @types/node @types/react @types/react-dom vitest`.
 - The repo has a local git identity (`thepatestate <thepatestate@users.noreply.github.com>`) already configured — do not change it, do not commit with any other identity.
-- Design source of truth: `thepatestatesite/*.html` mockups. Fonts: Big Shoulders Display (display), Newsreader (body), IBM Plex Mono (mono) — loaded via `next/font/google`, NOT `<link>` tags.
+- Design source of truth: `wireframes/*.html` (Josh's approved v1.1 set — `index.html`, not the old `index_43.html`). Fonts: Big Shoulders Display (display), Newsreader (body), IBM Plex Mono (mono) — loaded via `next/font/google`, NOT `<link>` tags.
+- **Demo-state rule (spec v2):** pages whose data engines arrive in later sub-projects (scores, poll, pick'em, playoffs, recruiting, notebook, porch, ledger, shop, teams) are ported pixel-faithful WITH the wireframe's sample data, but every such data surface gets a visible `<PreseasonChip />` label. Label it, don't fake it. Live surfaces (episodes, clips) show only real feed data.
+- Social links (verified, manual §24): X `https://x.com/JoshPateCFB`, Instagram `https://www.instagram.com/joshpatecfb`, TikTok `https://www.tiktok.com/@joshpatecfb`, merch `https://patestatematerial.com`. Export as `SOCIAL_LINKS` from `lib/youtube.ts` alongside the other constants.
+- Full nav order (wireframe v1.1): The Show `/show`, Scores `/scores`, Pick'Em `/pickem`, JP Poll `/poll`, Playoffs `/playoffs`, Recruiting `/recruiting`, Notebook `/notebook`, The Porch `/porch`, Tailgate `/tailgate`, Shop `/shop`. About lives in the footer.
 - Node 20+. Commit after every task at minimum.
 
 ---
@@ -82,7 +85,7 @@ next-env.d.ts
     "paths": { "@/*": ["./*"] }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules", "thepatestatesite"]
+  "exclude": ["node_modules", "wireframes"]
 }
 ```
 
@@ -230,6 +233,13 @@ export const SUBSCRIBE_URL = `${CHANNEL_URL}?sub_confirmation=1`;
 export const APPLE_PODCASTS_URL =
   "https://podcasts.apple.com/us/podcast/josh-pates-college-football-show/id1485905502";
 
+export const SOCIAL_LINKS = {
+  x: "https://x.com/JoshPateCFB",
+  instagram: "https://www.instagram.com/joshpatecfb",
+  tiktok: "https://www.tiktok.com/@joshpatecfb",
+  merch: "https://patestatematerial.com",
+} as const;
+
 export interface Video {
   id: string;
   title: string;
@@ -303,9 +313,9 @@ git add lib && git commit -m "feat: YouTube RSS feed parser with ISR fetch"
 
 - [ ] **Step 1: Port the stylesheet**
 
-Copy the entire `<style>` block contents of `thepatestatesite/index_43.html` (lines 6–~250, tokens through page sections) into `app/globals.css`. Then:
+Copy the entire `<style>` block contents of `wireframes/index.html` (tokens through page sections) into `app/globals.css`. Then:
 1. Delete the `--display`, `--body`, `--mono` definitions from `:root` (next/font provides them via the `<html>` className in Step 3).
-2. Append any classes used by `show.html` / `about.html` that aren't already present (diff their style blocks; the mockups are per-page copies with heavy overlap — `.player`, `.ep`, `.thumb`, `.chip`, `.page-head` etc. already exist in index_43).
+2. Append any classes used by `show.html` / `about.html` that aren't already present (diff their style blocks; the mockups are per-page copies with heavy overlap — `.player`, `.ep`, `.thumb`, `.chip`, `.page-head` etc. already exist in wireframes/index.html).
 3. Keep the ticker, yardline, nav, drawer, hero, panel, art, footer classes verbatim — the design must be pixel-faithful to the mockups.
 
 - [ ] **Step 2: Write `components/Nav.tsx`** (client component — mobile drawer needs state)
@@ -318,7 +328,15 @@ import { SUBSCRIBE_URL } from "@/lib/youtube";
 
 const LINKS = [
   { href: "/show", label: "The Show" },
-  { href: "/about", label: "About" },
+  { href: "/scores", label: "Scores" },
+  { href: "/pickem", label: "Pick'Em" },
+  { href: "/poll", label: "JP Poll" },
+  { href: "/playoffs", label: "Playoffs" },
+  { href: "/recruiting", label: "Recruiting" },
+  { href: "/notebook", label: "Notebook" },
+  { href: "/porch", label: "The Porch" },
+  { href: "/tailgate", label: "Tailgate" },
+  { href: "/shop", label: "Shop" },
 ];
 
 export default function Nav() {
@@ -364,7 +382,7 @@ export default function Ticker() {
 }
 ```
 
-- [ ] **Step 4: Write `components/Footer.tsx`** — port the footer markup from `index_43.html` (bottom of the body), reduced to: wordmark, the three real links (The Show, About, Subscribe), and the tagline "The Front Porch of College Football". Cut newsletter forms and fake nav sections. Use the mockup's footer classes.
+- [ ] **Step 4: Write `components/Footer.tsx`** — port the footer markup from `wireframes/index.html` (bottom of the body), including the v1.1 social row (`▶ YOUTUBE · 𝕏 @JOSHPATECFB · ◉ INSTAGRAM · ♪ TIKTOK`), using `SOCIAL_LINKS` + `CHANNEL_URL` from `lib/youtube.ts` for hrefs (all `target="_blank" rel="noopener"`). Include site nav links, About link, and the tagline "The Front Porch of College Football". Cut newsletter forms (Playbook signup arrives in sub-project D). Use the wireframe's footer classes.
 
 - [ ] **Step 5: Rewrite `app/layout.tsx`** with fonts + chrome
 
@@ -405,7 +423,7 @@ Note: `next/font` `variable` emits `--display` etc. as font-family *values* diff
 - [ ] **Step 6: Verify visually**
 
 Run: `npm run build && (npm run start &) && sleep 3 && curl -s http://localhost:3000 | grep -o "The Pate" | head -1; kill %1`
-Expected: build passes; wordmark present. Then eyeball `npm run dev` against `thepatestatesite/index_43.html` in a browser: fonts, ticker animation, nav layout, mobile drawer at <1080px.
+Expected: build passes; wordmark present. Then eyeball `npm run dev` against `wireframes/index.html` in a browser: fonts, ticker animation, nav layout, mobile drawer at <1080px.
 
 - [ ] **Step 7: Commit**
 
@@ -533,6 +551,13 @@ export default function SubscribeCTA({ label = "Subscribe on YouTube" }: { label
 }
 ```
 
+`components/PreseasonChip.tsx` (demo-state rule — spec v2):
+```tsx
+export default function PreseasonChip({ label = "Preseason preview" }: { label?: string }) {
+  return <span className="note">{label} — live data arrives with the season</span>;
+}
+```
+
 - [ ] **Step 6: Verify build** — `npm run build` → passes (components unused yet; that's fine).
 
 - [ ] **Step 7: Commit**
@@ -547,7 +572,7 @@ git add components lib && git commit -m "feat: video components + date formattin
 
 **Files:**
 - Modify: `app/page.tsx`
-- Reference: `thepatestatesite/index_43.html` (design), sections to KEEP: hero, "the show is the anchor tenant" episode block, weekly schedule; CUT: JP Poll ticker/board, pick'em panels, notebook/art grid, shop, porch, citizen CTA.
+- Reference: `wireframes/index.html` (design), sections to KEEP: hero, "the show is the anchor tenant" episode block, weekly schedule; CUT: JP Poll ticker/board, pick'em panels, notebook/art grid, shop, porch, citizen CTA.
 
 **Interfaces:**
 - Consumes: `getVideos`, `isEpisode`, `CHANNEL_URL` from `lib/youtube.ts`; `EpisodeHero`, `VideoGrid`, `SubscribeCTA` components.
@@ -615,7 +640,7 @@ export default async function Home() {
 }
 ```
 
-- [ ] **Step 2: Visual pass against the mockup** — run `npm run dev`, compare with `index_43.html` in a browser. Adjust spacing/section classes (`on-dark`, `yardline`, `tight`) to match the mockup's rhythm. Fix any missing CSS classes by porting them from the mockup style block.
+- [ ] **Step 2: Visual pass against the mockup** — run `npm run dev`, compare with `wireframes/index.html` in a browser. Adjust spacing/section classes (`on-dark`, `yardline`, `tight`) to match the mockup's rhythm. Fix any missing CSS classes by porting them from the mockup style block.
 
 - [ ] **Step 3: Verify build + tests** — `npm run build && npm test` → both pass.
 
@@ -631,7 +656,7 @@ git add app && git commit -m "feat: home page with live latest episode + recent 
 
 **Files:**
 - Create: `app/show/page.tsx`
-- Reference: `thepatestatesite/show.html` — KEEP: latest-episode block, platform chips, weekly series list, latest drops, clips row; CUT: fake view counts, "Most Popular — All Time" (fake), mailbag submit, episode archive table (fake), "500K+ Citizens" claim.
+- Reference: `wireframes/show.html` — KEEP: latest-episode block, platform chips, weekly series list, latest drops, clips row; CUT: fake view counts, "Most Popular — All Time" (fake), mailbag submit, episode archive table (fake), "500K+ Citizens" claim.
 
 **Interfaces:**
 - Consumes: `getVideos`, `isEpisode`, `videoUrl`, `CHANNEL_URL`, `APPLE_PODCASTS_URL` from `lib/youtube.ts`; `EpisodeHero`, `VideoGrid`, `SubscribeCTA`, `formatDate`.
@@ -732,7 +757,7 @@ export default async function ShowPage() {
 }
 ```
 
-- [ ] **Step 3: Visual pass** against `show.html` in dev mode; port any missing classes.
+- [ ] **Step 3: Visual pass** against `wireframes/show.html` in dev mode; port any missing classes.
 
 - [ ] **Step 4: Verify build + tests** — `npm run build && npm test` → pass. Also verify `/show` renders with the dev server.
 
@@ -748,19 +773,19 @@ git add app lib && git commit -m "feat: show page with live episodes, clips, pla
 
 **Files:**
 - Create: `app/about/page.tsx`
-- Reference: `thepatestatesite/about.html`
+- Reference: `wireframes/about.html`
 
 **Interfaces:**
 - Consumes: `SubscribeCTA`, `CHANNEL_URL`.
 
-- [ ] **Step 1: Read `thepatestatesite/about.html`** and port its narrative sections (who Josh Pate is, what the Pate State is, the show's ethos). Rules:
+- [ ] **Step 1: Read `wireframes/about.html`** and port its narrative sections (who Josh Pate is, what the Pate State is, the show's ethos). Rules:
   - Keep: page-head, the story/ethos prose, the weekly-schedule panel, final CTA band.
   - Cut: any subscriber counts, citizen counts, fake stats blocks (`.record .stat .num` numbers), fake press quotes, team/staff sections with invented names.
   - Reword any claim that implies live data into evergreen copy (e.g., "half a million citizens" → "a porch that's always open").
   - Structure: `page-head` header + 2–3 `section` blocks using existing classes (`panel`, `duo`, `on-soft`) + closing `<section className="on-field">` with `<SubscribeCTA />`.
   - Set `export const metadata: Metadata = { title: "About" };`
 
-- [ ] **Step 2: Visual pass** against `about.html` in dev mode.
+- [ ] **Step 2: Visual pass** against `wireframes/about.html` in dev mode.
 
 - [ ] **Step 3: Verify build + tests** — `npm run build && npm test` → pass.
 
@@ -769,6 +794,99 @@ git add app lib && git commit -m "feat: show page with live episodes, clips, pla
 ```bash
 git add app && git commit -m "feat: about page, evergreen copy only"
 ```
+
+
+---
+
+### Task 7a: Ritual pages — Scores, Pick'Em, JP Poll, Playoffs
+
+**Files:**
+- Create: `app/scores/page.tsx`, `app/pickem/page.tsx`, `app/poll/page.tsx`, `app/playoffs/page.tsx`
+- Modify: `app/globals.css` (append page-specific classes)
+- Reference: `wireframes/scores.html`, `wireframes/pickem.html`, `wireframes/poll.html`, `wireframes/playoffs.html`
+
+**Interfaces:**
+- Consumes: `PreseasonChip` from `components/PreseasonChip.tsx`; global chrome from Task 3.
+- Produces: static preview routes later hydrated by sub-projects (scores → CFBD engine, poll → ballot engine, pickem → picks engine, playoffs → bracket engine). Keep each page's sample data in clearly-marked `const DEMO_*` arrays at the top of the file so the future data hookup is a drop-in replacement.
+
+**Port recipe (applies to every page in this task):**
+
+1. Read the wireframe file listed for the route. Its `<body>` between the nav and footer is the target markup; the global chrome (Ticker/Nav/Footer) is already provided by `app/layout.tsx` — never duplicate it.
+2. Convert HTML to JSX in a server component (`class` → `className`, self-close voids, `style="..."` → object syntax, HTML entities kept via JSX strings). Preserve every class name — the CSS is already global.
+3. Append any CSS classes the page needs that `app/globals.css` lacks (diff the wireframe's `<style>` block; add missing classes verbatim at the end of globals.css with a `/* <page> */` comment).
+4. Sample-data surfaces (rankings, leaderboards, scores, records, mailbag quotes, prices) stay EXACTLY as wireframed, but add `<PreseasonChip />` directly under the section's `h2.display` (or `page-head` for whole-page previews). Interactive controls that have no engine yet (vote buttons, pick buttons, forms, "Become a Citizen") render as disabled `<button className="btn" disabled>` or link to `/#` — never a dead-looking broken control, never a fake success state.
+5. Internal links use the route map from Global Constraints; external links (`patestatematerial.com`, socials, YouTube) open in new tabs with `rel="noopener"`.
+6. Every page exports `metadata` with its wireframe `<title>` text (minus the "— The Pate State" suffix; the layout template appends it).
+7. Verify: `npm run build && npm test` pass; view the route in `npm run dev` side-by-side with the wireframe file opened directly in a browser — spacing, section order, and colors must match.
+
+- [ ] **Step 1: Port `/scores` from `wireframes/scores.html`** (build + visual check per recipe)
+- [ ] **Step 2: Port `/pickem` from `wireframes/pickem.html`** — prize-ladder copy stays (it's Josh's plan, not fake data); leaderboard gets the chip
+- [ ] **Step 3: Port `/poll` from `wireframes/poll.html`** — comparison tables + rank cards get one chip per section
+- [ ] **Step 4: Port `/playoffs` from `wireframes/playoffs.html`** — both bracket renders get chips; the AI Predictor tool panel renders with its button disabled and a `Predictor arrives with the season` note
+- [ ] **Step 5: Run `npm run build && npm test`** — pass
+- [ ] **Step 6: Commit** — `git add app components && git commit -m "feat: ritual pages (scores, pickem, poll, playoffs) in preseason-preview state"`
+
+---
+
+### Task 7b: Content pages — Notebook, Recruiting, Teams, Team page, Report
+
+**Files:**
+- Create: `app/notebook/page.tsx`, `app/recruiting/page.tsx`, `app/teams/page.tsx`, `app/teams/georgia/page.tsx`, `app/report/page.tsx`
+- Modify: `app/globals.css`
+- Reference: `wireframes/notebook.html`, `wireframes/recruiting.html`, `wireframes/teams.html`, `wireframes/team-georgia.html`, `wireframes/report.html`
+
+**Interfaces:**
+- Consumes: `PreseasonChip`, global chrome.
+- Produces: `/teams/georgia` is the template route the future 136 team pages generalize from — structure its sections (rank history, schedule, recruiting, articles) as separate components in the page file so parameterization later is mechanical.
+
+**Port recipe (applies to every page in this task):**
+
+1. Read the wireframe file listed for the route. Its `<body>` between the nav and footer is the target markup; the global chrome (Ticker/Nav/Footer) is already provided by `app/layout.tsx` — never duplicate it.
+2. Convert HTML to JSX in a server component (`class` → `className`, self-close voids, `style="..."` → object syntax, HTML entities kept via JSX strings). Preserve every class name — the CSS is already global.
+3. Append any CSS classes the page needs that `app/globals.css` lacks (diff the wireframe's `<style>` block; add missing classes verbatim at the end of globals.css with a `/* <page> */` comment).
+4. Sample-data surfaces (rankings, leaderboards, scores, records, mailbag quotes, prices) stay EXACTLY as wireframed, but add `<PreseasonChip />` directly under the section's `h2.display` (or `page-head` for whole-page previews). Interactive controls that have no engine yet (vote buttons, pick buttons, forms, "Become a Citizen") render as disabled `<button className="btn" disabled>` or link to `/#` — never a dead-looking broken control, never a fake success state.
+5. Internal links use the route map from Global Constraints; external links (`patestatematerial.com`, socials, YouTube) open in new tabs with `rel="noopener"`.
+6. Every page exports `metadata` with its wireframe `<title>` text (minus the "— The Pate State" suffix; the layout template appends it).
+7. Verify: `npm run build && npm test` pass; view the route in `npm run dev` side-by-side with the wireframe file opened directly in a browser — spacing, section order, and colors must match.
+
+- [ ] **Step 1: Port `/notebook` from `wireframes/notebook.html`** — article cards keep wireframe sample headlines with a single page-head chip (`Preseason preview — the Notebook opens with the season`); do NOT link sample headlines to `article.html` (that template belongs to sub-project C); cards render as non-link `<div>`s
+- [ ] **Step 2: Port `/recruiting` from `wireframes/recruiting.html`**
+- [ ] **Step 3: Port `/teams` from `wireframes/teams.html`**
+- [ ] **Step 4: Port `/teams/georgia` from `wireframes/team-georgia.html`**
+- [ ] **Step 5: Port `/report` from `wireframes/report.html`** — shop links point to `/shop`
+- [ ] **Step 6: Run `npm run build && npm test`** — pass
+- [ ] **Step 7: Commit** — `git add app && git commit -m "feat: content pages (notebook, recruiting, teams, report) in preseason-preview state"`
+
+---
+
+### Task 7c: Community & commerce pages — The Porch, Tailgate, Shop, Ledger
+
+**Files:**
+- Create: `app/porch/page.tsx`, `app/tailgate/page.tsx`, `app/shop/page.tsx`, `app/ledger/page.tsx`
+- Modify: `app/globals.css`
+- Reference: `wireframes/porch.html`, `wireframes/tailgate.html`, `wireframes/shop.html`, `wireframes/ledger.html`
+
+**Interfaces:**
+- Consumes: `PreseasonChip`, `SOCIAL_LINKS`, global chrome.
+- Produces: static preview routes later hydrated by citizenship (B) and shop/ledger engines.
+
+**Port recipe (applies to every page in this task):**
+
+1. Read the wireframe file listed for the route. Its `<body>` between the nav and footer is the target markup; the global chrome (Ticker/Nav/Footer) is already provided by `app/layout.tsx` — never duplicate it.
+2. Convert HTML to JSX in a server component (`class` → `className`, self-close voids, `style="..."` → object syntax, HTML entities kept via JSX strings). Preserve every class name — the CSS is already global.
+3. Append any CSS classes the page needs that `app/globals.css` lacks (diff the wireframe's `<style>` block; add missing classes verbatim at the end of globals.css with a `/* <page> */` comment).
+4. Sample-data surfaces (rankings, leaderboards, scores, records, mailbag quotes, prices) stay EXACTLY as wireframed, but add `<PreseasonChip />` directly under the section's `h2.display` (or `page-head` for whole-page previews). Interactive controls that have no engine yet (vote buttons, pick buttons, forms, "Become a Citizen") render as disabled `<button className="btn" disabled>` or link to `/#` — never a dead-looking broken control, never a fake success state.
+5. Internal links use the route map from Global Constraints; external links (`patestatematerial.com`, socials, YouTube) open in new tabs with `rel="noopener"`.
+6. Every page exports `metadata` with its wireframe `<title>` text (minus the "— The Pate State" suffix; the layout template appends it).
+7. Verify: `npm run build && npm test` pass; view the route in `npm run dev` side-by-side with the wireframe file opened directly in a browser — spacing, section order, and colors must match.
+
+- [ ] **Step 1: Port `/porch` from `wireframes/porch.html`** — mailbag sample Q&As get a chip (`Preseason preview — the real mailbag opens with citizenship`); "Submit Your Question" and "Open My Profile" buttons disabled; the wireframe's "Follow the Mayor" social panel uses `SOCIAL_LINKS`
+- [ ] **Step 2: Port `/tailgate` from `wireframes/tailgate.html`**
+- [ ] **Step 3: Port `/shop` from `wireframes/shop.html`** — all product CTAs link to `https://patestatematerial.com` (Josh's real existing store, manual §24) in a new tab; add one line under the page-head: `The State Store lives at patestatematerial.com while this shelf is under construction.`
+- [ ] **Step 4: Port `/ledger` from `wireframes/ledger.html`** — log-a-game form controls disabled with chip
+- [ ] **Step 5: Run `npm run build && npm test`** — pass
+- [ ] **Step 6: Commit** — `git add app && git commit -m "feat: community pages (porch, tailgate, shop, ledger) in preseason-preview state"`
+
 
 ---
 
@@ -828,7 +946,7 @@ import type { MetadataRoute } from "next";
 const BASE = "https://thepatestate.vercel.app"; // update when custom domain lands
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  return ["", "/show", "/about"].map((p) => ({ url: `${BASE}${p}`, changeFrequency: "daily" as const }));
+  return ["", "/show", "/about", "/scores", "/pickem", "/poll", "/playoffs", "/recruiting", "/notebook", "/porch", "/tailgate", "/shop", "/teams", "/teams/georgia", "/report", "/ledger"].map((p) => ({ url: `${BASE}${p}`, changeFrequency: "daily" as const }));
 }
 ```
 
