@@ -1,8 +1,29 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { getPublishedArticles } from "@/lib/sanity";
+import { formatDate } from "@/lib/format";
 
 export const metadata: Metadata = { title: "The Notebook" };
+export const revalidate = 300;
+
+// Same duplication pattern as HelmetIcon below: a small per-file lookup
+// rather than a shared lib module (this codebase doesn't DRY up
+// presentational bits — see components/ArticleBody.tsx for the sibling copy).
+const SERIES_LABELS: Record<string, string> = {
+  "weekend-truths": "Weekend Truths",
+  "poll-day": "Poll Day",
+  "sit-down": "The Sit-Down",
+  "picks-drop": "Picks Drop",
+  "espn-friday": "The ESPN Show",
+  mailbag: "The Mailbag",
+  general: "The Notebook",
+};
+
+function seriesLabel(series?: string): string {
+  if (!series) return "The Notebook";
+  return SERIES_LABELS[series] ?? series;
+}
 
 // --- Preseason-preview sample data ---------------------------------------
 // Stands in for the Notebook CMS (articles, the wire feed, most-popular
@@ -153,7 +174,11 @@ const DEMO_WIRE = [
   },
 ] as const;
 
-export default function NotebookPage() {
+export default async function NotebookPage() {
+  const articles = await getPublishedArticles(7);
+  const lead = articles[0] ?? null;
+  const featured = articles.slice(1, 4);
+
   return (
     <main>
       <header className="page-head">
@@ -165,8 +190,10 @@ export default function NotebookPage() {
             sport, new every weekday.
           </p>
           {/* Hardcoded: PreseasonChip always appends "— live data arrives with the
-              season", which would duplicate the trailing clause here. */}
-          <span className="note">Preseason preview — the Notebook opens with the season</span>
+              season", which would duplicate the trailing clause here. Once real
+              articles exist the page is no longer a preseason preview, so the
+              chip drops entirely rather than swapping to different copy. */}
+          {!lead && <span className="note">Preseason preview — the Notebook opens with the season</span>}
         </div>
       </header>
 
@@ -180,35 +207,69 @@ export default function NotebookPage() {
                 ))}
               </div>
 
-              <div className="lead-story">
-                <div className="ph">
-                  <button className="playbtn" aria-label="Play" disabled>▶</button>
-                </div>
-                <div>
-                  <span className="fr">📝 WEEKEND TRUTHS</span>
-                  <h3>What Saturday Actually Told Us</h3>
-                  <p className="deck">
-                    Five things that were real, three overreactions to ignore, and the one stat nobody&apos;s
-                    talking about — the written spine of the whole week.
-                  </p>
-                  <div className="meta">JOSH PATE · 6 MIN READ · TODAY 7:00 AM</div>
-                </div>
-              </div>
-
-              <div className="feat-grid">
-                {DEMO_FEATURED.map((f) => (
-                  <div className="feat" key={f.title}>
-                    <div
-                      className="ph"
-                      style={f.dark ? { background: "repeating-linear-gradient(-45deg,var(--navy-2) 0 10px,#1A2E47 10px 20px)" } : undefined}
-                    />
-                    <div className="bd">
-                      <h4>{f.title}</h4>
-                      <div className="meta">{f.meta}</div>
+              {lead ? (
+                <Link href={`/notebook/${lead.slug.current}`} className="lead-story" style={{ textDecoration: "none", color: "inherit" }}>
+                  <div className="ph">
+                    <span className="playbtn" aria-hidden="true">▶</span>
+                  </div>
+                  <div>
+                    <span className="fr">📝 {seriesLabel(lead.episode?.series)}</span>
+                    <h3>{lead.headline}</h3>
+                    {lead.dek && <p className="deck">{lead.dek}</p>}
+                    <div className="meta">
+                      {lead.byline.toUpperCase()}
+                      {lead.publishedAt ? ` · ${formatDate(lead.publishedAt)}` : ""}
                     </div>
                   </div>
-                ))}
-              </div>
+                </Link>
+              ) : (
+                <div className="lead-story">
+                  <div className="ph">
+                    <button className="playbtn" aria-label="Play" disabled>▶</button>
+                  </div>
+                  <div>
+                    <span className="fr">📝 WEEKEND TRUTHS</span>
+                    <h3>What Saturday Actually Told Us</h3>
+                    <p className="deck">
+                      Five things that were real, three overreactions to ignore, and the one stat nobody&apos;s
+                      talking about — the written spine of the whole week.
+                    </p>
+                    <div className="meta">JOSH PATE · 6 MIN READ · TODAY 7:00 AM</div>
+                  </div>
+                </div>
+              )}
+
+              {lead && featured.length > 0 ? (
+                <div className="feat-grid">
+                  {featured.map((a) => (
+                    <Link className="feat" href={`/notebook/${a.slug.current}`} key={a._id}>
+                      <div className="ph" />
+                      <div className="bd">
+                        <h4>{a.headline}</h4>
+                        <div className="meta">
+                          {a.byline}
+                          {a.publishedAt ? ` · ${formatDate(a.publishedAt)}` : ""}
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              ) : !lead ? (
+                <div className="feat-grid">
+                  {DEMO_FEATURED.map((f) => (
+                    <div className="feat" key={f.title}>
+                      <div
+                        className="ph"
+                        style={f.dark ? { background: "repeating-linear-gradient(-45deg,var(--navy-2) 0 10px,#1A2E47 10px 20px)" } : undefined}
+                      />
+                      <div className="bd">
+                        <h4>{f.title}</h4>
+                        <div className="meta">{f.meta}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : null}
 
               <p className="eyebrow" style={{ marginTop: 38 }}>Latest News</p>
               <div style={{ marginTop: 4 }}>

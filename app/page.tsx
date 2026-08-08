@@ -1,6 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { getVideos, isEpisode, CHANNEL_URL } from "@/lib/youtube";
+import { getPublishedArticles } from "@/lib/sanity";
+import { formatDate } from "@/lib/format";
 import EpisodeHero from "@/components/EpisodeHero";
 import VideoGrid from "@/components/VideoGrid";
 import SubscribeCTA from "@/components/SubscribeCTA";
@@ -55,6 +57,24 @@ function HelmetIcon({ bg, diag, mask }: IconColors) {
       </g>
     </svg>
   );
+}
+
+// Same duplication pattern as HelmetIcon above: a small per-file lookup
+// rather than a shared lib module (see components/ArticleBody.tsx and
+// app/notebook/page.tsx for the sibling copies).
+const SERIES_LABELS: Record<string, string> = {
+  "weekend-truths": "Weekend Truths",
+  "poll-day": "Poll Day",
+  "sit-down": "The Sit-Down",
+  "picks-drop": "Picks Drop",
+  "espn-friday": "The ESPN Show",
+  mailbag: "The Mailbag",
+  general: "The Notebook",
+};
+
+function seriesLabel(series?: string): string {
+  if (!series) return "The Notebook";
+  return SERIES_LABELS[series] ?? series;
 }
 
 const DEMO_NOTEBOOK_FEATURED = [
@@ -157,6 +177,9 @@ export default async function Home() {
   const videos = await getVideos();
   const latest = videos.find(isEpisode) ?? videos[0];
   const recent = videos.filter((v) => v !== latest).slice(0, 6);
+  const notebookArticles = await getPublishedArticles(3);
+  const notebookLead = notebookArticles[0] ?? null;
+  const notebookNext = notebookArticles.slice(1, 3);
 
   return (
     <main>
@@ -287,61 +310,112 @@ export default async function Home() {
           <h2 className="display">The Notebook</h2>
           <PreseasonChip />
           <div className="duo" style={{ gridTemplateColumns: "2fr 1fr", marginTop: 26 }}>
-            <div>
-              <Link href="/notebook" style={{ display: "block" }}>
-                <div
-                  style={{
-                    aspectRatio: "16/8",
-                    borderRadius: 6,
-                    background: "linear-gradient(150deg,var(--navy) 0%,#1A2E47 60%,var(--field) 100%)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    border: "1px solid var(--line-l)",
-                  }}
-                >
-                  <span className="playbtn" aria-hidden="true">▶</span>
+            {notebookLead ? (
+              <div>
+                <Link href={`/notebook/${notebookLead.slug.current}`} style={{ display: "block" }}>
+                  <div
+                    style={{
+                      aspectRatio: "16/8",
+                      borderRadius: 6,
+                      background: "linear-gradient(150deg,var(--navy) 0%,#1A2E47 60%,var(--field) 100%)",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      border: "1px solid var(--line-l)",
+                    }}
+                  >
+                    <span className="playbtn" aria-hidden="true">▶</span>
+                  </div>
+                </Link>
+                <div style={{ marginTop: 16 }}><span className="fr">📝 {seriesLabel(notebookLead.episode?.series)}</span></div>
+                <h3 className="display" style={{ fontSize: "clamp(24px,3vw,33px)", lineHeight: 0.95, margin: "6px 0 8px" }}>
+                  <Link href={`/notebook/${notebookLead.slug.current}`}>{notebookLead.headline}</Link>
+                </h3>
+                {notebookLead.dek && (
+                  <p style={{ fontSize: 15, color: "var(--ink-dim)" }}>{notebookLead.dek}</p>
+                )}
+                <div style={{ fontFamily: "var(--mono)", fontSize: 11, color: "var(--ink-dim)", marginTop: 10 }}>
+                  <b style={{ color: "var(--ink)" }}>{notebookLead.byline}</b>
+                  {notebookLead.publishedAt ? ` · ${formatDate(notebookLead.publishedAt)}` : ""}
                 </div>
-              </Link>
-              <div style={{ marginTop: 16 }}><span className="fr">📝 WEEKEND TRUTHS</span></div>
-              <h3 className="display" style={{ fontSize: "clamp(24px,3vw,33px)", lineHeight: 0.95, margin: "6px 0 8px" }}>
-                <Link href="/notebook">What Saturday Actually Told Us</Link>
-              </h3>
-              <p style={{ fontSize: 15, color: "var(--ink-dim)" }}>
-                Five things that were real, three overreactions to ignore, and the one stat nobody&apos;s talking
-                about — new every Monday at 7AM.
-              </p>
-              <div style={{ fontFamily: "var(--mono)", fontSize: 11, color: "var(--ink-dim)", marginTop: 10 }}>
-                <b style={{ color: "var(--ink)" }}>JOSH PATE</b> · 6 MIN READ · TODAY
-              </div>
 
-              {DEMO_NOTEBOOK_FEATURED.map((item, i) => (
-                <div
-                  className="newsitem"
-                  key={item.title}
-                  style={{ marginTop: i === 0 ? 10 : 0, borderBottom: i === DEMO_NOTEBOOK_FEATURED.length - 1 ? "none" : undefined }}
-                >
-                  <div className="nx">
-                    <div
-                      className="logo-box sm"
-                      style={{ background: item.badgeBg, color: item.badgeColor, border: "none", width: 36, height: 36, fontSize: 12, marginBottom: 10 }}
-                    >
-                      {item.badgeText}
+                {notebookNext.map((a, i) => (
+                  <div
+                    className="newsitem"
+                    key={a._id}
+                    style={{ marginTop: i === 0 ? 10 : 0, borderBottom: i === notebookNext.length - 1 ? "none" : undefined }}
+                  >
+                    <div className="nx">
+                      <h4 style={{ fontSize: 21 }}>
+                        <Link href={`/notebook/${a.slug.current}`}>{a.headline}</Link>
+                      </h4>
+                      {a.dek && <p style={{ fontSize: 14, color: "var(--ink-dim)", marginTop: 6 }}>{a.dek}</p>}
+                      <div className="by">
+                        <b>{a.byline}</b>
+                        {a.publishedAt ? ` · ${formatDate(a.publishedAt)}` : ""}
+                      </div>
                     </div>
-                    <h4 style={{ fontSize: 21 }}>
-                      <Link href="/notebook">{item.title}</Link>
-                      {item.citizenBadge && <span className="cit-badge">Citizens Only · Free</span>}
-                    </h4>
-                    <p style={{ fontSize: 14, color: "var(--ink-dim)", marginTop: 6 }}>{item.body}</p>
-                    <div className="by"><b>{item.by}</b> · {item.when}</div>
                   </div>
-                  <div className="newsthumb" style={{ flexBasis: 176 }}>
-                    <HelmetIcon {...item.icon} />
+                ))}
+                <Link className="btn" href="/notebook">Open the Notebook</Link>
+              </div>
+            ) : (
+              <div>
+                <Link href="/notebook" style={{ display: "block" }}>
+                  <div
+                    style={{
+                      aspectRatio: "16/8",
+                      borderRadius: 6,
+                      background: "linear-gradient(150deg,var(--navy) 0%,#1A2E47 60%,var(--field) 100%)",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      border: "1px solid var(--line-l)",
+                    }}
+                  >
+                    <span className="playbtn" aria-hidden="true">▶</span>
                   </div>
+                </Link>
+                <div style={{ marginTop: 16 }}><span className="fr">📝 WEEKEND TRUTHS</span></div>
+                <h3 className="display" style={{ fontSize: "clamp(24px,3vw,33px)", lineHeight: 0.95, margin: "6px 0 8px" }}>
+                  <Link href="/notebook">What Saturday Actually Told Us</Link>
+                </h3>
+                <p style={{ fontSize: 15, color: "var(--ink-dim)" }}>
+                  Five things that were real, three overreactions to ignore, and the one stat nobody&apos;s talking
+                  about — new every Monday at 7AM.
+                </p>
+                <div style={{ fontFamily: "var(--mono)", fontSize: 11, color: "var(--ink-dim)", marginTop: 10 }}>
+                  <b style={{ color: "var(--ink)" }}>JOSH PATE</b> · 6 MIN READ · TODAY
                 </div>
-              ))}
-              <Link className="btn" href="/notebook">Open the Notebook</Link>
-            </div>
+
+                {DEMO_NOTEBOOK_FEATURED.map((item, i) => (
+                  <div
+                    className="newsitem"
+                    key={item.title}
+                    style={{ marginTop: i === 0 ? 10 : 0, borderBottom: i === DEMO_NOTEBOOK_FEATURED.length - 1 ? "none" : undefined }}
+                  >
+                    <div className="nx">
+                      <div
+                        className="logo-box sm"
+                        style={{ background: item.badgeBg, color: item.badgeColor, border: "none", width: 36, height: 36, fontSize: 12, marginBottom: 10 }}
+                      >
+                        {item.badgeText}
+                      </div>
+                      <h4 style={{ fontSize: 21 }}>
+                        <Link href="/notebook">{item.title}</Link>
+                        {item.citizenBadge && <span className="cit-badge">Citizens Only · Free</span>}
+                      </h4>
+                      <p style={{ fontSize: 14, color: "var(--ink-dim)", marginTop: 6 }}>{item.body}</p>
+                      <div className="by"><b>{item.by}</b> · {item.when}</div>
+                    </div>
+                    <div className="newsthumb" style={{ flexBasis: 176 }}>
+                      <HelmetIcon {...item.icon} />
+                    </div>
+                  </div>
+                ))}
+                <Link className="btn" href="/notebook">Open the Notebook</Link>
+              </div>
+            )}
 
             <div className="wire">
               <h3><span className="dot" />The Wire</h3>
