@@ -59,7 +59,7 @@ const DEMO_RECRUITING_NEWS = [
   },
   {
     headline: "A&M is building a monster",
-    body: "Texas A&M sits No. 1 on both major services with 26 commits — six five-stars and 19 blue-chips — putting Mike Elko in position for his second top-five class in three cycles.",
+    body: "Texas A&M sits No. 1 on both major services with 26 commits — six five-stars and 19 blue-chips — putting the coaching staff in position for a second top-five class in three cycles.",
     src: "SAMPLE — RECRUITING WIRE",
   },
   {

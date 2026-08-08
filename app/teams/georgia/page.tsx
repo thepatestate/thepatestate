@@ -22,7 +22,7 @@ const GEORGIA = {
     { wk: "1", jp: "01", ap: "1", cfp: "—" },
     { wk: "PRE", jp: "02", ap: "2", cfp: "—" },
   ],
-  picksRecord: { ats: "9–4", atsLabel: "ATS Last 13", current: "W3", currentLabel: "Current" },
+  picksRecord: { ats: "—", atsLabel: "ATS Last 13", current: "—", currentLabel: "Current" },
   recruiting: {
     rank: "No. 13",
     body: "20 commits, two five-stars — including the nation's No. 10 overall, RB Kemon Spell. Quiet cycle by Athens standards, which usually means a December surge.",
@@ -74,6 +74,9 @@ function PicksRecord({ team }: { team: Team }) {
           <div className="lbl">{picksRecord.currentLabel}</div>
         </div>
       </div>
+      <p style={{ marginTop: 10, fontFamily: "var(--mono)", fontSize: 11, color: "var(--ink-dim)" }}>
+        Records start accruing Week 1 — every pick sourced and receipts kept.
+      </p>
     </div>
   );
 }
