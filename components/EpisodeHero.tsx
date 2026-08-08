@@ -1,10 +1,11 @@
 import { Video, videoUrl } from "@/lib/youtube";
 import { formatDate } from "@/lib/format";
 
-export default function EpisodeHero({ video }: { video: Video }) {
+export default function EpisodeHero({ video, tag }: { video: Video; tag?: string }) {
   return (
     <div>
       <div className="player" style={{ display: "block", aspectRatio: "16/9" }}>
+        {tag && <span className="tag">{tag}</span>}
         <iframe
           src={`https://www.youtube-nocookie.com/embed/${video.id}`}
           title={video.title}

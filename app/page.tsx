@@ -175,8 +175,9 @@ const DEMO_GUIDES = [
 
 export default async function Home() {
   const videos = await getVideos();
-  const latest = videos.find(isEpisode) ?? videos[0];
-  const recent = videos.filter((v) => v !== latest).slice(0, 6);
+  const episodes = videos.filter(isEpisode);
+  const latest = episodes[0] ?? videos[0];
+  const recentEpisodes = episodes.filter((v) => v !== latest).slice(0, 3);
   const notebookArticles = await getPublishedArticles(3);
   const notebookLead = notebookArticles[0] ?? null;
   const notebookNext = notebookArticles.slice(1, 3);
@@ -202,30 +203,25 @@ export default async function Home() {
         <section className="on-dark">
           <div className="wrap">
             <p className="eyebrow">America&apos;s College Football Show</p>
-            <h2 className="display">The Latest Episode</h2>
-            <EpisodeHero video={latest} />
+            <h2 className="display">The Show</h2>
+            <div className="show-grid">
+              <div>
+                <EpisodeHero video={latest} tag="NEW EPISODE" />
+              </div>
+              <VideoGrid videos={recentEpisodes} />
+            </div>
             <p className="sched">
               <b>MON</b> Weekend Truths · <b>TUE</b> Poll Day · <b>WED</b> The Sit-Down ·{" "}
               <b>THU</b> Picks Drop · <b>FRI</b> The ESPN Show · <b>SAT</b> We Watch Ball
+            </p>
+            <p style={{ marginTop: 20 }}>
+              <a className="btn" href={CHANNEL_URL} target="_blank" rel="noopener">Browse Every Episode</a>
             </p>
           </div>
         </section>
       )}
 
       <div className="yardline" />
-
-      {recent.length > 0 && (
-        <section>
-          <div className="wrap">
-            <p className="eyebrow">Fresh off the porch</p>
-            <h2 className="display">Recent Drops</h2>
-            <div className="ep-light"><VideoGrid videos={recent} /></div>
-            <p style={{ marginTop: 24 }}>
-              <a className="btn" href={CHANNEL_URL} target="_blank" rel="noopener">Every Episode on YouTube →</a>
-            </p>
-          </div>
-        </section>
-      )}
 
       <section className="on-dark tight">
         <div className="wrap">
