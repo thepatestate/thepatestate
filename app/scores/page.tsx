@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import PreseasonChip from "@/components/PreseasonChip";
+import { TEAMS_TOP25, TEAMS_ALL } from "@/lib/teams";
 
 export const metadata: Metadata = { title: "Scores & Schedule" };
 
@@ -72,28 +73,21 @@ function ConfMatchups({ rows }: { rows: typeof DEMO_CONF_COL1 | typeof DEMO_CONF
   );
 }
 
-const DEMO_TEAM_TOP25 = [
-  { value: "georgia", label: "#1 Georgia" },
-  { value: "ohiostate", label: "#2 Ohio State" },
-  { value: "texas", label: "#3 Texas" },
-  { value: "oregon", label: "#4 Oregon" },
-  { value: "alabama", label: "#9 Alabama" },
-  { value: "michigan", label: "#12 Michigan" },
-] as const;
+// DEMO_TEAM_TOP25 / DEMO_TEAM_ALL used to live here as local consts; the
+// canonical (unsuffixed) team lists now live in lib/teams.ts, shared with
+// the /welcome favorite-team picker.
 
-// Values are suffixed to stay distinct from DEMO_TEAM_TOP25 even though six
-// of these teams also appear there (matching the wireframe's quick-pick +
-// full-alphabetical groups) — otherwise React's uncontrolled <select> would
-// mark every same-valued <option> across both groups as selected at once.
-const DEMO_TEAM_ALL = [
-  { value: "alabama-all", label: "Alabama" },
+// Values are re-suffixed here (locally, for this page only) to stay distinct
+// from DEMO_TEAM_TOP25 even though six of these teams also appear there
+// (matching the wireframe's quick-pick + full-alphabetical groups) —
+// otherwise React's uncontrolled <select> would mark every same-valued
+// <option> across both groups as selected at once.
+const DEMO_TEAM_TOP25 = TEAMS_TOP25;
+const DEMO_TEAM_ALL: ReadonlyArray<{ value: string | null; label: string }> = [
+  { value: `${TEAMS_ALL[0].value}-all`, label: TEAMS_ALL[0].label },
   { value: null, label: "Air Force · Akron · App State … (all 136 in production)" },
-  { value: "georgia-all", label: "Georgia" },
-  { value: "michigan-all", label: "Michigan" },
-  { value: "ohiostate-all", label: "Ohio State" },
-  { value: "oregon-all", label: "Oregon" },
-  { value: "texas-all", label: "Texas" },
-] as const;
+  ...TEAMS_ALL.slice(1).map((t) => ({ value: `${t.value}-all`, label: t.label })),
+];
 
 // The wireframe repeats a mirrored pair of placeholder helmet SVGs per
 // watch-list row, varying only the two teams' fill/mask colors.
