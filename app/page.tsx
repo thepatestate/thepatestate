@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { getVideos, isEpisode, CHANNEL_URL } from "@/lib/youtube";
+import { getVideos, isEpisode, CHANNEL_URL, APPLE_PODCASTS_URL, SPOTIFY_URL } from "@/lib/youtube";
 import { getPublishedArticles } from "@/lib/sanity";
 import { formatDate } from "@/lib/format";
 import EpisodeHero from "@/components/EpisodeHero";
@@ -207,6 +207,11 @@ export default async function Home() {
             <div className="show-grid">
               <div>
                 <EpisodeHero video={latest} tag="NEW EPISODE" />
+                <div className="platforms">
+                  <a className="chip" href={CHANNEL_URL} target="_blank" rel="noopener">YouTube</a>
+                  <a className="chip" href={APPLE_PODCASTS_URL} target="_blank" rel="noopener">Apple Podcasts</a>
+                  <a className="chip" href={SPOTIFY_URL} target="_blank" rel="noopener">Spotify</a>
+                </div>
               </div>
               <VideoGrid videos={recentEpisodes} />
             </div>
