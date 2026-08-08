@@ -425,6 +425,7 @@ export default async function Home() {
         <div className="wrap">
           <p className="eyebrow">Every Stadium. Every Tradition. Every Tailgate.</p>
           <h2 className="display">Pate Tailgate</h2>
+          <PreseasonChip />
           <p className="lede">
             The field guide to actually living this sport — where to park, where to eat, what time to arrive, which
             traditions you can&apos;t miss.
