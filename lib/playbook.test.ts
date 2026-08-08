@@ -25,6 +25,12 @@ describe("renderPlaybookHtml", () => {
     const html = renderPlaybookHtml({ ...content, articles: [] }, opts);
     expect(html).not.toContain("From the Notebook");
   });
+  it("escapes double quotes in episode title to prevent attribute injection", () => {
+    const evil = { ...content, episode: { ...content.episode, title: 'He Said "Go" onerror=x' } };
+    const html = renderPlaybookHtml(evil, opts);
+    expect(html).not.toContain('" onerror=');
+    expect(html).toContain("&quot;");
+  });
 });
 
 describe("renderPlaybookText", () => {

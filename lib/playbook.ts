@@ -29,11 +29,19 @@ const COLOR_BG = "#FDFCF8";
 const COLOR_NAVY = "#0F1B2D";
 const COLOR_LAMP = "#E8A33D";
 
-// Escapes text-node content (not intended for attribute values). Apostrophes are
-// left untouched since they are safe both in text nodes and inside double-quoted
-// attributes, which keeps rendered copy byte-identical to the source strings.
+// Single escaper used everywhere text is interpolated — both text nodes (intro,
+// headline, dek, episode title) and double-quoted attribute values (the `alt`
+// attribute on the episode thumbnail). Escapes &, <, >, and " so a `"` in
+// caller-supplied text (e.g. a YouTube episode title) cannot break out of an
+// `alt="..."` attribute and inject markup/attributes.
+//
+// Apostrophes are intentionally left unescaped: every attribute in this
+// template is double-quoted, so a raw `'` can never terminate an attribute
+// value here, and escaping it would corrupt copy that callers (and tests)
+// compare verbatim — e.g. the intro "Here's the porch this morning." must
+// appear byte-for-byte in the rendered HTML.
 function escapeHtml(s: string): string {
-  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 }
 
 // URLs used in href/src attributes are all internally constructed (SITE_URL,
