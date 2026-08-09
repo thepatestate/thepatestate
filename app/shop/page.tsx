@@ -110,26 +110,16 @@ export default function ShopPage() {
 
           <p className="eyebrow" style={{ marginTop: 28 }}>Paper &amp; Porch</p>
           <div className="shop-items shop4" style={{ marginTop: 12 }}>
-            <Link href="/report" className="item" style={{ textDecoration: "none" }}>
-              <div
-                style={{
-                  flex: 1,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontFamily: "var(--mono)",
-                  fontSize: 9,
-                  letterSpacing: ".06em",
-                  textTransform: "uppercase",
-                  color: "var(--chalk-dim)",
-                  background: "linear-gradient(150deg,var(--navy) 0%,#1A2E47 55%,var(--field) 100%)",
-                  borderRadius: 3,
-                  textAlign: "center",
-                  padding: 8,
-                }}
-              >
-                The Pate Report 2026
-              </div>
+            <Link href="/report" className="item has-photo" style={{ textDecoration: "none" }}>
+              <Image
+                src="/img/editorial-goalpost.jpg"
+                alt="A goalpost silhouetted in fog against the sunrise"
+                fill
+                sizes="(max-width: 700px) 50vw, 260px"
+                style={{ objectFit: "cover" }}
+              />
+              <div className="item-scrim" />
+              <div style={{ flex: 1 }} />
               <b>THE PATE REPORT — $24.99 · DIGITAL FREE FOR CITIZENS</b>
             </Link>
             <a className="item" href={STORE_URL} target="_blank" rel="noopener" style={{ textDecoration: "none" }}><div style={{ flex: 1 }} /><b>STADIUM PASSPORT — $19</b></a>

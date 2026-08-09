@@ -7,8 +7,8 @@ import { formatDate } from "@/lib/format";
 export const metadata: Metadata = { title: "The Notebook" };
 export const revalidate = 300;
 
-// Same duplication pattern as HelmetIcon below: a small per-file lookup
-// rather than a shared lib module (this codebase doesn't DRY up
+// Same duplication pattern as the notebook cards below: a small per-file
+// lookup rather than a shared lib module (this codebase doesn't DRY up
 // presentational bits — see components/ArticleBody.tsx for the sibling copy).
 const SERIES_LABELS: Record<string, string> = {
   "weekend-truths": "Weekend Truths",
@@ -28,43 +28,30 @@ function seriesLabel(series?: string): string {
 // --- Preseason-preview sample data ---------------------------------------
 // Stands in for the Notebook CMS (articles, the wire feed, most-popular
 // tracking). Swap for live queries when the CMS ships; the JSX below only
-// touches these arrays.
-
-type IconColors = { bg: string; diag: string; mask: string };
-
-// The wireframe repeats a placeholder "helmet" SVG per news/wire item,
-// varying only these three fill colors.
-function HelmetIcon({ bg, diag, mask }: IconColors) {
-  return (
-    <svg viewBox="0 0 160 100" preserveAspectRatio="xMidYMid slice">
-      <rect width="160" height="100" fill={bg} />
-      <path d="M160,0 L160,100 L70,100 Z" fill={diag} opacity=".28" />
-      <rect y="86" width="160" height="2" fill="rgba(255,255,255,.35)" />
-      <g transform="translate(44,20) scale(1.9)">
-        <path
-          d="M4,17 C4,8 10,3 18,3 C27,3 33,9 33,17 L33,23 C33,25 31,26 29,26 L24,26 L24,29 L14,29 C8,29 4,24 4,17 Z"
-          fill={bg}
-        />
-        <rect x="15" y="3" width="6" height="23" rx="3" fill={mask} />
-        <path
-          d="M27,15 L38,15 M27,21 L38,21 M33,12 L33,24"
-          stroke="#DADDE2"
-          strokeWidth="2.6"
-          fill="none"
-          strokeLinecap="round"
-        />
-      </g>
-    </svg>
-  );
-}
+// touches these arrays. Card/tile photos below follow the same
+// category→image mapping the homepage's Notebook + Wire sections use (see
+// app/page.tsx's DEMO_NOTEBOOK_FEATURED/DEMO_WIRE): recruiting/portal→turf,
+// media/coaching→film, poll/state→goalpost, TV/matchups→matchup-helmets,
+// store→train-tee. Adjacent cards never repeat the same photo.
 
 const DEMO_CATNAV = ["Latest", "Josh Pate", "News", "Recruiting & Portal", "Rankings", "Teams", "Columns"] as const;
 
 const DEMO_FEATURED = [
-  { title: "Why the Citizens Jumped Texas to No. 3", meta: "POLL DAY, EXPLAINED · TUE", dark: false },
-  { title: "The Week 1 Honor Roll", meta: "TOP PERFORMERS · WED", dark: true },
-  { title: "Wedding Season vs. Football Season", meta: "THE MAILBAG · FRI", dark: false },
+  {
+    title: "Why the Citizens Jumped Texas to No. 3", meta: "POLL DAY, EXPLAINED · TUE",
+    photo: "/img/editorial-goalpost.jpg", alt: "A goalpost silhouetted in fog against the sunrise",
+  },
+  {
+    title: "The Week 1 Honor Roll", meta: "TOP PERFORMERS · WED",
+    photo: "/img/matchup-helmets.jpg", alt: "Blank navy and gold helmets facing off before kickoff",
+  },
+  {
+    title: "Wedding Season vs. Football Season", meta: "THE MAILBAG · FRI",
+    photo: "/img/editorial-film.jpg", alt: "A film projector beside a chalkboard of X's-and-O's diagrams",
+  },
 ] as const;
+
+type Photo = { src: string; alt: string };
 
 type NewsItem = {
   logoText: string;
@@ -76,24 +63,26 @@ type NewsItem = {
   by: string;
   date: string;
   nudge: boolean;
-  thumb: IconColors | null;
+  thumb: Photo | null;
 };
 
 // Sample headlines only — never linked to article.html (that template
 // belongs to sub-project C) or anywhere else; these render as non-link
-// cards.
+// cards. Thumbs use a team helmet when the story is about one specific
+// team, and an editorial photo otherwise — matching the pattern already
+// used for the DEMO_WIRE rail below.
 const DEMO_NEWS: readonly NewsItem[] = [
   {
     logoText: "UGA", logoBg: "#BA0C2F", logoColor: "#fff",
     headline: "Georgia's Margin for Error Is a Myth", locked: false, citizenBadge: null,
     by: "Josh Pate", date: "AUG 7, 2026", nudge: false,
-    thumb: { bg: "#BA0C2F", diag: "#000000", mask: "#000000" },
+    thumb: { src: "/img/helmets/georgia.jpg", alt: "Georgia helmet studio photo" },
   },
   {
     logoText: "JP", logoBg: "var(--navy)", logoColor: "var(--lamp)",
     headline: "The JP Poll Still Doesn't Trust Alabama — Here's the Math", locked: true,
     citizenBadge: "Citizens Only · Free", by: "Staff", date: "AUG 7, 2026", nudge: true,
-    thumb: { bg: "#9E1B32", diag: "#FFFFFF", mask: "#FFFFFF" },
+    thumb: { src: "/img/editorial-goalpost.jpg", alt: "A goalpost silhouetted in fog against the sunrise" },
   },
   {
     logoText: "A&M", logoBg: "#500000", logoColor: "#fff",
@@ -104,7 +93,7 @@ const DEMO_NEWS: readonly NewsItem[] = [
     logoText: "IU", logoBg: "#990000", logoColor: "#fff",
     headline: "Indiana Closes the 2027 Board With a Five-Star WR", locked: false, citizenBadge: null,
     by: "Staff", date: "AUG 6, 2026", nudge: false,
-    thumb: { bg: "#990000", diag: "#EEEDEB", mask: "#FFFFFF" },
+    thumb: { src: "/img/helmets/indiana.jpg", alt: "Indiana helmet studio photo" },
   },
   {
     logoText: "★", logoBg: "var(--field)", logoColor: "var(--lamp)",
@@ -115,7 +104,7 @@ const DEMO_NEWS: readonly NewsItem[] = [
     logoText: "LSU", logoBg: "#461D7C", logoColor: "#FDD023",
     headline: "Night Games in Death Valley: The Survival Guide, Updated", locked: true,
     citizenBadge: "Citizens Only · Free", by: "Staff", date: "AUG 5, 2026", nudge: false,
-    thumb: { bg: "#461D7C", diag: "#FDD023", mask: "#FDD023" },
+    thumb: { src: "/img/tailgate-night.jpg", alt: "LSU fans in purple and gold packing Tiger Stadium's night tailgate lot" },
   },
 ];
 
@@ -130,47 +119,47 @@ const DEMO_WIRE = [
   {
     time: "2 HRS AGO", category: "RECRUITING", headline: "Texas A&M holds No. 1 on both major boards",
     badge: "Full Story Ready", body: "26 commits and six five-stars in the 2027 class.",
-    icon: { bg: "#500000", diag: "#FFFFFF", mask: "#FFFFFF" },
+    photo: "/img/editorial-turf.jpg", alt: "Frosted turf and a yard line at dawn",
   },
   {
     time: "THIS WEEK", category: "RECRUITING", headline: "Final 2027 five-stars commit", badge: null,
     body: "A five-star WR picks Indiana; a five-star RB stays with Tennessee.",
-    icon: { bg: "#990000", diag: "#EEEDEB", mask: "#FFFFFF" },
+    photo: "/img/editorial-goalpost.jpg", alt: "A goalpost silhouetted in fog against the sunrise",
   },
   {
     time: "2 WKS AGO", category: "MEDIA", headline: "New ESPN Friday show announced", badge: null,
     body: "Josh pairs with Bussin' With The Boys, sometimes live from GameDay sites.",
-    icon: { bg: "#0F1B2D", diag: "#E8A33D", mask: "#E8A33D" },
+    photo: "/img/editorial-film.jpg", alt: "A film projector beside a chalkboard of X's-and-O's diagrams",
   },
   {
     time: "TODAY", category: "THE STATE", headline: "Porch Pick'Em opens for the season", badge: null,
     body: "Season champion watches a game with Josh; top 10 win tickets.",
-    icon: { bg: "#1E3B2E", diag: "#E8A33D", mask: "#E8A33D" },
+    photo: "/img/editorial-goalpost.jpg", alt: "A goalpost silhouetted in fog against the sunrise",
   },
   {
     time: "THIS WEEK", category: "THE POLL", headline: "Ballots open Sunday 8PM ET", badge: null,
     body: "Week 1 reveal comes Tuesday on the show.",
-    icon: { bg: "#15243B", diag: "#F3EFE6", mask: "#E8A33D" },
+    photo: "/img/editorial-film.jpg", alt: "A film projector beside a chalkboard of X's-and-O's diagrams",
   },
   {
     time: "TODAY", category: "COACHING", headline: "Hot-seat watch: three ADs go quiet", badge: null,
     body: "Buyout math is moving in two SEC towns and one in the Big 12.",
-    icon: { bg: "#3E2723", diag: "#D7CCC8", mask: "#D7CCC8" },
+    photo: "/img/editorial-turf.jpg", alt: "Frosted turf and a yard line at dawn",
   },
   {
     time: "YESTERDAY", category: "PORTAL", headline: "August portal ripple begins", badge: null,
     body: "Two projected starters enter; three contenders circle.",
-    icon: { bg: "#263238", diag: "#90A4AE", mask: "#90A4AE" },
+    photo: "/img/editorial-goalpost.jpg", alt: "A goalpost silhouetted in fog against the sunrise",
   },
   {
     time: "YESTERDAY", category: "THE STATE", headline: "Watch parties hit 40 cities", badge: null,
     body: "New chapters open in Charlotte, Boise, and San Diego.",
-    icon: { bg: "#1E3B2E", diag: "#F3EFE6", mask: "#F3EFE6" },
+    photo: "/img/matchup-helmets.jpg", alt: "Blank navy and gold helmets facing off before kickoff",
   },
   {
     time: "THIS WEEK", category: "TV", headline: "Week 1 kick times locked", badge: "Full Story Ready",
     body: "Georgia–Bama gets the 7:30 CBS window; Oregon–Michigan at 3:30.",
-    icon: { bg: "#101820", diag: "#E8A33D", mask: "#E8A33D" },
+    photo: "/img/editorial-turf.jpg", alt: "Frosted turf and a yard line at dawn",
   },
 ] as const;
 
@@ -278,10 +267,9 @@ export default async function NotebookPage() {
                 <div className="feat-grid">
                   {DEMO_FEATURED.map((f) => (
                     <div className="feat" key={f.title}>
-                      <div
-                        className="ph"
-                        style={f.dark ? { background: "repeating-linear-gradient(-45deg,var(--navy-2) 0 10px,#1A2E47 10px 20px)" } : undefined}
-                      />
+                      <div className="ph" style={{ position: "relative" }}>
+                        <Image src={f.photo} alt={f.alt} fill sizes="(max-width: 860px) 33vw, 280px" style={{ objectFit: "cover" }} />
+                      </div>
                       <div className="bd">
                         <h4>{f.title}</h4>
                         <div className="meta">{f.meta}</div>
@@ -315,7 +303,11 @@ export default async function NotebookPage() {
                         </div>
                       )}
                     </div>
-                    {n.thumb && <div className="newsthumb"><HelmetIcon {...n.thumb} /></div>}
+                    {n.thumb && (
+                      <div className="newsthumb" style={{ position: "relative" }}>
+                        <Image src={n.thumb.src} alt={n.thumb.alt} fill sizes="200px" style={{ objectFit: "cover" }} />
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
@@ -342,7 +334,9 @@ export default async function NotebookPage() {
               {lead && <span className="note">Sample content below — more real stories coming</span>}
               {DEMO_WIRE.map((w) => (
                 <div className="wire-item" key={w.headline}>
-                  <div className="wire-thumb2"><HelmetIcon {...w.icon} /></div>
+                  <div className="wire-thumb2" style={{ position: "relative" }}>
+                    <Image src={w.photo} alt={w.alt} fill sizes="86px" style={{ objectFit: "cover" }} />
+                  </div>
                   <div className="wtxt">
                     <span className="t">{w.time} · {w.category}</span>
                     <b>{w.headline}{w.badge && <span className="ai-badge">{w.badge}</span>}</b>

@@ -40,9 +40,18 @@ const DEMO_CHAMPIONS = [
 ] as const;
 
 const DEMO_HOT = [
-  { title: "Week 1 Overreactions — the comment section is cooking", meta: "THE SHOW · EP 1,204", cc: "🔥 2,418 COMMENTS" },
-  { title: '"Why the JP Poll Doesn\'t Trust Alabama Yet"', meta: "THE NOTEBOOK · POLL DAY COLUMN", cc: "🔥 1,907 COMMENTS" },
-  { title: "The Indiana argument Josh lost to his own audience", meta: "POLL DAY · THE REVEAL", cc: "🔥 1,634 COMMENTS" },
+  {
+    title: "Week 1 Overreactions — the comment section is cooking", meta: "THE SHOW · EP 1,204", cc: "🔥 2,418 COMMENTS",
+    photo: "/img/editorial-film.jpg", alt: "A film projector beside a chalkboard of X's-and-O's diagrams",
+  },
+  {
+    title: '"Why the JP Poll Doesn\'t Trust Alabama Yet"', meta: "THE NOTEBOOK · POLL DAY COLUMN", cc: "🔥 1,907 COMMENTS",
+    photo: "/img/editorial-goalpost.jpg", alt: "A goalpost silhouetted in fog against the sunrise",
+  },
+  {
+    title: "The Indiana argument Josh lost to his own audience", meta: "POLL DAY · THE REVEAL", cc: "🔥 1,634 COMMENTS",
+    photo: "/img/helmets/indiana.jpg", alt: "Indiana helmet studio photo",
+  },
 ] as const;
 
 const DEMO_TOUR = [
@@ -180,10 +189,9 @@ export default async function PorchPage() {
           <div style={{ maxWidth: 820, marginTop: 14 }}>
             {DEMO_HOT.map((h) => (
               <div className="hot-row" key={h.title}>
-                <div
-                  className="hthumb"
-                  style={{ background: "repeating-linear-gradient(-45deg,var(--field-lt) 0 8px,#fff 8px 16px)" }}
-                />
+                <div className="hthumb" style={{ position: "relative" }}>
+                  <Image src={h.photo} alt={h.alt} fill sizes="84px" style={{ objectFit: "cover" }} />
+                </div>
                 <div className="who">
                   <b>{h.title}</b>
                   <div className="meta">{h.meta}</div>

@@ -9,6 +9,7 @@ import VideoGrid from "@/components/VideoGrid";
 import SubscribeCTA from "@/components/SubscribeCTA";
 import PreseasonChip from "@/components/PreseasonChip";
 import Reveal from "@/components/Reveal";
+import SlateStrip from "@/components/SlateStrip";
 
 // --- Preseason-preview sample data ---------------------------------------
 // Every array below stands in for a section that isn't wired to a real
@@ -202,6 +203,7 @@ export default async function Home() {
 
   return (
     <main>
+      <SlateStrip />
       <section className="hero">
         <div className="wrap">
           <p className="eyebrow">Est. in Columbus, GA — population: everyone who lives for Saturdays</p>

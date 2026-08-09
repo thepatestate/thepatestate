@@ -13,15 +13,21 @@ export const metadata: Metadata = { title: "Pate Tailgate" };
 
 type TailgateGuide = { emoji: string; bg: string; name: string; meta: string; photo: string | null; alt: string | null; team: string | null };
 
+// The four stadiums below don't have location-specific tailgate photography
+// yet (see the LSU/Ole Miss/Ohio State/Wisconsin rows, which do). Rather
+// than stand them in with a color-gradient-plus-emoji swatch, each uses the
+// real studio helmet photo for its team (all four are in
+// lib/teams-meta's HELMET_SLUGS) via the `team` field below, which also
+// unlocks the small logo team-chip badge every other card already gets.
 const DEMO_GUIDES: readonly TailgateGuide[] = [
-  { emoji: "🌭", bg: "linear-gradient(135deg,#BA0C2F 0%,#000000 100%)", name: "Sanford Stadium", meta: "THE FULL GUIDE · BY THE CITIZENS OF THE STATE", photo: null, alt: null, team: null },
+  { emoji: "🌭", bg: "linear-gradient(135deg,#BA0C2F 0%,#000000 100%)", name: "Sanford Stadium", meta: "THE FULL GUIDE · BY THE CITIZENS OF THE STATE", photo: "/img/helmets/georgia.jpg", alt: "Georgia helmet studio photo", team: "georgia" },
   { emoji: "🌙", bg: "linear-gradient(135deg,#461D7C 0%,#FDD023 100%)", name: "Tiger Stadium", meta: "LSU · NIGHT GAME SURVIVAL", photo: "/img/tailgate-night.jpg", alt: "LSU fans in purple and gold packing Tiger Stadium's night tailgate lot", team: "lsu" },
   { emoji: "🥂", bg: "linear-gradient(135deg,#14213D 0%,#CE1126 100%)", name: "The Grove", meta: "OLE MISS · MASTERCLASS", photo: "/img/tailgate-grove.jpg", alt: "Ole Miss fans tailgating under the oaks of The Grove", team: "ole-miss" },
   { emoji: "🏟️", bg: "linear-gradient(135deg,#BB0000 0%,#666666 100%)", name: "The Horseshoe", meta: "OHIO STATE · FIRST-TIMER", photo: "/img/tailgate-horseshoe.jpg", alt: "Ohio State fans packing The Horseshoe for kickoff", team: "ohio-state" },
   { emoji: "🦡", bg: "linear-gradient(135deg,#C5050C 0%,#FFFFFF 100%)", name: "Camp Randall", meta: "WISCONSIN · JUMP AROUND", photo: "/img/tailgate-jump.jpg", alt: "Wisconsin fans jumping around at Camp Randall", team: "wisconsin" },
-  { emoji: "📣", bg: "linear-gradient(135deg,#500000 0%,#FFFFFF 100%)", name: "Kyle Field", meta: "TEXAS A&M · MIDNIGHT YELL", photo: null, alt: null, team: null },
-  { emoji: "🦆", bg: "linear-gradient(135deg,#154733 0%,#FEE123 100%)", name: "Autzen Stadium", meta: "OREGON · LOUDEST PER CAPITA", photo: null, alt: null, team: null },
-  { emoji: "⛪", bg: "linear-gradient(135deg,#0C2340 0%,#C99700 100%)", name: "Notre Dame Stadium", meta: "THE PILGRIMAGE PLAN", photo: null, alt: null, team: null },
+  { emoji: "📣", bg: "linear-gradient(135deg,#500000 0%,#FFFFFF 100%)", name: "Kyle Field", meta: "TEXAS A&M · MIDNIGHT YELL", photo: "/img/helmets/texas-am.jpg", alt: "Texas A&M helmet studio photo", team: "texas-am" },
+  { emoji: "🦆", bg: "linear-gradient(135deg,#154733 0%,#FEE123 100%)", name: "Autzen Stadium", meta: "OREGON · LOUDEST PER CAPITA", photo: "/img/helmets/oregon.jpg", alt: "Oregon helmet studio photo", team: "oregon" },
+  { emoji: "⛪", bg: "linear-gradient(135deg,#0C2340 0%,#C99700 100%)", name: "Notre Dame Stadium", meta: "THE PILGRIMAGE PLAN", photo: "/img/helmets/notre-dame.jpg", alt: "Notre Dame helmet studio photo", team: "notre-dame" },
 ];
 
 export default function TailgatePage() {

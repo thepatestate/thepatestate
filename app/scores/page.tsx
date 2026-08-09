@@ -4,35 +4,38 @@ import Link from "next/link";
 import PreseasonChip from "@/components/PreseasonChip";
 import { TEAMS_TOP25, TEAMS_ALL } from "@/lib/teams";
 import { slugifyTeam, teamLogoUrl, helmetUrl } from "@/lib/teams-meta";
+import {
+  DEMO_LIVE_SCORES,
+  DEMO_UPCOMING_SCORES,
+  DEMO_CONF_COL1,
+  DEMO_CONF_COL2,
+  DEMO_WATCHLIST,
+  teamNameFromLabel,
+  type ScoreCardData,
+} from "@/lib/scores-demo";
 
 export const metadata: Metadata = { title: "Scores & Schedule" };
 
-// --- Preseason-preview sample data ---------------------------------------
-// Stands in for the CFBD live-scores engine. Swap for a real feed when it
-// ships; the JSX below only touches these arrays.
-
-type ScoreTeam = { label: string; pts: string; lead: boolean };
-type ScoreCardData = { st: string; live: boolean; net: string; teams: readonly [ScoreTeam, ScoreTeam] };
-
-const DEMO_LIVE_SCORES: readonly ScoreCardData[] = [
-  { st: "LIVE · Q3 8:42", live: true, net: "CBS", teams: [{ label: "#1 Georgia", pts: "24", lead: true }, { label: "#9 Alabama", pts: "17", lead: false }] },
-  { st: "LIVE · Q2 0:38", live: true, net: "FOX", teams: [{ label: "#6 Oregon", pts: "14", lead: false }, { label: "#12 Michigan", pts: "17", lead: true }] },
-  { st: "LIVE · Q4 3:12", live: true, net: "ESPN", teams: [{ label: "#11 Indiana", pts: "31", lead: true }, { label: "Iowa", pts: "13", lead: false }] },
-  { st: "FINAL", live: false, net: "SECN", teams: [{ label: "#8 LSU", pts: "38", lead: true }, { label: "Ole Miss", pts: "35", lead: false }] },
+// Simple 2026 CFB week date ranges for the week-selector strip below. Week 1
+// spans the full opening slate (Thursday kickoffs through Labor Day); every
+// week after runs a standard Tue-Mon slate. Live weekly data replaces this
+// once the season engine ships.
+const CFB_WEEKS = [
+  { wk: 1, range: "AUG 29–SEP 7" },
+  { wk: 2, range: "SEP 8–14" },
+  { wk: 3, range: "SEP 15–21" },
+  { wk: 4, range: "SEP 22–28" },
+  { wk: 5, range: "SEP 29–OCT 5" },
+  { wk: 6, range: "OCT 6–12" },
+  { wk: 7, range: "OCT 13–19" },
+  { wk: 8, range: "OCT 20–26" },
+  { wk: 9, range: "OCT 27–NOV 2" },
+  { wk: 10, range: "NOV 3–9" },
+  { wk: 11, range: "NOV 10–16" },
+  { wk: 12, range: "NOV 17–23" },
+  { wk: 13, range: "NOV 24–30" },
+  { wk: 14, range: "DEC 1–7" },
 ] as const;
-
-const DEMO_UPCOMING_SCORES: readonly ScoreCardData[] = [
-  { st: "7:30 PM ET", live: false, net: "NBC", teams: [{ label: "#8 Notre Dame", pts: "—", lead: false }, { label: "USC", pts: "—", lead: false }] },
-  { st: "7:00 PM ET", live: false, net: "ACCN", teams: [{ label: "#7 Clemson", pts: "—", lead: false }, { label: "Florida State", pts: "—", lead: false }] },
-  { st: "10:15 PM ET", live: false, net: "ESPN", teams: [{ label: "Boise State", pts: "—", lead: false }, { label: "UNLV", pts: "—", lead: false }] },
-  { st: "FINAL — NOON", live: false, net: "BIG NOON", teams: [{ label: "#2 Ohio State", pts: "41", lead: true }, { label: "Penn State", pts: "20", lead: false }] },
-] as const;
-
-// Score-card labels carry a "#<rank> " prefix (e.g. "#1 Georgia"); strip it
-// before slugifying so the lookup matches lib/teams-meta's plain team names.
-function teamNameFromLabel(label: string): string {
-  return label.replace(/^#\d+\s+/, "");
-}
 
 function ScoreCard({ card }: { card: ScoreCardData }) {
   return (
@@ -58,17 +61,6 @@ function ScoreCard({ card }: { card: ScoreCardData }) {
     </div>
   );
 }
-
-const DEMO_CONF_COL1 = [
-  { conf: "SEC", aRank: "#1", aName: "Georgia", sep: "vs", bRank: "#9", bRest: "Alabama · 7:30 CBS" },
-  { conf: "Big Ten", aRank: "#6", aName: "Oregon", sep: "at", bRank: "#12", bRest: "Michigan · 3:30 FOX" },
-  { conf: "ACC", aRank: "#7", aName: "Clemson", sep: "at", bRank: null, bRest: "Florida State · 7:00 ACCN" },
-] as const;
-
-const DEMO_CONF_COL2 = [
-  { conf: "Big 12", aRank: null, aName: "Texas Tech", sep: "at", bRank: null, bRest: "Oklahoma State · 4:00 ESPN2" },
-  { conf: "G5 Game of the Week", aRank: "#4", aName: "Boise State", sep: "at", bRank: null, bRest: "UNLV · 10:15 ESPN" },
-] as const;
 
 const MATCHUP_STYLE = { background: "var(--navy-2)", borderColor: "var(--line-d)", color: "var(--chalk)" } as const;
 
@@ -158,19 +150,6 @@ function MatchupHelmet({ team, fill, mask, flip }: { team: string; fill: string;
   return <TeamIcon team={team} fill={fill} mask={mask} flip={flip} />;
 }
 
-const DEMO_WATCHLIST = [
-  { n: "01", teamA: "Georgia", teamB: "Alabama", left: { fill: "#BA0C2F", mask: "#000000" }, right: { fill: "#9E1B32", mask: "#FFFFFF" }, title: "#1 Georgia at #9 Alabama", meta: "THE STANDARD VS. THE STANDARD · BRYANT-DENNY", tv: "CBS · 7:30" },
-  { n: "02", teamA: "Oregon", teamB: "Michigan", left: { fill: "#154733", mask: "#FEE123" }, right: { fill: "#00274C", mask: "#FFCB05" }, title: "#6 Oregon at #12 Michigan", meta: "WINNER CONTROLS THE BIG TEN RACE", tv: "FOX · 3:30" },
-  { n: "03", teamA: "Ohio State", teamB: "Penn State", left: { fill: "#BB0000", mask: "#B0B7BF" }, right: { fill: "#041E42", mask: "#FFFFFF" }, title: "#2 Ohio State vs Penn State", meta: "WHITE OUT ENERGY, COLUMBUS EDITION", tv: "FOX · NOON" },
-  { n: "04", teamA: "Clemson", teamB: "Florida State", left: { fill: "#F56600", mask: "#FFFFFF" }, right: { fill: "#782F40", mask: "#CEB888" }, title: "#7 Clemson at Florida State", meta: "THE ACC RUNS THROUGH ONE OF THESE", tv: "ACCN · 7:00" },
-  { n: "05", teamA: "Notre Dame", teamB: "USC", left: { fill: "#0C2340", mask: "#C99700" }, right: { fill: "#990000", mask: "#FFC72C" }, title: "#8 Notre Dame vs USC", meta: "THE CROSS-COUNTRY CLASSIC, UNDER THE LIGHTS", tv: "NBC · 7:30" },
-  { n: "06", teamA: "LSU", teamB: "Ole Miss", left: { fill: "#461D7C", mask: "#FDD023" }, right: { fill: "#14213D", mask: "#CE1126" }, title: "#8 LSU at Ole Miss", meta: "MAGNOLIA STATE CHAOS GUARANTEED", tv: "SECN · NOON" },
-  { n: "07", teamA: "Indiana", teamB: "Iowa", left: { fill: "#990000", mask: "#FFFFFF" }, right: { fill: "#000000", mask: "#FFCD00" }, title: "#11 Indiana vs Iowa", meta: "THE CINDERELLA AUDIT CONTINUES", tv: "BTN · 4:00" },
-  { n: "08", teamA: "Texas Tech", teamB: "Oklahoma State", left: { fill: "#CC0000", mask: "#000000" }, right: { fill: "#FF7300", mask: "#000000" }, title: "Texas Tech at Oklahoma State", meta: "BIG 12 ELIMINATION STAKES", tv: "ESPN2 · 4:00" },
-  { n: "09", teamA: "Boise State", teamB: "UNLV", left: { fill: "#0033A0", mask: "#D64309" }, right: { fill: "#CF0A2C", mask: "#666666" }, title: "#4 Boise State at UNLV", meta: "THE G5 BYE ON THE LINE, LATE NIGHT", tv: "ESPN · 10:15" },
-  { n: "10", teamA: "Utah", teamB: "Kansas State", left: { fill: "#CC0000", mask: "#FFFFFF" }, right: { fill: "#512888", mask: "#D1D1D1" }, title: "Utah at Kansas State", meta: "SLEEPER OF THE WEEK — DVR INSURANCE", tv: "FS1 · 8:00" },
-] as const;
-
 export default function ScoresPage() {
   return (
     <main>
@@ -187,6 +166,20 @@ export default function ScoresPage() {
           <p className="eyebrow">Live Now — Saturday Slate</p>
           <h2 className="display" style={{ fontSize: 38 }}>The Scoreboard</h2>
           <PreseasonChip />
+          <div className="week-strip" role="list" aria-label="Season week selector">
+            {CFB_WEEKS.map((w) => (
+              <span
+                key={w.wk}
+                role="listitem"
+                className={w.wk === 1 ? "week-pill active" : "week-pill disabled"}
+                aria-current={w.wk === 1 ? "true" : undefined}
+                aria-disabled={w.wk !== 1}
+              >
+                WEEK {w.wk} · {w.range}
+              </span>
+            ))}
+          </div>
+          <span className="note" style={{ display: "inline-block" }}>Live weekly slates arrive with the season</span>
           <div className="score-strip">
             {DEMO_LIVE_SCORES.map((c) => <ScoreCard card={c} key={c.st + c.net} />)}
           </div>

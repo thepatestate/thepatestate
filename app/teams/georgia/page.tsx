@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import PreseasonChip from "@/components/PreseasonChip";
 
@@ -31,8 +32,14 @@ const GEORGIA = {
     body: "Between the Hedges, the Dawg Walk, and where to eat on Milledge — the citizens' complete gameday plan.",
   },
   articles: [
-    { kick: "THE MONDAY COLUMN", title: "Georgia's Margin for Error Is a Myth", meta: "JOSH PATE · 6 MIN", href: null, navy: true },
-    { kick: "POLL DAY", title: "Why the Citizens Kept the Dawgs at No. 1", meta: "TUESDAY", href: "/notebook", navy: false },
+    {
+      kick: "THE MONDAY COLUMN", title: "Georgia's Margin for Error Is a Myth", meta: "JOSH PATE · 6 MIN", href: null, navy: true,
+      photo: "/img/editorial-turf.jpg", alt: "Frosted turf and a yard line at dawn",
+    },
+    {
+      kick: "POLL DAY", title: "Why the Citizens Kept the Dawgs at No. 1", meta: "TUESDAY", href: "/notebook", navy: false,
+      photo: "/img/editorial-goalpost.jpg", alt: "A goalpost silhouetted in fog against the sunrise",
+    },
   ],
 } as const;
 
@@ -115,7 +122,9 @@ function LatestArticles({ team }: { team: Team }) {
         {team.articles.map((a) =>
           a.href ? (
             <Link className="art" href={a.href} key={a.title}>
-              <div className={a.navy ? "art-thumb navy" : "art-thumb"} />
+              <div className={a.navy ? "art-thumb navy" : "art-thumb"}>
+                <Image src={a.photo} alt={a.alt} fill sizes="104px" style={{ objectFit: "cover" }} />
+              </div>
               <div className="art-body">
                 <span className="kick">{a.kick}</span>
                 <h4>{a.title}</h4>
@@ -124,7 +133,9 @@ function LatestArticles({ team }: { team: Team }) {
             </Link>
           ) : (
             <div className="art" key={a.title}>
-              <div className={a.navy ? "art-thumb navy" : "art-thumb"} />
+              <div className={a.navy ? "art-thumb navy" : "art-thumb"}>
+                <Image src={a.photo} alt={a.alt} fill sizes="104px" style={{ objectFit: "cover" }} />
+              </div>
               <div className="art-body">
                 <span className="kick">{a.kick}</span>
                 <h4>{a.title}</h4>

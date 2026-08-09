@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import PreseasonChip from "@/components/PreseasonChip";
 
@@ -10,8 +11,9 @@ export const metadata: Metadata = { title: "The Pate Report" };
 // actually ships. Note: the wireframe's cover art (pate-report-cover.svg)
 // doesn't exist as an asset anywhere in wireframes/ or public/ — unlike
 // citizen-gift-cover.png, which is real and used elsewhere via next/image —
-// so it's rendered here as a styled placeholder box instead of a broken
-// <img> tag.
+// so the cover renders as an editorial photo (goalpost, navy overlay) with
+// the report's own title text standing in as a dignified "cover," same
+// treatment as the matching tile on /shop.
 
 const DEMO_TOC = [
   { label: "The Top 40, ranked and X-rayed — roster, schedule, ceiling, floor", page: "P. 12" },
@@ -23,9 +25,9 @@ const DEMO_TOC = [
 ] as const;
 
 const DEMO_SPREADS = [
-  { title: "No. 1: Georgia, X-Rayed", meta: "8-PAGE TEAM CAPSULE" },
-  { title: "The 10 Games That Decide It", meta: "FOLD-OUT SCHEDULE MAP" },
-  { title: "All 136, One Page Each", meta: "THE JP POLL PRESEASON BOARD" },
+  { title: "No. 1: Georgia, X-Rayed", meta: "8-PAGE TEAM CAPSULE", photo: "/img/helmets/georgia.jpg", alt: "Georgia helmet studio photo" },
+  { title: "The 10 Games That Decide It", meta: "FOLD-OUT SCHEDULE MAP", photo: "/img/matchup-helmets.jpg", alt: "Blank navy and gold helmets facing off before kickoff" },
+  { title: "All 136, One Page Each", meta: "THE JP POLL PRESEASON BOARD", photo: "/img/editorial-goalpost.jpg", alt: "A goalpost silhouetted in fog against the sunrise" },
 ] as const;
 
 export default function ReportPage() {
@@ -46,24 +48,39 @@ export default function ReportPage() {
         <div className="wrap">
           <div className="mag">
             <div>
-              <div
-                className="cover-img"
-                style={{
-                  aspectRatio: "3 / 4",
-                  background: "linear-gradient(150deg,var(--navy) 0%,#1A2E47 55%,var(--field) 100%)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  textAlign: "center",
-                  padding: 24,
-                  fontFamily: "var(--mono)",
-                  fontSize: 12,
-                  letterSpacing: ".08em",
-                  textTransform: "uppercase",
-                  color: "var(--chalk-dim)",
-                }}
-              >
-                The Pate Report 2026 — Smith · Manning · Carr
+              <div className="cover-img" style={{ aspectRatio: "3 / 4", position: "relative", overflow: "hidden" }}>
+                <Image
+                  src="/img/editorial-goalpost.jpg"
+                  alt="A goalpost silhouetted in fog against the sunrise"
+                  fill
+                  sizes="(max-width: 860px) 100vw, 360px"
+                  style={{ objectFit: "cover" }}
+                />
+                <div
+                  style={{
+                    position: "absolute",
+                    inset: 0,
+                    background: "linear-gradient(150deg,rgba(15,27,45,.78) 0%,rgba(26,46,71,.58) 55%,rgba(30,59,46,.72) 100%)",
+                  }}
+                />
+                <div
+                  style={{
+                    position: "absolute",
+                    inset: 0,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    textAlign: "center",
+                    padding: 24,
+                    fontFamily: "var(--mono)",
+                    fontSize: 12,
+                    letterSpacing: ".08em",
+                    textTransform: "uppercase",
+                    color: "var(--chalk)",
+                  }}
+                >
+                  The Pate Report 2026 — Smith · Manning · Carr
+                </div>
               </div>
             </div>
             <div>
@@ -104,7 +121,9 @@ export default function ReportPage() {
           <div className="guide-grid" style={{ gridTemplateColumns: "repeat(3,1fr)" }}>
             {DEMO_SPREADS.map((s) => (
               <Link className="guide on-light-guide" href="/#" key={s.title}>
-                <div className="ph" />
+                <div className="ph" style={{ position: "relative" }}>
+                  <Image src={s.photo} alt={s.alt} fill sizes="(max-width: 900px) 33vw, 280px" style={{ objectFit: "cover" }} />
+                </div>
                 <div className="body">
                   <h4>{s.title}</h4>
                   <div className="meta">{s.meta}</div>

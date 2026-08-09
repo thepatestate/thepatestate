@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import PreseasonChip from "@/components/PreseasonChip";
+import { slugifyTeam, teamLogoUrl } from "@/lib/teams-meta";
 
 export const metadata: Metadata = { title: "Recruiting — The Next Wave" };
 
@@ -95,10 +97,16 @@ export default function RecruitingPage() {
           </p>
 
           <div style={{ maxWidth: 860, marginTop: 20 }}>
-            {DEMO_TEAM_INDEX.map((t) => (
+            {DEMO_TEAM_INDEX.map((t) => {
+              const logoUrl = teamLogoUrl(slugifyTeam(t.team));
+              return (
               <div className="rankcard" key={t.rk}>
                 <div className="rk-num">{t.rk}</div>
-                <div className="logo-box">{t.code}</div>
+                {logoUrl ? (
+                  <Image src={logoUrl} alt={`${t.team} logo`} width={60} height={60} className="logo-img" />
+                ) : (
+                  <div className="logo-box">{t.code}</div>
+                )}
                 <div className="rk-main">
                   <b>{t.team}</b>
                   <span className="rk-rec">2027 CLASS</span>
@@ -113,7 +121,8 @@ export default function RecruitingPage() {
                   <span className="lbl">247 PTS</span>
                 </div>
               </div>
-            ))}
+              );
+            })}
           </div>
 
           <p className="eyebrow" style={{ marginTop: 30 }}>The Full Index</p>
