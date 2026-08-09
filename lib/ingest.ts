@@ -1,7 +1,7 @@
 import type { Video } from "@/lib/youtube";
 import { writeClient, isSanityWriteConfigured, articleExistsForEpisode } from "@/lib/sanity";
 import { fetchTranscript, transcriptToPromptText } from "@/lib/transcript";
-import { classifySeries, draftCompanion, BYLINE_JOSH } from "@/lib/generate";
+import { classifySeries, draftCompanion, BYLINE_STAFF } from "@/lib/generate";
 import { slugify } from "@/lib/slug";
 
 export interface IngestVideo extends Video {
@@ -79,9 +79,9 @@ export async function ingestEpisode(v: IngestVideo): Promise<IngestResult> {
       bodyMarkdown: draft.bodyMarkdown,
       pullQuote: draft.pullQuote,
       episode: { _type: "reference", _ref: episodeId },
-      byline: BYLINE_JOSH,
+      byline: BYLINE_STAFF,
       workflowState: "ai-drafted",
-      lowConfidence: !transcriptText,
+      lowConfidence: !transcriptText || draft.lowConfidence === true,
       primaryTeam: draft.primaryTeam,
       teams: draft.teams,
       tags: draft.tags,

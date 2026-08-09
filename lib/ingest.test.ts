@@ -25,7 +25,7 @@ vi.mock("@/lib/sanity", () => ({
 }));
 
 vi.mock("@/lib/generate", () => ({
-  BYLINE_JOSH: "Josh Pate",
+  BYLINE_STAFF: "The Pate State Staff",
   classifySeries: mocks.classifySeries,
   draftCompanion: mocks.draftCompanion,
 }));
@@ -90,7 +90,7 @@ describe("ingestEpisode", () => {
     );
     expect(articleCall).toBeTruthy();
     const articleDoc = articleCall![0] as Record<string, unknown>;
-    expect(articleDoc.byline).toBe("Josh Pate");
+    expect(articleDoc.byline).toBe("The Pate State Staff");
     expect(articleDoc.workflowState).toBe("ai-drafted");
   });
 

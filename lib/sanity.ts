@@ -45,12 +45,20 @@ export interface SanityArticle {
   seoTitle?: string;
   seoDescription?: string;
   publishedAt?: string;
-  episode?: { ytId: string; title: string; durationSeconds?: number; series?: string } | null;
+  episode?: {
+    ytId: string;
+    title: string;
+    durationSeconds?: number;
+    series?: string;
+    description?: string;
+    thumbnailUrl?: string;
+    publishedAt?: string;
+  } | null;
 }
 
 const ARTICLE_FIELDS = `_id, headline, slug, dek, bodyMarkdown, pullQuote, byline,
   workflowState, lowConfidence, primaryTeam, teams, tags, seoTitle, seoDescription, publishedAt,
-  "episode": episode->{ ytId, title, durationSeconds, series }`;
+  "episode": episode->{ ytId, title, durationSeconds, series, description, thumbnailUrl, publishedAt }`;
 
 // Deliberately throws on failure — no try/catch here. Pages calling these
 // error on a Sanity outage, and Next's ISR then serves the last good render

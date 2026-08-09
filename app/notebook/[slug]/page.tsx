@@ -40,12 +40,30 @@ export default async function ArticlePage({
     author: { "@type": "Person", name: article.byline },
   };
 
+  const videoJsonLd = article.episode
+    ? {
+        "@context": "https://schema.org",
+        "@type": "VideoObject",
+        name: article.episode.title,
+        description: article.episode.description || article.dek || article.episode.title,
+        thumbnailUrl: article.episode.thumbnailUrl ? [article.episode.thumbnailUrl] : undefined,
+        uploadDate: article.episode.publishedAt,
+        embedUrl: `https://www.youtube-nocookie.com/embed/${article.episode.ytId}`,
+      }
+    : null;
+
   return (
     <main>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}
       />
+      {videoJsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(videoJsonLd).replace(/</g, "\\u003c") }}
+        />
+      )}
 
       <div className="page-head">
         <div className="wrap">
@@ -81,6 +99,10 @@ export default async function ArticlePage({
                   </div>
                 </a>
               )}
+
+              <p style={{ marginTop: 20, opacity: 0.55, fontSize: 12.5, lineHeight: 1.5 }}>
+                Articles are drafted from Josh Pate&apos;s College Football Show and reviewed before publishing.
+              </p>
             </article>
 
             <aside className="aside-sticky">

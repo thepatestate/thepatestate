@@ -2,7 +2,7 @@ import Anthropic from "@anthropic-ai/sdk";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
-export const BYLINE_JOSH = "Josh Pate";
+export const BYLINE_STAFF = "The Pate State Staff";
 export const SERIES_VALUES = [
   "weekend-truths", "poll-day", "sit-down", "picks-drop", "espn-friday", "mailbag", "general",
 ] as const;
@@ -26,6 +26,48 @@ export interface CompanionDraft {
   teams: string[];
   tags: string[];
   seo: { title: string; description: string };
+  // Set by draftCompanion (never by the model / DRAFT_SCHEMA) when the verbatim-quote
+  // check still fails after one retry — signals the article needs a closer editorial look.
+  lowConfidence?: boolean;
+}
+
+/** Normalizes a string for verbatim-quote comparison: lowercase, curly quotes/apostrophes
+ * folded to straight ones, commas/periods stripped, whitespace collapsed. */
+function normalizeForCompare(s: string): string {
+  return s
+    .toLowerCase()
+    .replace(/[‘’]/g, "'")
+    .replace(/[“”]/g, '"')
+    .replace(/[,.]/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+const STRAIGHT_QUOTE_RE = /"([^"]+)"/g;
+const CURLY_QUOTE_RE = /“([^”]+)”/g;
+
+function extractQuotedSpans(body: string): string[] {
+  const spans: string[] = [];
+  for (const re of [STRAIGHT_QUOTE_RE, CURLY_QUOTE_RE]) {
+    re.lastIndex = 0;
+    let m: RegExpExecArray | null;
+    while ((m = re.exec(body))) spans.push(m[1]);
+  }
+  return spans;
+}
+
+/** Pure, unit-testable check: returns every quoted span (straight or curly quotes, ≥5
+ * words — short scare-quotes are exempt) in bodyMarkdown that is NOT a verbatim substring
+ * of transcript, after normalizing both for punctuation/quote-style/whitespace differences. */
+export function findNonVerbatimQuotes(body: string, transcript: string): string[] {
+  const normTranscript = normalizeForCompare(transcript);
+  const bad: string[] = [];
+  for (const raw of extractQuotedSpans(body)) {
+    const wordCount = raw.trim().split(/\s+/).filter(Boolean).length;
+    if (wordCount < 5) continue;
+    if (!normTranscript.includes(normalizeForCompare(raw))) bad.push(raw.trim());
+  }
+  return bad;
 }
 
 export function validateDraft(raw: unknown): CompanionDraft | null {
@@ -117,7 +159,7 @@ export async function draftCompanion(input: {
   const c = client();
   if (!c) return null;
   const system = `${prompt("global-preamble.md")}\n\n${prompt("companion-article.md")}`;
-  const user = [
+  const baseUser = [
     `Episode title: ${input.title}`,
     `Series: ${input.series}`,
     `Published: ${input.publishedAt}`,
@@ -126,6 +168,14 @@ export async function draftCompanion(input: {
       ? `Transcript (timestamped):\n${input.transcriptText}`
       : `NO TRANSCRIPT AVAILABLE — draft from the title and description only, per your instructions.`,
   ].join("\n\n");
+
+  // Two attempts total. A schema/parse miss just retries with the same prompt (loop
+  // continues below). A schema-valid draft whose quoted spans aren't verbatim in the
+  // transcript gets ONE retry with the offending quotes named; if that retry still
+  // fails (or errors), the last schema-valid draft is accepted with lowConfidence: true
+  // rather than discarded outright.
+  let user = baseUser;
+  let lastDraft: CompanionDraft | null = null;
 
   for (let attempt = 0; attempt < 2; attempt++) {
     try {
@@ -137,13 +187,21 @@ export async function draftCompanion(input: {
         messages: [{ role: "user", content: user }],
       });
       const draft = validateDraft(JSON.parse(textOf(res)));
-      if (draft) return draft;
+      if (!draft) continue; // schema/parse miss — retry with the same prompt
+
+      if (!input.transcriptText) return draft; // nothing to verify quotes against
+
+      const badQuotes = findNonVerbatimQuotes(draft.bodyMarkdown, input.transcriptText);
+      if (badQuotes.length === 0) return draft;
+
+      lastDraft = draft;
+      user = `${baseUser}\n\nYour previous draft put quotation marks around text that is not a verbatim match to the transcript. Every quotation-marked phrase must be an exact substring of the transcript text. Fix this by quoting the exact transcript wording, or by removing the quotation marks and paraphrasing instead. Non-verbatim quoted spans from your last draft: ${badQuotes.map((q) => `"${q}"`).join("; ")}`;
     } catch (err) {
       // SDK already retried 429/5xx internally; loop covers schema/parse misses
       console.error("[generate:draftCompanion]", attempt, err);
     }
   }
-  return null;
+  return lastDraft ? { ...lastDraft, lowConfidence: true } : null;
 }
 
 export interface PlaybookIntro {
