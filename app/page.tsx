@@ -32,35 +32,7 @@ const DEMO_LEADERBOARD = [
   { rank: 5, name: "ChalkEater88", pts: "1,700 PTS", streak: null },
 ] as const;
 
-type IconColors = { bg: string; diag: string; mask: string };
-
-// The wireframe repeats a placeholder "helmet" SVG per news/wire item,
-// varying only these three fill colors.
-function HelmetIcon({ bg, diag, mask }: IconColors) {
-  return (
-    <svg viewBox="0 0 160 100" preserveAspectRatio="xMidYMid slice">
-      <rect width="160" height="100" fill={bg} />
-      <path d="M160,0 L160,100 L70,100 Z" fill={diag} opacity=".28" />
-      <rect y="86" width="160" height="2" fill="rgba(255,255,255,.35)" />
-      <g transform="translate(44,20) scale(1.9)">
-        <path
-          d="M4,17 C4,8 10,3 18,3 C27,3 33,9 33,17 L33,23 C33,25 31,26 29,26 L24,26 L24,29 L14,29 C8,29 4,24 4,17 Z"
-          fill={bg}
-        />
-        <rect x="15" y="3" width="6" height="23" rx="3" fill={mask} />
-        <path
-          d="M27,15 L38,15 M27,21 L38,21 M33,12 L33,24"
-          stroke="#DADDE2"
-          strokeWidth="2.6"
-          fill="none"
-          strokeLinecap="round"
-        />
-      </g>
-    </svg>
-  );
-}
-
-// Same duplication pattern as HelmetIcon above: a small per-file lookup
+// Same duplication pattern noted throughout this file: a small per-file lookup
 // rather than a shared lib module (see components/ArticleBody.tsx and
 // app/notebook/page.tsx for the sibling copies).
 const SERIES_LABELS: Record<string, string> = {
@@ -78,6 +50,42 @@ function seriesLabel(series?: string): string {
   return SERIES_LABELS[series] ?? series;
 }
 
+// Shared thumb for the Notebook lead card's empty play-button box — identical
+// markup in both the real-lead and demo-lead branches below, so it's pulled
+// out once rather than duplicated.
+function NotebookLeadThumb() {
+  return (
+    <div
+      style={{
+        aspectRatio: "16/8",
+        borderRadius: 6,
+        border: "1px solid var(--line-l)",
+        position: "relative",
+        overflow: "hidden",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <Image
+        src="/img/editorial-film.jpg"
+        alt="A film projector beside a chalkboard of X's-and-O's diagrams"
+        fill
+        sizes="(max-width: 900px) 100vw, 700px"
+        style={{ objectFit: "cover" }}
+      />
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          background: "linear-gradient(150deg,rgba(15,27,45,.6) 0%,rgba(26,46,71,.4) 55%,rgba(30,59,46,.55) 100%)",
+        }}
+      />
+      <span className="playbtn" aria-hidden="true" style={{ position: "relative", zIndex: 2 }}>▶</span>
+    </div>
+  );
+}
+
 const DEMO_NOTEBOOK_FEATURED = [
   {
     badgeText: "★",
@@ -88,7 +96,8 @@ const DEMO_NOTEBOOK_FEATURED = [
     by: "STAFF",
     when: "WEDNESDAY",
     citizenBadge: false,
-    icon: { bg: "#0F1B2D", diag: "#E8A33D", mask: "#E8A33D" },
+    photo: "/img/editorial-turf.jpg",
+    alt: "Frosted turf and a yard line at dawn",
   },
   {
     badgeText: "Q&A",
@@ -99,7 +108,8 @@ const DEMO_NOTEBOOK_FEATURED = [
     by: "JOSH PATE",
     when: "FRIDAY",
     citizenBadge: true,
-    icon: { bg: "#1E3B2E", diag: "#F3EFE6", mask: "#F3EFE6" },
+    photo: "/img/editorial-goalpost.jpg",
+    alt: "A goalpost silhouetted in fog against the sunrise",
   },
 ] as const;
 
@@ -110,7 +120,8 @@ const DEMO_WIRE = [
     headline: "A&M holds No. 1 on both major boards",
     badge: "Full Story Ready",
     body: "26 commits, six five-stars — the 2027 class keeps growing.",
-    icon: { bg: "#500000", diag: "#FFFFFF", mask: "#FFFFFF" },
+    photo: "/img/editorial-turf.jpg",
+    alt: "Frosted turf and a yard line at dawn",
   },
   {
     time: "THIS WEEK",
@@ -118,7 +129,8 @@ const DEMO_WIRE = [
     headline: "Last 2027 five-stars come off the board",
     badge: null,
     body: "Indiana lands a five-star WR; Tennessee keeps a five-star RB home.",
-    icon: { bg: "#990000", diag: "#EEEDEB", mask: "#FFFFFF" },
+    photo: "/img/editorial-turf.jpg",
+    alt: "Frosted turf and a yard line at dawn",
   },
   {
     time: "2 WKS AGO",
@@ -126,7 +138,8 @@ const DEMO_WIRE = [
     headline: "Josh's new ESPN Friday show announced",
     badge: null,
     body: "Fridays this fall, sometimes live from GameDay sites.",
-    icon: { bg: "#0F1B2D", diag: "#E8A33D", mask: "#E8A33D" },
+    photo: "/img/editorial-film.jpg",
+    alt: "A film projector beside a chalkboard of X's-and-O's diagrams",
   },
   {
     time: "TODAY",
@@ -134,7 +147,8 @@ const DEMO_WIRE = [
     headline: "Porch Pick'Em registration opens",
     badge: null,
     body: "Season champ watches a game with Josh.",
-    icon: { bg: "#1E3B2E", diag: "#E8A33D", mask: "#E8A33D" },
+    photo: "/img/editorial-goalpost.jpg",
+    alt: "A goalpost silhouetted in fog against the sunrise",
   },
   {
     time: "THIS WEEK",
@@ -142,7 +156,8 @@ const DEMO_WIRE = [
     headline: "Ballots open Sunday 8PM ET",
     badge: null,
     body: "Week 1 reveal comes Tuesday on the show.",
-    icon: { bg: "#15243B", diag: "#F3EFE6", mask: "#E8A33D" },
+    photo: "/img/editorial-goalpost.jpg",
+    alt: "A goalpost silhouetted in fog against the sunrise",
   },
   {
     time: "TODAY",
@@ -150,7 +165,8 @@ const DEMO_WIRE = [
     headline: "Creed Tee restock lands",
     badge: null,
     body: "Tri-blend, ridiculously soft — first run sold out in nine days.",
-    icon: { bg: "#1E3B2E", diag: "#E8A33D", mask: "#F3EFE6" },
+    photo: "/img/train-tee.jpg",
+    alt: "The Creed Tee's vintage train-and-football graphic",
   },
 ] as const;
 
@@ -168,10 +184,10 @@ const DEMO_TOUR = [
 ] as const;
 
 const DEMO_GUIDES = [
-  { name: "Tiger Stadium", meta: "LSU · NIGHT GAME SURVIVAL", emoji: "🌙", gradient: "linear-gradient(135deg,#461D7C 0%,#FDD023 100%)" },
-  { name: "The Grove", meta: "OLE MISS · MASTERCLASS", emoji: "🥂", gradient: "linear-gradient(135deg,#14213D 0%,#CE1126 100%)" },
-  { name: "The Horseshoe", meta: "OHIO STATE · FIRST-TIMER", emoji: "🏟️", gradient: "linear-gradient(135deg,#BB0000 0%,#666666 100%)" },
-  { name: "Camp Randall", meta: "WISCONSIN · JUMP AROUND", emoji: "🦡", gradient: "linear-gradient(135deg,#C5050C 0%,#FFFFFF 100%)" },
+  { name: "Tiger Stadium", meta: "LSU · NIGHT GAME SURVIVAL", photo: "/img/tailgate-night.jpg", alt: "Tiger Stadium's lights glowing over a packed night tailgate lot" },
+  { name: "The Grove", meta: "OLE MISS · MASTERCLASS", photo: "/img/tailgate-grove.jpg", alt: "Chandeliers strung through the oaks of The Grove above rows of white tailgate tents" },
+  { name: "The Horseshoe", meta: "OHIO STATE · FIRST-TIMER", photo: "/img/tailgate-horseshoe.jpg", alt: "The Horseshoe packed to capacity for an Ohio State kickoff" },
+  { name: "Camp Randall", meta: "WISCONSIN · JUMP AROUND", photo: "/img/tailgate-jump.jpg", alt: "Camp Randall's student section jumping with confetti in the air" },
 ] as const;
 
 export default async function Home() {
@@ -322,19 +338,7 @@ export default async function Home() {
             {notebookLead ? (
               <div>
                 <Link href={`/notebook/${notebookLead.slug.current}`} style={{ display: "block" }}>
-                  <div
-                    style={{
-                      aspectRatio: "16/8",
-                      borderRadius: 6,
-                      background: "linear-gradient(150deg,var(--navy) 0%,#1A2E47 60%,var(--field) 100%)",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      border: "1px solid var(--line-l)",
-                    }}
-                  >
-                    <span className="playbtn" aria-hidden="true">▶</span>
-                  </div>
+                  <NotebookLeadThumb />
                 </Link>
                 <div style={{ marginTop: 16 }}><span className="fr">📝 {seriesLabel(notebookLead.episode?.series)}</span></div>
                 <h3 className="display" style={{ fontSize: "clamp(24px,3vw,33px)", lineHeight: 0.95, margin: "6px 0 8px" }}>
@@ -371,19 +375,7 @@ export default async function Home() {
             ) : (
               <div>
                 <Link href="/notebook" style={{ display: "block" }}>
-                  <div
-                    style={{
-                      aspectRatio: "16/8",
-                      borderRadius: 6,
-                      background: "linear-gradient(150deg,var(--navy) 0%,#1A2E47 60%,var(--field) 100%)",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      border: "1px solid var(--line-l)",
-                    }}
-                  >
-                    <span className="playbtn" aria-hidden="true">▶</span>
-                  </div>
+                  <NotebookLeadThumb />
                 </Link>
                 <div style={{ marginTop: 16 }}><span className="fr">📝 WEEKEND TRUTHS</span></div>
                 <h3 className="display" style={{ fontSize: "clamp(24px,3vw,33px)", lineHeight: 0.95, margin: "6px 0 8px" }}>
@@ -417,8 +409,8 @@ export default async function Home() {
                       <p style={{ fontSize: 14, color: "var(--ink-dim)", marginTop: 6 }}>{item.body}</p>
                       <div className="by"><b>{item.by}</b> · {item.when}</div>
                     </div>
-                    <div className="newsthumb" style={{ flexBasis: 176 }}>
-                      <HelmetIcon {...item.icon} />
+                    <div className="newsthumb" style={{ flexBasis: 176, position: "relative" }}>
+                      <Image src={item.photo} alt={item.alt} fill sizes="176px" style={{ objectFit: "cover" }} />
                     </div>
                   </div>
                 ))}
@@ -430,7 +422,9 @@ export default async function Home() {
               <h3><span className="dot" />The Wire</h3>
               {DEMO_WIRE.map((w) => (
                 <div className="wire-item" key={w.headline}>
-                  <div className="wire-thumb2"><HelmetIcon {...w.icon} /></div>
+                  <div className="wire-thumb2" style={{ position: "relative" }}>
+                    <Image src={w.photo} alt={w.alt} fill sizes="86px" style={{ objectFit: "cover" }} />
+                  </div>
                   <div className="wtxt">
                     <span className="t">{w.time} · {w.category}</span>
                     <b>{w.headline}{w.badge && <span className="ai-badge">{w.badge}</span>}</b>
@@ -516,8 +510,8 @@ export default async function Home() {
           <div className="guide-grid">
             {DEMO_GUIDES.map((g) => (
               <Link className="guide" href="/tailgate" key={g.name}>
-                <div className="ph" style={{ background: g.gradient, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 44 }}>
-                  {g.emoji}
+                <div className="ph">
+                  <Image src={g.photo} alt={g.alt} fill sizes="(max-width: 900px) 50vw, 280px" style={{ objectFit: "cover" }} />
                 </div>
                 <div className="body">
                   <h4>{g.name}</h4>

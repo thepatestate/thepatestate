@@ -210,6 +210,14 @@ export default async function NotebookPage() {
               {lead ? (
                 <Link href={`/notebook/${lead.slug.current}`} className="lead-story" style={{ textDecoration: "none", color: "inherit" }}>
                   <div className="ph">
+                    <Image
+                      src="/img/editorial-film.jpg"
+                      alt="A film projector beside a chalkboard of X's-and-O's diagrams"
+                      fill
+                      sizes="(max-width: 860px) 100vw, 500px"
+                      style={{ objectFit: "cover" }}
+                    />
+                    <div className="overlay" />
                     <span className="playbtn" aria-hidden="true">▶</span>
                   </div>
                   <div>
@@ -225,6 +233,14 @@ export default async function NotebookPage() {
               ) : (
                 <div className="lead-story">
                   <div className="ph">
+                    <Image
+                      src="/img/editorial-film.jpg"
+                      alt="A film projector beside a chalkboard of X's-and-O's diagrams"
+                      fill
+                      sizes="(max-width: 860px) 100vw, 500px"
+                      style={{ objectFit: "cover" }}
+                    />
+                    <div className="overlay" />
                     <button className="playbtn" aria-label="Play" disabled>▶</button>
                   </div>
                   <div>

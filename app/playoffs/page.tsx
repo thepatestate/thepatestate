@@ -166,6 +166,17 @@ export default function PlayoffsPage() {
 
       <section>
         <div className="wrap">
+          <div className="banner-photo">
+            <Image
+              src="/img/matchup-helmets.jpg"
+              alt="Blank navy and gold helmets facing off before kickoff"
+              fill
+              sizes="(max-width: 900px) 100vw, 1180px"
+              style={{ objectFit: "cover" }}
+              priority
+            />
+            <div className="overlay" />
+          </div>
           <p className="eyebrow">If the Season Ended Today</p>
           <h2 className="display" style={{ fontSize: 38 }}>Two Brackets. One January.</h2>
           <PreseasonChip />

@@ -221,6 +221,16 @@ export default function ScoresPage() {
 
       <section>
         <div className="wrap" style={{ maxWidth: 860 }}>
+          <div className="banner-photo">
+            <Image
+              src="/img/matchup-helmets.jpg"
+              alt="Blank navy and gold helmets facing off before kickoff"
+              fill
+              sizes="(max-width: 860px) 100vw, 860px"
+              style={{ objectFit: "cover" }}
+            />
+            <div className="overlay" />
+          </div>
           <p className="eyebrow">The Watch List</p>
           <h2 className="display" style={{ fontSize: 36 }}>Top 10 Games of the Week</h2>
           <PreseasonChip />

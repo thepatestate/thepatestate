@@ -45,6 +45,12 @@ export default function ShopPage() {
           <div className="duo" style={{ alignItems: "center" }}>
             <div style={{ background: "var(--paper-2)", border: "1px solid var(--line-l)", borderRadius: 6, padding: 20 }}>
               <svg className="tee-svg" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+                <title>The Creed Tee, field green with a vintage train-and-football chest print</title>
+                <defs>
+                  <clipPath id="teeGraphicClip">
+                    <rect x="98" y="100" width="104" height="68" rx="5" />
+                  </clipPath>
+                </defs>
                 <path
                   d="M96,38 L120,26 C128,40 172,40 180,26 L204,38 L246,64 L226,104 L204,92 L204,262 C204,270 198,274 190,274 L110,274 C102,274 96,270 96,262 L96,92 L74,104 L54,64 Z"
                   fill="#1E3B2E"
@@ -53,8 +59,17 @@ export default function ShopPage() {
                   d="M120,26 C128,40 172,40 180,26 L204,38 C188,54 112,54 96,38 Z"
                   fill="rgba(0,0,0,.25)"
                 />
-                <text x="150" y="150" textAnchor="middle" fontFamily="Georgia,serif" fontStyle="italic" fontSize="22" fill="#E8A33D">No</text>
-                <text x="150" y="192" textAnchor="middle" fontFamily="Arial Black,sans-serif" fontWeight="900" fontSize="30" fill="#F3EFE6" letterSpacing="1">OFFSEASON</text>
+                <text x="150" y="90" textAnchor="middle" fontFamily="Georgia,serif" fontStyle="italic" fontSize="22" fill="#E8A33D">No</text>
+                <image
+                  href="/img/train-tee.jpg"
+                  x="98"
+                  y="100"
+                  width="104"
+                  height="68"
+                  preserveAspectRatio="xMidYMid slice"
+                  clipPath="url(#teeGraphicClip)"
+                />
+                <text x="150" y="196" textAnchor="middle" fontFamily="Arial Black,sans-serif" fontWeight="900" fontSize="30" fill="#F3EFE6" letterSpacing="1">OFFSEASON</text>
                 <line x1="112" y1="214" x2="188" y2="214" stroke="#F3EFE6" strokeWidth="2" />
                 <text x="150" y="232" textAnchor="middle" fontFamily="monospace" fontSize="9" fill="#B9B4A6" letterSpacing="3">EST. THE PATE STATE</text>
               </svg>
