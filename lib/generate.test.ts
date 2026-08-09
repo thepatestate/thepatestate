@@ -65,6 +65,21 @@ describe("findNonVerbatimQuotes", () => {
     expect(findNonVerbatimQuotes(body, transcript)).toEqual([]);
   });
 
+  it("passes a quote that spans a caption-segment boundary (real-world YouTube auto-captions run 2-4 words/line)", () => {
+    // transcriptToPromptText() prepends a [MM:SS] marker to every short caption line, so a
+    // genuine verbatim quote spanning two adjacent lines has a literal timestamp token
+    // landing mid-quote in the raw transcript text — normalizeForCompare must strip it.
+    const choppyTranscript = "[00:00] Of course, this is the most all-in of\n[00:01] all-in teams and in the portal going and";
+    const body = 'He said, "the most all-in of all-in teams" on air.';
+    expect(findNonVerbatimQuotes(body, choppyTranscript)).toEqual([]);
+  });
+
+  it("passes a quote interrupted by a non-speech caption annotation like [music]", () => {
+    const captionedTranscript = "[00:38] words, when you think back [music] to\n[00:39] Texas Georgia games and you think about";
+    const body = 'He said, "when you think back to Texas Georgia games and you think about" it.';
+    expect(findNonVerbatimQuotes(body, captionedTranscript)).toEqual([]);
+  });
+
   it("exempts short scare-quotes under 5 words", () => {
     const body = 'Pate called it a "total mess" on air.';
     expect(findNonVerbatimQuotes(body, transcript)).toEqual([]);

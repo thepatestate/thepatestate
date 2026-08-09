@@ -32,10 +32,19 @@ export interface CompanionDraft {
 }
 
 /** Normalizes a string for verbatim-quote comparison: lowercase, curly quotes/apostrophes
- * folded to straight ones, commas/periods stripped, whitespace collapsed. */
+ * folded to straight ones, commas/periods stripped, whitespace collapsed. Also strips any
+ * bracketed transcript annotation — `[MM:SS]`/`[HH:MM:SS]` timestamp markers (one per caption
+ * line from transcriptToPromptText()) and non-speech tags YouTube auto-captions insert inline
+ * (`[music]`, `[applause]`, `[laughter]`, `[inaudible]`, etc). YouTube auto-captions run only
+ * 2-4 words per line, so any quote spanning a caption boundary — or a beat where the captioner
+ * dropped in one of those tags — would otherwise have a literal bracketed token landing mid-quote
+ * in the transcript side and break an otherwise-genuine verbatim match. Quoted spans pulled from
+ * bodyMarkdown never legitimately contain bracketed text, so stripping brackets from both sides
+ * only ever affects (and only ever helps) the transcript side. */
 function normalizeForCompare(s: string): string {
   return s
     .toLowerCase()
+    .replace(/\[[^\]]*\]/g, " ")
     .replace(/[‘’]/g, "'")
     .replace(/[“”]/g, '"')
     .replace(/[,.]/g, "")
