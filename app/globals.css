@@ -52,9 +52,13 @@ nav{position:sticky;top:0;z-index:50;background:rgba(253,252,248,.94);backdrop-f
 .page-head h1{font-family:var(--display);font-weight:800;text-transform:uppercase;font-size:clamp(44px,7vw,84px);line-height:.92}
 .page-head .lede{color:var(--chalk-dim);margin-top:14px}
 .crumb{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--lamp);margin-bottom:12px}
-.hero{color:var(--chalk);padding:104px 0 60px;position:relative;overflow:hidden;
+.hero{color:var(--chalk);padding:104px 0 60px;position:relative;overflow:hidden;background-color:var(--navy)}
+/* Photo layer lives on ::before (not directly on .hero) so the very-slow
+   drift/zoom below can transform:scale() just the image, never the text in
+   .hero .wrap (already position:relative;z-index:1, so it stacks above this). */
+.hero::before{content:"";position:absolute;inset:0;z-index:0;
 background-image:linear-gradient(100deg,rgba(15,27,45,.94) 32%,rgba(15,27,45,.68) 58%,rgba(15,27,45,.4) 100%),url(/img/hero-porch.jpg);
-background-size:cover;background-position:center right;background-color:var(--navy)}
+background-size:cover;background-position:center right}
 .hero h1{font-size:clamp(54px,9.5vw,126px)}.hero h1 .row2{display:block;color:var(--lamp)}
 .hero .lede{font-size:20px;margin:22px 0 30px;color:var(--chalk-dim)}
 .hero-ctas{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:64px}
@@ -472,3 +476,69 @@ footer{background:var(--navy);color:var(--chalk-dim);padding:44px 0 60px;font-fa
 .foot-row{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap}
 .foot-links{display:flex;gap:18px;flex-wrap:wrap;letter-spacing:.08em;text-transform:uppercase}
 .foot-links a:hover{color:var(--chalk)}
+
+/* --- motion: scroll-reveal (components/Reveal.tsx) ---
+   SSR/no-JS-safe: base .reveal is fully visible with no transform. Only once
+   the observer arms client-side does "reveal-armed" land (opacity 0 + a
+   12-16px rise), and only "reveal-in" (added the instant it enters view)
+   fades/rises it back in. reduced-motion forces the armed state to full
+   visibility with no transition, so it's never hidden either way. */
+.reveal.reveal-armed{opacity:0;transform:translateY(14px);transition:opacity .5s ease-out,transform .5s ease-out}
+.reveal.reveal-armed.reveal-in{opacity:1;transform:translateY(0)}
+@media(prefers-reduced-motion:reduce){
+  .reveal.reveal-armed{opacity:1;transform:none;transition:none}
+}
+
+/* --- motion: shared card hover-lift ---
+   Targets every bordered "card" tile across the site — the card-named
+   classes (card-l, rankcard, log-card, score-card, aside-card) plus the
+   other tile/panel components that render as boxed cards in grids (art,
+   feat, guide, team-tile, game, bracket-round, ep, mail, wire, panel).
+   Lift + shadow apply everywhere; border-color warms only where a class
+   doesn't already own a hover border-color rule above (art/feat/guide/
+   team-tile/ep keep their existing hover color untouched). */
+.card-l,.panel,.art,.feat,.guide,.rankcard,.log-card,.aside-card,.score-card,
+.team-tile,.game,.bracket-round,.mail,.ep,.wire{
+  transition:transform .18s ease-out,box-shadow .18s ease-out,border-color .18s ease-out;
+}
+.card-l:hover,.panel:hover,.art:hover,.feat:hover,.guide:hover,.rankcard:hover,
+.log-card:hover,.aside-card:hover,.score-card:hover,.team-tile:hover,.game:hover,
+.bracket-round:hover,.mail:hover,.ep:hover,.wire:hover{
+  transform:translateY(-3px);
+  box-shadow:0 12px 28px rgba(15,27,45,.18);
+}
+.card-l:hover,.panel:hover,.rankcard:hover,.log-card:hover,.aside-card:hover,
+.score-card:hover,.game:hover,.bracket-round:hover,.mail:hover,.wire:hover{border-color:var(--lamp-deep)}
+.panel-dark:hover,.panel-field:hover,.rankcard.dark:hover{border-color:var(--lamp)}
+@media(prefers-reduced-motion:reduce){
+  .card-l,.panel,.art,.feat,.guide,.rankcard,.log-card,.aside-card,.score-card,
+  .team-tile,.game,.bracket-round,.mail,.ep,.wire{transition:border-color .18s ease-out}
+  .card-l:hover,.panel:hover,.art:hover,.feat:hover,.guide:hover,.rankcard:hover,
+  .log-card:hover,.aside-card:hover,.score-card:hover,.team-tile:hover,.game:hover,
+  .bracket-round:hover,.mail:hover,.ep:hover,.wire:hover{transform:none;box-shadow:none}
+}
+
+/* --- texture: film grain on dark bands ---
+   .on-dark/.on-field are already the site's dark-band wrapper classes
+   (navy/green sections throughout), so the grain lands on every such
+   section automatically with no JSX changes. Inline feTurbulence noise
+   SVG, tiled, at ~5% opacity via mix-blend-mode so it never meaningfully
+   touches text contrast; pointer-events:none keeps it click-through. */
+.on-dark,.on-field{position:relative}
+.on-dark::after,.on-field::after{
+  content:"";position:absolute;inset:0;pointer-events:none;z-index:1;
+  opacity:.05;mix-blend-mode:overlay;
+  background-repeat:repeat;background-size:220px 220px;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='grain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23grain)'/%3E%3C/svg%3E");
+}
+
+/* --- motion: hero background drift ---
+   Very slow alternate zoom/pan on .hero::before (the photo layer) via
+   transform:scale — never on .hero itself — so text/CTAs in .hero .wrap
+   never move, and overflow:hidden on .hero clips the scaled edges (1→1.06
+   only ever grows past the box, so no gap ever shows). Disabled under
+   reduced-motion. */
+@keyframes heroDrift{from{transform:scale(1)}to{transform:scale(1.06)}}
+@media(prefers-reduced-motion:no-preference){
+  .hero::before{animation:heroDrift 40s ease-in-out infinite alternate}
+}

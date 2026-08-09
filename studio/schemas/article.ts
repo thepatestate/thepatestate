@@ -9,6 +9,10 @@ export default defineType({
     defineField({ name: "slug", type: "slug", options: { source: "headline", maxLength: 80 }, validation: (r) => r.required() }),
     defineField({ name: "dek", type: "text", rows: 2 }),
     defineField({
+      name: "heroImage", title: "Hero Image (auto-generated — BFL FLUX)",
+      type: "image", options: { hotspot: true },
+    }),
+    defineField({
       name: "bodyMarkdown", title: "Body (Markdown — [EMBED:HH:MM:SS] and [PULLQUOTE] markers)",
       type: "text", rows: 30, validation: (r) => r.required(),
     }),

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getArticleBySlug } from "@/lib/sanity";
@@ -15,9 +16,29 @@ export async function generateMetadata({
   const { slug } = await params;
   const article = await getArticleBySlug(slug);
   if (!article) return {};
+
+  const title = article.seoTitle || article.headline;
+  const description = article.seoDescription || article.dek;
+  // Prefer the article's own generated hero; fall back to the episode's
+  // YouTube thumbnail. If neither exists, leave openGraph/twitter unset so
+  // the route inherits the site-wide app/opengraph-image.tsx + twitter-image.tsx.
+  const imageUrl = article.heroUrl || article.episode?.thumbnailUrl || null;
+
   return {
-    title: article.seoTitle || article.headline,
-    description: article.seoDescription || article.dek,
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      type: "article",
+      ...(imageUrl ? { images: [{ url: imageUrl, width: 1200, height: 630, alt: article.headline }] } : {}),
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      ...(imageUrl ? { images: [imageUrl] } : {}),
+    },
   };
 }
 
@@ -75,6 +96,18 @@ export default async function ArticlePage({
         <div className="wrap">
           <div className="story-grid">
             <article className="story">
+              {article.heroUrl && (
+                <Image
+                  src={article.heroUrl}
+                  alt={article.headline}
+                  width={1152}
+                  height={640}
+                  priority
+                  sizes="(max-width: 960px) 100vw, 820px"
+                  className="cover-img"
+                  style={{ marginBottom: 20 }}
+                />
+              )}
               <h1>{article.headline}</h1>
               {article.dek && <p className="dek">{article.dek}</p>}
 

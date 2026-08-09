@@ -1,7 +1,8 @@
 import type { Video } from "@/lib/youtube";
-import { writeClient, isSanityWriteConfigured, articleExistsForEpisode } from "@/lib/sanity";
+import { writeClient, isSanityWriteConfigured, articleExistsForEpisode, uploadHeroImage, setArticleHeroImage } from "@/lib/sanity";
 import { fetchTranscript, transcriptToPromptText } from "@/lib/transcript";
 import { classifySeries, draftCompanion, BYLINE_STAFF } from "@/lib/generate";
+import { generateArticleHero } from "@/lib/hero-image";
 import { slugify } from "@/lib/slug";
 
 export interface IngestVideo extends Video {
@@ -88,6 +89,20 @@ export async function ingestEpisode(v: IngestVideo): Promise<IngestResult> {
       seoTitle: draft.seo.title,
       seoDescription: draft.seo.description,
     });
+
+    // 6. Hero image — best-effort only. Wrapped in its own try/catch (on top
+    // of generateArticleHero already being fail-soft) so a bug in the upload
+    // or patch step can never turn a successful ingest into a "failed" one.
+    try {
+      const heroBuffer = await generateArticleHero(draft.headline, draft.teams);
+      if (heroBuffer) {
+        const assetId = await uploadHeroImage(heroBuffer);
+        if (assetId) await setArticleHeroImage(articleId, assetId);
+      }
+    } catch (err) {
+      console.error("[ingest:hero]", v.id, err);
+    }
+
     return "created";
   } catch (err) {
     console.error("[ingest]", v.id, err);

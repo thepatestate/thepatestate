@@ -1,10 +1,14 @@
 import { ImageResponse } from "next/og";
 
+// Mirrors app/opengraph-image.tsx. Kept as its own self-contained file
+// (rather than importing a shared render function) because Next's file
+// convention resolves opengraph-image/twitter-image per-route via their own
+// static alt/size/contentType exports and default export in this exact file.
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 export const alt = "The Pate State — The Front Porch of College Football";
 
-export default function OgImage() {
+export default function TwitterImage() {
   return new ImageResponse(
     (
       <div

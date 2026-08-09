@@ -36,6 +36,7 @@ export interface SanityArticle {
   dek?: string;
   bodyMarkdown: string;
   pullQuote?: string;
+  heroUrl?: string | null;
   byline: string;
   workflowState: "ai-drafted" | "approved" | "published";
   lowConfidence?: boolean;
@@ -58,6 +59,7 @@ export interface SanityArticle {
 
 const ARTICLE_FIELDS = `_id, headline, slug, dek, bodyMarkdown, pullQuote, byline,
   workflowState, lowConfidence, primaryTeam, teams, tags, seoTitle, seoDescription, publishedAt,
+  "heroUrl": heroImage.asset->url,
   "episode": episode->{ ytId, title, durationSeconds, series, description, thumbnailUrl, publishedAt }`;
 
 // Deliberately throws on failure — no try/catch here. Pages calling these
@@ -83,4 +85,32 @@ export async function getArticleBySlug(slug: string): Promise<SanityArticle | nu
 export async function articleExistsForEpisode(episodeId: string): Promise<boolean> {
   const n = await writeClient.fetch(`count(*[_type == "article" && references($id)])`, { id: episodeId });
   return n > 0;
+}
+
+/** Uploads a generated hero image buffer to Sanity assets. Fail-soft: returns
+ * the new asset's `_id` on success, null on ANY failure (including when writes
+ * aren't configured) — callers (ingest, the backfill script) treat a missing
+ * hero image as non-fatal. */
+export async function uploadHeroImage(buffer: Buffer): Promise<string | null> {
+  if (!isSanityWriteConfigured) return null;
+  try {
+    const asset = await writeClient.assets.upload("image", buffer, { contentType: "image/png" });
+    return asset._id;
+  } catch (err) {
+    console.error("[sanity:uploadHeroImage]", err);
+    return null;
+  }
+}
+
+/** Patches an article's heroImage field to reference an uploaded asset.
+ * Fail-soft: swallows and logs errors, never throws. */
+export async function setArticleHeroImage(articleId: string, assetId: string): Promise<void> {
+  try {
+    await writeClient
+      .patch(articleId)
+      .set({ heroImage: { _type: "image", asset: { _type: "reference", _ref: assetId } } })
+      .commit();
+  } catch (err) {
+    console.error("[sanity:setArticleHeroImage]", articleId, err);
+  }
 }

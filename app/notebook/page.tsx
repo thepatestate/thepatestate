@@ -211,8 +211,8 @@ export default async function NotebookPage() {
                 <Link href={`/notebook/${lead.slug.current}`} className="lead-story" style={{ textDecoration: "none", color: "inherit" }}>
                   <div className="ph">
                     <Image
-                      src="/img/editorial-film.jpg"
-                      alt="A film projector beside a chalkboard of X's-and-O's diagrams"
+                      src={lead.heroUrl || "/img/editorial-film.jpg"}
+                      alt={lead.heroUrl ? lead.headline : "A film projector beside a chalkboard of X's-and-O's diagrams"}
                       fill
                       sizes="(max-width: 860px) 100vw, 500px"
                       style={{ objectFit: "cover" }}
@@ -259,7 +259,11 @@ export default async function NotebookPage() {
                 <div className="feat-grid">
                   {featured.map((a) => (
                     <Link className="feat" href={`/notebook/${a.slug.current}`} key={a._id}>
-                      <div className="ph" />
+                      <div className="ph" style={a.heroUrl ? { position: "relative" } : undefined}>
+                        {a.heroUrl && (
+                          <Image src={a.heroUrl} alt={a.headline} fill sizes="(max-width: 860px) 33vw, 280px" style={{ objectFit: "cover" }} />
+                        )}
+                      </div>
                       <div className="bd">
                         <h4>{a.headline}</h4>
                         <div className="meta">

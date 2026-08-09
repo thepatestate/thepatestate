@@ -8,6 +8,7 @@ import EpisodeHero from "@/components/EpisodeHero";
 import VideoGrid from "@/components/VideoGrid";
 import SubscribeCTA from "@/components/SubscribeCTA";
 import PreseasonChip from "@/components/PreseasonChip";
+import Reveal from "@/components/Reveal";
 
 // --- Preseason-preview sample data ---------------------------------------
 // Every array below stands in for a section that isn't wired to a real
@@ -53,7 +54,7 @@ function seriesLabel(series?: string): string {
 // Shared thumb for the Notebook lead card's empty play-button box — identical
 // markup in both the real-lead and demo-lead branches below, so it's pulled
 // out once rather than duplicated.
-function NotebookLeadThumb() {
+function NotebookLeadThumb({ src, alt }: { src?: string; alt?: string } = {}) {
   return (
     <div
       style={{
@@ -68,8 +69,8 @@ function NotebookLeadThumb() {
       }}
     >
       <Image
-        src="/img/editorial-film.jpg"
-        alt="A film projector beside a chalkboard of X's-and-O's diagrams"
+        src={src || "/img/editorial-film.jpg"}
+        alt={alt || "A film projector beside a chalkboard of X's-and-O's diagrams"}
         fill
         sizes="(max-width: 900px) 100vw, 700px"
         style={{ objectFit: "cover" }}
@@ -247,6 +248,7 @@ export default async function Home() {
 
       <section className="on-dark tight">
         <div className="wrap">
+          <Reveal>
           <div className="duo">
             <div className="panel panel-dark">
               <span className="fr">🗳 THE JP POLL</span>
@@ -326,6 +328,7 @@ export default async function Home() {
               <Link className="btn" href="/pickem">Play Free — See the Prizes</Link>
             </div>
           </div>
+          </Reveal>
         </div>
       </section>
 
@@ -334,11 +337,12 @@ export default async function Home() {
           <p className="eyebrow">From the Porch — New Every Weekday</p>
           <h2 className="display">The Notebook</h2>
           {!notebookLead && <PreseasonChip />}
+          <Reveal>
           <div className="duo" style={{ gridTemplateColumns: "2fr 1fr", marginTop: 26 }}>
             {notebookLead ? (
               <div>
                 <Link href={`/notebook/${notebookLead.slug.current}`} style={{ display: "block" }}>
-                  <NotebookLeadThumb />
+                  <NotebookLeadThumb src={notebookLead.heroUrl || undefined} alt={notebookLead.heroUrl ? notebookLead.headline : undefined} />
                 </Link>
                 <div style={{ marginTop: 16 }}><span className="fr">📝 {seriesLabel(notebookLead.episode?.series)}</span></div>
                 <h3 className="display" style={{ fontSize: "clamp(24px,3vw,33px)", lineHeight: 0.95, margin: "6px 0 8px" }}>
@@ -437,6 +441,7 @@ export default async function Home() {
               </Link>
             </div>
           </div>
+          </Reveal>
         </div>
       </section>
 
@@ -464,6 +469,7 @@ export default async function Home() {
 
       <section className="tight">
         <div className="wrap">
+          <Reveal>
           <div className="split">
             <div>
               <p className="eyebrow">Wear the Flag</p>
@@ -493,6 +499,7 @@ export default async function Home() {
               ))}
             </div>
           </div>
+          </Reveal>
         </div>
       </section>
 
@@ -505,6 +512,7 @@ export default async function Home() {
             The field guide to actually living this sport — where to park, where to eat, what time to arrive, which
             traditions you can&apos;t miss.
           </p>
+          <Reveal>
           <div className="guide-grid">
             {DEMO_GUIDES.map((g) => {
               const badgeUrl = teamLogoUrl(g.team);
@@ -526,6 +534,7 @@ export default async function Home() {
               );
             })}
           </div>
+          </Reveal>
           <div style={{ marginTop: 24 }}><Link className="btn" href="/tailgate">Open the Full Guide — 136 Stadiums</Link></div>
         </div>
       </section>
