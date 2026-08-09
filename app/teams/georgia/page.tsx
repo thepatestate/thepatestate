@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import PreseasonChip from "@/components/PreseasonChip";
+import { createArtPicker } from "@/lib/editorial-art";
 
 export const metadata: Metadata = { title: "Georgia — Team Page" };
 
@@ -34,11 +35,11 @@ const GEORGIA = {
   articles: [
     {
       kick: "THE MONDAY COLUMN", title: "Georgia's Margin for Error Is a Myth", meta: "JOSH PATE · 6 MIN", href: null, navy: true,
-      photo: "/img/editorial-turf.jpg", alt: "Frosted turf and a yard line at dawn",
+      art: "weekend-truths",
     },
     {
       kick: "POLL DAY", title: "Why the Citizens Kept the Dawgs at No. 1", meta: "TUESDAY", href: "/notebook", navy: false,
-      photo: "/img/editorial-goalpost.jpg", alt: "A goalpost silhouetted in fog against the sunrise",
+      art: "poll",
     },
   ],
 } as const;
@@ -115,15 +116,17 @@ function TailgateGuide({ team }: { team: Team }) {
 }
 
 function LatestArticles({ team }: { team: Team }) {
+  const art = createArtPicker();
   return (
     <div>
       <p className="eyebrow">Latest From the Porch on {team.name}</p>
       <div style={{ display: "flex", flexDirection: "column", gap: 12, maxWidth: 760, marginTop: 12 }}>
-        {team.articles.map((a) =>
-          a.href ? (
+        {team.articles.map((a) => {
+          const img = art.pick(a.art, `${team.name} — ${a.title}`);
+          return a.href ? (
             <Link className="art" href={a.href} key={a.title}>
-              <div className={a.navy ? "art-thumb navy" : "art-thumb"}>
-                <Image src={a.photo} alt={a.alt} fill sizes="104px" style={{ objectFit: "cover" }} />
+              <div className={a.navy ? "art-thumb navy bleed-thumb" : "art-thumb bleed-thumb"}>
+                <Image src={img.src} alt={img.alt} fill sizes="120px" style={{ objectFit: "cover" }} />
               </div>
               <div className="art-body">
                 <span className="kick">{a.kick}</span>
@@ -133,8 +136,8 @@ function LatestArticles({ team }: { team: Team }) {
             </Link>
           ) : (
             <div className="art" key={a.title}>
-              <div className={a.navy ? "art-thumb navy" : "art-thumb"}>
-                <Image src={a.photo} alt={a.alt} fill sizes="104px" style={{ objectFit: "cover" }} />
+              <div className={a.navy ? "art-thumb navy bleed-thumb" : "art-thumb bleed-thumb"}>
+                <Image src={img.src} alt={img.alt} fill sizes="120px" style={{ objectFit: "cover" }} />
               </div>
               <div className="art-body">
                 <span className="kick">{a.kick}</span>
@@ -142,8 +145,8 @@ function LatestArticles({ team }: { team: Team }) {
                 <span className="meta">{a.meta}</span>
               </div>
             </div>
-          )
-        )}
+          );
+        })}
       </div>
     </div>
   );

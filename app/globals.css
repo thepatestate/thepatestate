@@ -152,8 +152,8 @@ td.rk{color:var(--lamp-deep);font-weight:600;width:44px}td.rating{text-align:rig
 .art .meta{font-family:var(--mono);font-size:11px;color:var(--ink-dim);margin-top:auto}
 .video-slot{position:relative;aspect-ratio:16/9;background:var(--navy-2);border:1px solid var(--line-d);border-radius:4px;display:flex;align-items:center;justify-content:center}
 .art{flex-direction:row;align-items:stretch}
-.art-thumb{flex:0 0 104px;border:1px solid var(--line-l);border-radius:3px;position:relative;overflow:hidden;background:var(--paper-2)}
-.art-thumb.navy{border-color:var(--line-d);background:var(--navy-2)}
+.art-thumb{flex:0 0 120px;border-radius:5px;position:relative;overflow:hidden;background:var(--paper-2)}
+.art-thumb.navy{background:var(--navy-2)}
 .art-body{display:flex;flex-direction:column;gap:7px;flex:1}
 .wire{border:1px solid var(--line-l);background:#fff;border-radius:4px;padding:20px}
 .wire h3{font-family:var(--display);font-weight:800;font-size:24px;text-transform:uppercase;display:flex;align-items:center;gap:10px}
@@ -173,7 +173,7 @@ td.rk{color:var(--lamp-deep);font-weight:600;width:44px}td.rating{text-align:rig
 .perf .pthumb{flex:0 0 64px;height:48px;border-radius:3px;background-size:cover;background-position:center;border:1px solid var(--line-l);align-self:center}
 .tee-svg{width:100%;height:auto;display:block}
 .hot-row{display:flex;align-items:center;gap:14px;border:1px solid var(--line-l);background:#fff;border-radius:4px;padding:12px 14px;margin-bottom:10px;color:var(--ink)}
-.hot-row .hthumb{flex:0 0 84px;height:56px;border-radius:3px;background-size:cover;background-position:center;border:1px solid var(--line-l);overflow:hidden}
+.hot-row .hthumb{flex:0 0 104px;height:70px;border-radius:5px;background-size:cover;background-position:center;overflow:hidden}
 .hot-row .who{flex:1}
 .hot-row .who b{font-size:15px}
 .hot-row .who .meta{font-family:var(--mono);font-size:11px;color:var(--ink-dim);margin-top:2px}
@@ -288,10 +288,10 @@ td.rk{color:var(--lamp-deep);font-weight:600;width:44px}td.rating{text-align:rig
 .newsitem h4 a:hover{color:var(--lamp-deep)}
 .newsitem .by{font-family:var(--mono);font-size:11px;color:var(--ink-dim);margin-top:9px}
 .newsitem .by b{color:var(--ink);font-weight:600}
-.newsthumb{flex:0 0 200px;aspect-ratio:16/10;border-radius:6px;overflow:hidden;border:1px solid var(--line-l);background:var(--paper-2)}
+.newsthumb{flex:0 0 240px;aspect-ratio:16/10;border-radius:6px;overflow:hidden;background:var(--paper-2)}
 .newsthumb svg{display:block;width:100%;height:100%}
 @media(max-width:700px){.newsthumb{flex-basis:120px}}
-.wire-thumb2{flex:0 0 86px;height:62px;border-radius:5px;overflow:hidden;border:1px solid var(--line-l)}
+.wire-thumb2{flex:0 0 96px;height:68px;border-radius:5px;overflow:hidden}
 .wire-thumb2 svg{display:block;width:100%;height:100%}
 .panel-field .btn{border-color:var(--lamp);color:var(--lamp)}
 .panel-field .btn:hover{background:var(--lamp);color:var(--navy)}
@@ -562,3 +562,106 @@ footer{background:var(--navy);color:var(--chalk-dim);padding:44px 0 60px;font-fa
 .week-pill{flex:0 0 auto;font-family:var(--mono);font-size:11px;letter-spacing:.04em;white-space:nowrap;padding:8px 14px;border-radius:20px;border:1px solid var(--line-l);color:var(--ink-dim)}
 .week-pill.active{background:var(--lamp);border-color:var(--lamp);color:var(--navy);font-weight:600}
 .week-pill.disabled{opacity:.45}
+
+/* ==========================================================================
+   2026 design pass — image-first tiles, bento grids, unique editorial art
+   ========================================================================== */
+
+/* --- tile: the reusable image-first card. A tile is a relative container;
+   the photo is a next/image `fill` layer, a bottom-weighted scrim sits over
+   it for legibility, and headline/kicker text is absolutely positioned in
+   the lower third — no boxed white card, no image-above-text-below split.
+   Depth comes from the photo + shadow, never a border stroke. */
+.tile{position:relative;display:block;border-radius:8px;overflow:hidden;
+  background:var(--navy);box-shadow:0 10px 28px rgba(15,27,45,.22);
+  transition:box-shadow .25s ease-out}
+.tile:hover{box-shadow:0 16px 38px rgba(15,27,45,.32)}
+.tile-media{position:absolute;inset:0;z-index:0}
+.tile-media img{transition:transform .6s ease-out}
+.tile:hover .tile-media img{transform:scale(1.05)}
+.tile-scrim{position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:linear-gradient(180deg,transparent 30%,rgba(15,27,45,.55) 60%,rgba(15,27,45,.92) 100%);
+  transition:opacity .25s ease-out}
+.tile:hover .tile-scrim{opacity:.92}
+.tile-badge{position:absolute;top:14px;left:14px;z-index:2;font-family:var(--mono);
+  font-size:10px;letter-spacing:.12em;text-transform:uppercase;background:var(--lamp);
+  color:var(--navy);padding:4px 10px;border-radius:2px}
+.tile-body{position:absolute;left:0;right:0;bottom:0;z-index:2;padding:18px 20px}
+.tile-kicker{display:block;font-family:var(--mono);font-size:11px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--lamp);margin-bottom:7px}
+.tile-headline{font-family:var(--display);font-weight:800;text-transform:uppercase;
+  color:var(--chalk);line-height:.98;font-size:clamp(18px,2.3vw,27px);margin:0}
+.tile-meta{font-family:var(--mono);font-size:11px;color:var(--chalk-dim);margin-top:8px}
+.tile-lead .tile-headline{font-size:clamp(26px,3.6vw,42px)}
+.tile-lead .tile-body{padding:26px 28px}
+@media(prefers-reduced-motion:reduce){
+  .tile,.tile-media img,.tile-scrim{transition:none}
+  .tile:hover .tile-media img{transform:none}
+}
+
+/* --- bento: homepage/notebook grid — a large lead tile beside a stack of
+   smaller secondary tiles, replacing the old image-above-text .duo split. */
+.bento{display:grid;grid-template-columns:1.4fr 1fr;gap:16px;align-items:stretch}
+.bento .tile-lead{min-height:520px}
+.bento-stack{display:flex;flex-direction:column;gap:16px}
+.bento-stack .tile{flex:1;min-height:170px}
+@media(max-width:860px){
+  .bento{grid-template-columns:1fr}
+  .bento .tile-lead{min-height:360px}
+}
+
+/* --- feature grid tiles (replaces the boxed .feat card on /notebook) --- */
+.tile-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:22px}
+.tile-grid .tile{aspect-ratio:4/3}
+@media(max-width:860px){.tile-grid{grid-template-columns:1fr}}
+
+/* --- bleed-thumb: a borderless, bleeding thumbnail used wherever a card
+   keeps its row layout (Latest News rows, Wire rail, hot rows, team-page
+   article rows) but drops the boxed-border thumb for a full-bleed photo
+   with hover motion + depth from shadow only. */
+.bleed-thumb{position:relative;overflow:hidden;border-radius:6px;
+  box-shadow:0 8px 20px rgba(15,27,45,.18)}
+.bleed-thumb img{transition:transform .6s ease-out}
+.bleed-thumb:hover img{transform:scale(1.05)}
+@media(prefers-reduced-motion:reduce){
+  .bleed-thumb img{transition:none}
+  .bleed-thumb:hover img{transform:none}
+}
+
+/* --- cover: full-bleed article-page hero with the headline/dek/byline
+   overlaid on the lower third, magazine-style (app/notebook/[slug]). --- */
+.cover{position:relative;border-radius:8px;overflow:hidden;aspect-ratio:16/8;
+  margin-bottom:26px;box-shadow:0 18px 50px rgba(15,27,45,.35)}
+.cover-media{position:absolute;inset:0;z-index:0}
+.cover-scrim{position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:linear-gradient(180deg,transparent 26%,rgba(15,27,45,.6) 58%,rgba(15,27,45,.94) 100%)}
+.cover-body{position:absolute;left:0;right:0;bottom:0;z-index:2;padding:28px 32px 26px;color:var(--chalk)}
+.cover-body .fr{color:var(--lamp);border-color:var(--lamp)}
+.cover-body h1{font-family:var(--display);font-weight:800;text-transform:uppercase;
+  color:var(--chalk);font-size:clamp(30px,4.6vw,50px);line-height:.96;margin:10px 0 10px}
+.cover-body .dek{font-size:17px;color:var(--chalk-dim);max-width:62ch;margin:0}
+@media(max-width:700px){.cover{aspect-ratio:4/5}.cover-body{padding:20px 20px 20px}}
+
+/* --- section headers: kicker + display header, optional right-aligned
+   "view all" text link on the same baseline row — replaces boxy
+   chip-bordered "view all" buttons where a plain link reads cleaner. --- */
+.sec-head{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;flex-wrap:wrap}
+.sec-head .view-all{font-family:var(--mono);font-size:12px;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--lamp-deep);white-space:nowrap;padding-bottom:8px}
+.on-dark .sec-head .view-all,.on-field .sec-head .view-all{color:var(--lamp)}
+.sec-head .view-all:hover{color:var(--lamp)}
+.on-dark .sec-head .view-all:hover,.on-field .sec-head .view-all:hover{color:var(--chalk)}
+
+/* --- poll-band: subtle fixed image texture behind the JP Poll + Pick'Em
+   duo section so the flat navy panels aren't dead — cfb-aerial blended in
+   at ~8% visibility behind the navy via a heavy-alpha gradient layer. --- */
+.poll-band{background-color:var(--navy);
+  background-image:linear-gradient(rgba(15,27,45,.92),rgba(15,27,45,.92)),url(/img/cfb-aerial.jpg);
+  background-size:cover;background-position:center;background-blend-mode:normal}
+
+/* --- rank numerals: oversized gold outlined numerals as graphic elements
+   in the JP Poll rankcards, instead of a flat small number. --- */
+.rankcard .rk-num{font-size:60px;width:64px;color:rgba(184,115,24,.10);
+  -webkit-text-stroke:1.5px var(--lamp-deep)}
+.rankcard.dark .rk-num{color:rgba(232,163,61,.12);-webkit-text-stroke:1.5px var(--lamp)}
+@media(max-width:640px){.rankcard .rk-num{font-size:42px;width:46px;-webkit-text-stroke:1px}}

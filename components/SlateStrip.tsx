@@ -12,7 +12,7 @@ function TeamMark({ team, code }: { team: string; code: string }) {
   if (!src) return <span className="slate-code">{code}</span>;
   return (
     <span className="slate-hel">
-      <Image src={src} alt={`${team} helmet`} width={22} height={22} style={{ objectFit: "cover" }} />
+      <Image src={src} alt={`${team} helmet`} width={22} height={22} style={{ objectFit: "cover" }} priority />
     </span>
   );
 }

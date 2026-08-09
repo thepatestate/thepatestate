@@ -6,6 +6,7 @@ import KeyBadge from "@/components/KeyBadge";
 import PreseasonChip from "@/components/PreseasonChip";
 import { getCitizen } from "@/lib/supabase/server";
 import { CHANNEL_URL, SOCIAL_LINKS } from "@/lib/youtube";
+import { createArtPicker } from "@/lib/editorial-art";
 
 export const metadata: Metadata = { title: "Pate's Porch" };
 
@@ -42,11 +43,11 @@ const DEMO_CHAMPIONS = [
 const DEMO_HOT = [
   {
     title: "Week 1 Overreactions — the comment section is cooking", meta: "THE SHOW · EP 1,204", cc: "🔥 2,418 COMMENTS",
-    photo: "/img/editorial-film.jpg", alt: "A film projector beside a chalkboard of X's-and-O's diagrams",
+    art: "media",
   },
   {
     title: '"Why the JP Poll Doesn\'t Trust Alabama Yet"', meta: "THE NOTEBOOK · POLL DAY COLUMN", cc: "🔥 1,907 COMMENTS",
-    photo: "/img/editorial-goalpost.jpg", alt: "A goalpost silhouetted in fog against the sunrise",
+    art: "poll",
   },
   {
     title: "The Indiana argument Josh lost to his own audience", meta: "POLL DAY · THE REVEAL", cc: "🔥 1,634 COMMENTS",
@@ -70,6 +71,7 @@ const FOLLOW_LINKS = [
 
 export default async function PorchPage() {
   const citizen = await getCitizen();
+  const art = createArtPicker();
 
   return (
     <main>
@@ -187,18 +189,21 @@ export default async function PorchPage() {
           <h2 className="display" style={{ fontSize: 32 }}>Join the Conversation</h2>
           <PreseasonChip />
           <div style={{ maxWidth: 820, marginTop: 14 }}>
-            {DEMO_HOT.map((h) => (
-              <div className="hot-row" key={h.title}>
-                <div className="hthumb" style={{ position: "relative" }}>
-                  <Image src={h.photo} alt={h.alt} fill sizes="84px" style={{ objectFit: "cover" }} />
+            {DEMO_HOT.map((h) => {
+              const img = "art" in h ? art.pick(h.art, h.title) : { src: h.photo, alt: h.alt };
+              return (
+                <div className="hot-row" key={h.title}>
+                  <div className="hthumb bleed-thumb" style={{ position: "relative" }}>
+                    <Image src={img.src} alt={img.alt} fill sizes="104px" style={{ objectFit: "cover" }} />
+                  </div>
+                  <div className="who">
+                    <b>{h.title}</b>
+                    <div className="meta">{h.meta}</div>
+                  </div>
+                  <span className="cc">{h.cc}</span>
                 </div>
-                <div className="who">
-                  <b>{h.title}</b>
-                  <div className="meta">{h.meta}</div>
-                </div>
-                <span className="cc">{h.cc}</span>
-              </div>
-            ))}
+              );
+            })}
           </div>
           <div className="duo" style={{ marginTop: 26 }}>
             <div className="panel">

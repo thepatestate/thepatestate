@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { getArticleBySlug } from "@/lib/sanity";
 import ArticleBody from "@/components/ArticleBody";
 import { CHANNEL_URL, SOCIAL_LINKS } from "@/lib/youtube";
+import { formatDate } from "@/lib/format";
 
 export const revalidate = 300;
 
@@ -96,20 +97,44 @@ export default async function ArticlePage({
         <div className="wrap">
           <div className="story-grid">
             <article className="story">
-              {article.heroUrl && (
-                <Image
-                  src={article.heroUrl}
-                  alt={article.headline}
-                  width={1152}
-                  height={640}
-                  priority
-                  sizes="(max-width: 960px) 100vw, 820px"
-                  className="cover-img"
-                  style={{ marginBottom: 20 }}
-                />
+              {(() => {
+                // Full-bleed magazine cover: the article's own generated
+                // hero, falling back to the episode's YouTube thumbnail —
+                // headline/dek/byline overlaid on the lower third rather
+                // than stacked as plain text below a boxed image.
+                const coverSrc = article.heroUrl || article.episode?.thumbnailUrl;
+                if (!coverSrc) return null;
+                return (
+                  <div className="cover">
+                    <div className="cover-media">
+                      <Image
+                        src={coverSrc}
+                        alt={article.headline}
+                        fill
+                        priority
+                        sizes="(max-width: 960px) 100vw, 820px"
+                        style={{ objectFit: "cover" }}
+                      />
+                    </div>
+                    <div className="cover-scrim" />
+                    <div className="cover-body">
+                      <span className="fr">📝 The Notebook</span>
+                      <h1>{article.headline}</h1>
+                      {article.dek && <p className="dek">{article.dek}</p>}
+                      <div style={{ fontFamily: "var(--mono)", fontSize: 11, color: "var(--chalk-dim)", marginTop: 12 }}>
+                        <b style={{ color: "var(--chalk)" }}>{article.byline}</b>
+                        {article.publishedAt ? ` · ${formatDate(article.publishedAt)}` : ""}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })()}
+              {!(article.heroUrl || article.episode?.thumbnailUrl) && (
+                <>
+                  <h1>{article.headline}</h1>
+                  {article.dek && <p className="dek">{article.dek}</p>}
+                </>
               )}
-              <h1>{article.headline}</h1>
-              {article.dek && <p className="dek">{article.dek}</p>}
 
               <ArticleBody article={article} />
 

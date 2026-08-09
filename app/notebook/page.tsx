@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { getPublishedArticles } from "@/lib/sanity";
 import { formatDate } from "@/lib/format";
+import { createArtPicker } from "@/lib/editorial-art";
 
 export const metadata: Metadata = { title: "The Notebook" };
 export const revalidate = 300;
@@ -39,15 +40,15 @@ const DEMO_CATNAV = ["Latest", "Josh Pate", "News", "Recruiting & Portal", "Rank
 const DEMO_FEATURED = [
   {
     title: "Why the Citizens Jumped Texas to No. 3", meta: "POLL DAY, EXPLAINED · TUE",
-    photo: "/img/editorial-goalpost.jpg", alt: "A goalpost silhouetted in fog against the sunrise",
+    art: "poll",
   },
   {
     title: "The Week 1 Honor Roll", meta: "TOP PERFORMERS · WED",
-    photo: "/img/matchup-helmets.jpg", alt: "Blank navy and gold helmets facing off before kickoff",
+    art: "honor-roll",
   },
   {
     title: "Wedding Season vs. Football Season", meta: "THE MAILBAG · FRI",
-    photo: "/img/editorial-film.jpg", alt: "A film projector beside a chalkboard of X's-and-O's diagrams",
+    art: "mailbag",
   },
 ] as const;
 
@@ -82,7 +83,7 @@ const DEMO_NEWS: readonly NewsItem[] = [
     logoText: "JP", logoBg: "var(--navy)", logoColor: "var(--lamp)",
     headline: "The JP Poll Still Doesn't Trust Alabama — Here's the Math", locked: true,
     citizenBadge: "Citizens Only · Free", by: "Staff", date: "AUG 7, 2026", nudge: true,
-    thumb: { src: "/img/editorial-goalpost.jpg", alt: "A goalpost silhouetted in fog against the sunrise" },
+    thumb: { src: "/img/cfb-flag.jpg", alt: "A penalty flag lying on the turf" },
   },
   {
     logoText: "A&M", logoBg: "#500000", logoColor: "#fff",
@@ -119,47 +120,47 @@ const DEMO_WIRE = [
   {
     time: "2 HRS AGO", category: "RECRUITING", headline: "Texas A&M holds No. 1 on both major boards",
     badge: "Full Story Ready", body: "26 commits and six five-stars in the 2027 class.",
-    photo: "/img/editorial-turf.jpg", alt: "Frosted turf and a yard line at dawn",
+    art: "recruiting",
   },
   {
     time: "THIS WEEK", category: "RECRUITING", headline: "Final 2027 five-stars commit", badge: null,
     body: "A five-star WR picks Indiana; a five-star RB stays with Tennessee.",
-    photo: "/img/editorial-goalpost.jpg", alt: "A goalpost silhouetted in fog against the sunrise",
+    art: "recruiting",
   },
   {
     time: "2 WKS AGO", category: "MEDIA", headline: "New ESPN Friday show announced", badge: null,
     body: "Josh pairs with Bussin' With The Boys, sometimes live from GameDay sites.",
-    photo: "/img/editorial-film.jpg", alt: "A film projector beside a chalkboard of X's-and-O's diagrams",
+    art: "media",
   },
   {
     time: "TODAY", category: "THE STATE", headline: "Porch Pick'Em opens for the season", badge: null,
     body: "Season champion watches a game with Josh; top 10 win tickets.",
-    photo: "/img/editorial-goalpost.jpg", alt: "A goalpost silhouetted in fog against the sunrise",
+    art: "state",
   },
   {
     time: "THIS WEEK", category: "THE POLL", headline: "Ballots open Sunday 8PM ET", badge: null,
     body: "Week 1 reveal comes Tuesday on the show.",
-    photo: "/img/editorial-film.jpg", alt: "A film projector beside a chalkboard of X's-and-O's diagrams",
+    art: "poll",
   },
   {
     time: "TODAY", category: "COACHING", headline: "Hot-seat watch: three ADs go quiet", badge: null,
     body: "Buyout math is moving in two SEC towns and one in the Big 12.",
-    photo: "/img/editorial-turf.jpg", alt: "Frosted turf and a yard line at dawn",
+    art: "coaching",
   },
   {
     time: "YESTERDAY", category: "PORTAL", headline: "August portal ripple begins", badge: null,
     body: "Two projected starters enter; three contenders circle.",
-    photo: "/img/editorial-goalpost.jpg", alt: "A goalpost silhouetted in fog against the sunrise",
+    art: "recruiting",
   },
   {
     time: "YESTERDAY", category: "THE STATE", headline: "Watch parties hit 40 cities", badge: null,
     body: "New chapters open in Charlotte, Boise, and San Diego.",
-    photo: "/img/matchup-helmets.jpg", alt: "Blank navy and gold helmets facing off before kickoff",
+    art: "atmosphere",
   },
   {
     time: "THIS WEEK", category: "TV", headline: "Week 1 kick times locked", badge: "Full Story Ready",
     body: "Georgia–Bama gets the 7:30 CBS window; Oregon–Michigan at 3:30.",
-    photo: "/img/editorial-turf.jpg", alt: "Frosted turf and a yard line at dawn",
+    art: "schedule",
   },
 ] as const;
 
@@ -167,6 +168,10 @@ export default async function NotebookPage() {
   const articles = await getPublishedArticles(7);
   const lead = articles[0] ?? null;
   const featured = articles.slice(1, 4);
+  // One picker for the whole page render — every category lookup below
+  // (feature tiles, Breaking News rail) draws from it, so no two cards on
+  // this page ever end up showing the same photo.
+  const art = createArtPicker();
 
   return (
     <main>
@@ -245,41 +250,50 @@ export default async function NotebookPage() {
               )}
 
               {lead && featured.length > 0 ? (
-                <div className="feat-grid">
-                  {featured.map((a) => (
-                    <Link className="feat" href={`/notebook/${a.slug.current}`} key={a._id}>
-                      <div className="ph" style={a.heroUrl ? { position: "relative" } : undefined}>
-                        {a.heroUrl && (
-                          <Image src={a.heroUrl} alt={a.headline} fill sizes="(max-width: 860px) 33vw, 280px" style={{ objectFit: "cover" }} />
-                        )}
-                      </div>
-                      <div className="bd">
-                        <h4>{a.headline}</h4>
-                        <div className="meta">
-                          {a.byline}
-                          {a.publishedAt ? ` · ${formatDate(a.publishedAt)}` : ""}
+                <div className="tile-grid">
+                  {featured.map((a) => {
+                    const img = a.heroUrl ? { src: a.heroUrl, alt: a.headline } : art.pick("generic", a.headline);
+                    return (
+                      <Link className="tile" href={`/notebook/${a.slug.current}`} key={a._id}>
+                        <div className="tile-media">
+                          <Image src={img.src} alt={img.alt} fill sizes="(max-width: 860px) 33vw, 280px" style={{ objectFit: "cover" }} />
                         </div>
-                      </div>
-                    </Link>
-                  ))}
+                        <div className="tile-scrim" />
+                        <div className="tile-body">
+                          <h4 className="tile-headline" style={{ fontSize: "clamp(16px,1.8vw,20px)" }}>{a.headline}</h4>
+                          <span className="tile-meta">
+                            {a.byline}
+                            {a.publishedAt ? ` · ${formatDate(a.publishedAt)}` : ""}
+                          </span>
+                        </div>
+                      </Link>
+                    );
+                  })}
                 </div>
               ) : !lead ? (
-                <div className="feat-grid">
-                  {DEMO_FEATURED.map((f) => (
-                    <div className="feat" key={f.title}>
-                      <div className="ph" style={{ position: "relative" }}>
-                        <Image src={f.photo} alt={f.alt} fill sizes="(max-width: 860px) 33vw, 280px" style={{ objectFit: "cover" }} />
+                <div className="tile-grid">
+                  {DEMO_FEATURED.map((f) => {
+                    const img = art.pick(f.art, f.title);
+                    return (
+                      <div className="tile" key={f.title}>
+                        <div className="tile-media">
+                          <Image src={img.src} alt={img.alt} fill sizes="(max-width: 860px) 33vw, 280px" style={{ objectFit: "cover" }} />
+                        </div>
+                        <div className="tile-scrim" />
+                        <div className="tile-body">
+                          <h4 className="tile-headline" style={{ fontSize: "clamp(16px,1.8vw,20px)" }}>{f.title}</h4>
+                          <span className="tile-meta">{f.meta}</span>
+                        </div>
                       </div>
-                      <div className="bd">
-                        <h4>{f.title}</h4>
-                        <div className="meta">{f.meta}</div>
-                      </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               ) : null}
 
-              <p className="eyebrow" style={{ marginTop: 38 }}>Latest News</p>
+              <div className="sec-head" style={{ marginTop: 38 }}>
+                <p className="eyebrow" style={{ margin: 0 }}>Latest News</p>
+                <Link className="view-all" href="/#">Load More →</Link>
+              </div>
               {lead && <span className="note">Sample content below — more real stories coming</span>}
               <div style={{ marginTop: 4 }}>
                 {DEMO_NEWS.map((n) => (
@@ -304,16 +318,18 @@ export default async function NotebookPage() {
                       )}
                     </div>
                     {n.thumb && (
-                      <div className="newsthumb" style={{ position: "relative" }}>
+                      <div className="newsthumb bleed-thumb" style={{ position: "relative" }}>
                         <Image src={n.thumb.src} alt={n.thumb.alt} fill sizes="200px" style={{ objectFit: "cover" }} />
                       </div>
                     )}
                   </div>
                 ))}
               </div>
-              <div style={{ marginTop: 14 }}><Link className="btn" href="/#">Load More Articles</Link></div>
 
-              <p className="eyebrow" style={{ marginTop: 38 }}>Most Popular This Week</p>
+              <div className="sec-head" style={{ marginTop: 38 }}>
+                <p className="eyebrow" style={{ margin: 0 }}>Most Popular This Week</p>
+                <Link className="view-all" href="/#">More Popular →</Link>
+              </div>
               {lead && <span className="note">Sample content below — more real stories coming</span>}
               <div style={{ marginTop: 8 }}>
                 {DEMO_POPULAR.map((p) => (
@@ -326,24 +342,26 @@ export default async function NotebookPage() {
                   </div>
                 ))}
               </div>
-              <div style={{ marginTop: 14 }}><Link className="btn" href="/#">More Popular Articles</Link></div>
             </div>
 
             <div className="wire">
               <h3><span className="dot" />Breaking News</h3>
               {lead && <span className="note">Sample content below — more real stories coming</span>}
-              {DEMO_WIRE.map((w) => (
-                <div className="wire-item" key={w.headline}>
-                  <div className="wire-thumb2" style={{ position: "relative" }}>
-                    <Image src={w.photo} alt={w.alt} fill sizes="86px" style={{ objectFit: "cover" }} />
+              {DEMO_WIRE.map((w) => {
+                const img = art.pick(w.art, `${w.category} — ${w.headline}`);
+                return (
+                  <div className="wire-item" key={w.headline}>
+                    <div className="wire-thumb2 bleed-thumb" style={{ position: "relative" }}>
+                      <Image src={img.src} alt={img.alt} fill sizes="96px" style={{ objectFit: "cover" }} />
+                    </div>
+                    <div className="wtxt">
+                      <span className="t">{w.time} · {w.category}</span>
+                      <b>{w.headline}{w.badge && <span className="ai-badge">{w.badge}</span>}</b>
+                      <p>{w.body}</p>
+                    </div>
                   </div>
-                  <div className="wtxt">
-                    <span className="t">{w.time} · {w.category}</span>
-                    <b>{w.headline}{w.badge && <span className="ai-badge">{w.badge}</span>}</b>
-                    <p>{w.body}</p>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
               <div style={{ marginTop: 14, padding: 12, border: "1px dashed var(--line-l)", borderRadius: 4, fontFamily: "var(--mono)", fontSize: 11, color: "var(--ink-dim)", lineHeight: 1.6 }}>
                 ⚡ <b style={{ color: "var(--field)" }}>THE WIRE DESK</b> — when news is big enough, our AI drafts
                 the full story within minutes and an editor signs off before it publishes. Speed of a wire service,

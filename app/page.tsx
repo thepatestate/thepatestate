@@ -4,6 +4,7 @@ import { getVideos, isEpisode, CHANNEL_URL, APPLE_PODCASTS_URL, SPOTIFY_URL, SOC
 import { getPublishedArticles } from "@/lib/sanity";
 import { formatDate } from "@/lib/format";
 import { slugifyTeam, teamLogoUrl } from "@/lib/teams-meta";
+import { createArtPicker } from "@/lib/editorial-art";
 import EpisodeHero from "@/components/EpisodeHero";
 import VideoGrid from "@/components/VideoGrid";
 import SubscribeCTA from "@/components/SubscribeCTA";
@@ -52,42 +53,6 @@ function seriesLabel(series?: string): string {
   return SERIES_LABELS[series] ?? series;
 }
 
-// Shared thumb for the Notebook lead card's empty play-button box — identical
-// markup in both the real-lead and demo-lead branches below, so it's pulled
-// out once rather than duplicated.
-function NotebookLeadThumb({ src, alt }: { src?: string; alt?: string } = {}) {
-  return (
-    <div
-      style={{
-        aspectRatio: "16/8",
-        borderRadius: 6,
-        border: "1px solid var(--line-l)",
-        position: "relative",
-        overflow: "hidden",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
-      <Image
-        src={src || "/img/editorial-film.jpg"}
-        alt={alt || "A film projector beside a chalkboard of X's-and-O's diagrams"}
-        fill
-        sizes="(max-width: 900px) 100vw, 700px"
-        style={{ objectFit: "cover" }}
-      />
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          background: "linear-gradient(150deg,rgba(15,27,45,.6) 0%,rgba(26,46,71,.4) 55%,rgba(30,59,46,.55) 100%)",
-        }}
-      />
-      <span className="playbtn" aria-hidden="true" style={{ position: "relative", zIndex: 2 }}>▶</span>
-    </div>
-  );
-}
-
 const DEMO_NOTEBOOK_FEATURED = [
   {
     badgeText: "★",
@@ -98,8 +63,7 @@ const DEMO_NOTEBOOK_FEATURED = [
     by: "STAFF",
     when: "WEDNESDAY",
     citizenBadge: false,
-    photo: "/img/editorial-turf.jpg",
-    alt: "Frosted turf and a yard line at dawn",
+    art: "honor-roll",
   },
   {
     badgeText: "Q&A",
@@ -110,8 +74,7 @@ const DEMO_NOTEBOOK_FEATURED = [
     by: "JOSH PATE",
     when: "FRIDAY",
     citizenBadge: true,
-    photo: "/img/editorial-goalpost.jpg",
-    alt: "A goalpost silhouetted in fog against the sunrise",
+    art: "mailbag",
   },
 ] as const;
 
@@ -122,8 +85,7 @@ const DEMO_WIRE = [
     headline: "A&M holds No. 1 on both major boards",
     badge: "Full Story Ready",
     body: "26 commits, six five-stars — the 2027 class keeps growing.",
-    photo: "/img/editorial-turf.jpg",
-    alt: "Frosted turf and a yard line at dawn",
+    art: "recruiting",
   },
   {
     time: "THIS WEEK",
@@ -131,8 +93,7 @@ const DEMO_WIRE = [
     headline: "Last 2027 five-stars come off the board",
     badge: null,
     body: "Indiana lands a five-star WR; Tennessee keeps a five-star RB home.",
-    photo: "/img/editorial-turf.jpg",
-    alt: "Frosted turf and a yard line at dawn",
+    art: "recruiting",
   },
   {
     time: "2 WKS AGO",
@@ -140,8 +101,7 @@ const DEMO_WIRE = [
     headline: "Josh's new ESPN Friday show announced",
     badge: null,
     body: "Fridays this fall, sometimes live from GameDay sites.",
-    photo: "/img/editorial-film.jpg",
-    alt: "A film projector beside a chalkboard of X's-and-O's diagrams",
+    art: "media",
   },
   {
     time: "TODAY",
@@ -149,8 +109,7 @@ const DEMO_WIRE = [
     headline: "Porch Pick'Em registration opens",
     badge: null,
     body: "Season champ watches a game with Josh.",
-    photo: "/img/editorial-goalpost.jpg",
-    alt: "A goalpost silhouetted in fog against the sunrise",
+    art: "state",
   },
   {
     time: "THIS WEEK",
@@ -158,8 +117,7 @@ const DEMO_WIRE = [
     headline: "Ballots open Sunday 8PM ET",
     badge: null,
     body: "Week 1 reveal comes Tuesday on the show.",
-    photo: "/img/editorial-goalpost.jpg",
-    alt: "A goalpost silhouetted in fog against the sunrise",
+    art: "poll",
   },
   {
     time: "TODAY",
@@ -167,8 +125,7 @@ const DEMO_WIRE = [
     headline: "Creed Tee restock lands",
     badge: null,
     body: "Tri-blend, ridiculously soft — first run sold out in nine days.",
-    photo: "/img/train-tee.jpg",
-    alt: "The Creed Tee's vintage train-and-football graphic",
+    art: "store",
   },
 ] as const;
 
@@ -200,6 +157,12 @@ export default async function Home() {
   const notebookArticles = await getPublishedArticles(3);
   const notebookLead = notebookArticles[0] ?? null;
   const notebookNext = notebookArticles.slice(1, 3);
+  const art = createArtPicker();
+  // Computed once (not inline in JSX) so a missing heroUrl never causes the
+  // src and alt attributes to resolve from two different art.pick() calls.
+  const leadImg = notebookLead?.heroUrl
+    ? { src: notebookLead.heroUrl, alt: notebookLead.headline }
+    : art.pick("weekend-truths");
 
   return (
     <main>
@@ -248,7 +211,7 @@ export default async function Home() {
 
       <div className="yardline" />
 
-      <section className="on-dark tight">
+      <section className="on-dark tight poll-band">
         <div className="wrap">
           <Reveal>
           <div className="duo">
@@ -336,108 +299,135 @@ export default async function Home() {
 
       <section>
         <div className="wrap">
-          <p className="eyebrow">From the Porch — New Every Weekday</p>
-          <h2 className="display">The Notebook</h2>
+          <div className="sec-head">
+            <div>
+              <p className="eyebrow">From the Porch — New Every Weekday</p>
+              <h2 className="display">The Notebook</h2>
+            </div>
+            <Link className="view-all" href="/notebook">View All Stories →</Link>
+          </div>
           {!notebookLead && <PreseasonChip />}
           <Reveal>
-          <div className="duo" style={{ gridTemplateColumns: "2fr 1fr", marginTop: 26 }}>
-            {notebookLead ? (
-              <div>
-                <Link href={`/notebook/${notebookLead.slug.current}`} style={{ display: "block" }}>
-                  <NotebookLeadThumb src={notebookLead.heroUrl || undefined} alt={notebookLead.heroUrl ? notebookLead.headline : undefined} />
-                </Link>
-                <div style={{ marginTop: 16 }}><span className="fr">📝 {seriesLabel(notebookLead.episode?.series)}</span></div>
-                <h3 className="display" style={{ fontSize: "clamp(24px,3vw,33px)", lineHeight: 0.95, margin: "6px 0 8px" }}>
-                  <Link href={`/notebook/${notebookLead.slug.current}`}>{notebookLead.headline}</Link>
-                </h3>
-                {notebookLead.dek && (
-                  <p style={{ fontSize: 15, color: "var(--ink-dim)" }}>{notebookLead.dek}</p>
-                )}
-                <div style={{ fontFamily: "var(--mono)", fontSize: 11, color: "var(--ink-dim)", marginTop: 10 }}>
-                  <b style={{ color: "var(--ink)" }}>{notebookLead.byline}</b>
-                  {notebookLead.publishedAt ? ` · ${formatDate(notebookLead.publishedAt)}` : ""}
-                </div>
-
-                {notebookNext.map((a, i) => (
-                  <div
-                    className="newsitem"
-                    key={a._id}
-                    style={{ marginTop: i === 0 ? 10 : 0, borderBottom: i === notebookNext.length - 1 ? "none" : undefined }}
-                  >
-                    <div className="nx">
-                      <h4 style={{ fontSize: 21 }}>
-                        <Link href={`/notebook/${a.slug.current}`}>{a.headline}</Link>
-                      </h4>
-                      {a.dek && <p style={{ fontSize: 14, color: "var(--ink-dim)", marginTop: 6 }}>{a.dek}</p>}
-                      <div className="by">
-                        <b>{a.byline}</b>
-                        {a.publishedAt ? ` · ${formatDate(a.publishedAt)}` : ""}
-                      </div>
+          <div className="duo" style={{ gridTemplateColumns: "2fr 1fr", marginTop: 26, alignItems: "start" }}>
+            <div>
+              {notebookLead ? (
+                <div className="bento">
+                  <Link href={`/notebook/${notebookLead.slug.current}`} className="tile tile-lead">
+                    <div className="tile-media">
+                      <Image
+                        src={leadImg.src}
+                        alt={leadImg.alt}
+                        fill
+                        sizes="(max-width: 860px) 100vw, 560px"
+                        style={{ objectFit: "cover" }}
+                        priority
+                      />
                     </div>
+                    <div className="tile-scrim" />
+                    <span className="tile-badge">📝 {seriesLabel(notebookLead.episode?.series)}</span>
+                    <div className="tile-body">
+                      <span className="tile-kicker">
+                        {notebookLead.byline}
+                        {notebookLead.publishedAt ? ` · ${formatDate(notebookLead.publishedAt)}` : ""}
+                      </span>
+                      <h3 className="tile-headline">{notebookLead.headline}</h3>
+                      {notebookLead.dek && (
+                        <p style={{ fontSize: 14, color: "var(--chalk-dim)", marginTop: 8, maxWidth: "46ch" }}>
+                          {notebookLead.dek}
+                        </p>
+                      )}
+                    </div>
+                  </Link>
+                  <div className="bento-stack">
+                    {notebookNext.map((a) => {
+                      const img = a.heroUrl ? { src: a.heroUrl, alt: a.headline } : art.pick("generic", a.headline);
+                      return (
+                        <Link href={`/notebook/${a.slug.current}`} className="tile" key={a._id}>
+                          <div className="tile-media">
+                            <Image src={img.src} alt={img.alt} fill sizes="(max-width: 860px) 50vw, 280px" style={{ objectFit: "cover" }} />
+                          </div>
+                          <div className="tile-scrim" />
+                          <div className="tile-body">
+                            <span className="tile-kicker">
+                              {a.byline}
+                              {a.publishedAt ? ` · ${formatDate(a.publishedAt)}` : ""}
+                            </span>
+                            <h4 className="tile-headline" style={{ fontSize: "clamp(15px,1.6vw,19px)" }}>{a.headline}</h4>
+                          </div>
+                        </Link>
+                      );
+                    })}
                   </div>
-                ))}
-                <Link className="btn" href="/notebook">Open the Notebook</Link>
-              </div>
-            ) : (
-              <div>
-                <Link href="/notebook" style={{ display: "block" }}>
-                  <NotebookLeadThumb />
-                </Link>
-                <div style={{ marginTop: 16 }}><span className="fr">📝 WEEKEND TRUTHS</span></div>
-                <h3 className="display" style={{ fontSize: "clamp(24px,3vw,33px)", lineHeight: 0.95, margin: "6px 0 8px" }}>
-                  <Link href="/notebook">What Saturday Actually Told Us</Link>
-                </h3>
-                <p style={{ fontSize: 15, color: "var(--ink-dim)" }}>
-                  Five things that were real, three overreactions to ignore, and the one stat nobody&apos;s talking
-                  about — new every Monday at 7AM.
-                </p>
-                <div style={{ fontFamily: "var(--mono)", fontSize: 11, color: "var(--ink-dim)", marginTop: 10 }}>
-                  <b style={{ color: "var(--ink)" }}>JOSH PATE</b> · 6 MIN READ · TODAY
                 </div>
-
-                {DEMO_NOTEBOOK_FEATURED.map((item, i) => (
-                  <div
-                    className="newsitem"
-                    key={item.title}
-                    style={{ marginTop: i === 0 ? 10 : 0, borderBottom: i === DEMO_NOTEBOOK_FEATURED.length - 1 ? "none" : undefined }}
-                  >
-                    <div className="nx">
-                      <div
-                        className="logo-box sm"
-                        style={{ background: item.badgeBg, color: item.badgeColor, border: "none", width: 36, height: 36, fontSize: 12, marginBottom: 10 }}
-                      >
-                        {item.badgeText}
-                      </div>
-                      <h4 style={{ fontSize: 21 }}>
-                        <Link href="/notebook">{item.title}</Link>
-                        {item.citizenBadge && <span className="cit-badge">Citizens Only · Free</span>}
-                      </h4>
-                      <p style={{ fontSize: 14, color: "var(--ink-dim)", marginTop: 6 }}>{item.body}</p>
-                      <div className="by"><b>{item.by}</b> · {item.when}</div>
+              ) : (
+                <div className="bento">
+                  <Link href="/notebook" className="tile tile-lead">
+                    <div className="tile-media">
+                      <Image
+                        src="/img/editorial-film.jpg"
+                        alt="A film projector beside a chalkboard of X's-and-O's diagrams"
+                        fill
+                        sizes="(max-width: 860px) 100vw, 560px"
+                        style={{ objectFit: "cover" }}
+                        priority
+                      />
                     </div>
-                    <div className="newsthumb" style={{ flexBasis: 176, position: "relative" }}>
-                      <Image src={item.photo} alt={item.alt} fill sizes="176px" style={{ objectFit: "cover" }} />
+                    <div className="tile-scrim" />
+                    <span className="tile-badge">📝 Weekend Truths</span>
+                    <div className="tile-body">
+                      <span className="tile-kicker">JOSH PATE · 6 MIN READ · TODAY</span>
+                      <h3 className="tile-headline">What Saturday Actually Told Us</h3>
+                      <p style={{ fontSize: 14, color: "var(--chalk-dim)", marginTop: 8, maxWidth: "46ch" }}>
+                        Five things that were real, three overreactions to ignore, and the one stat nobody&apos;s
+                        talking about — new every Monday at 7AM.
+                      </p>
                     </div>
+                  </Link>
+                  <div className="bento-stack">
+                    {DEMO_NOTEBOOK_FEATURED.map((item) => {
+                      const img = art.pick(item.art, item.title);
+                      return (
+                        <Link href="/notebook" className="tile" key={item.title}>
+                          <div className="tile-media">
+                            <Image src={img.src} alt={img.alt} fill sizes="(max-width: 860px) 50vw, 280px" style={{ objectFit: "cover" }} />
+                          </div>
+                          <div className="tile-scrim" />
+                          <span className="tile-badge" style={{ background: item.badgeBg, color: item.badgeColor }}>
+                            {item.badgeText}
+                          </span>
+                          <div className="tile-body">
+                            <span className="tile-kicker">
+                              {item.by} · {item.when}
+                              {item.citizenBadge ? " · Citizens Only" : ""}
+                            </span>
+                            <h4 className="tile-headline" style={{ fontSize: "clamp(15px,1.6vw,19px)" }}>{item.title}</h4>
+                          </div>
+                        </Link>
+                      );
+                    })}
                   </div>
-                ))}
-                <Link className="btn" href="/notebook">Open the Notebook</Link>
-              </div>
-            )}
+                </div>
+              )}
+              <div style={{ marginTop: 18 }}><Link className="btn" href="/notebook">Open the Notebook</Link></div>
+            </div>
 
             <div className="wire">
               <h3><span className="dot" />The Wire</h3>
-              {DEMO_WIRE.map((w) => (
-                <div className="wire-item" key={w.headline}>
-                  <div className="wire-thumb2" style={{ position: "relative" }}>
-                    <Image src={w.photo} alt={w.alt} fill sizes="86px" style={{ objectFit: "cover" }} />
+              {DEMO_WIRE.map((w) => {
+                const img = art.pick(w.art, `${w.category} — ${w.headline}`);
+                return (
+                  <div className="wire-item" key={w.headline}>
+                    <div className="wire-thumb2 bleed-thumb" style={{ position: "relative" }}>
+                      <Image src={img.src} alt={img.alt} fill sizes="96px" style={{ objectFit: "cover" }} />
+                    </div>
+                    <div className="wtxt">
+                      <span className="t">{w.time} · {w.category}</span>
+                      <b>{w.headline}{w.badge && <span className="ai-badge">{w.badge}</span>}</b>
+                      <p>{w.body}</p>
+                    </div>
                   </div>
-                  <div className="wtxt">
-                    <span className="t">{w.time} · {w.category}</span>
-                    <b>{w.headline}{w.badge && <span className="ai-badge">{w.badge}</span>}</b>
-                    <p>{w.body}</p>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
               <Link className="btn gold" href="/notebook" style={{ marginTop: 14, width: "100%", textAlign: "center" }}>
                 All Breaking News
               </Link>

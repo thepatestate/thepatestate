@@ -27,7 +27,7 @@ const DEMO_TOC = [
 const DEMO_SPREADS = [
   { title: "No. 1: Georgia, X-Rayed", meta: "8-PAGE TEAM CAPSULE", photo: "/img/helmets/georgia.jpg", alt: "Georgia helmet studio photo" },
   { title: "The 10 Games That Decide It", meta: "FOLD-OUT SCHEDULE MAP", photo: "/img/matchup-helmets.jpg", alt: "Blank navy and gold helmets facing off before kickoff" },
-  { title: "All 136, One Page Each", meta: "THE JP POLL PRESEASON BOARD", photo: "/img/editorial-goalpost.jpg", alt: "A goalpost silhouetted in fog against the sunrise" },
+  { title: "All 136, One Page Each", meta: "THE JP POLL PRESEASON BOARD", photo: "/img/cfb-typewriter.jpg", alt: "A sportswriter's desk, typewriter mid-page" },
 ] as const;
 
 export default function ReportPage() {
