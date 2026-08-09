@@ -48,7 +48,7 @@ export default function ShopPage() {
                 <title>The Creed Tee, field green with a vintage train-and-football chest print</title>
                 <defs>
                   <clipPath id="teeGraphicClip">
-                    <rect x="98" y="100" width="104" height="68" rx="5" />
+                    <rect x="106" y="96" width="88" height="60" rx="4" />
                   </clipPath>
                 </defs>
                 <path
@@ -59,19 +59,20 @@ export default function ShopPage() {
                   d="M120,26 C128,40 172,40 180,26 L204,38 C188,54 112,54 96,38 Z"
                   fill="rgba(0,0,0,.25)"
                 />
-                <text x="150" y="90" textAnchor="middle" fontFamily="Georgia,serif" fontStyle="italic" fontSize="22" fill="#E8A33D">No</text>
+                <text x="150" y="88" textAnchor="middle" fontFamily="Georgia,serif" fontStyle="italic" fontSize="20" fill="#E8A33D">No</text>
                 <image
                   href="/img/train-tee.jpg"
-                  x="98"
-                  y="100"
-                  width="104"
-                  height="68"
+                  x="106"
+                  y="96"
+                  width="88"
+                  height="60"
                   preserveAspectRatio="xMidYMid slice"
                   clipPath="url(#teeGraphicClip)"
                 />
-                <text x="150" y="196" textAnchor="middle" fontFamily="Arial Black,sans-serif" fontWeight="900" fontSize="30" fill="#F3EFE6" letterSpacing="1">OFFSEASON</text>
-                <line x1="112" y1="214" x2="188" y2="214" stroke="#F3EFE6" strokeWidth="2" />
-                <text x="150" y="232" textAnchor="middle" fontFamily="monospace" fontSize="9" fill="#B9B4A6" letterSpacing="3">EST. THE PATE STATE</text>
+                <rect x="106" y="96" width="88" height="60" rx="4" fill="none" stroke="rgba(243,239,230,.25)" strokeWidth="1" />
+                <text x="150" y="180" textAnchor="middle" fontFamily="Arial Black,sans-serif" fontWeight="900" fontSize="15" fill="#F3EFE6" letterSpacing="1.5">OFFSEASON</text>
+                <line x1="116" y1="194" x2="184" y2="194" stroke="#F3EFE6" strokeWidth="1.5" />
+                <text x="150" y="212" textAnchor="middle" fontFamily="monospace" fontSize="7.5" fill="#B9B4A6" letterSpacing="2.5">EST. THE PATE STATE</text>
               </svg>
             </div>
             <div>
