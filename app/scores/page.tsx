@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import PreseasonChip from "@/components/PreseasonChip";
 import { TEAMS_TOP25, TEAMS_ALL } from "@/lib/teams";
-import { slugifyTeam, teamLogoUrl } from "@/lib/teams-meta";
+import { slugifyTeam, teamLogoUrl, helmetUrl } from "@/lib/teams-meta";
 
 export const metadata: Metadata = { title: "Scores & Schedule" };
 
@@ -134,6 +134,30 @@ function TeamIcon({ team, fill, mask, flip }: { team: string; fill: string; mask
   return <Helmet fill={fill} mask={mask} flip={flip} />;
 }
 
+// Real blank-helmet studio photo for the Watch List matchups, noticeably
+// larger than the plain TeamIcon logo it replaces. Every source photo faces
+// LEFT in identical framing, so the home/right-side helmet (flip) is
+// mirrored with scaleX(-1) to make the pair face each other like a matchup
+// poster. Falls back to TeamIcon (real logo, or the placeholder SVG) for
+// any team without a generated helmet yet.
+function MatchupHelmet({ team, fill, mask, flip }: { team: string; fill: string; mask: string; flip?: boolean }) {
+  const helmet = helmetUrl(slugifyTeam(team));
+  if (helmet) {
+    return (
+      <span className="helmet-chip">
+        <Image
+          src={helmet}
+          alt={`${team} helmet`}
+          width={112}
+          height={112}
+          style={{ objectFit: "cover", transform: flip ? "scale(1.18) scaleX(-1)" : "scale(1.18)" }}
+        />
+      </span>
+    );
+  }
+  return <TeamIcon team={team} fill={fill} mask={mask} flip={flip} />;
+}
+
 const DEMO_WATCHLIST = [
   { n: "01", teamA: "Georgia", teamB: "Alabama", left: { fill: "#BA0C2F", mask: "#000000" }, right: { fill: "#9E1B32", mask: "#FFFFFF" }, title: "#1 Georgia at #9 Alabama", meta: "THE STANDARD VS. THE STANDARD · BRYANT-DENNY", tv: "CBS · 7:30" },
   { n: "02", teamA: "Oregon", teamB: "Michigan", left: { fill: "#154733", mask: "#FEE123" }, right: { fill: "#00274C", mask: "#FFCB05" }, title: "#6 Oregon at #12 Michigan", meta: "WINNER CONTROLS THE BIG TEN RACE", tv: "FOX · 3:30" },
@@ -243,9 +267,9 @@ export default function ScoresPage() {
               <div className="wk" key={g.n}>
                 <div className="n">{g.n}</div>
                 <div className="helms">
-                  <TeamIcon team={g.teamA} fill={g.left.fill} mask={g.left.mask} />
+                  <MatchupHelmet team={g.teamA} fill={g.left.fill} mask={g.left.mask} />
                   <span className="at">AT</span>
-                  <TeamIcon team={g.teamB} fill={g.right.fill} mask={g.right.mask} flip />
+                  <MatchupHelmet team={g.teamB} fill={g.right.fill} mask={g.right.mask} flip />
                 </div>
                 <div className="who"><b>{g.title}</b><div className="meta">{g.meta}</div></div>
                 <div className="tv">{g.tv}</div>

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import PreseasonChip from "@/components/PreseasonChip";
-import { slugifyTeam, teamLogoUrl } from "@/lib/teams-meta";
+import { slugifyTeam, teamLogoUrl, helmetUrl } from "@/lib/teams-meta";
 
 export const metadata: Metadata = { title: "The Playoffs" };
 
@@ -70,11 +70,24 @@ const DEMO_JOSH_BRACKET: readonly BRound[] = [
   ] },
 ] as const;
 
+// Small circular helmet thumbnail beside a bracket-row team name; renders
+// nothing when the team has no generated helmet yet (the row layout is
+// unaffected either way since the .tm flex row already has a gap).
+function BracketHelmet({ team }: { team: string }) {
+  const helmet = helmetUrl(slugifyTeam(team));
+  if (!helmet) return null;
+  return (
+    <span className="bracket-helmet">
+      <Image src={helmet} alt="" width={56} height={56} style={{ objectFit: "cover" }} />
+    </span>
+  );
+}
+
 function GameBox({ g }: { g: BGame }) {
   return (
     <div className="game">
-      <div className={g.winA ? "tm w" : "tm"}><span className="sd">{g.seedA}</span>{g.teamA}</div>
-      <div className={g.winB ? "tm w" : "tm"}><span className="sd">{g.seedB}</span>{g.teamB}</div>
+      <div className={g.winA ? "tm w" : "tm"}><span className="sd">{g.seedA}</span><BracketHelmet team={g.teamA} />{g.teamA}</div>
+      <div className={g.winB ? "tm w" : "tm"}><span className="sd">{g.seedB}</span><BracketHelmet team={g.teamB} />{g.teamB}</div>
       <div className="tag2">{g.tag}</div>
     </div>
   );

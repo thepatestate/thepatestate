@@ -66,3 +66,55 @@ export function teamLogoUrl(slug: string): string | null {
   const id = TEAM_LOGOS[slug];
   return id ? `https://a.espncdn.com/i/teamlogos/ncaa/500/${id}.png` : null;
 }
+
+// The 39 team slugs with generated blank-helmet studio photography in
+// public/img/helmets/ (source: josh-assets/generated/helmets/). Every
+// helmet faces LEFT in identical framing against a dark charcoal-navy
+// background. Built explicitly from the directory listing at
+// implementation time — update this set if more helmets are generated.
+const HELMET_SLUGS = new Set<string>([
+  "alabama",
+  "arizona-state",
+  "army",
+  "boise-state",
+  "byu",
+  "clemson",
+  "colorado",
+  "florida",
+  "florida-state",
+  "georgia",
+  "georgia-tech",
+  "indiana",
+  "iowa",
+  "iowa-state",
+  "kansas-state",
+  "lsu",
+  "miami",
+  "michigan",
+  "missouri",
+  "nebraska",
+  "notre-dame",
+  "ohio-state",
+  "oklahoma",
+  "oklahoma-state",
+  "ole-miss",
+  "oregon",
+  "penn-state",
+  "smu",
+  "tennessee",
+  "texas",
+  "texas-am",
+  "texas-tech",
+  "tulane",
+  "unlv",
+  "usc",
+  "utah",
+  "vanderbilt",
+  "washington",
+  "wisconsin",
+]);
+
+/** Blank-helmet studio photo URL for a team slug, or null if not generated yet. */
+export function helmetUrl(slug: string): string | null {
+  return HELMET_SLUGS.has(slug) ? `/img/helmets/${slug}.jpg` : null;
+}

@@ -171,9 +171,9 @@ const DEMO_WIRE = [
 ] as const;
 
 const DEMO_SHOP = [
-  { label: "THE CREED TEE — $28 · TRI-BLEND", hero: true },
-  { label: "PORCH FLAG — $34", hero: false },
-  { label: "GAMEDAY HAT — $32", hero: false },
+  { label: "THE CREED TEE — $28 · TRI-BLEND", hero: true, photo: "/img/product-tee.jpg", alt: "The Creed Tee, folded flat" },
+  { label: "PORCH FLAG — $34", hero: false, photo: "/img/product-flag.jpg", alt: "The Pate State porch flag" },
+  { label: "GAMEDAY HAT — $32", hero: false, photo: "/img/product-hat.jpg", alt: "The Pate State gameday hat" },
 ] as const;
 
 const DEMO_TOUR = [
@@ -184,10 +184,10 @@ const DEMO_TOUR = [
 ] as const;
 
 const DEMO_GUIDES = [
-  { name: "Tiger Stadium", meta: "LSU · NIGHT GAME SURVIVAL", photo: "/img/tailgate-night.jpg", alt: "Tiger Stadium's lights glowing over a packed night tailgate lot" },
-  { name: "The Grove", meta: "OLE MISS · MASTERCLASS", photo: "/img/tailgate-grove.jpg", alt: "Chandeliers strung through the oaks of The Grove above rows of white tailgate tents" },
-  { name: "The Horseshoe", meta: "OHIO STATE · FIRST-TIMER", photo: "/img/tailgate-horseshoe.jpg", alt: "The Horseshoe packed to capacity for an Ohio State kickoff" },
-  { name: "Camp Randall", meta: "WISCONSIN · JUMP AROUND", photo: "/img/tailgate-jump.jpg", alt: "Camp Randall's student section jumping with confetti in the air" },
+  { name: "Tiger Stadium", meta: "LSU · NIGHT GAME SURVIVAL", photo: "/img/tailgate-night.jpg", alt: "LSU fans in purple and gold packing Tiger Stadium's night tailgate lot", team: "lsu" },
+  { name: "The Grove", meta: "OLE MISS · MASTERCLASS", photo: "/img/tailgate-grove.jpg", alt: "Ole Miss fans tailgating under the oaks of The Grove", team: "ole-miss" },
+  { name: "The Horseshoe", meta: "OHIO STATE · FIRST-TIMER", photo: "/img/tailgate-horseshoe.jpg", alt: "Ohio State fans packing The Horseshoe for kickoff", team: "ohio-state" },
+  { name: "Camp Randall", meta: "WISCONSIN · JUMP AROUND", photo: "/img/tailgate-jump.jpg", alt: "Wisconsin fans jumping around at Camp Randall", team: "wisconsin" },
 ] as const;
 
 export default async function Home() {
@@ -471,13 +471,11 @@ export default async function Home() {
               <PreseasonChip />
               <div className="shop-items">
                 {DEMO_SHOP.map((item) => (
-                  <div
-                    key={item.label}
-                    className={item.hero ? "item hero-item" : "item"}
-                    style={item.hero ? { background: "var(--paper-2)" } : undefined}
-                  >
+                  <div key={item.label} className={item.hero ? "item hero-item has-photo" : "item has-photo"}>
+                    <Image src={item.photo} alt={item.alt} fill sizes="(max-width: 700px) 33vw, 260px" style={{ objectFit: "cover" }} />
+                    <div className="item-scrim" />
                     <div style={{ flex: 1 }} />
-                    <b style={item.hero ? { color: "var(--ink)" } : undefined}>{item.label}</b>
+                    <b>{item.label}</b>
                   </div>
                 ))}
               </div>
@@ -508,17 +506,25 @@ export default async function Home() {
             traditions you can&apos;t miss.
           </p>
           <div className="guide-grid">
-            {DEMO_GUIDES.map((g) => (
-              <Link className="guide" href="/tailgate" key={g.name}>
-                <div className="ph">
-                  <Image src={g.photo} alt={g.alt} fill sizes="(max-width: 900px) 50vw, 280px" style={{ objectFit: "cover" }} />
-                </div>
-                <div className="body">
-                  <h4>{g.name}</h4>
-                  <div className="meta">{g.meta}</div>
-                </div>
-              </Link>
-            ))}
+            {DEMO_GUIDES.map((g) => {
+              const badgeUrl = teamLogoUrl(g.team);
+              return (
+                <Link className="guide" href="/tailgate" key={g.name}>
+                  <div className="ph">
+                    <Image src={g.photo} alt={g.alt} fill sizes="(max-width: 900px) 50vw, 280px" style={{ objectFit: "cover" }} />
+                    {badgeUrl && (
+                      <span className="team-chip">
+                        <Image src={badgeUrl} alt={`${g.name} team logo`} width={26} height={26} style={{ objectFit: "contain" }} />
+                      </span>
+                    )}
+                  </div>
+                  <div className="body">
+                    <h4>{g.name}</h4>
+                    <div className="meta">{g.meta}</div>
+                  </div>
+                </Link>
+              );
+            })}
           </div>
           <div style={{ marginTop: 24 }}><Link className="btn" href="/tailgate">Open the Full Guide — 136 Stadiums</Link></div>
         </div>

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import PreseasonChip from "@/components/PreseasonChip";
 
@@ -17,12 +18,14 @@ export const metadata: Metadata = { title: "The State Store" };
 
 const STORE_URL = "https://patestatematerial.com";
 
-const DEMO_GEAR = [
-  { label: "PORCH FLAG — $34" },
-  { label: "GAMEDAY HAT — $32" },
-  { label: "CITIZEN HOODIE — $54" },
-  { label: "TAILGATE APRON — $38" },
-] as const;
+type GearItem = { label: string; photo: string | null; alt: string | null };
+
+const DEMO_GEAR: readonly GearItem[] = [
+  { label: "PORCH FLAG — $34", photo: "/img/product-flag.jpg", alt: "The Pate State porch flag" },
+  { label: "GAMEDAY HAT — $32", photo: "/img/product-hat.jpg", alt: "The Pate State gameday hat" },
+  { label: "CITIZEN HOODIE — $54", photo: null, alt: null },
+  { label: "TAILGATE APRON — $38", photo: null, alt: null },
+];
 
 export default function ShopPage() {
   return (
@@ -92,7 +95,13 @@ export default function ShopPage() {
           <p className="eyebrow" style={{ marginTop: 44 }}>Gear</p>
           <div className="shop-items shop4" style={{ marginTop: 12 }}>
             {DEMO_GEAR.map((g) => (
-              <a className="item" href={STORE_URL} target="_blank" rel="noopener" style={{ textDecoration: "none" }} key={g.label}>
+              <a className={g.photo ? "item has-photo" : "item"} href={STORE_URL} target="_blank" rel="noopener" style={{ textDecoration: "none" }} key={g.label}>
+                {g.photo && (
+                  <>
+                    <Image src={g.photo} alt={g.alt ?? g.label} fill sizes="(max-width: 700px) 50vw, 260px" style={{ objectFit: "cover" }} />
+                    <div className="item-scrim" />
+                  </>
+                )}
                 <div style={{ flex: 1 }} />
                 <b>{g.label}</b>
               </a>

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import PreseasonChip from "@/components/PreseasonChip";
+import { teamLogoUrl } from "@/lib/teams-meta";
 
 export const metadata: Metadata = { title: "Pate Tailgate" };
 
@@ -10,17 +11,17 @@ export const metadata: Metadata = { title: "Pate Tailgate" };
 // the guide grid). Swap for a real CMS/schedule query when it ships; the
 // JSX below only touches this array.
 
-type TailgateGuide = { emoji: string; bg: string; name: string; meta: string; photo: string | null; alt: string | null };
+type TailgateGuide = { emoji: string; bg: string; name: string; meta: string; photo: string | null; alt: string | null; team: string | null };
 
 const DEMO_GUIDES: readonly TailgateGuide[] = [
-  { emoji: "🌭", bg: "linear-gradient(135deg,#BA0C2F 0%,#000000 100%)", name: "Sanford Stadium", meta: "THE FULL GUIDE · BY THE CITIZENS OF THE STATE", photo: null, alt: null },
-  { emoji: "🌙", bg: "linear-gradient(135deg,#461D7C 0%,#FDD023 100%)", name: "Tiger Stadium", meta: "LSU · NIGHT GAME SURVIVAL", photo: "/img/tailgate-night.jpg", alt: "Tiger Stadium's lights glowing over a packed night tailgate lot" },
-  { emoji: "🥂", bg: "linear-gradient(135deg,#14213D 0%,#CE1126 100%)", name: "The Grove", meta: "OLE MISS · MASTERCLASS", photo: "/img/tailgate-grove.jpg", alt: "Chandeliers strung through the oaks of The Grove above rows of white tailgate tents" },
-  { emoji: "🏟️", bg: "linear-gradient(135deg,#BB0000 0%,#666666 100%)", name: "The Horseshoe", meta: "OHIO STATE · FIRST-TIMER", photo: "/img/tailgate-horseshoe.jpg", alt: "The Horseshoe packed to capacity for an Ohio State kickoff" },
-  { emoji: "🦡", bg: "linear-gradient(135deg,#C5050C 0%,#FFFFFF 100%)", name: "Camp Randall", meta: "WISCONSIN · JUMP AROUND", photo: "/img/tailgate-jump.jpg", alt: "Camp Randall's student section jumping with confetti in the air" },
-  { emoji: "📣", bg: "linear-gradient(135deg,#500000 0%,#FFFFFF 100%)", name: "Kyle Field", meta: "TEXAS A&M · MIDNIGHT YELL", photo: null, alt: null },
-  { emoji: "🦆", bg: "linear-gradient(135deg,#154733 0%,#FEE123 100%)", name: "Autzen Stadium", meta: "OREGON · LOUDEST PER CAPITA", photo: null, alt: null },
-  { emoji: "⛪", bg: "linear-gradient(135deg,#0C2340 0%,#C99700 100%)", name: "Notre Dame Stadium", meta: "THE PILGRIMAGE PLAN", photo: null, alt: null },
+  { emoji: "🌭", bg: "linear-gradient(135deg,#BA0C2F 0%,#000000 100%)", name: "Sanford Stadium", meta: "THE FULL GUIDE · BY THE CITIZENS OF THE STATE", photo: null, alt: null, team: null },
+  { emoji: "🌙", bg: "linear-gradient(135deg,#461D7C 0%,#FDD023 100%)", name: "Tiger Stadium", meta: "LSU · NIGHT GAME SURVIVAL", photo: "/img/tailgate-night.jpg", alt: "LSU fans in purple and gold packing Tiger Stadium's night tailgate lot", team: "lsu" },
+  { emoji: "🥂", bg: "linear-gradient(135deg,#14213D 0%,#CE1126 100%)", name: "The Grove", meta: "OLE MISS · MASTERCLASS", photo: "/img/tailgate-grove.jpg", alt: "Ole Miss fans tailgating under the oaks of The Grove", team: "ole-miss" },
+  { emoji: "🏟️", bg: "linear-gradient(135deg,#BB0000 0%,#666666 100%)", name: "The Horseshoe", meta: "OHIO STATE · FIRST-TIMER", photo: "/img/tailgate-horseshoe.jpg", alt: "Ohio State fans packing The Horseshoe for kickoff", team: "ohio-state" },
+  { emoji: "🦡", bg: "linear-gradient(135deg,#C5050C 0%,#FFFFFF 100%)", name: "Camp Randall", meta: "WISCONSIN · JUMP AROUND", photo: "/img/tailgate-jump.jpg", alt: "Wisconsin fans jumping around at Camp Randall", team: "wisconsin" },
+  { emoji: "📣", bg: "linear-gradient(135deg,#500000 0%,#FFFFFF 100%)", name: "Kyle Field", meta: "TEXAS A&M · MIDNIGHT YELL", photo: null, alt: null, team: null },
+  { emoji: "🦆", bg: "linear-gradient(135deg,#154733 0%,#FEE123 100%)", name: "Autzen Stadium", meta: "OREGON · LOUDEST PER CAPITA", photo: null, alt: null, team: null },
+  { emoji: "⛪", bg: "linear-gradient(135deg,#0C2340 0%,#C99700 100%)", name: "Notre Dame Stadium", meta: "THE PILGRIMAGE PLAN", photo: null, alt: null, team: null },
 ];
 
 export default function TailgatePage() {
@@ -47,21 +48,29 @@ export default function TailgatePage() {
             Avenue by 3, the Dawg Walk at 5:10, and don&apos;t you dare leave before the fourth-quarter light show.
           </p>
           <div className="guide-grid">
-            {DEMO_GUIDES.map((g) => (
-              <a className="guide" href="/#" key={g.name}>
-                <div className="ph" style={g.photo ? undefined : { background: g.bg, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 52 }}>
-                  {g.photo ? (
-                    <Image src={g.photo} alt={g.alt ?? g.name} fill sizes="(max-width: 900px) 50vw, 280px" style={{ objectFit: "cover" }} />
-                  ) : (
-                    g.emoji
-                  )}
-                </div>
-                <div className="body">
-                  <h4>{g.name}</h4>
-                  <div className="meta">{g.meta}</div>
-                </div>
-              </a>
-            ))}
+            {DEMO_GUIDES.map((g) => {
+              const badgeUrl = g.team ? teamLogoUrl(g.team) : null;
+              return (
+                <a className="guide" href="/#" key={g.name}>
+                  <div className="ph" style={g.photo ? undefined : { background: g.bg, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 52 }}>
+                    {g.photo ? (
+                      <Image src={g.photo} alt={g.alt ?? g.name} fill sizes="(max-width: 900px) 50vw, 280px" style={{ objectFit: "cover" }} />
+                    ) : (
+                      g.emoji
+                    )}
+                    {badgeUrl && (
+                      <span className="team-chip">
+                        <Image src={badgeUrl} alt={`${g.name} team logo`} width={26} height={26} style={{ objectFit: "contain" }} />
+                      </span>
+                    )}
+                  </div>
+                  <div className="body">
+                    <h4>{g.name}</h4>
+                    <div className="meta">{g.meta}</div>
+                  </div>
+                </a>
+              );
+            })}
           </div>
           <div style={{ marginTop: 24 }}>
             <Link href="/teams" className="btn">All 136 Stadium Guides</Link>
