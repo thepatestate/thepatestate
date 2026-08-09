@@ -230,8 +230,62 @@ async function fetchTranscriptViaWatchPage(ytId: string): Promise<TranscriptSegm
   return segs.length > 0 ? segs : null;
 }
 
-/** Fetches a transcript for a YouTube video. Tries the InnerTube player API first, falling
- * back to the watch-page scrape if that fails entirely. Null on total failure. */
+type SupadataChunk = { text: string; offset: number; duration: number; lang?: string };
+type SupadataResponse = { content?: SupadataChunk[] | string; jobId?: string };
+type SupadataJobResponse = SupadataResponse & { status?: "queued" | "active" | "completed" | "failed" };
+
+function mapSupadataContent(content: SupadataChunk[] | string | undefined): TranscriptSegment[] | null {
+  if (!Array.isArray(content) || content.length === 0) return null;
+  const segs = content
+    .filter((c) => typeof c?.text === "string" && c.text.trim())
+    .map((c) => ({ start: c.offset / 1000, text: c.text.trim() }));
+  return segs.length > 0 ? segs : null;
+}
+
+const SUPADATA_POLL_ATTEMPTS = 20;
+const SUPADATA_POLL_INTERVAL_MS = 2000;
+
+/** Supadata third-party transcript API: last-resort fallback for when YouTube's InnerTube API
+ * is unreachable from the deployment's datacenter IP (Vercel is commonly blocked; residential
+ * IPs are not). Skipped entirely (returns null immediately) when SUPADATA_API_KEY is unset, so
+ * behavior is unchanged for anyone not opted into this fallback. Never throws. */
+export async function fetchTranscriptSupadata(ytId: string): Promise<TranscriptSegment[] | null> {
+  const apiKey = process.env.SUPADATA_API_KEY;
+  if (!apiKey) return null;
+  try {
+    const url = `https://api.supadata.ai/v1/transcript?url=${encodeURIComponent(
+      `https://www.youtube.com/watch?v=${ytId}`
+    )}`;
+    const res = await fetch(url, { headers: { "x-api-key": apiKey }, cache: "no-store" });
+    if (!res.ok) return null;
+    const data = (await res.json()) as SupadataResponse;
+
+    if (data.jobId) {
+      for (let i = 0; i < SUPADATA_POLL_ATTEMPTS; i++) {
+        await new Promise((resolve) => setTimeout(resolve, SUPADATA_POLL_INTERVAL_MS));
+        const jobRes = await fetch(`https://api.supadata.ai/v1/transcript/${data.jobId}`, {
+          headers: { "x-api-key": apiKey },
+          cache: "no-store",
+        });
+        if (!jobRes.ok) return null;
+        const job = (await jobRes.json()) as SupadataJobResponse;
+        if (job.status === "failed") return null;
+        if (job.status === "completed") return mapSupadataContent(job.content);
+        // queued / active: keep polling
+      }
+      return null; // gave up waiting on the job
+    }
+
+    return mapSupadataContent(data.content);
+  } catch (err) {
+    console.error("[transcript:fetchTranscriptSupadata]", ytId, err);
+    return null;
+  }
+}
+
+/** Fetches a transcript for a YouTube video. Tries the InnerTube player API first, then the
+ * watch-page scrape, then (if configured) the Supadata third-party API as a last resort for
+ * when YouTube itself is unreachable from the deployment's IP. Null on total failure. */
 export async function fetchTranscript(ytId: string): Promise<TranscriptSegment[] | null> {
   try {
     const segs = await fetchTranscriptViaInnerTube(ytId);
@@ -240,9 +294,10 @@ export async function fetchTranscript(ytId: string): Promise<TranscriptSegment[]
     console.error("[transcript:fetchTranscript] innertube failed", ytId, err);
   }
   try {
-    return await fetchTranscriptViaWatchPage(ytId);
+    const segs = await fetchTranscriptViaWatchPage(ytId);
+    if (segs) return segs;
   } catch (err) {
     console.error("[transcript:fetchTranscript]", ytId, err);
-    return null;
   }
+  return fetchTranscriptSupadata(ytId);
 }
