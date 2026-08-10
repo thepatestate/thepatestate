@@ -109,10 +109,12 @@ function MatchupHelmet({ team, flip }: { team: string; flip?: boolean }) {
 
 // Small circular logo mark for the "This Week's Slate" day-by-day rows —
 // official logos per §1.4 (helmets stay exclusive to the Watch List above).
-function SlateLogo({ team }: { team: string }) {
+// Real-feed rows pass the CFBD-resolved logo; FCS visitors without one fall
+// back to the abbreviation disc.
+function SlateLogo({ team, logo }: { team: string; logo?: string | null }) {
   return (
     <span className="dr-hel">
-      <TeamMark name={team} slug={slugifyTeam(team)} size={26} />
+      <TeamMark name={team} slug={slugifyTeam(team)} logo={logo} size={26} />
     </span>
   );
 }
@@ -198,11 +200,11 @@ export default async function ScoresPage() {
                   <div className="dayslate-day">{day}</div>
                   {realGames.filter((g) => g.day === day).map((g) => (
                     <div className="dayslate-row" key={g.id}>
-                      <SlateLogo team={g.teams[0].label} />
+                      <SlateLogo team={g.teams[0].label} logo={g.teams[0].logo} />
                       <div className="dr-teams">
                         {g.teams[0].label} <span className="at">at</span> {g.teams[1].label}
                       </div>
-                      <SlateLogo team={g.teams[1].label} />
+                      <SlateLogo team={g.teams[1].label} logo={g.teams[1].logo} />
                       <span className="dr-net">{g.net}</span>
                       <span className="dr-time">{g.time ?? ""}</span>
                     </div>
@@ -354,7 +356,6 @@ export default async function ScoresPage() {
         <div className="wrap">
           <p className="eyebrow">Catch Up</p>
           <h2 className="display" style={{ fontSize: 34 }}>The Film Room</h2>
-          <PreseasonChip />
           <div className="duo" style={{ marginTop: 18 }}>
             {latestVideo ? (
               <EpisodeLead video={latestVideo} tag="LATEST FROM THE SHOW" />
