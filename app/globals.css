@@ -829,3 +829,19 @@ footer{background:var(--navy);color:var(--chalk-dim);padding:34px 0 40px;font-fa
 .empty-state .es-body{font-size:14px;color:var(--ink-dim);max-width:44ch;margin:0 auto}
 .empty-state.dark .es-body{color:var(--chalk-dim)}
 .hero-proof{margin-top:16px;font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--chalk-dim)}
+
+/* --- Nav v2: More dropdown + search entry (v2 brief §2.1) --- */
+.nav-more{position:relative;display:inline-flex}
+.nav-more button{background:none;border:none;cursor:pointer;font-family:var(--mono);font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--ink);font-weight:600;padding:6px 0;border-bottom:2px solid transparent}
+.nav-more button:hover{border-color:var(--lamp)}
+.nav-more-menu{position:absolute;top:calc(100% + 8px);right:0;background:var(--paper);border:1px solid var(--line-l);border-radius:4px;box-shadow:0 10px 30px rgba(16,36,62,.14);padding:8px 0;min-width:180px;display:flex;flex-direction:column;z-index:60}
+.nav-more-menu a{padding:9px 16px;border-bottom:none!important;font-weight:600}
+.nav-more-menu a:hover{background:var(--paper-2)}
+.nav-search{font-size:19px;line-height:1;color:var(--ink);padding:4px 6px;border:1.5px solid transparent;border-radius:3px;text-decoration:none}
+.nav-search:hover{border-color:var(--lamp)}
+@media(max-width:1080px){.nav-search{display:none}}
+
+/* --- /search form --- */
+.search-form{display:flex;gap:10px;margin-top:18px;max-width:560px}
+.search-form input{flex:1;padding:12px 14px;font-family:var(--mono);font-size:14px;border:1px solid var(--line-l);border-radius:4px;background:#fff;color:var(--ink)}
+.search-form input:focus{outline:2px solid var(--lamp);outline-offset:1px}

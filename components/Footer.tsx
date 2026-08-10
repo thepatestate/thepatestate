@@ -5,18 +5,31 @@ import { CHANNEL_URL, SOCIAL_LINKS } from "@/lib/youtube";
 const LINKS = [
   { href: "/show", label: "The Show" },
   { href: "/scores", label: "Scores" },
+  { href: "/play", label: "Play" },
   { href: "/pickem", label: "Pick'Em" },
   { href: "/poll", label: "JP Poll" },
   { href: "/playoffs", label: "Playoffs" },
   { href: "/teams", label: "Teams" },
   { href: "/recruiting", label: "Recruiting" },
   { href: "/notebook", label: "Notebook" },
+  { href: "/wire", label: "The Wire" },
   { href: "/porch", label: "The Porch" },
   { href: "/tailgate", label: "Tailgate" },
   { href: "/ledger", label: "Ledger" },
   { href: "/shop", label: "Shop" },
   { href: "/report", label: "The Report" },
+  { href: "/search", label: "Search" },
   { href: "/about", label: "About" },
+];
+
+// Trust & legal row (v2 brief §8) — required for sponsorships, commerce,
+// email capture, and E-E-A-T.
+const TRUST_LINKS = [
+  { href: "/standards", label: "Editorial Standards & Corrections" },
+  { href: "/standards#ai", label: "AI Disclosure" },
+  { href: "/privacy", label: "Privacy Policy" },
+  { href: "/terms", label: "Terms of Service" },
+  { href: "/contact", label: "Contact" },
 ];
 
 const SOCIAL = [
@@ -63,6 +76,11 @@ export default function Footer() {
         </div>
         <div className="foot-links">
           {LINKS.map((l) => (
+            <Link key={l.href} href={l.href}>{l.label}</Link>
+          ))}
+        </div>
+        <div className="foot-links" style={{ marginTop: 14, opacity: 0.85 }}>
+          {TRUST_LINKS.map((l) => (
             <Link key={l.href} href={l.href}>{l.label}</Link>
           ))}
         </div>
