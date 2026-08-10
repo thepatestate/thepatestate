@@ -2,6 +2,7 @@
 // and, on gamedays, real scores. Server-only; fail-soft everywhere: every
 // helper returns [] / null on any failure so pages fall back to demo data.
 import type { Conference, ScoreCardData } from "@/lib/scores-demo";
+import { slugifyTeam } from "@/lib/teams-meta";
 
 const BASE = "https://api.collegefootballdata.com";
 const YEAR = 2026;
@@ -64,7 +65,10 @@ function kickoffLabel(iso: string, tbd?: boolean): string {
 
 /** Real games for a week as scoreboard cards, kickoff-sorted. [] on failure. */
 export async function getWeekScoreboard(week = 1): Promise<ScoreCardData[]> {
-  const games = await cfbd<CfbdGame[]>(`/games?year=${YEAR}&week=${week}&seasonType=regular&classification=fbs`);
+  const [games, dir] = await Promise.all([
+    cfbd<CfbdGame[]>(`/games?year=${YEAR}&week=${week}&seasonType=regular&classification=fbs`),
+    getTeamDirectory(),
+  ]);
   if (!games) return [];
   return games
     .slice()
@@ -81,11 +85,54 @@ export async function getWeekScoreboard(week = 1): Promise<ScoreCardData[]> {
         net: g.tv ?? g.outlet ?? "",
         conf: toConference(g.homeConference, g.awayConference),
         teams: [
-          { label: g.awayTeam, pts: hasScore ? String(g.awayPoints) : "—", lead: awayLead },
-          { label: g.homeTeam, pts: hasScore ? String(g.homePoints) : "—", lead: homeLead },
+          { label: g.awayTeam, pts: hasScore ? String(g.awayPoints) : "—", lead: awayLead, logo: dir[slugifyTeam(g.awayTeam)]?.logo ?? null },
+          { label: g.homeTeam, pts: hasScore ? String(g.homePoints) : "—", lead: homeLead, logo: dir[slugifyTeam(g.homeTeam)]?.logo ?? null },
         ],
       } as ScoreCardData;
     });
+}
+
+// --- Team directory (v2 brief §1.4) ---------------------------------------
+// All 136 FBS programs with real broadcast abbreviations, brand colors, and
+// logo art. CFBD's team ids are ESPN's team ids, so logos come from the same
+// ESPN CDN pattern the hand-built lib/teams-meta map already uses — one
+// consistent source sitewide. Refreshes daily.
+
+interface CfbdTeam {
+  id: number;
+  school: string;
+  abbreviation?: string | null;
+  conference?: string | null;
+  color?: string | null;
+  alternateColor?: string | null;
+}
+
+export interface TeamInfo {
+  school: string;
+  slug: string;
+  abbrev: string;
+  conference: string;
+  color: string | null;
+  logo: string;
+}
+
+/** Slug → team info for every FBS program; {} on failure. */
+export async function getTeamDirectory(): Promise<Record<string, TeamInfo>> {
+  const teams = await cfbd<CfbdTeam[]>(`/teams/fbs?year=${YEAR}`, 86400);
+  if (!teams) return {};
+  const dir: Record<string, TeamInfo> = {};
+  for (const t of teams) {
+    const slug = slugifyTeam(t.school);
+    dir[slug] = {
+      school: t.school,
+      slug,
+      abbrev: t.abbreviation || t.school.slice(0, 4).toUpperCase(),
+      conference: t.conference ?? "",
+      color: t.color ?? null,
+      logo: `https://a.espncdn.com/i/teamlogos/ncaa/500/${t.id}.png`,
+    };
+  }
+  return dir;
 }
 
 export interface SlateGame {
@@ -93,20 +140,22 @@ export interface SlateGame {
   home: string;
   awayCode: string;
   homeCode: string;
+  awayLogo: string | null;
+  homeLogo: string | null;
   when: string;
   net: string;
-}
-
-function code(team: string): string {
-  return team.replace(/[^A-Za-z ]/g, "").split(/\s+/).map((w) => w[0]).join("").slice(0, 3).toUpperCase() || team.slice(0, 3).toUpperCase();
 }
 
 /** Marquee real games for the homepage slate strip: both teams from a known
  * power set, earliest first. [] on failure (strip falls back to demo). */
 export async function getSlateGames(week = 1, limit = 5): Promise<SlateGame[]> {
-  const games = await cfbd<CfbdGame[]>(`/games?year=${YEAR}&week=${week}&seasonType=regular&classification=fbs`);
+  const [games, dir] = await Promise.all([
+    cfbd<CfbdGame[]>(`/games?year=${YEAR}&week=${week}&seasonType=regular&classification=fbs`),
+    getTeamDirectory(),
+  ]);
   if (!games) return [];
   const power = new Set(["SEC", "Big Ten", "Big 12", "ACC"]);
+  const info = (name: string): TeamInfo | undefined => dir[slugifyTeam(name)];
   return games
     .filter((g) => power.has(g.homeConference ?? "") && power.has(g.awayConference ?? ""))
     .sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime())
@@ -114,8 +163,10 @@ export async function getSlateGames(week = 1, limit = 5): Promise<SlateGame[]> {
     .map((g) => ({
       away: g.awayTeam,
       home: g.homeTeam,
-      awayCode: code(g.awayTeam),
-      homeCode: code(g.homeTeam),
+      awayCode: info(g.awayTeam)?.abbrev ?? g.awayTeam.slice(0, 4).toUpperCase(),
+      homeCode: info(g.homeTeam)?.abbrev ?? g.homeTeam.slice(0, 4).toUpperCase(),
+      awayLogo: info(g.awayTeam)?.logo ?? null,
+      homeLogo: info(g.homeTeam)?.logo ?? null,
       when: kickoffLabel(g.startDate, g.startTimeTBD),
       net: g.tv ?? g.outlet ?? "",
     }));

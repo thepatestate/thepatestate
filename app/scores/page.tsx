@@ -4,8 +4,9 @@ import Link from "next/link";
 import PreseasonChip from "@/components/PreseasonChip";
 import EpisodeLead from "@/components/EpisodeLead";
 import ScoreboardTabs from "@/components/ScoreboardTabs";
+import TeamMark from "@/components/TeamMark";
 import { TEAMS_TOP25, TEAMS_ALL } from "@/lib/teams";
-import { slugifyTeam, teamLogoUrl, helmetLightUrl } from "@/lib/teams-meta";
+import { slugifyTeam, helmetLightUrl } from "@/lib/teams-meta";
 import { getVideos } from "@/lib/youtube";
 import { getWeekScoreboard } from "@/lib/cfbd";
 import { createArtPicker } from "@/lib/editorial-art";
@@ -75,80 +76,39 @@ const DEMO_TEAM_ALL: ReadonlyArray<{ value: string | null; label: string }> = [
   ...TEAMS_ALL.slice(1).map((t) => ({ value: `${t.value}-all`, label: t.label })),
 ];
 
-// Fallback for any team not yet in lib/teams-meta's TEAM_LOGOS map — the
-// wireframe's original mirrored pair of placeholder helmet SVGs, varying
-// only the two teams' fill/mask colors.
-function Helmet({ fill, mask, flip }: { fill: string; mask: string; flip?: boolean }) {
-  return (
-    <svg width="38" height="30" viewBox="0 0 40 32" aria-hidden="true">
-      <g transform={flip ? "scale(-1,1) translate(-40,0)" : undefined}>
-        <path
-          d="M4,17 C4,8 10,3 18,3 C27,3 33,9 33,17 L33,23 C33,25 31,26 29,26 L24,26 L24,29 L14,29 C8,29 4,24 4,17 Z"
-          fill={fill}
-        />
-        <rect x="15" y="3" width="6" height="23" rx="3" fill={mask} />
-        <path d="M27,15 L38,15 M27,21 L38,21 M33,12 L33,24" stroke="#9AA0A8" strokeWidth="2.6" fill="none" strokeLinecap="round" />
-      </g>
-    </svg>
-  );
-}
-
-// Real team logo when mapped in lib/teams-meta, ~20% larger than the old
-// 38x30 Helmet placeholder it replaces; falls back to the Helmet SVG for
-// any team not yet in TEAM_LOGOS.
-function TeamIcon({ team, fill, mask, flip }: { team: string; fill: string; mask: string; flip?: boolean }) {
-  const logoUrl = teamLogoUrl(slugifyTeam(team));
-  if (logoUrl) {
-    return <Image src={logoUrl} alt={`${team} logo`} width={46} height={36} style={{ objectFit: "contain" }} />;
-  }
-  return <Helmet fill={fill} mask={mask} flip={flip} />;
-}
-
-// Real blank-helmet studio photo for the Watch List matchups, noticeably
-// larger than the plain TeamIcon logo it replaces. Every source photo in the
-// light (cream-background) set faces RIGHT in identical framing, so the
-// away/left-side helmet (flip) is mirrored with scaleX(-1) to face back
-// toward its opponent — the home/right-side helmet keeps its natural
-// rightward-facing orientation. Falls back to TeamIcon (real logo, or the
-// placeholder SVG) for any team without a generated helmet yet.
-function MatchupHelmet({ team, fill, mask, flip }: { team: string; fill: string; mask: string; flip?: boolean }) {
-  const helmet = helmetLightUrl(slugifyTeam(team));
+// Watch List matchup mark — the ONE place helmets remain (v2 brief §1.4's
+// Top 10 Games exception); everywhere else on this page renders official
+// logos via TeamMark. The light helmet set faces RIGHT, so the home/right
+// helmet is mirrored to face LEFT — the two helmets face each other across
+// the "AT". Falls back to the team logo (never a blank shell) for any team
+// without helmet art.
+function MatchupHelmet({ team, flip }: { team: string; flip?: boolean }) {
+  const slug = slugifyTeam(team);
+  const helmet = helmetLightUrl(slug);
   if (helmet) {
     return (
       <span className="helmet-chip">
         <Image
           src={helmet}
           alt={`${team} helmet`}
-          width={112}
-          height={112}
+          width={148}
+          height={148}
           style={{ objectFit: "cover", transform: flip ? "scale(1.18) scaleX(-1)" : "scale(1.18)" }}
         />
       </span>
     );
   }
-  return <TeamIcon team={team} fill={fill} mask={mask} flip={flip} />;
+  return <TeamMark name={team} slug={slug} size={52} />;
 }
 
-// Small circular helmet mark for the "This Week's Slate" day-by-day rows —
-// same light-helmet-on-cream-chip treatment as the Watch List above, just
-// smaller. Falls back to the plain ESPN logo (no chip) for any team without
-// generated helmet art.
-function SlateHelmet({ team, flip }: { team: string; flip?: boolean }) {
-  const slug = slugifyTeam(team);
-  const helmet = helmetLightUrl(slug);
-  if (helmet) {
-    return (
-      <span className="dr-hel">
-        <Image src={helmet} alt="" width={28} height={28} style={{ transform: flip ? "scaleX(-1)" : undefined }} />
-      </span>
-    );
-  }
-  const logoUrl = teamLogoUrl(slug);
-  return logoUrl ? (
+// Small circular logo mark for the "This Week's Slate" day-by-day rows —
+// official logos per §1.4 (helmets stay exclusive to the Watch List above).
+function SlateLogo({ team }: { team: string }) {
+  return (
     <span className="dr-hel">
-      <Image src={logoUrl} alt="" width={28} height={28} style={{ objectFit: "contain" }} />
+      <TeamMark name={team} slug={slugifyTeam(team)} size={26} />
     </span>
-  ) : null;
+  );
 }
 
 // This Week's Slate groups the same 10 Watch List games (lib/scores-demo's
@@ -225,11 +185,11 @@ export default async function ScoresPage() {
                   if (!g) return null;
                   return (
                     <div className="dayslate-row" key={g.n}>
-                      <SlateHelmet team={g.teamA} flip />
+                      <SlateLogo team={g.teamA} />
                       <div className="dr-teams">
                         {g.teamA} <span className="at">at</span> {g.teamB}
                       </div>
-                      <SlateHelmet team={g.teamB} />
+                      <SlateLogo team={g.teamB} />
                       <span className="dr-net">{g.tv.split(" · ")[0]}</span>
                       <span className="dr-time">{g.tv.split(" · ")[1] ?? g.tv}</span>
                     </div>
@@ -311,9 +271,9 @@ export default async function ScoresPage() {
               <div className="wk" key={g.n}>
                 <div className="n">{g.n}</div>
                 <div className="helms">
-                  <MatchupHelmet team={g.teamA} fill={g.left.fill} mask={g.left.mask} flip />
+                  <MatchupHelmet team={g.teamA} />
                   <span className="at">AT</span>
-                  <MatchupHelmet team={g.teamB} fill={g.right.fill} mask={g.right.mask} />
+                  <MatchupHelmet team={g.teamB} flip />
                 </div>
                 <div className="who"><b>{g.title}</b><div className="meta">{g.meta}</div></div>
                 <div className="tv">{g.tv}</div>

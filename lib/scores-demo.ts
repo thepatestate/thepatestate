@@ -5,7 +5,7 @@
 // copy-pasting them. Swap for a real feed when the season engine ships; the
 // JSX at each call site only touches these arrays.
 
-export type ScoreTeam = { label: string; pts: string; lead: boolean };
+export type ScoreTeam = { label: string; pts: string; lead: boolean; logo?: string | null };
 
 // Conference tag every scoreboard card carries, so /scores' tab filter
 // (TOP 25 / SEC / BIG TEN / BIG 12 / ACC / G5 / ALL 136) can slice one

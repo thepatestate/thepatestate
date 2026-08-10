@@ -37,7 +37,7 @@ function ScoreCard({ card }: { card: ScoreCardData }) {
         <span>{card.net}</span>
       </div>
       {card.teams.map((t) => {
-        const logoUrl = teamLogoUrl(slugifyTeam(teamNameFromLabel(t.label)));
+        const logoUrl = t.logo ?? teamLogoUrl(slugifyTeam(teamNameFromLabel(t.label)));
         return (
           <div className={t.lead ? "tm lead" : "tm"} key={t.label}>
             <span style={{ display: "flex", alignItems: "center", gap: 6 }}>

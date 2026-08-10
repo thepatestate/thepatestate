@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import PreseasonChip from "@/components/PreseasonChip";
-import { slugifyTeam, teamLogoUrl, helmetLightUrl } from "@/lib/teams-meta";
+import { slugifyTeam, teamLogoUrl } from "@/lib/teams-meta";
 import { createArtPicker } from "@/lib/editorial-art";
 
 export const metadata: Metadata = { title: "The Playoffs" };
@@ -71,15 +71,16 @@ const DEMO_JOSH_BRACKET: readonly BRound[] = [
   ] },
 ] as const;
 
-// Small circular helmet thumbnail beside a bracket-row team name; renders
-// nothing when the team has no generated helmet yet (the row layout is
+// Small circular logo thumbnail beside a bracket-row team name — official
+// logos per v2 brief §1.4 (helmets are exclusive to the scores Watch List);
+// renders nothing when the team has no mapped logo (the row layout is
 // unaffected either way since the .tm flex row already has a gap).
 function BracketHelmet({ team }: { team: string }) {
-  const helmet = helmetLightUrl(slugifyTeam(team));
-  if (!helmet) return null;
+  const logo = teamLogoUrl(slugifyTeam(team));
+  if (!logo) return null;
   return (
-    <span className="bracket-helmet">
-      <Image src={helmet} alt="" width={56} height={56} style={{ objectFit: "cover" }} />
+    <span className="bracket-helmet" style={{ background: "#fff" }}>
+      <Image src={logo} alt="" width={56} height={56} style={{ objectFit: "contain", padding: 4 }} />
     </span>
   );
 }
