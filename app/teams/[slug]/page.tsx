@@ -8,6 +8,7 @@ import {
   fmtHeight, CLASS_YEARS, type TeamGame,
 } from "@/lib/team-data";
 import { getBoards, getThreads, publicClient } from "@/lib/community";
+import { getTeamDirectory } from "@/lib/cfbd";
 import { createClient, getCitizen } from "@/lib/supabase/server";
 import { followTeam, unfollowTeam } from "@/app/teams/actions";
 import { getVideos } from "@/lib/youtube";
@@ -36,12 +37,12 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   };
 }
 
-function GameRow({ g }: { g: TeamGame }) {
+function GameRow({ g, logo }: { g: TeamGame; logo?: string | null }) {
   return (
     <div className="tg-row">
       <span className="tg-date">{g.dateLabel}</span>
       <span className="tg-opp">
-        <TeamMark name={g.opponent} slug={g.opponentSlug} size={22} />
+        <TeamMark name={g.opponent} slug={g.opponentSlug} logo={logo} size={22} />
         <b>{g.home ? "vs" : "at"} {g.opponent}</b>
       </span>
       <span className="tg-meta">
@@ -58,7 +59,7 @@ export default async function TeamHubPage({ params }: { params: Promise<{ slug: 
   const info = await getTeamInfo(slug);
   if (!info) notFound();
 
-  const [schedule, records, roster, portal, quotes, articles, wire, recruiting, boards, citizen, videos] =
+  const [schedule, records, roster, portal, quotes, articles, wire, recruiting, boards, citizen, videos, dir] =
     await Promise.all([
       getTeamSchedule(info.school),
       getRecords(info.school),
@@ -71,6 +72,7 @@ export default async function TeamHubPage({ params }: { params: Promise<{ slug: 
       getBoards(),
       getCitizen(),
       getVideos(),
+      getTeamDirectory(),
     ]);
 
   const board = boards.find((b) => b.kind === "team" && b.team_slug === slug);
@@ -163,7 +165,7 @@ export default async function TeamHubPage({ params }: { params: Promise<{ slug: 
                   <div className="ng-row">
                     <TeamMark name={info.school} slug={slug} logo={info.logo} size={44} />
                     <b className="ng-vs">{nextGame.home ? "vs" : "at"}</b>
-                    <TeamMark name={nextGame.opponent} slug={nextGame.opponentSlug} size={44} />
+                    <TeamMark name={nextGame.opponent} slug={nextGame.opponentSlug} logo={dir[nextGame.opponentSlug]?.logo} size={44} />
                     <div className="ng-body">
                       <b>{nextGame.home ? `${nextGame.opponent} at ${info.school}` : `${info.school} at ${nextGame.opponent}`}</b>
                       <span>
@@ -285,7 +287,7 @@ export default async function TeamHubPage({ params }: { params: Promise<{ slug: 
                   <EmptyState kicker="LIVE FROM THE FEED" title="Schedule loading" body="The full 2026 slate loads from the live data feed." />
                 ) : (
                   <div style={{ marginTop: 6 }}>
-                    {schedule.map((g) => <GameRow g={g} key={g.id} />)}
+                    {schedule.map((g) => <GameRow g={g} logo={dir[g.opponentSlug]?.logo} key={g.id} />)}
                   </div>
                 )}
                 <p className="hub-src">Schedule &amp; results via CollegeFootballData · scores flow in live on gamedays</p>
