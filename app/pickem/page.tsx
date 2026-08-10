@@ -58,10 +58,14 @@ const DEMO_PUNDITS = [
   { rk: 20, initials: "DP", name: "Dave Portnoy", aff: "BARSTOOL", josh: false },
   // Added to bring the leaderboard to an even 24 (12/12 columns) — real
   // on-air CFB analysts, same as everyone above; no invented records.
-  { rk: 21, initials: "DPo", name: "David Pollack", aff: "ESPN · GAMEDAY", josh: false },
-  { rk: 22, initials: "BM", name: "Booger McFarland", aff: "ESPN · SEC NETWORK", josh: false },
-  { rk: 23, initials: "CD", name: "Charles Davis", aff: "FOX · BIG NOON", josh: false },
-  { rk: 24, initials: "CC", name: "Cole Cubelic", aff: "ESPN · SEC NETWORK", josh: false },
+  // Slots 21–24 replaced per v2 brief §0.5; affiliations verified against
+  // each analyst's current employer 2026-08-10 (Rodgers left SEC Saturday
+  // Night for ESPN's Friday booth in 2026, so his line reads ESPN, not the
+  // brief's SEC Network).
+  { rk: 21, initials: "SS", name: "Stanford Steve Coughlin", aff: "ESPN", josh: false },
+  { rk: 22, initials: "BE", name: "Bud Elliott", aff: "CBS SPORTS", josh: false },
+  { rk: 23, initials: "JR", name: "Jordan Rodgers", aff: "ESPN", josh: false },
+  { rk: 24, initials: "AW", name: "Ari Wasserman", aff: "ON3", josh: false },
 ] as const;
 
 // Team-ish saturated color pairs cycled by rank — gives each monogram
