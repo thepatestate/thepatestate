@@ -66,6 +66,26 @@ const ARTICLE_FIELDS = `_id, headline, slug, dek, bodyMarkdown, pullQuote, bylin
 // error on a Sanity outage, and Next's ISR then serves the last good render
 // instead of these functions failing over to an empty/fake result. Callers
 // that must stay fail-soft (e.g. app/sitemap.ts) catch at the call site.
+export interface SanityHeroSlide {
+  _id: string;
+  title: string;
+  kicker?: string;
+  link: string;
+  imageUrl?: string | null;
+}
+
+/** Active hero-carousel slides in display order (v2 brief §1.1). */
+export async function getHeroSlides(): Promise<SanityHeroSlide[]> {
+  return readClient.fetch<SanityHeroSlide[]>(
+    `*[_type == "heroSlide" && active == true] | order(order asc)[0...6]{
+      _id, title, kicker, link,
+      "imageUrl": coalesce(image.asset->url, imageUrl)
+    }`,
+    {},
+    { next: { revalidate: 300, tags: ["hero"] } } as never,
+  );
+}
+
 export async function getPublishedArticles(limit = 20): Promise<SanityArticle[]> {
   return await readClient.fetch(
     `*[_type == "article" && workflowState == "published"] | order(publishedAt desc)[0...$limit]{ ${ARTICLE_FIELDS} }`,

@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { getVideos, isEpisode, getChannelStats, compactCount, CHANNEL_URL, APPLE_PODCASTS_URL, SPOTIFY_URL, SOCIAL_LINKS } from "@/lib/youtube";
-import { getPublishedArticles, getWireItems } from "@/lib/sanity";
+import { getPublishedArticles, getWireItems, getHeroSlides } from "@/lib/sanity";
+import HeroSlider, { type HeroSlideData } from "@/components/HeroSlider";
 import { formatDate, relTime } from "@/lib/format";
 import { slugifyTeam, teamLogoUrl } from "@/lib/teams-meta";
 import { createArtPicker, type ArtCategory } from "@/lib/editorial-art";
@@ -165,6 +166,31 @@ export default async function Home() {
   const liveWire = await getWireItems(5).catch(() => []);
   const notebookLead = notebookArticles[0] ?? null;
   const notebookNext = notebookArticles.slice(1, 3);
+  // Hero banner (§1.1): the latest episode always leads, then the
+  // Sanity-managed heroSlide docs — editors change the rotation without code.
+  const sanitySlides = await getHeroSlides().catch(() => []);
+  const heroSlides: HeroSlideData[] = [
+    ...(latest
+      ? [{
+          key: "latest-episode",
+          title: latest.title.replace(/ - Josh Pate's College Football Show/i, ""),
+          kicker: "NEW EPISODE",
+          link: `https://www.youtube.com/watch?v=${latest.id}`,
+          imageUrl: latest.thumbnail,
+          external: true,
+        }]
+      : []),
+    ...sanitySlides
+      .filter((s) => s.imageUrl)
+      .map((s) => ({
+        key: s._id,
+        title: s.title,
+        kicker: s.kicker,
+        link: s.link,
+        imageUrl: s.imageUrl as string,
+        external: /^https?:/i.test(s.link),
+      })),
+  ].slice(0, 6);
   const art = createArtPicker();
   // Computed once (not inline in JSX) so a missing heroUrl never causes the
   // src and alt attributes to resolve from two different art.pick() calls.
@@ -179,24 +205,29 @@ export default async function Home() {
         {/* Ambient hero video (public/video/hero-ambient.mp4) removed for now —
             reintroduce when the client asks for more life up top. */}
         <div className="wrap">
-          <p className="eyebrow">Est. in Columbus, GA — population: everyone who lives for Saturdays</p>
-          <h1 className="display">The Front Porch<span className="row2">of College Football.</span></h1>
-          <p className="lede">
-            No debates. No hot takes. Just the sport, all year long — the show, every week,
-            and a seat that&apos;s always open. Pull up a chair.
-          </p>
-          <div className="hero-ctas">
-            <Link className="btn gold" href="/show">Browse the Show</Link>
-            <Link className="btn" href="/join" style={{ borderColor: "rgba(243,239,230,.5)", color: "var(--chalk, #F3EFE6)" }}>Become a Citizen — Free</Link>
+          <div className="hero-split">
+            <div>
+              <p className="eyebrow">Est. in Columbus, GA — population: everyone who lives for Saturdays</p>
+              <h1 className="display">The Front Porch<span className="row2">of College Football.</span></h1>
+              <p className="lede">
+                No debates. No hot takes. Just the sport, all year long — the show, every week,
+                and a seat that&apos;s always open. Pull up a chair.
+              </p>
+              <div className="hero-ctas">
+                <Link className="btn gold" href="/show">Browse the Show</Link>
+                <Link className="btn" href="/join" style={{ borderColor: "rgba(243,239,230,.5)", color: "var(--chalk, #F3EFE6)" }}>Become a Citizen — Free</Link>
+              </div>
+              {/* Real, verifiable social proof from the YouTube Data API (§0.2) —
+                  omitted entirely if the stats call fails, never invented. */}
+              {stats && (
+                <p className="hero-proof">
+                  {compactCount(stats.subscribers)} subscribers · {compactCount(stats.videos)} videos ·{" "}
+                  {compactCount(stats.views)} views · Every pick logged
+                </p>
+              )}
+            </div>
+            <HeroSlider slides={heroSlides} />
           </div>
-          {/* Real, verifiable social proof from the YouTube Data API (§0.2) —
-              omitted entirely if the stats call fails, never invented. */}
-          {stats && (
-            <p className="hero-proof">
-              {compactCount(stats.subscribers)} subscribers · {compactCount(stats.videos)} videos ·{" "}
-              {compactCount(stats.views)} views · Every pick logged
-            </p>
-          )}
         </div>
       </section>
 

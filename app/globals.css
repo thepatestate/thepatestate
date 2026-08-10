@@ -845,3 +845,20 @@ footer{background:var(--navy);color:var(--chalk-dim);padding:34px 0 40px;font-fa
 .search-form{display:flex;gap:10px;margin-top:18px;max-width:560px}
 .search-form input{flex:1;padding:12px 14px;font-family:var(--mono);font-size:14px;border:1px solid var(--line-l);border-radius:4px;background:#fff;color:var(--ink)}
 .search-form input:focus{outline:2px solid var(--lamp);outline-offset:1px}
+
+/* --- Hero split layout + rotating banner (v2 brief §1.1) --- */
+.hero-split{display:grid;grid-template-columns:58fr 42fr;gap:34px;align-items:center;position:relative;z-index:1}
+.hero-split h1{font-size:clamp(42px,6.8vw,92px)}
+.hero-split .lede{font-size:17px}
+@media(max-width:900px){.hero-split{grid-template-columns:1fr;gap:26px}}
+.hero-slider{position:relative;width:100%;aspect-ratio:16/10;min-height:240px;border-radius:6px;overflow:hidden;border:1px solid var(--line-d);box-shadow:0 16px 44px rgba(0,0,0,.4)}
+.hs-slide{position:absolute;inset:0;opacity:0;transition:opacity .6s ease;display:block;text-decoration:none;color:var(--chalk);pointer-events:none}
+.hs-slide.on{opacity:1;pointer-events:auto}
+@media(prefers-reduced-motion:reduce){.hs-slide{transition:none}}
+.hs-scrim{position:absolute;inset:0;background:linear-gradient(to top,rgba(10,20,36,.88) 0%,rgba(10,20,36,.25) 55%,rgba(10,20,36,.05) 100%)}
+.hs-body{position:absolute;left:0;right:0;bottom:0;padding:18px 20px}
+.hs-kicker{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--lamp)}
+.hs-title{font-family:var(--display);font-weight:800;text-transform:uppercase;font-size:clamp(19px,2vw,26px);line-height:1;margin-top:4px}
+.hs-dots{position:absolute;right:14px;top:12px;display:flex;gap:7px;z-index:3}
+.hs-dot{width:9px;height:9px;border-radius:50%;border:1px solid rgba(243,239,230,.7);background:transparent;cursor:pointer;padding:0}
+.hs-dot.on{background:var(--lamp);border-color:var(--lamp)}
