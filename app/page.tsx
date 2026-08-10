@@ -171,7 +171,7 @@ export default async function Home() {
   // Live Wire items take over from the demo rail once the Wire Desk has real
   // coverage flowing (v1.2 §3) — demo stays only while the wire warms up.
   // Density per v2 §1.3: 8–10 items on the homepage, every one clickable.
-  const liveWire = await getWireItems(10).catch(() => []);
+  const liveWire = await getWireItems(12).catch(() => []);
   // Real full stories: fill the notebook bento + the numbered strip so the
   // left column carries as much genuine click-through density as the rail.
   const wireStories = await getWireStories(8).catch(() => []);
@@ -314,14 +314,25 @@ export default async function Home() {
                         genuine click-throughs instead of dead space (§0.1
                         compliant: every headline is a real published story). */}
                     {!DEMO_MODE &&
-                      wireStories.slice(0, Math.max(0, 2 - notebookNext.length)).map((w) => {
+                      (wireStories.length > 0
+                        ? wireStories.slice(0, Math.max(0, 2 - notebookNext.length)).map((w) => ({
+                            key: w._id, headline: w.headline, category: w.category, teams: w.teams,
+                            publishedAt: w.publishedAt, href: `/wire/${w.slug.current}`, external: false,
+                          }))
+                        : liveWire.slice(10, 12).map((w) => ({
+                            key: w._id, headline: w.headline, category: w.category, teams: w.teams,
+                            publishedAt: w.publishedAt,
+                            href: w.storySlug ? `/wire/${w.storySlug}` : (w.sourceUrl ?? "/wire"),
+                            external: !w.storySlug && Boolean(w.sourceUrl),
+                          }))
+                      ).slice(0, Math.max(0, 2 - notebookNext.length)).map((w) => {
                         const img = art.pick(
                           ["recruiting", "coaching", "media", "playoffs"].includes(w.category ?? "") ? (w.category as ArtCategory) : "generic",
                           w.headline,
                         );
                         const logo = w.teams?.[0] ? teamLogoUrl(w.teams[0]) : null;
                         return (
-                          <Link href={`/wire/${w.slug.current}`} className="tile" key={w._id}>
+                          <Link href={w.href} className="tile" key={w.key} {...(w.external ? { target: "_blank", rel: "noopener" } : {})}>
                             <div className="tile-media">
                               <Image src={img.src} alt={img.alt} fill sizes="(max-width: 860px) 50vw, 280px" style={{ objectFit: "cover" }} />
                             </div>
@@ -341,7 +352,7 @@ export default async function Home() {
                           </Link>
                         );
                       })}
-                    {!DEMO_MODE && notebookNext.length < 2 && wireStories.length === 0 && (
+                    {!DEMO_MODE && notebookNext.length < 2 && wireStories.length === 0 && liveWire.length <= 10 && (
                       <div className="tile" style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
                         <EmptyState
                           kicker="NEW EVERY WEEKDAY"
@@ -485,7 +496,7 @@ export default async function Home() {
                 />
               )}
               {liveWire.length >= 3
-                ? liveWire.map((w) => {
+                ? liveWire.slice(0, 10).map((w) => {
                     const logo = w.teams?.[0] ? teamLogoUrl(w.teams[0]) : null;
                     const wireArt: ArtCategory = w.category && ["recruiting", "coaching", "media", "playoffs"].includes(w.category) ? (w.category as ArtCategory) : "generic";
                     const img = logo ?? art.pick(wireArt, w.headline).src;

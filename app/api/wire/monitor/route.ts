@@ -10,6 +10,7 @@ export async function POST(request: Request) {
   if (denied) return denied;
   try {
     const summary = await runWireMonitor();
+  console.log("[wire:monitor]", JSON.stringify(summary));
     if (summary.items > 0 || summary.stories > 0) revalidateTag("wire", { expire: 0 });
     return NextResponse.json({ ok: true, ...summary });
   } catch (err) {
