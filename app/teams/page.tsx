@@ -1,36 +1,27 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
-import PreseasonChip from "@/components/PreseasonChip";
-import { DEMO_MODE } from "@/lib/demo";
+import { getTeamDirectory } from "@/lib/cfbd";
+import { LAUNCH_TEAMS } from "@/lib/team-data";
 
 export const metadata: Metadata = {
   title: "All 136 Teams",
-  description: "Every FBS program gets a page — poll history, Josh's picks record, recruiting, and the tailgate guide, one team at a time.",
+  description:
+    "Every FBS program in The Pate State — deep team hubs for the biggest fanbases, with schedule, roster, portal moves, Josh's receipts, and each team's porch.",
   alternates: { canonical: "/teams" },
 };
 
-// --- Preseason-preview sample data ---------------------------------------
-// Stands in for the full 136-team directory. Georgia is the only team page
-// built so far (the template every other program's page will generalize
-// from); the rest are dead tiles until they're generated. Swap this array
-// for a live team-index query when the rest of the 136 ship.
+export const revalidate = 3600;
 
-const DEMO_TEAMS = [
-  { name: "Georgia", note: "JP POLL: NO. 1 · The template page →", href: "/teams/georgia" },
-  { name: "Ohio State", note: "JP POLL: NO. 2", href: null },
-  { name: "Texas", note: "JP POLL: NO. 3", href: null },
-  { name: "Oregon", note: "JP POLL: NO. 4", href: null },
-  { name: "Penn State", note: "JP POLL: NO. 5", href: null },
-  { name: "LSU", note: "JP POLL: NO. 6", href: null },
-  { name: "Clemson", note: "JP POLL: NO. 7", href: null },
-  { name: "Notre Dame", note: "JP POLL: NO. 8", href: null },
-  { name: "Alabama", note: "JP POLL: NO. 9", href: null },
-  { name: "Miami", note: "JP POLL: NO. 10", href: null },
-  { name: "Indiana", note: "JP POLL: NO. 11", href: null },
-  { name: "Michigan", note: "JP POLL: NO. 12", href: null },
-] as const;
+// Team directory (v2 §4.6): launch hubs are live links; every other FBS
+// program is listed (real names from the live directory) and unlocks as its
+// hub ships. No fake poll placements — nothing here invents a number.
+export default async function TeamsPage() {
+  const dir = await getTeamDirectory();
+  const all = Object.values(dir).sort((a, b) => a.school.localeCompare(b.school));
+  const launched = all.filter((t) => LAUNCH_TEAMS.includes(t.slug));
+  const rest = all.filter((t) => !LAUNCH_TEAMS.includes(t.slug));
 
-export default function TeamsPage() {
   return (
     <main>
       <header className="page-head">
@@ -38,35 +29,42 @@ export default function TeamsPage() {
           <p className="crumb">The Pate State / Every Team</p>
           <h1>All 136 Teams</h1>
           <p className="lede">
-            One page per program: its JP Poll history, Josh&apos;s picks record against it, its tailgate guide, and
-            its recruiting class — the whole story in one place.
+            One hub per program: the real schedule and roster, portal moves, what Josh has actually said, and the
+            team&apos;s own porch. The biggest fanbases are live — the rest unlock as their hubs ship.
           </p>
-          {DEMO_MODE && <PreseasonChip />}
         </div>
       </header>
 
       <section>
         <div className="wrap">
-          <p className="eyebrow">Browse the State</p>
+          <p className="eyebrow">Live Team Hubs ({launched.length})</p>
           <div className="team-grid">
-            {DEMO_TEAMS.filter((t) => DEMO_MODE || t.href).map((t) =>
-              t.href ? (
-                <Link className="team-tile" href={t.href} key={t.name}>
-                  {t.name}
-                  <span className="m">{t.note}</span>
-                </Link>
-              ) : (
-                <div className="team-tile" key={t.name} aria-disabled="true" style={{ opacity: 0.7 }}>
-                  {t.name}
-                  <span className="m">{t.note}</span>
-                </div>
-              )
-            )}
+            {launched.map((t) => (
+              <Link className="team-tile" href={`/teams/${t.slug}`} key={t.slug}>
+                <span style={{ display: "inline-flex", alignItems: "center", gap: 10 }}>
+                  <Image src={t.logo} alt="" width={26} height={26} style={{ objectFit: "contain" }} />
+                  {t.school}
+                </span>
+                <span className="m">{t.conference} · OPEN THE HUB →</span>
+              </Link>
+            ))}
+          </div>
+
+          <p className="eyebrow" style={{ marginTop: 34 }}>The Rest of the 136 — Hubs on the Way</p>
+          <div className="team-grid">
+            {rest.map((t) => (
+              <div className="team-tile" key={t.slug} aria-disabled="true" style={{ opacity: 0.65 }}>
+                <span style={{ display: "inline-flex", alignItems: "center", gap: 10 }}>
+                  <Image src={t.logo} alt="" width={22} height={22} style={{ objectFit: "contain" }} />
+                  {t.school}
+                </span>
+                <span className="m">{t.conference}</span>
+              </div>
+            ))}
           </div>
           <p style={{ marginTop: 18, fontFamily: "var(--mono)", fontSize: 12, color: "var(--ink-dim)" }}>
-            {DEMO_MODE
-              ? "Showing 12 of 136 · every FBS program gets a page"
-              : "Team hubs roll out starting with the most active fanbases — every FBS program gets a page."}
+            Team list via CollegeFootballData · hubs expand conference by conference — want yours next?
+            Make noise on <Link href="/community" style={{ color: "var(--lamp-deep)" }}>the Porch</Link>.
           </p>
         </div>
       </section>
@@ -74,11 +72,11 @@ export default function TeamsPage() {
       <div className="cta-band">
         <div className="wrap row">
           <div>
-            <h3>Who&apos;s In? See the Playoff Picture.</h3>
-            <p>THE BRACKET, THE RANKINGS, JOSH&apos;S PICKS — AND AN AI TO RUN YOUR OWN</p>
+            <h3>Follow your teams, get your porch.</h3>
+            <p>CITIZENSHIP IS FREE — YOUR PROGRAMS&apos; NEWS, GAMES, AND THREADS, FIRST</p>
           </div>
-          <Link className="btn" href="/playoffs" style={{ borderColor: "var(--lamp)", color: "var(--lamp)" }}>
-            Open the Playoffs Page →
+          <Link className="btn" href="/join" style={{ borderColor: "var(--lamp)", color: "var(--lamp)" }}>
+            Become a Citizen — Free
           </Link>
         </div>
       </div>

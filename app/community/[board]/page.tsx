@@ -8,6 +8,7 @@ import { teamLogoUrl } from "@/lib/teams-meta";
 import ThreadCard from "@/components/community/ThreadCard";
 import NewThreadForm from "@/components/community/NewThreadForm";
 import GateCard from "@/components/GateCard";
+import { teamHubHref, LAUNCH_TEAMS } from "@/lib/launch-teams";
 import EmptyState from "@/components/EmptyState";
 
 export async function generateMetadata({ params }: { params: Promise<{ board: string }> }): Promise<Metadata> {
@@ -45,6 +46,13 @@ export default async function BoardPage({ params }: { params: Promise<{ board: s
             {b.name}
           </h1>
           <p className="sub">{b.description}</p>
+          {b.team_slug && LAUNCH_TEAMS.includes(b.team_slug) && (
+            <p style={{ marginTop: 10 }}>
+              <Link href={teamHubHref(b.team_slug)} style={{ fontFamily: "var(--mono)", fontSize: 11, letterSpacing: ".1em", textTransform: "uppercase", color: "var(--lamp)", textDecoration: "none" }}>
+                Open the team hub →
+              </Link>
+            </p>
+          )}
         </div>
       </div>
 

@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
+import { teamHubHref } from "@/lib/launch-teams";
 
 // "My Teams" homepage module (v2 brief §1.3, §6): signed-in citizens see the
 // teams they follow (primary flag first); signed-out visitors get the
@@ -81,7 +82,7 @@ export default function MyTeams() {
               {slugs.map((slug) => {
                 const info = dir[slug];
                 return (
-                  <Link key={slug} href="/scores" className="myteams-chip" title={info?.school ?? slug}>
+                  <Link key={slug} href={teamHubHref(slug)} className="myteams-chip" title={info?.school ?? slug}>
                     {info?.logo ? (
                       <Image src={info.logo} alt="" width={26} height={26} style={{ objectFit: "contain" }} />
                     ) : (

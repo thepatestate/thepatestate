@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getArticleBySlug } from "@/lib/sanity";
 import { getBoards } from "@/lib/community";
+import { teamHubHref, LAUNCH_TEAMS } from "@/lib/launch-teams";
 import ArticleBody from "@/components/ArticleBody";
 import EditorialLabel, { Corrections } from "@/components/EditorialLabel";
 import { CHANNEL_URL, SOCIAL_LINKS } from "@/lib/youtube";
@@ -56,7 +57,7 @@ export default async function ArticlePage({
   if (!article) notFound();
   const boards = await getBoards().catch(() => []);
 
-  const teamHref = article.primaryTeam === "georgia" ? "/teams/georgia" : "/teams";
+  const teamHref = teamHubHref(article.primaryTeam);
   const authorSlug = /josh pate/i.test(article.byline) ? "josh-pate" : "the-pate-state-staff";
   const canonicalUrl = `https://thepatestate.com/notebook/${article.slug.current}`;
 
@@ -238,7 +239,7 @@ export default async function ArticlePage({
                   See the Full JP Poll
                 </Link>
                 <Link className="btn" href={teamHref} style={{ width: "100%", textAlign: "center", display: "block" }}>
-                  {article.primaryTeam === "georgia" ? "Georgia's Team Page" : "Browse All Teams"}
+                  {article.primaryTeam && LAUNCH_TEAMS.includes(article.primaryTeam) ? "Open the Team Hub" : "Browse All Teams"}
                 </Link>
               </div>
 
