@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Connecting the YouTube Channel — The Pate State</title>
+<style>
+  @page { size: letter; margin: 0.5in 0.55in; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --navy: #10243E; --navy2: #16213A; --gold: #B8842C; --lamp: #E8A33D;
+    --paper: #FBF9F4; --ink: #1C222B; --ink-dim: #5A6472; --line: #E3DDD0;
+  }
+  body { font-family: Georgia, "Times New Roman", serif; color: var(--ink); font-size: 11pt; line-height: 1.4; }
+  .mono { font-family: "SF Mono", Menlo, Consolas, monospace; }
+
+  .head { background: var(--navy); color: #F3EFE6; padding: 15pt 20pt; border-radius: 6pt; margin-bottom: 11pt; }
+  .head .kicker { font-family: Menlo, Consolas, monospace; font-size: 8.5pt; letter-spacing: 2.5pt; text-transform: uppercase; color: var(--lamp); }
+  .head h1 { font-size: 22pt; letter-spacing: .3pt; margin-top: 6pt; line-height: 1.15; }
+  .head p { margin-top: 8pt; color: #C9CFD8; font-size: 11.5pt; }
+
+  h2 { font-size: 11.5pt; text-transform: uppercase; letter-spacing: 1.2pt; color: var(--navy); margin: 9pt 0 5pt; }
+  p + p { margin-top: 7pt; }
+
+  .why { display: flex; gap: 10pt; margin-top: 4pt; }
+  .why div { flex: 1; border: 1pt solid var(--line); border-radius: 5pt; padding: 8pt 10pt; background: var(--paper); }
+  .why b { display: block; font-size: 11pt; color: var(--navy); margin-bottom: 3pt; }
+  .why span { font-size: 10.3pt; color: var(--ink-dim); line-height: 1.45; display: block; }
+
+  .steps { counter-reset: step; margin-top: 6pt; }
+  .step { display: flex; gap: 10pt; align-items: flex-start; padding: 6pt 0; border-bottom: 1pt solid var(--line); }
+  .step:last-child { border-bottom: none; }
+  .step::before {
+    counter-increment: step; content: counter(step);
+    font-family: Menlo, Consolas, monospace; font-weight: bold; font-size: 12pt;
+    background: var(--navy); color: var(--lamp); border-radius: 50%;
+    width: 20pt; height: 20pt; display: flex; align-items: center; justify-content: center; flex: 0 0 20pt;
+  }
+  .step b { color: var(--navy); }
+  .step .sub { font-size: 10.5pt; color: var(--ink-dim); display: block; margin-top: 2pt; }
+
+  .email-box {
+    margin: 4pt 0 2pt; padding: 7pt 12pt; background: #FFF; border: 1.5pt dashed var(--gold);
+    border-radius: 5pt; font-family: Menlo, Consolas, monospace; font-size: 13pt; font-weight: bold;
+    color: var(--navy); text-align: center; letter-spacing: .5pt;
+  }
+
+  .promise { background: var(--paper); border: 1pt solid var(--line); border-left: 4pt solid var(--gold); border-radius: 0 5pt 5pt 0; padding: 7pt 11pt; margin-top: 5pt; }
+  .promise b { color: var(--navy); }
+  ul { margin: 6pt 0 0 16pt; }
+  li { margin-top: 3pt; }
+  li::marker { color: var(--gold); }
+
+  .foot { margin-top: 9pt; padding-top: 6pt; border-top: 1.5pt solid var(--navy); font-family: Menlo, Consolas, monospace; font-size: 8.5pt; letter-spacing: 1pt; text-transform: uppercase; color: var(--ink-dim); display: flex; justify-content: space-between; }
+</style>
+</head>
+<body>
+
+<div class="head">
+  <div class="kicker">The Pate State · thepatestate.com · One-page guide</div>
+  <h1>Connecting the YouTube Channel</h1>
+  <p>One invite, about two minutes, no passwords shared. This lets the site pull the show&rsquo;s official
+  captions and video data directly from the channel instead of working around it.</p>
+</div>
+
+<h2>Why this helps</h2>
+<div class="why">
+  <div><b>Accurate quotes</b><span>Every article quotes Josh verbatim, checked word-for-word against the episode transcript. Official captions make that bulletproof.</span></div>
+  <div><b>No workarounds</b><span>Today the site reads public data and scrapes captions through a third party. Channel access removes the fragile middle-man.</span></div>
+  <div><b>Nothing changes</b><span>The channel, uploads, and comments stay exactly as they are. This is read access for the website&rsquo;s pipeline &mdash; that&rsquo;s it.</span></div>
+</div>
+
+<h2>What to do</h2>
+<div class="steps">
+  <div class="step"><div>
+    <b>Open YouTube Studio</b> &mdash; go to <span class="mono">studio.youtube.com</span> signed in to the account that runs
+    <span class="mono">@JoshPateCFB</span>.
+  </div></div>
+  <div class="step"><div>
+    <b>Open permissions</b> &mdash; in the left sidebar click <b>Settings</b> (gear icon, bottom), then <b>Permissions</b>.
+    <span class="sub">If Google shows you a &ldquo;Brand Account permissions&rdquo; page instead, that&rsquo;s the same thing &mdash; keep going.</span>
+  </div></div>
+  <div class="step"><div>
+    <b>Invite this address</b> &mdash; click <b>Invite</b> and enter:
+    <div class="email-box">the.pate.state@gmail.com</div>
+    <span class="sub">This is the website&rsquo;s own dedicated account &mdash; it exists only to run thepatestate.com.</span>
+  </div></div>
+  <div class="step"><div>
+    <b>Choose the role &ldquo;Manager&rdquo;</b>, then click <b>Save</b> / <b>Done</b>.
+    <span class="sub">Manager is the role that lets the site&rsquo;s pipeline read captions and video data through YouTube&rsquo;s official tools. It cannot delete the channel.</span>
+  </div></div>
+  <div class="step"><div>
+    <b>Tell us it&rsquo;s done</b> &mdash; reply to whoever sent you this. We accept the invite and handle everything else. You never need to touch it again.
+  </div></div>
+</div>
+
+<h2>The ground rules</h2>
+<div class="promise">
+  <b>What we will never do with this access:</b> upload, edit, or delete videos; change titles, thumbnails,
+  or settings; touch comments; or post anything. It powers the website&rsquo;s reading pipeline only.
+  <ul>
+    <li><b>Revocable anytime</b> &mdash; same screen, remove the address, done.</li>
+    <li><b>No passwords involved</b> &mdash; never share the channel password with us or anyone.</li>
+    <li><b>No rush</b> &mdash; the site runs fine today; this just makes it sturdier before the season.</li>
+  </ul>
+</div>
+
+</body>
+</html>
