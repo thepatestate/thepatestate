@@ -4,7 +4,8 @@ import Link from "next/link";
 import { getVideos, isEpisode, getChannelStats, getShorts, compactCount, CHANNEL_URL, SOCIAL_LINKS } from "@/lib/youtube";
 import { getPublishedArticles, getWireItems, getHeroSlides } from "@/lib/sanity";
 import HeroSlider, { type HeroSlideData } from "@/components/HeroSlider";
-import { formatDate, relTime } from "@/lib/format";
+import { formatDate } from "@/lib/format";
+import RelTime from "@/components/RelTime";
 import { slugifyTeam, teamLogoUrl } from "@/lib/teams-meta";
 import { createArtPicker, type ArtCategory } from "@/lib/editorial-art";
 import PreseasonChip from "@/components/PreseasonChip";
@@ -167,7 +168,8 @@ export default async function Home() {
   const notebookArticles = await getPublishedArticles(3);
   // Live Wire items take over from the demo rail once the Wire Desk has real
   // coverage flowing (v1.2 §3) — demo stays only while the wire warms up.
-  const liveWire = await getWireItems(5).catch(() => []);
+  // Density per v2 §1.3: 8–10 items on the homepage, every one clickable.
+  const liveWire = await getWireItems(10).catch(() => []);
   const notebookLead = notebookArticles[0] ?? null;
   const notebookNext = notebookArticles.slice(1, 3);
   // Hero banner (§1.1): the latest episode always leads, then the
@@ -440,14 +442,19 @@ export default async function Home() {
                           <Image src={img} alt="" fill sizes="96px" style={{ objectFit: logo ? "contain" : "cover", ...(logo ? { padding: 8 } : {}) }} />
                         </div>
                         <div className="wtxt">
-                          <span className="t">{relTime(w.publishedAt)} · {w.category?.toUpperCase() ?? "NEWS"}</span>
+                          <span className="t"><RelTime iso={w.publishedAt} /> · {w.category?.toUpperCase() ?? "NEWS"}</span>
                           <b>{w.headline}{w.storySlug && <span className="ai-badge">⚡ FULL STORY READY</span>}</b>
                           {w.sub && <p>{w.sub}</p>}
                         </div>
                       </div>
                     );
+                    // Every wire item is fully clickable (§1.3): to our full
+                    // story when one exists, otherwise straight to the
+                    // original source's report.
                     return w.storySlug ? (
                       <Link href={`/wire/${w.storySlug}`} key={w._id} style={{ textDecoration: "none", color: "inherit" }}>{inner}</Link>
+                    ) : w.sourceUrl ? (
+                      <a href={w.sourceUrl} target="_blank" rel="noopener" key={w._id} style={{ textDecoration: "none", color: "inherit" }}>{inner}</a>
                     ) : (
                       inner
                     );
@@ -468,7 +475,7 @@ export default async function Home() {
                     );
                   })}
               <Link className="btn gold" href="/wire" style={{ marginTop: 14, width: "100%", textAlign: "center" }}>
-                All Breaking News
+                All Wire Coverage →
               </Link>
             </div>
           </div>
