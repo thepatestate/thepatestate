@@ -78,7 +78,17 @@ export async function getWeekScoreboard(week = 1): Promise<ScoreCardData[]> {
       const hasScore = done && g.homePoints != null && g.awayPoints != null;
       const homeLead = hasScore && (g.homePoints ?? 0) > (g.awayPoints ?? 0);
       const awayLead = hasScore && (g.awayPoints ?? 0) > (g.homePoints ?? 0);
+      const kickoff = new Date(g.startDate);
+      const day = kickoff
+        .toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric", timeZone: "America/New_York" })
+        .replace(/,/g, "")
+        .toUpperCase();
+      const time = g.startTimeTBD
+        ? "TBD"
+        : `${kickoff.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", timeZone: "America/New_York" })} ET`;
       return {
+        day,
+        time,
         id: String(g.id),
         st: done ? "FINAL" : kickoffLabel(g.startDate, g.startTimeTBD),
         live: false,

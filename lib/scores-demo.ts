@@ -20,6 +20,10 @@ export type ScoreCardData = {
   net: string;
   conf: Conference;
   teams: readonly [ScoreTeam, ScoreTeam];
+  /** Kickoff day label for day-by-day grouping, e.g. "THU AUG 27" (real feed only). */
+  day?: string;
+  /** Kickoff time label, e.g. "8:00 PM ET" (real feed only). */
+  time?: string;
 };
 
 // Every demo scoreboard card, tagged by conference. Combines the original

@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import PreseasonChip from "@/components/PreseasonChip";
+import EmptyState from "@/components/EmptyState";
+import { DEMO_MODE } from "@/lib/demo";
 import VideoCard from "@/components/VideoCard";
 import { slugifyTeam, teamLogoUrl } from "@/lib/teams-meta";
 import { createArtPicker } from "@/lib/editorial-art";
@@ -141,13 +143,23 @@ export default async function RecruitingPage() {
         <div className="wrap">
           <p className="eyebrow">The Pate Recruiting Index — Class of 2027</p>
           <h2 className="display" style={{ fontSize: 38 }}>Two Services. One Honest Number.</h2>
-          <PreseasonChip />
+          {DEMO_MODE && <PreseasonChip />}
           <p className="lede">
             Every outlet ranks classes a little differently. We average the two biggest — 247Sports&apos;
             Composite and On3/Rivals&apos; Industry ranking — into one index, and show you both, so nobody can
             accuse the number of wearing team colors.
           </p>
 
+          {!DEMO_MODE && (
+            <div style={{ maxWidth: 860, marginTop: 20 }}>
+              <EmptyState
+                kicker="PULLED NIGHTLY IN SEASON"
+                title="The Pate Recruiting Index goes live with the data feed"
+                body="Class rankings from the 247Sports Composite and On3/Rivals Industry boards, averaged into one honest number — with both sources always shown."
+              />
+            </div>
+          )}
+          {DEMO_MODE && (<>
           <div style={{ maxWidth: 860, marginTop: 20 }}>
             {DEMO_TEAM_INDEX.map((t) => {
               const logoUrl = teamLogoUrl(slugifyTeam(t.team));
@@ -203,15 +215,26 @@ export default async function RecruitingPage() {
             Pate Index = average of the two service ranks; ties broken by scores. Sources: 247Sports Composite &amp;
             On3/Rivals Industry team rankings.
           </p>
+          </>)}
 
           <div style={{ marginTop: 44 }}>
             <p className="eyebrow">The Pate Player Index — Class of 2027</p>
             <h2 className="display" style={{ fontSize: 34 }}>The Top Players in America</h2>
-            <PreseasonChip />
+            {DEMO_MODE && <PreseasonChip />}
             <p className="lede">
               The nation&apos;s best, per 247Sports&apos; Top247 — will be pulled nightly once the season engine is
               live. On production, On3/Rivals industry player ranks merge in nightly to complete the index.
             </p>
+            {!DEMO_MODE && (
+              <div style={{ marginTop: 18, maxWidth: 720 }}>
+                <EmptyState
+                  kicker="PULLED NIGHTLY IN SEASON"
+                  title="The player index arrives with the data feed"
+                  body="The nation's top prospects per 247Sports' Top247, merged nightly with On3/Rivals industry ranks."
+                />
+              </div>
+            )}
+            {DEMO_MODE && (
             <table style={{ marginTop: 18 }}>
               <thead>
                 <tr><th>RK</th><th>PLAYER</th><th>POS</th><th>HT/WT</th><th>HOMETOWN</th><th>COMMITTED</th></tr>
@@ -229,11 +252,12 @@ export default async function RecruitingPage() {
                 ))}
               </tbody>
             </table>
+            )}
+            {DEMO_MODE && (
             <div style={{ marginTop: 14, fontFamily: "var(--mono)", fontSize: 12, color: "var(--ink-dim)" }}>
-              Showing 1–12 · <Link href="/#" style={{ color: "var(--lamp-deep)" }}>Top 100 →</Link> ·{" "}
-              <Link href="/#" style={{ color: "var(--lamp-deep)" }}>By Position</Link> ·{" "}
-              <Link href="/#" style={{ color: "var(--lamp-deep)" }}>By State</Link>
+              Showing 1–12 — the Top 100, position, and state boards ship with the season engine
             </div>
+            )}
           </div>
         </div>
       </section>
@@ -242,9 +266,19 @@ export default async function RecruitingPage() {
         <div className="wrap">
           <p className="eyebrow">More From the Next Wave</p>
           <h2 className="display" style={{ fontSize: 34 }}>Recruiting &amp; Portal Coverage</h2>
-          <PreseasonChip />
+          {DEMO_MODE && <PreseasonChip />}
+          {!DEMO_MODE && (
+            <div style={{ marginTop: 14, maxWidth: 720 }}>
+              <EmptyState
+                kicker="COVERAGE BUILDS DAILY"
+                title="Recruiting stories land here as they break"
+                body="Class grades, portal tracking, and Josh's reads — written coverage stacks up as the cycle heats up."
+                cta={{ href: "/wire", label: "Read the Wire →" }}
+              />
+            </div>
+          )}
           <div className="tile-grid">
-            {DEMO_ARTICLES.map((a) => {
+            {(DEMO_MODE ? DEMO_ARTICLES : []).map((a) => {
               const img = art.pick(a.art, a.headline);
               return (
                 <div className="tile" key={a.headline}>
@@ -270,7 +304,14 @@ export default async function RecruitingPage() {
               <p className="eyebrow">The Wire — What Just Happened</p>
               <h2 className="display" style={{ fontSize: 34 }}>Recruiting News</h2>
               <div style={{ marginTop: 18 }}>
-                {DEMO_RECRUITING_NEWS.map((n) => {
+                {!DEMO_MODE && (
+                  <EmptyState
+                    kicker="VERIFIED NEWS ONLY"
+                    title="Recruiting news flows in from the Wire"
+                    body="Commitments, decommitments, and portal moves — sourced and attributed, never message-board rumors."
+                  />
+                )}
+                {(DEMO_MODE ? DEMO_RECRUITING_NEWS : []).map((n) => {
                   const img = art.pick(n.art, n.headline);
                   return (
                     <div className="news-item" style={{ borderColor: "var(--lamp-deep)", display: "flex", gap: 16 }} key={n.headline}>

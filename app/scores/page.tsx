@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import PreseasonChip from "@/components/PreseasonChip";
+import EmptyState from "@/components/EmptyState";
+import { DEMO_MODE } from "@/lib/demo";
 import EpisodeLead from "@/components/EpisodeLead";
 import ScoreboardTabs from "@/components/ScoreboardTabs";
 import TeamMark from "@/components/TeamMark";
@@ -129,7 +131,7 @@ export default async function ScoresPage() {
   const videos = await getVideos();
   // Real Week 1 slate from CollegeFootballData; demo cards only as fallback.
   const realGames = await getWeekScoreboard(1);
-  const scoreboardGames = realGames.length > 0 ? realGames : DEMO_SCOREBOARD_GAMES;
+  const scoreboardGames = realGames.length > 0 ? realGames : DEMO_MODE ? DEMO_SCOREBOARD_GAMES : [];
   const latestVideo = videos[0] ?? null;
   const art = createArtPicker();
   const filmTeaser = art.pick("schedule", "A stadium lit up at night, seen from above");
@@ -150,9 +152,9 @@ export default async function ScoresPage() {
           <h2 className="display" style={{ fontSize: 38 }}>The Scoreboard</h2>
           {realGames.length > 0 ? (
             <span className="note">Live schedule data · scores flow in on gameday</span>
-          ) : (
+          ) : DEMO_MODE ? (
             <PreseasonChip />
-          )}
+          ) : null}
           <div className="week-strip" role="list" aria-label="Season week selector">
             {CFB_WEEKS.map((w) => (
               <span
@@ -166,7 +168,17 @@ export default async function ScoresPage() {
               </span>
             ))}
           </div>
-          <ScoreboardTabs games={scoreboardGames} />
+          {scoreboardGames.length > 0 ? (
+            <ScoreboardTabs games={scoreboardGames} />
+          ) : (
+            <div style={{ marginTop: 16, maxWidth: 720 }}>
+              <EmptyState
+                kicker="LIVE FROM THE FEED"
+                title="The Week 1 scoreboard is loading"
+                body="Real schedule data flows in from the live feed — check back in a moment."
+              />
+            </div>
+          )}
           <div style={{ marginTop: 14 }}><Link className="btn" href="/teams">Full Scoreboard — All 136 Teams</Link></div>
         </div>
       </section>
@@ -175,29 +187,60 @@ export default async function ScoresPage() {
         <div className="wrap">
           <p className="eyebrow">Plan Your Saturday (and Thursday, and Monday)</p>
           <h2 className="display" style={{ fontSize: 34 }}>This Week&apos;s Slate</h2>
-          <PreseasonChip />
-          <div className="dayslate">
-            {SLATE_DAYPARTS.map((part) => (
-              <div key={part.label} style={{ marginBottom: 18 }}>
-                <div className="dayslate-day">{part.label}</div>
-                {part.gameNs.map((n) => {
-                  const g = DEMO_WATCHLIST.find((game) => game.n === n);
-                  if (!g) return null;
-                  return (
-                    <div className="dayslate-row" key={g.n}>
-                      <SlateLogo team={g.teamA} />
+          {realGames.length > 0 ? (
+            <div className="dayslate">
+              {Array.from(new Set(realGames.map((g) => g.day).filter(Boolean))).map((day) => (
+                <div key={day} style={{ marginBottom: 18 }}>
+                  <div className="dayslate-day">{day}</div>
+                  {realGames.filter((g) => g.day === day).map((g) => (
+                    <div className="dayslate-row" key={g.id}>
+                      <SlateLogo team={g.teams[0].label} />
                       <div className="dr-teams">
-                        {g.teamA} <span className="at">at</span> {g.teamB}
+                        {g.teams[0].label} <span className="at">at</span> {g.teams[1].label}
                       </div>
-                      <SlateLogo team={g.teamB} />
-                      <span className="dr-net">{g.tv.split(" · ")[0]}</span>
-                      <span className="dr-time">{g.tv.split(" · ")[1] ?? g.tv}</span>
+                      <SlateLogo team={g.teams[1].label} />
+                      <span className="dr-net">{g.net}</span>
+                      <span className="dr-time">{g.time ?? ""}</span>
                     </div>
-                  );
-                })}
-              </div>
-            ))}
-          </div>
+                  ))}
+                </div>
+              ))}
+            </div>
+          ) : DEMO_MODE ? (
+            <>
+            <PreseasonChip />
+            <div className="dayslate">
+              {SLATE_DAYPARTS.map((part) => (
+                <div key={part.label} style={{ marginBottom: 18 }}>
+                  <div className="dayslate-day">{part.label}</div>
+                  {part.gameNs.map((n) => {
+                    const g = DEMO_WATCHLIST.find((game) => game.n === n);
+                    if (!g) return null;
+                    return (
+                      <div className="dayslate-row" key={g.n}>
+                        <SlateLogo team={g.teamA} />
+                        <div className="dr-teams">
+                          {g.teamA} <span className="at">at</span> {g.teamB}
+                        </div>
+                        <SlateLogo team={g.teamB} />
+                        <span className="dr-net">{g.tv.split(" · ")[0]}</span>
+                        <span className="dr-time">{g.tv.split(" · ")[1] ?? g.tv}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              ))}
+            </div>
+            </>
+          ) : (
+            <div style={{ marginTop: 14, maxWidth: 720 }}>
+              <EmptyState
+                kicker="LIVE FROM THE FEED"
+                title="The weekly slate is loading"
+                body="Every game, grouped by kickoff day, straight from the live schedule feed."
+              />
+            </div>
+          )}
         </div>
       </section>
 
@@ -205,7 +248,17 @@ export default async function ScoresPage() {
         <div className="wrap">
           <p className="eyebrow">The Porch Guide to the Week</p>
           <h2 className="display" style={{ fontSize: 36 }}>The Best Game in Every Conference</h2>
-          <PreseasonChip />
+          {!DEMO_MODE && (
+            <div style={{ marginTop: 14, maxWidth: 720 }}>
+              <EmptyState
+                dark
+                kicker="RE-RANKED EVERY THURSDAY"
+                title="Josh's conference picks drop each week in season"
+                body="The one game worth your time in every league — straight from Thursday's show."
+              />
+            </div>
+          )}
+          {DEMO_MODE && (
           <div className="duo" style={{ marginTop: 18 }}>
             <div><ConfMatchups rows={DEMO_CONF_COL1} /></div>
             <div>
@@ -217,6 +270,7 @@ export default async function ScoresPage() {
               </p>
             </div>
           </div>
+          )}
         </div>
       </section>
 
@@ -224,10 +278,10 @@ export default async function ScoresPage() {
         <div className="wrap">
           <p className="eyebrow">Find Your Team</p>
           <h2 className="display" style={{ fontSize: 36 }}>Every Schedule, One Tap</h2>
-          <PreseasonChip />
+          {DEMO_MODE && <PreseasonChip />}
           <p className="lede">
-            Pick your program and get the full slate — home games in gold, ranked opponents flagged. All 136 teams
-            in production; six shown in this demo.
+            Pick your program and get the full slate — home games in gold, ranked opponents flagged. Team schedule
+            pages arrive with the team hubs.
           </p>
           <div className="tool" style={{ margin: "18px 0 0", maxWidth: 820 }}>
             <label htmlFor="teamSel">Your team</label>
@@ -261,13 +315,22 @@ export default async function ScoresPage() {
           </div>
           <p className="eyebrow">The Watch List</p>
           <h2 className="display" style={{ fontSize: 36 }}>Top 10 Games of the Week</h2>
-          <PreseasonChip />
+          {DEMO_MODE && <PreseasonChip />}
           <p className="lede">
             Not the biggest brands — the games most worth your Saturday this week, ranked by the porch. Re-ranked
             every Thursday. Argue accordingly.
           </p>
+          {!DEMO_MODE && (
+            <div style={{ marginTop: 14 }}>
+              <EmptyState
+                kicker="RANKED BY THE PORCH"
+                title="The Week 1 Watch List drops Thursday of opening week"
+                body="Josh ranks the ten games most worth your Saturday — not the biggest brands, the best football."
+              />
+            </div>
+          )}
           <div style={{ marginTop: 6 }}>
-            {DEMO_WATCHLIST.map((g) => (
+            {(DEMO_MODE ? DEMO_WATCHLIST : []).map((g) => (
               <div className="wk" key={g.n}>
                 <div className="n">{g.n}</div>
                 <div className="helms">

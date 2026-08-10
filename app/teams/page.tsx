@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import PreseasonChip from "@/components/PreseasonChip";
+import { DEMO_MODE } from "@/lib/demo";
 
 export const metadata: Metadata = { title: "All 136 Teams" };
 
@@ -36,7 +37,7 @@ export default function TeamsPage() {
             One page per program: its JP Poll history, Josh&apos;s picks record against it, its tailgate guide, and
             its recruiting class — the whole story in one place.
           </p>
-          <PreseasonChip />
+          {DEMO_MODE && <PreseasonChip />}
         </div>
       </header>
 
@@ -44,15 +45,24 @@ export default function TeamsPage() {
         <div className="wrap">
           <p className="eyebrow">Browse the State</p>
           <div className="team-grid">
-            {DEMO_TEAMS.map((t) => (
-              <Link className="team-tile" href={t.href ?? "/#"} key={t.name}>
-                {t.name}
-                <span className="m">{t.note}</span>
-              </Link>
-            ))}
+            {DEMO_TEAMS.filter((t) => DEMO_MODE || t.href).map((t) =>
+              t.href ? (
+                <Link className="team-tile" href={t.href} key={t.name}>
+                  {t.name}
+                  <span className="m">{t.note}</span>
+                </Link>
+              ) : (
+                <div className="team-tile" key={t.name} aria-disabled="true" style={{ opacity: 0.7 }}>
+                  {t.name}
+                  <span className="m">{t.note}</span>
+                </div>
+              )
+            )}
           </div>
           <p style={{ marginTop: 18, fontFamily: "var(--mono)", fontSize: 12, color: "var(--ink-dim)" }}>
-            Showing 12 of 136 · every FBS program gets a page
+            {DEMO_MODE
+              ? "Showing 12 of 136 · every FBS program gets a page"
+              : "Team hubs roll out starting with the most active fanbases — every FBS program gets a page."}
           </p>
         </div>
       </section>

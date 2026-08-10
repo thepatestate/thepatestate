@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import PreseasonChip from "@/components/PreseasonChip";
+import EmptyState from "@/components/EmptyState";
+import { DEMO_MODE } from "@/lib/demo";
 import { slugifyTeam, teamLogoUrl } from "@/lib/teams-meta";
 import { createArtPicker } from "@/lib/editorial-art";
 
@@ -223,7 +225,6 @@ export default function PlayoffsPage() {
         <div className="wrap">
           <p className="eyebrow">If the Season Ended Today</p>
           <h2 className="display" style={{ fontSize: 38 }}>Two Brackets. One January.</h2>
-          <PreseasonChip />
           <p className="lede">
             The full 12-team field, seeded from the JP Poll — both sides of the bracket funneling to the champion
             in the middle. First the AI Predictor&apos;s path, then Josh&apos;s. Both are locked and graded publicly.
@@ -233,28 +234,52 @@ export default function PlayoffsPage() {
             <div className="avatar" style={{ background: "var(--field)", borderColor: "var(--field)" }}>AI</div>
             <h3>The AI Predictor&apos;s Bracket</h3>
           </div>
-          <PreseasonChip />
-          <TourneyBracket rounds={DEMO_AI_BRACKET} champTitle="AI PREDICTOR'S CHAMPION" champName="Texas" />
+          {DEMO_MODE ? (
+            <>
+              <PreseasonChip />
+              <TourneyBracket rounds={DEMO_AI_BRACKET} champTitle="AI PREDICTOR'S CHAMPION" champName="Texas" />
+            </>
+          ) : (
+            <div style={{ margin: "12px 0 8px", maxWidth: 720 }}>
+              <EmptyState
+                kicker="LOCKS AT WEEK 1 KICKOFF"
+                title="The AI Predictor's bracket arrives with the season"
+                body="The machine projects its 12-team field from talent, schedules, and results — locked and graded publicly against Josh's bracket."
+              />
+            </div>
+          )}
 
           <div className="bracket-title">
             <div className="avatar" style={{ background: "var(--lamp)", color: "var(--navy)", borderColor: "var(--lamp)" }}>JP</div>
             <h3>Josh&apos;s Bracket</h3>
           </div>
-          <PreseasonChip />
+          <span className="note">Projection — Josh&apos;s picks, on the record since August · <Link href="/notebook/my-2026-playoff-bracket-on-the-record" style={{ color: "var(--lamp-deep)" }}>read the column</Link></span>
           <TourneyBracket rounds={DEMO_JOSH_BRACKET} champTitle="JOSH'S CHAMPION" champName="Georgia" />
 
           <div style={{ marginTop: 30 }}>
             <p className="eyebrow">The Committee of the Citizens</p>
             <h2 className="display" style={{ fontSize: 34 }}>Current Playoff Rankings</h2>
-            <PreseasonChip />
-            <div className="duo" style={{ marginTop: 18 }}>
-              <SeedTable rows={DEMO_SEEDS_COL1} />
-              <SeedTable rows={DEMO_SEEDS_COL2} />
-            </div>
-            <p style={{ marginTop: 14, fontFamily: "var(--mono)", fontSize: 12, color: "var(--ink-dim)" }}>
-              FIRST FOUR OUT: Michigan · Utah · Tennessee · Texas Tech — SEEDED FROM THE JP POLL + CONFERENCE
-              STANDINGS · UPDATES SUNDAY NIGHTS
-            </p>
+            {DEMO_MODE ? (
+              <>
+                <PreseasonChip />
+                <div className="duo" style={{ marginTop: 18 }}>
+                  <SeedTable rows={DEMO_SEEDS_COL1} />
+                  <SeedTable rows={DEMO_SEEDS_COL2} />
+                </div>
+                <p style={{ marginTop: 14, fontFamily: "var(--mono)", fontSize: 12, color: "var(--ink-dim)" }}>
+                  FIRST FOUR OUT: Michigan · Utah · Tennessee · Texas Tech — SEEDED FROM THE JP POLL + CONFERENCE
+                  STANDINGS · UPDATES SUNDAY NIGHTS
+                </p>
+              </>
+            ) : (
+              <div style={{ marginTop: 14, maxWidth: 720 }}>
+                <EmptyState
+                  kicker="SEEDED FROM THE JP POLL"
+                  title="The 12-team field appears when the first board drops"
+                  body="Seeds come from the JP Poll plus conference standings, updated Sunday nights all season."
+                />
+              </div>
+            )}
           </div>
         </div>
       </section>
@@ -264,7 +289,6 @@ export default function PlayoffsPage() {
           <span className="fr fr-field">🏆 THE CITIZENS&apos; BRACKET CHALLENGE</span>
           <p className="eyebrow">Free for Every Citizen · Two Windows, One Champion</p>
           <h2 className="display" style={{ fontSize: 38 }}>Build Yours. Beat Everybody.</h2>
-          <PreseasonChip />
           <p className="lede">
             Call the field before anyone kicks off, then prove it again when the real bracket drops. Scored all
             season, standings live on the porch, receipts forever.
@@ -333,11 +357,18 @@ export default function PlayoffsPage() {
             <div className="panel panel-dark">
               <p className="eyebrow">The AI Predictor&apos;s Board</p>
               <h3>Where the AI Predictor Has It</h3>
-              <p>
-                The AI Predictor has <b style={{ color: "var(--chalk)" }}>Texas</b> upsetting Georgia in the
-                Cotton Bowl semifinal and beating Ohio State for the title. Josh vs. the AI Predictor gets settled
-                in January — both brackets are locked and graded publicly.
-              </p>
+              {DEMO_MODE ? (
+                <p>
+                  The AI Predictor has <b style={{ color: "var(--chalk)" }}>Texas</b> upsetting Georgia in the
+                  Cotton Bowl semifinal and beating Ohio State for the title. Josh vs. the AI Predictor gets settled
+                  in January — both brackets are locked and graded publicly.
+                </p>
+              ) : (
+                <p>
+                  The machine locks its bracket at Week 1 kickoff, then re-projects the field every week — and it
+                  gets graded publicly against Josh&apos;s picks in January.
+                </p>
+              )}
               <a className="btn" href="#tool">Run Your Own Projection ↓</a>
             </div>
           </div>
@@ -348,7 +379,6 @@ export default function PlayoffsPage() {
         <div className="wrap">
           <p className="eyebrow">Your Turn</p>
           <h2 className="display" style={{ fontSize: 36 }}>Run the AI Playoff Predictor</h2>
-          <PreseasonChip />
           <div className="tool" style={{ marginTop: 20 }}>
             <p className="eyebrow">Set the Scene</p>
             <label htmlFor="pWeek">Point in the season</label>
@@ -373,13 +403,22 @@ export default function PlayoffsPage() {
         <div className="wrap">
           <p className="eyebrow">The Field, Ranked by Odds</p>
           <h2 className="display" style={{ fontSize: 34 }}>Playoff Predictor</h2>
-          <PreseasonChip />
+          {DEMO_MODE && <PreseasonChip />}
           <p className="lede">
             Every team still alive for the 12-team field, seeded from the JP Poll, with the machine&apos;s current
             chance to make it.
           </p>
+          {!DEMO_MODE && (
+            <div style={{ marginTop: 14, maxWidth: 720 }}>
+              <EmptyState
+                kicker="THE MACHINE WARMS UP WEEK 1"
+                title="Live playoff odds arrive with the season"
+                body="Once real results exist, every team's chance at the 12-team field updates here weekly."
+              />
+            </div>
+          )}
           <div className="predictor-grid">
-            {DEMO_PREDICTOR_PCTS.map((r, i) => {
+            {(DEMO_MODE ? DEMO_PREDICTOR_PCTS : []).map((r, i) => {
               const logoUrl = teamLogoUrl(slugifyTeam(r.team));
               return (
                 <div className="predictor-row" key={r.team}>
@@ -403,7 +442,7 @@ export default function PlayoffsPage() {
         <div className="wrap">
           <p className="eyebrow">Read the Room</p>
           <h2 className="display" style={{ fontSize: 34 }}>More on the Bracket</h2>
-          <PreseasonChip />
+          {DEMO_MODE && <PreseasonChip />}
           <div className="bento" style={{ marginTop: 18 }}>
             <Link href="/notebook/my-2026-playoff-bracket-on-the-record" className="tile tile-lead">
               <div className="tile-media">
@@ -417,7 +456,7 @@ export default function PlayoffsPage() {
               </div>
             </Link>
             <div className="bento-stack">
-              {DEMO_READ_ROOM.map((item) => {
+              {(DEMO_MODE ? DEMO_READ_ROOM : []).map((item) => {
                 const img = art.pick(item.art, item.title);
                 return (
                   <Link href="/notebook" className="tile" key={item.title}>

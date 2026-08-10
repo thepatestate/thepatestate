@@ -82,7 +82,6 @@ export default function ShopPage() {
             </div>
             <div>
               <h2 className="display" style={{ fontSize: 44 }}>The Creed Tee</h2>
-              <PreseasonChip />
               <p className="lede">
                 Two words, year-round. Tri-blend and ridiculously soft — field green with porch-lamp gold. The
                 shirt of the State.

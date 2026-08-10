@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import PreseasonChip from "@/components/PreseasonChip";
+import EmptyState from "@/components/EmptyState";
+import { DEMO_MODE } from "@/lib/demo";
 import { createArtPicker } from "@/lib/editorial-art";
 
 export const metadata: Metadata = { title: "Georgia — Team Page" };
@@ -27,7 +29,8 @@ const GEORGIA = {
   picksRecord: { ats: "—", atsLabel: "ATS Last 13", current: "—", currentLabel: "Current" },
   recruiting: {
     rank: "No. 13",
-    body: "20 commits, two five-stars — including the nation's No. 10 overall, RB Kemon Spell. Quiet cycle by Athens standards, which usually means a December surge.",
+    // Demo-only blurb (invented pairing of real names/figures — §0.1).
+    body: "20 commits, two five-stars — a quiet cycle by Athens standards, which usually means a December surge.",
   },
   tailgate: {
     body: "Between the Hedges, the Dawg Walk, and where to eat on Milledge — the citizens' complete gameday plan.",
@@ -47,6 +50,20 @@ const GEORGIA = {
 type Team = typeof GEORGIA;
 
 function RankHistory({ team }: { team: Team }) {
+  if (!DEMO_MODE) {
+    return (
+      <div>
+        <p className="eyebrow">In the JP Poll</p>
+        <div style={{ marginTop: 12 }}>
+          <EmptyState
+            kicker="FIRST BOARD — WEEK 1"
+            title="Poll history starts with the first ballot"
+            body="Week-by-week JP Poll placement, tracked against the AP and CFP, all season."
+          />
+        </div>
+      </div>
+    );
+  }
   return (
     <div>
       <p className="eyebrow">In the JP Poll</p>
@@ -90,6 +107,18 @@ function PicksRecord({ team }: { team: Team }) {
 }
 
 function RecruitingClass({ team }: { team: Team }) {
+  if (!DEMO_MODE) {
+    return (
+      <div className="panel" style={{ marginBottom: 16 }}>
+        <p className="eyebrow">The 2027 Class</p>
+        <h3>Recruiting, tracked honestly</h3>
+        <p>Class rank, commitments, and portal moves land here when the nightly data feed goes live.</p>
+        <Link className="btn" href="/recruiting" style={{ borderColor: "var(--navy)", color: "var(--navy)" }}>
+          Full Recruiting Index
+        </Link>
+      </div>
+    );
+  }
   return (
     <div className="panel" style={{ marginBottom: 16 }}>
       <p className="eyebrow">The 2027 Class</p>
@@ -164,7 +193,7 @@ export default function GeorgiaTeamPage() {
             The Bulldogs in the Pate State: where the citizens rank them, how Josh has picked them, and how to do a
             Saturday in Athens right.
           </p>
-          <PreseasonChip />
+          {DEMO_MODE && <PreseasonChip />}
         </div>
       </header>
 

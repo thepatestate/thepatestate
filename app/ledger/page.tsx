@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import PreseasonChip from "@/components/PreseasonChip";
+import EmptyState from "@/components/EmptyState";
+import { DEMO_MODE } from "@/lib/demo";
 
 export const metadata: Metadata = { title: "The Season Ledger" };
 
@@ -38,25 +40,36 @@ export default function LedgerPage() {
 
       <section>
         <div className="wrap">
-          <PreseasonChip />
-          <div className="record">
-            {DEMO_STATS.map((s) => (
-              <div className="stat" key={s.lbl}>
-                <div className="num">{s.num}</div>
-                <div className="lbl">{s.lbl}</div>
+          {DEMO_MODE ? (
+            <>
+              <PreseasonChip />
+              <div className="record">
+                {DEMO_STATS.map((s) => (
+                  <div className="stat" key={s.lbl}>
+                    <div className="num">{s.num}</div>
+                    <div className="lbl">{s.lbl}</div>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-          <p className="eyebrow">Your Recent Entries</p>
-          <div className="log-strip">
-            {DEMO_ENTRIES.map((e) => (
-              <div className="log-card" key={e.g}>
-                <div className="g">{e.g}</div>
-                <div className="stars">{e.stars}</div>
-                <p>{e.note}</p>
+              <p className="eyebrow">Your Recent Entries</p>
+              <div className="log-strip">
+                {DEMO_ENTRIES.map((e) => (
+                  <div className="log-card" key={e.g}>
+                    <div className="g">{e.g}</div>
+                    <div className="stars">{e.stars}</div>
+                    <p>{e.note}</p>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
+            </>
+          ) : (
+            <EmptyState
+              kicker="OPENS WITH THE SEASON"
+              title="Your ledger starts with your first logged game"
+              body="Log every game you watch, rate it, pin the stadiums — a lifetime record of your Saturdays, starting Week 1."
+              cta={{ href: "/join", label: "Become a Citizen — Free" }}
+            />
+          )}
           <div style={{ marginTop: 24, display: "flex", gap: 12, flexWrap: "wrap" }}>
             <button className="btn solid" disabled>Log a Game</button>
             <Link href="/tailgate" className="btn">Open Your Stadium Passport</Link>

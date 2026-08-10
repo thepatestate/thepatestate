@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import PreseasonChip from "@/components/PreseasonChip";
+import { DEMO_MODE } from "@/lib/demo";
 import { teamLogoUrl } from "@/lib/teams-meta";
 
 export const metadata: Metadata = { title: "Pate Tailgate" };
@@ -46,18 +47,31 @@ export default function TailgatePage() {
 
       <section className="on-soft">
         <div className="wrap">
-          <p className="eyebrow">Featured This Week</p>
-          <h2 className="display" style={{ fontSize: 38 }}>Week 1: Athens, Georgia</h2>
-          <PreseasonChip />
-          <p className="lede">
-            Georgia hosts a top-10 opponent under the lights. The citizens&apos; complete plan: park by 2, Milledge
-            Avenue by 3, the Dawg Walk at 5:10, and don&apos;t you dare leave before the fourth-quarter light show.
-          </p>
+          {DEMO_MODE ? (
+            <>
+              <p className="eyebrow">Featured This Week</p>
+              <h2 className="display" style={{ fontSize: 38 }}>Week 1: Athens, Georgia</h2>
+              <PreseasonChip />
+              <p className="lede">
+                Georgia hosts a top-10 opponent under the lights. The citizens&apos; complete plan: park by 2, Milledge
+                Avenue by 3, the Dawg Walk at 5:10, and don&apos;t you dare leave before the fourth-quarter light show.
+              </p>
+            </>
+          ) : (
+            <>
+              <p className="eyebrow">The Field Guide</p>
+              <h2 className="display" style={{ fontSize: 38 }}>The Great American Tailgate</h2>
+              <p className="lede">
+                Where to park, where to eat, what time to arrive, which traditions you can&apos;t miss — a featured
+                stadium guide every week of the season, written by the people who actually go.
+              </p>
+            </>
+          )}
           <div className="guide-grid">
             {DEMO_GUIDES.map((g) => {
               const badgeUrl = g.team ? teamLogoUrl(g.team) : null;
               return (
-                <a className="guide" href="/#" key={g.name}>
+                <div className="guide" key={g.name}>
                   <div className="ph" style={g.photo ? undefined : { background: g.bg, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 52 }}>
                     {g.photo ? (
                       <Image src={g.photo} alt={g.alt ?? g.name} fill sizes="(max-width: 900px) 50vw, 280px" style={{ objectFit: "cover" }} />
@@ -74,7 +88,7 @@ export default function TailgatePage() {
                     <h4>{g.name}</h4>
                     <div className="meta">{g.meta}</div>
                   </div>
-                </a>
+                </div>
               );
             })}
           </div>
@@ -94,7 +108,7 @@ export default function TailgatePage() {
                 Smoked wings for a noon kick. Brisket for a 7:30. A different citizen-tested recipe every week of
                 the season, with the make-ahead timeline that actually works in a parking lot.
               </p>
-              <a className="btn" href="/#" style={{ borderColor: "var(--navy)", color: "var(--navy)" }}>This Week&apos;s Recipe</a>
+              <p style={{ fontFamily: "var(--mono)", fontSize: 11, letterSpacing: ".08em", color: "var(--ink-dim)" }}>RECIPES DROP WEEKLY IN SEASON</p>
             </div>
             <div className="panel">
               <p className="eyebrow">The Map</p>

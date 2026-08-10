@@ -4,6 +4,8 @@ import Link from "next/link";
 import GateCard from "@/components/GateCard";
 import KeyBadge from "@/components/KeyBadge";
 import PreseasonChip from "@/components/PreseasonChip";
+import EmptyState from "@/components/EmptyState";
+import { DEMO_MODE } from "@/lib/demo";
 import { getCitizen } from "@/lib/supabase/server";
 import { CHANNEL_URL, SOCIAL_LINKS } from "@/lib/youtube";
 import { createArtPicker } from "@/lib/editorial-art";
@@ -100,14 +102,24 @@ export default async function PorchPage() {
                 </div>
               </div>
               <div style={{ marginTop: 14 }}>
-                <span className="note">Preseason preview — the real mailbag opens with citizenship</span>
-                {DEMO_MAILBAG.map((m) => (
-                  <div className="mail" key={m.q}>
-                    <div className="q">{m.q}</div>
-                    <div className="from">{m.from}</div>
-                    <div className="a">{m.a}</div>
-                  </div>
-                ))}
+                {DEMO_MODE ? (
+                  <>
+                    <span className="note">Preseason preview — the real mailbag opens with citizenship</span>
+                    {DEMO_MAILBAG.map((m) => (
+                      <div className="mail" key={m.q}>
+                        <div className="q">{m.q}</div>
+                        <div className="from">{m.from}</div>
+                        <div className="a">{m.a}</div>
+                      </div>
+                    ))}
+                  </>
+                ) : (
+                  <EmptyState
+                    kicker="ASK JOSH"
+                    title="The mailbag opens with citizenship"
+                    body="Citizens write in, Josh answers — the best questions make the Friday show. Submissions open here soon."
+                  />
+                )}
               </div>
               {citizen ? (
                 <div style={{ marginTop: 14 }}>
@@ -162,18 +174,23 @@ export default async function PorchPage() {
                       {l.label}
                     </a>
                   ))}
-                  <a href="/#" style={{ color: "var(--lamp-deep)" }}>🎙 THE LOCKER ROOM: CFB — W/ COMPTON &amp; LEWAN</a>
                 </div>
               </div>
               <div className="panel">
                 <p className="eyebrow">Wall of Champions</p>
                 <h3>The Honored Citizens</h3>
-                {DEMO_CHAMPIONS.map((c) => (
-                  <div className="lb-row" key={c.label}>
-                    <span>{c.label}</span>
-                    <span className="streak">{c.who}</span>
-                  </div>
-                ))}
+                {DEMO_MODE ? (
+                  DEMO_CHAMPIONS.map((c) => (
+                    <div className="lb-row" key={c.label}>
+                      <span>{c.label}</span>
+                      <span className="streak">{c.who}</span>
+                    </div>
+                  ))
+                ) : (
+                  <p style={{ fontFamily: "var(--mono)", fontSize: 12, color: "var(--ink-dim)" }}>
+                    The first names go on the wall after the 2026 season — pick&apos;em champ, ledger leader, traveler of the year.
+                  </p>
+                )}
                 <Link href="/pickem" className="btn" style={{ marginTop: 14, borderColor: "var(--navy)", color: "var(--navy)" }}>
                   This Year&apos;s Race
                 </Link>
@@ -187,7 +204,18 @@ export default async function PorchPage() {
         <div className="wrap">
           <p className="eyebrow">Where the Porch Is Loudest</p>
           <h2 className="display" style={{ fontSize: 32 }}>Join the Conversation</h2>
-          <PreseasonChip />
+          {DEMO_MODE && <PreseasonChip />}
+          {!DEMO_MODE && (
+            <div style={{ maxWidth: 820, marginTop: 14 }}>
+              <EmptyState
+                kicker="THE PORCH IS BEING BUILT"
+                title="Community threads open this season"
+                body="Game threads, the mailbag, and the loudest arguments on the porch — all landing with the first slate. For now, the conversation lives in the show comments."
+                cta={{ href: "/show", label: "Join the show comments" }}
+              />
+            </div>
+          )}
+          {DEMO_MODE && (
           <div style={{ maxWidth: 820, marginTop: 14 }}>
             {DEMO_HOT.map((h) => {
               const img = "art" in h ? art.pick(h.art, h.title) : { src: h.photo, alt: h.alt };
@@ -205,6 +233,7 @@ export default async function PorchPage() {
               );
             })}
           </div>
+          )}
           <div className="duo" style={{ marginTop: 26 }}>
             <div className="panel">
               <p className="eyebrow">Find Your People</p>
@@ -213,7 +242,7 @@ export default async function PorchPage() {
                 Citizen-run rooms by city and by team — plan tailgates, fill watch parties, argue in good faith.
                 Atlanta, Dallas, Columbus, Nashville and 36 more.
               </p>
-              <a className="btn" href="/#" style={{ borderColor: "var(--navy)", color: "var(--navy)" }}>Browse Chapters</a>
+              <p style={{ fontFamily: "var(--mono)", fontSize: 11, letterSpacing: ".08em", color: "var(--ink-dim)" }}>CHAPTERS OPEN THIS SEASON</p>
             </div>
             <div className="panel">
               <p className="eyebrow">Start Something</p>
@@ -222,7 +251,7 @@ export default async function PorchPage() {
                 No chapter in your town? Claim it. Hosts get a State Store kit, early tour tickets, and the
                 founding-citizen badge.
               </p>
-              <a className="btn" href="/#" style={{ borderColor: "var(--navy)", color: "var(--navy)" }}>Start a Chapter</a>
+              <p style={{ fontFamily: "var(--mono)", fontSize: 11, letterSpacing: ".08em", color: "var(--ink-dim)" }}>HOST SIGN-UPS OPEN THIS SEASON</p>
             </div>
           </div>
         </div>
@@ -235,8 +264,8 @@ export default async function PorchPage() {
               <p className="eyebrow">Saturdays Together</p>
               <h3>Citizen Watch Parties</h3>
               <p>
-                Citizen-hosted watch parties in 40+ cities every Saturday — find your bar, claim your table, wear
-                the flag. Hosts get a State Store kit on us.
+                Citizen-hosted watch parties are spinning up for the season — find your bar, claim your table,
+                wear the flag. Hosts get a State Store kit on us.
               </p>
               <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
                 <a className="btn" href="/tailgate">Find a Watch Party Near You</a>
@@ -246,12 +275,20 @@ export default async function PorchPage() {
             <div className="panel panel-accent-field">
               <p className="eyebrow">The Tour</p>
               <h3>The Porch, Live</h3>
-              {DEMO_TOUR.map((t) => (
-                <div className="tour-row" key={t.date}>
-                  <span>{t.date}</span>
-                  {t.status === "tickets" ? <a href="/#">Tickets →</a> : <span>Sold Out</span>}
-                </div>
-              ))}
+              {DEMO_MODE ? (
+                DEMO_TOUR.map((t) => (
+                  <div className="tour-row" key={t.date}>
+                    <span>{t.date}</span>
+                    {t.status === "tickets" ? <span>Tickets soon</span> : <span>Sold Out</span>}
+                  </div>
+                ))
+              ) : (
+                <EmptyState
+                  kicker="THE PORCH TOUR"
+                  title="Tour dates announced soon"
+                  body="Campus stops are being booked now — citizens get first dibs the moment dates drop."
+                />
+              )}
             </div>
           </div>
         </div>

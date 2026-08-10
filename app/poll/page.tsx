@@ -3,6 +3,8 @@ import Image from "next/image";
 import Link from "next/link";
 import PreseasonChip from "@/components/PreseasonChip";
 import EpisodeLead from "@/components/EpisodeLead";
+import EmptyState from "@/components/EmptyState";
+import { DEMO_MODE } from "@/lib/demo";
 import { slugifyTeam, teamLogoUrl } from "@/lib/teams-meta";
 import { getVideos } from "@/lib/youtube";
 
@@ -119,7 +121,18 @@ export default async function PollPage() {
           <span className="fr">🗳 THE JP POLL</span>
           <p className="eyebrow">This Week&apos;s Board</p>
           <h2 className="display" style={{ fontSize: 38 }}>The Top 25</h2>
-          <PreseasonChip />
+          {DEMO_MODE && <PreseasonChip />}
+          {!DEMO_MODE && (
+            <div style={{ marginTop: 16, maxWidth: 720 }}>
+              <EmptyState
+                kicker="FIRST BALLOTS OPEN AUG 24"
+                title="The first board of 2026 lands opening week"
+                body="Every citizen ranks a top 10; ballots lock Sunday 8PM ET and the reveal airs Tuesday on the show. No editorial panel, no anonymous ballots — and the full vote distribution goes public with the board."
+                cta={{ href: "/join", label: "Become a Citizen — Free" }}
+              />
+            </div>
+          )}
+          {DEMO_MODE && (
           <div className="duo" style={{ gridTemplateColumns: "2fr 1fr", marginTop: 16, alignItems: "start" }}>
             <div>
               <p className="eyebrow" style={{ marginBottom: 6 }}>The Top Five</p>
@@ -185,9 +198,7 @@ export default async function PollPage() {
                   <span><b>★</b> biggest disagreement of the week</span>
                 </div>
                 <div style={{ marginTop: 12, fontFamily: "var(--mono)", fontSize: 12, color: "var(--ink-dim)" }}>
-                  All 25, full ballot data ·{" "}
-                  <Link href="/#" style={{ color: "var(--lamp-deep)" }}>All 136 Teams Rated</Link> ·{" "}
-                  <Link href="/#" style={{ color: "var(--lamp-deep)" }}>Poll Archive</Link>
+                  All 25, full ballot data — the 136-team board and poll archive ship with the season
                 </div>
               </div>
 
@@ -261,6 +272,7 @@ export default async function PollPage() {
               </div>
             </aside>
           </div>
+          )}
         </div>
       </section>
 
@@ -300,7 +312,7 @@ export default async function PollPage() {
       <section className="on-dark tight">
         <div className="wrap">
           <div className="panel panel-dark" style={{ maxWidth: 640, margin: "0 auto" }}>
-            <p className="eyebrow">Ballots Open Sunday 8PM ET</p>
+            <p className="eyebrow">Poll voting opens Aug 24 · then every Sunday 8PM ET</p>
             <h3>Cast This Week&apos;s Ballot</h3>
             <p>Rank your top 10. See where the State disagrees with the AP — and with Josh.</p>
             {DEMO_BALLOT_ITEMS.map((label) => (
