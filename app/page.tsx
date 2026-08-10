@@ -1,10 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import { getVideos, isEpisode, CHANNEL_URL, APPLE_PODCASTS_URL, SPOTIFY_URL, SOCIAL_LINKS } from "@/lib/youtube";
-import { getPublishedArticles } from "@/lib/sanity";
-import { formatDate } from "@/lib/format";
+import { getPublishedArticles, getWireItems } from "@/lib/sanity";
+import { formatDate, relTime } from "@/lib/format";
 import { slugifyTeam, teamLogoUrl } from "@/lib/teams-meta";
-import { createArtPicker } from "@/lib/editorial-art";
+import { createArtPicker, type ArtCategory } from "@/lib/editorial-art";
 import EpisodeLead from "@/components/EpisodeLead";
 import VideoGrid from "@/components/VideoGrid";
 import PreseasonChip from "@/components/PreseasonChip";
@@ -154,6 +154,9 @@ export default async function Home() {
   const latest = episodes[0] ?? videos[0];
   const recentEpisodes = episodes.filter((v) => v !== latest).slice(0, 3);
   const notebookArticles = await getPublishedArticles(3);
+  // Live Wire items take over from the demo rail once the Wire Desk has real
+  // coverage flowing (v1.2 §3) — demo stays only while the wire warms up.
+  const liveWire = await getWireItems(6).catch(() => []);
   const notebookLead = notebookArticles[0] ?? null;
   const notebookNext = notebookArticles.slice(1, 3);
   const art = createArtPicker();
@@ -326,22 +329,45 @@ export default async function Home() {
 
             <div className="wire">
               <h3><span className="dot" />The Wire</h3>
-              {DEMO_WIRE.map((w) => {
-                const img = art.pick(w.art, `${w.category} — ${w.headline}`);
-                return (
-                  <div className="wire-item" key={w.headline}>
-                    <div className="wire-thumb2 bleed-thumb" style={{ position: "relative" }}>
-                      <Image src={img.src} alt={img.alt} fill sizes="96px" style={{ objectFit: "cover" }} />
-                    </div>
-                    <div className="wtxt">
-                      <span className="t">{w.time} · {w.category}</span>
-                      <b>{w.headline}{w.badge && <span className="ai-badge">{w.badge}</span>}</b>
-                      <p>{w.body}</p>
-                    </div>
-                  </div>
-                );
-              })}
-              <Link className="btn gold" href="/notebook" style={{ marginTop: 14, width: "100%", textAlign: "center" }}>
+              {liveWire.length >= 3
+                ? liveWire.map((w) => {
+                    const logo = w.teams?.[0] ? teamLogoUrl(w.teams[0]) : null;
+                    const wireArt: ArtCategory = w.category && ["recruiting", "coaching", "media", "playoffs"].includes(w.category) ? (w.category as ArtCategory) : "generic";
+                    const img = logo ?? art.pick(wireArt, w.headline).src;
+                    const inner = (
+                      <div className="wire-item" key={w._id}>
+                        <div className="wire-thumb2 bleed-thumb" style={{ position: "relative", ...(logo ? { background: "#fff" } : {}) }}>
+                          <Image src={img} alt="" fill sizes="96px" style={{ objectFit: logo ? "contain" : "cover", ...(logo ? { padding: 8 } : {}) }} />
+                        </div>
+                        <div className="wtxt">
+                          <span className="t">{relTime(w.publishedAt)} · {w.category?.toUpperCase() ?? "NEWS"}</span>
+                          <b>{w.headline}{w.storySlug && <span className="ai-badge">⚡ FULL STORY READY</span>}</b>
+                          {w.sub && <p>{w.sub}</p>}
+                        </div>
+                      </div>
+                    );
+                    return w.storySlug ? (
+                      <Link href={`/wire/${w.storySlug}`} key={w._id} style={{ textDecoration: "none", color: "inherit" }}>{inner}</Link>
+                    ) : (
+                      inner
+                    );
+                  })
+                : DEMO_WIRE.map((w) => {
+                    const img = art.pick(w.art, `${w.category} — ${w.headline}`);
+                    return (
+                      <div className="wire-item" key={w.headline}>
+                        <div className="wire-thumb2 bleed-thumb" style={{ position: "relative" }}>
+                          <Image src={img.src} alt={img.alt} fill sizes="96px" style={{ objectFit: "cover" }} />
+                        </div>
+                        <div className="wtxt">
+                          <span className="t">{w.time} · {w.category}</span>
+                          <b>{w.headline}{w.badge && <span className="ai-badge">{w.badge}</span>}</b>
+                          <p>{w.body}</p>
+                        </div>
+                      </div>
+                    );
+                  })}
+              <Link className="btn gold" href="/wire" style={{ marginTop: 14, width: "100%", textAlign: "center" }}>
                 All Breaking News
               </Link>
             </div>

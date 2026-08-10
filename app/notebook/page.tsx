@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { getPublishedArticles } from "@/lib/sanity";
-import { formatDate } from "@/lib/format";
-import { createArtPicker } from "@/lib/editorial-art";
+import { getPublishedArticles, getWireItems } from "@/lib/sanity";
+import { formatDate, relTime } from "@/lib/format";
+import { teamLogoUrl } from "@/lib/teams-meta";
+import { createArtPicker, type ArtCategory } from "@/lib/editorial-art";
 
 export const metadata: Metadata = { title: "The Notebook" };
 export const revalidate = 300;
@@ -166,6 +167,7 @@ const DEMO_WIRE = [
 
 export default async function NotebookPage() {
   const articles = await getPublishedArticles(7);
+  const liveWire = await getWireItems(6).catch(() => []);
   const lead = articles[0] ?? null;
   const featured = articles.slice(1, 4);
   // One picker for the whole page render — every category lookup below
@@ -346,29 +348,51 @@ export default async function NotebookPage() {
 
             <div className="wire">
               <h3><span className="dot" />Breaking News</h3>
-              {lead && <span className="note">Sample content below — more real stories coming</span>}
-              {DEMO_WIRE.map((w) => {
-                const img = art.pick(w.art, `${w.category} — ${w.headline}`);
-                return (
-                  <div className="wire-item" key={w.headline}>
-                    <div className="wire-thumb2 bleed-thumb" style={{ position: "relative" }}>
-                      <Image src={img.src} alt={img.alt} fill sizes="96px" style={{ objectFit: "cover" }} />
-                    </div>
-                    <div className="wtxt">
-                      <span className="t">{w.time} · {w.category}</span>
-                      <b>{w.headline}{w.badge && <span className="ai-badge">{w.badge}</span>}</b>
-                      <p>{w.body}</p>
-                    </div>
-                  </div>
-                );
-              })}
+              {liveWire.length >= 3
+                ? liveWire.map((w) => {
+                    const logo = w.teams?.[0] ? teamLogoUrl(w.teams[0]) : null;
+                    const wireArt: ArtCategory = w.category && ["recruiting", "coaching", "media", "playoffs"].includes(w.category) ? (w.category as ArtCategory) : "generic";
+                    const img = logo ?? art.pick(wireArt, w.headline).src;
+                    const inner = (
+                      <div className="wire-item" key={w._id}>
+                        <div className="wire-thumb2 bleed-thumb" style={{ position: "relative", ...(logo ? { background: "#fff" } : {}) }}>
+                          <Image src={img} alt="" fill sizes="96px" style={{ objectFit: logo ? "contain" : "cover", ...(logo ? { padding: 8 } : {}) }} />
+                        </div>
+                        <div className="wtxt">
+                          <span className="t">{relTime(w.publishedAt)} · {w.category?.toUpperCase() ?? "NEWS"}</span>
+                          <b>{w.headline}{w.storySlug && <span className="ai-badge">⚡ FULL STORY READY</span>}</b>
+                          {w.sub && <p>{w.sub}</p>}
+                        </div>
+                      </div>
+                    );
+                    return w.storySlug ? (
+                      <Link href={`/wire/${w.storySlug}`} key={w._id} style={{ textDecoration: "none", color: "inherit" }}>{inner}</Link>
+                    ) : (
+                      inner
+                    );
+                  })
+                : DEMO_WIRE.map((w) => {
+                    const img = art.pick(w.art, `${w.category} — ${w.headline}`);
+                    return (
+                      <div className="wire-item" key={w.headline}>
+                        <div className="wire-thumb2 bleed-thumb" style={{ position: "relative" }}>
+                          <Image src={img.src} alt={img.alt} fill sizes="96px" style={{ objectFit: "cover" }} />
+                        </div>
+                        <div className="wtxt">
+                          <span className="t">{w.time} · {w.category}</span>
+                          <b>{w.headline}{w.badge && <span className="ai-badge">{w.badge}</span>}</b>
+                          <p>{w.body}</p>
+                        </div>
+                      </div>
+                    );
+                  })}
               <div style={{ marginTop: 14, padding: 12, border: "1px dashed var(--line-l)", borderRadius: 4, fontFamily: "var(--mono)", fontSize: 11, color: "var(--ink-dim)", lineHeight: 1.6 }}>
                 ⚡ <b style={{ color: "var(--field)" }}>THE WIRE DESK</b> — when news is big enough, our AI drafts
-                the full story within minutes and an editor signs off before it publishes. Speed of a wire service,
-                standards of the porch.
+                the full story within minutes, runs it through the site&apos;s verification rules, and publishes with
+                its sources cited. An editor monitors everything; corrections are timestamped, never silent.
               </div>
-              <Link className="btn gold" href="/#" style={{ marginTop: 14, width: "100%", textAlign: "center" }}>
-                Load More News
+              <Link className="btn gold" href="/wire" style={{ marginTop: 14, width: "100%", textAlign: "center" }}>
+                All Wire Coverage
               </Link>
             </div>
           </div>

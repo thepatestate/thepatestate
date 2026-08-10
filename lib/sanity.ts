@@ -114,3 +114,64 @@ export async function setArticleHeroImage(articleId: string, assetId: string): P
     console.error("[sanity:setArticleHeroImage]", articleId, err);
   }
 }
+
+// ---- Wire Desk (v1.2) ----
+
+export interface SanityWireItem {
+  _id: string;
+  headline: string;
+  sub?: string;
+  category?: string;
+  teams?: string[];
+  importance?: number;
+  publishedAt?: string;
+  storySlug?: string | null;
+}
+
+export interface SanityWireStory {
+  _id: string;
+  headline: string;
+  slug: { current: string };
+  verification?: "confirmed" | "reported" | "developing";
+  category?: string;
+  teams?: string[];
+  whatHappened?: string;
+  whyItMatters?: string[];
+  joshReceipt?: { quote?: string; ytId?: string; tsSeconds?: number } | null;
+  readLabel?: string;
+  readBody?: string;
+  whatsNext?: string[];
+  sources?: { outlet?: string; url?: string }[];
+  publishedAt?: string;
+  updatedAt?: string;
+}
+
+const WIRE_STORY_FIELDS = `_id, headline, slug, verification, category, teams, whatHappened,
+  whyItMatters, joshReceipt, readLabel, readBody, whatsNext, sources, publishedAt, updatedAt`;
+
+export async function getWireItems(limit = 8): Promise<SanityWireItem[]> {
+  return await readClient.fetch(
+    `*[_type == "wireItem"] | order(publishedAt desc)[0...$limit]{
+      _id, headline, sub, category, teams, importance, publishedAt,
+      "storySlug": story->slug.current
+    }`,
+    { limit },
+    { next: { revalidate: 120, tags: ["wire"] } } as never
+  );
+}
+
+export async function getWireStories(limit = 12): Promise<SanityWireStory[]> {
+  return await readClient.fetch(
+    `*[_type == "wireStory"] | order(publishedAt desc)[0...$limit]{ ${WIRE_STORY_FIELDS} }`,
+    { limit },
+    { next: { revalidate: 120, tags: ["wire"] } } as never
+  );
+}
+
+export async function getWireStoryBySlug(slug: string): Promise<SanityWireStory | null> {
+  return await readClient.fetch(
+    `*[_type == "wireStory" && slug.current == $slug][0]{ ${WIRE_STORY_FIELDS} }`,
+    { slug },
+    { next: { revalidate: 120, tags: ["wire", `wire:${slug}`] } } as never
+  );
+}
