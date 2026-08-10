@@ -1,19 +1,18 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { getVideos, isEpisode, getChannelStats, compactCount, CHANNEL_URL, APPLE_PODCASTS_URL, SPOTIFY_URL, SOCIAL_LINKS } from "@/lib/youtube";
+import { getVideos, isEpisode, getChannelStats, getShorts, compactCount, CHANNEL_URL, SOCIAL_LINKS } from "@/lib/youtube";
 import { getPublishedArticles, getWireItems, getHeroSlides } from "@/lib/sanity";
 import HeroSlider, { type HeroSlideData } from "@/components/HeroSlider";
 import { formatDate, relTime } from "@/lib/format";
 import { slugifyTeam, teamLogoUrl } from "@/lib/teams-meta";
 import { createArtPicker, type ArtCategory } from "@/lib/editorial-art";
-import EpisodeLead from "@/components/EpisodeLead";
-import VideoGrid from "@/components/VideoGrid";
 import PreseasonChip from "@/components/PreseasonChip";
 import EmptyState from "@/components/EmptyState";
 import { DEMO_MODE } from "@/lib/demo";
 import Reveal from "@/components/Reveal";
 import SlateStrip from "@/components/SlateStrip";
+import ShowSection from "@/components/ShowSection";
 
 export const metadata: Metadata = { alternates: { canonical: "/" } };
 
@@ -156,10 +155,15 @@ const DEMO_GUIDES = [
 
 export default async function Home() {
   const videos = await getVideos();
-  const stats = await getChannelStats();
+  const [stats, shorts] = await Promise.all([getChannelStats(), getShorts(8)]);
   const episodes = videos.filter(isEpisode);
   const latest = episodes[0] ?? videos[0];
   const recentEpisodes = episodes.filter((v) => v !== latest).slice(0, 3);
+  // More Episodes row (§1.2): the next 6 uploads beyond the featured + 3
+  // stacked — Shorts arrive via their own rail, so filter nothing here
+  // beyond what's already shown.
+  const shown = new Set([latest?.id, ...recentEpisodes.map((v) => v.id)]);
+  const moreEpisodes = videos.filter((v) => !shown.has(v.id) && !shorts.some((s) => s.id === v.id)).slice(0, 6);
   const notebookArticles = await getPublishedArticles(3);
   // Live Wire items take over from the demo rail once the Wire Desk has real
   // coverage flowing (v1.2 §3) — demo stays only while the wire warms up.
@@ -232,30 +236,7 @@ export default async function Home() {
       </section>
 
       {latest && (
-        <section className="on-dark">
-          <div className="wrap">
-            <p className="eyebrow">America&apos;s College Football Show</p>
-            <h2 className="display">The Show</h2>
-            <div className="show-grid">
-              <div>
-                <EpisodeLead video={latest} tag="NEW EPISODE" priority />
-                <div className="platforms">
-                  <a className="chip" href={CHANNEL_URL} target="_blank" rel="noopener">YouTube</a>
-                  <a className="chip" href={APPLE_PODCASTS_URL} target="_blank" rel="noopener">Apple Podcasts</a>
-                  <a className="chip" href={SPOTIFY_URL} target="_blank" rel="noopener">Spotify</a>
-                </div>
-              </div>
-              <VideoGrid videos={recentEpisodes} variant="stack" sizes="(max-width: 900px) 45vw, 360px" />
-            </div>
-            <p className="sched">
-              <b>MON</b> Weekend Truths · <b>TUE</b> Poll Day · <b>WED</b> The Sit-Down ·{" "}
-              <b>THU</b> Picks Drop · <b>FRI</b> The ESPN Show · <b>SAT</b> We Watch Ball
-            </p>
-            <p style={{ marginTop: 20 }}>
-              <a className="btn" href={CHANNEL_URL} target="_blank" rel="noopener">Browse Every Episode</a>
-            </p>
-          </div>
-        </section>
+        <ShowSection latest={latest} stacked={recentEpisodes} more={moreEpisodes} shorts={shorts} />
       )}
 
       <div className="yardline" />

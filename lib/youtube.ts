@@ -90,6 +90,48 @@ export function compactCount(n: number): string {
   return String(n);
 }
 
+// YouTube auto-generates a Shorts-only playlist per channel: "UUSH" + the
+// channel id minus its "UC" prefix. Same trick the uploads playlist uses
+// ("UU" + suffix). Verified live against the channel before shipping.
+const SHORTS_PLAYLIST = `UUSH${CHANNEL_ID.slice(2)}`;
+
+export interface Short {
+  id: string;
+  title: string;
+  published: string;
+}
+
+/** Vertical 9:16 thumbnail YouTube serves for Shorts. */
+export function shortsThumb(id: string): string {
+  return `https://i.ytimg.com/vi/${id}/oardefault.jpg`;
+}
+
+/** Latest Shorts from the channel's auto-generated Shorts playlist (v2 brief
+ * §1.2). Fail-soft []: the rail simply doesn't render without data. */
+export async function getShorts(limit = 8): Promise<Short[]> {
+  const key = process.env.YOUTUBE_API_KEY;
+  if (!key) return [];
+  try {
+    const res = await fetch(
+      `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${SHORTS_PLAYLIST}&maxResults=${limit}&key=${key}`,
+      { next: { revalidate: 21600 } },
+    );
+    if (!res.ok) return [];
+    const data = (await res.json()) as {
+      items?: { snippet?: { title?: string; publishedAt?: string; resourceId?: { videoId?: string } } }[];
+    };
+    return (data.items ?? [])
+      .map((it) => ({
+        id: it.snippet?.resourceId?.videoId ?? "",
+        title: it.snippet?.title ?? "",
+        published: it.snippet?.publishedAt ?? "",
+      }))
+      .filter((s) => s.id && s.title);
+  } catch {
+    return [];
+  }
+}
+
 export async function getVideos(): Promise<Video[]> {
   try {
     const res = await fetch(FEED_URL, { next: { revalidate: 21600 } });
