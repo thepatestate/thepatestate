@@ -156,7 +156,7 @@ export default async function Home() {
   const notebookArticles = await getPublishedArticles(3);
   // Live Wire items take over from the demo rail once the Wire Desk has real
   // coverage flowing (v1.2 §3) — demo stays only while the wire warms up.
-  const liveWire = await getWireItems(6).catch(() => []);
+  const liveWire = await getWireItems(5).catch(() => []);
   const notebookLead = notebookArticles[0] ?? null;
   const notebookNext = notebookArticles.slice(1, 3);
   const art = createArtPicker();
@@ -170,6 +170,11 @@ export default async function Home() {
     <main>
       <SlateStrip />
       <section className="hero">
+        {/* Ambient motion loop (client request) — decorative, muted, low
+            opacity; hidden for reduced-motion users and phones. */}
+        <video className="hero-video" autoPlay muted loop playsInline aria-hidden="true" preload="metadata">
+          <source src="/video/hero-ambient.mp4" type="video/mp4" />
+        </video>
         <div className="wrap">
           <p className="eyebrow">Est. in Columbus, GA — population: everyone who lives for Saturdays</p>
           <h1 className="display">The Front Porch<span className="row2">of College Football.</span></h1>
@@ -324,6 +329,26 @@ export default async function Home() {
                   </div>
                 </div>
               )}
+              {/* Most Read strip balances the column against the Wire rail. */}
+              <div style={{ marginTop: 22 }}>
+                <p className="eyebrow" style={{ marginBottom: 8 }}>Most Read This Week <PreseasonChip /></p>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "10px 22px" }}>
+                  {[
+                    { n: "01", t: "The 5 Programs Under the Most Pressure This Fall", m: "PAIRS WITH EP 1,204" },
+                    { n: "02", t: "Why the JP Poll Doesn't Trust Alabama Yet", m: "POLL DAY COLUMN" },
+                    { n: "03", t: "The Grove, Ranked: A Tailgate Masterclass", m: "PATE TAILGATE" },
+                    { n: "04", t: "Portal Winners Nobody's Pricing In", m: "THE NEXT WAVE" },
+                  ].map((p) => (
+                    <Link key={p.n} href="/notebook" style={{ display: "flex", gap: 12, alignItems: "baseline", textDecoration: "none", color: "inherit", borderBottom: "1px solid var(--line-l)", paddingBottom: 8 }}>
+                      <span className="display" style={{ fontSize: 26, color: "transparent", WebkitTextStroke: "1.5px var(--gold, #B8842C)", flexShrink: 0 }}>{p.n}</span>
+                      <span>
+                        <b style={{ fontSize: 14, lineHeight: 1.3, display: "block" }}>{p.t}</b>
+                        <span style={{ fontFamily: "var(--mono)", fontSize: 10, letterSpacing: ".06em", color: "var(--ink-dim)" }}>{p.m}</span>
+                      </span>
+                    </Link>
+                  ))}
+                </div>
+              </div>
               <div style={{ marginTop: 18 }}><Link className="btn" href="/notebook">Open the Notebook</Link></div>
             </div>
 
@@ -463,23 +488,55 @@ export default async function Home() {
       </section>
 
       <section className="on-soft" id="citizen">
-        <div className="wrap" style={{ textAlign: "center" }}>
+        <div className="wrap">
           <p className="eyebrow">Free Citizenship · The Daily Briefing</p>
           <h2 className="display">The Pate Playbook</h2>
-          <PreseasonChip />
-          <div className="card">
-            <h3>Become a Citizen of the Pate State</h3>
-            <p>
-              One email every weekday morning: what actually happened in the sport, what it means, and what&apos;s
-              worth your Saturday. Written like Josh talks. Free forever.
-            </p>
-            <div className="signup">
-              <Link className="btn gold" href="/join">Become a Citizen — Free</Link>
+          <div className="duo" style={{ marginTop: 18, alignItems: "stretch", gap: 22 }}>
+            {/* Live preview of the actual daily email — real episode, real wire. */}
+            <div className="playbook-preview">
+              <div className="pb-chrome">
+                <span className="pb-dot" /><span className="pb-dot" /><span className="pb-dot" />
+                <span style={{ marginLeft: 10 }}>
+                  The Playbook · {new Date().toLocaleDateString("en-US", { weekday: "long", month: "short", day: "numeric", timeZone: "America/New_York" })} · 6:00 AM ET
+                </span>
+              </div>
+              <div className="pb-body">
+                <p className="pb-from">FROM: The Pate State &lt;porch@thepatestate.com&gt;</p>
+                <p className="pb-subject">Today on the porch</p>
+                {latest && (
+                  <a className="pb-episode" href={`https://www.youtube.com/watch?v=${latest.id}`} target="_blank" rel="noopener">
+                    <span className="pb-thumb" style={{ position: "relative" }}>
+                      <Image src={latest.thumbnail} alt="" fill sizes="120px" style={{ objectFit: "cover" }} />
+                    </span>
+                    <span>
+                      <b>Yesterday&apos;s show</b>
+                      <em>{latest.title.replace(/ - Josh Pate's College Football Show/i, "")}</em>
+                    </span>
+                  </a>
+                )}
+                <p className="pb-label">The three stories that matter:</p>
+                <ul className="pb-wire">
+                  {(liveWire.length >= 3 ? liveWire.slice(0, 3).map((w) => w.headline) : DEMO_WIRE.slice(0, 3).map((w) => w.headline)).map((h) => (
+                    <li key={h}>{h}</li>
+                  ))}
+                </ul>
+                <p className="pb-cta">Today&apos;s ritual → make your picks before Saturday 11:58 AM ET.</p>
+              </div>
             </div>
-            <p style={{ margin: "16px 0 0", fontSize: 13 }}>
-              Citizens get early poll access, pick&apos;em invites, first dibs on tour tickets — and the digital
-              Pate Report free every July.
-            </p>
+            <div className="card" style={{ textAlign: "center", display: "flex", flexDirection: "column", justifyContent: "center" }}>
+              <h3>Become a Citizen of the Pate State</h3>
+              <p>
+                This exact briefing, in your inbox every weekday morning: what actually happened in the sport,
+                what it means, and what&apos;s worth your Saturday. Written like Josh talks. Free forever.
+              </p>
+              <div className="signup">
+                <Link className="btn gold" href="/join">Become a Citizen — Free</Link>
+              </div>
+              <p style={{ margin: "16px 0 0", fontSize: 13 }}>
+                Citizens get early poll access, pick&apos;em invites, first dibs on tour tickets — and the digital
+                Pate Report free every July.
+              </p>
+            </div>
           </div>
         </div>
       </section>

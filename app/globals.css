@@ -789,3 +789,27 @@ footer{background:var(--navy);color:var(--chalk-dim);padding:34px 0 40px;font-fa
 .x-card .btn:hover{background:var(--lamp);color:var(--navy)}
 @media(max-width:560px){.x-card{flex-wrap:wrap}}
 @media(max-width:640px){.rankcard .rk-num{font-size:42px;width:46px;-webkit-text-stroke:1px}}
+
+/* Playbook live email preview */
+.playbook-preview{background:#fff;border:1px solid var(--line-l);border-radius:8px;overflow:hidden;box-shadow:0 10px 30px rgba(22,33,58,.10);display:flex;flex-direction:column}
+.pb-chrome{display:flex;align-items:center;gap:5px;background:var(--navy);color:var(--chalk-dim,#B9B4A6);font-family:var(--mono);font-size:11px;letter-spacing:.05em;padding:10px 14px}
+.pb-dot{width:9px;height:9px;border-radius:50%;background:rgba(243,239,230,.25);display:inline-block}
+.pb-body{padding:18px 20px;display:grid;gap:10px;text-align:left}
+.pb-from{font-family:var(--mono);font-size:11px;color:var(--ink-dim);margin:0}
+.pb-subject{font-weight:800;font-size:20px;margin:0}
+.pb-episode{display:flex;gap:12px;align-items:center;text-decoration:none;color:inherit;border:1px solid var(--line-l);border-radius:6px;padding:10px;transition:border-color .15s ease}
+.pb-episode:hover{border-color:var(--gold,#E8A33D)}
+.pb-thumb{width:110px;height:62px;border-radius:4px;overflow:hidden;flex-shrink:0;display:block}
+.pb-episode b{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.08em;color:var(--gold,#B8842C);text-transform:uppercase}
+.pb-episode em{font-style:normal;font-size:14px;font-weight:700;line-height:1.3}
+.pb-label{font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--ink-dim);text-transform:uppercase;margin:4px 0 0}
+.pb-wire{margin:0;padding-left:18px;display:grid;gap:6px}
+.pb-wire li{font-size:14px;line-height:1.45}
+.pb-cta{margin:4px 0 0;font-size:13px;color:var(--ink-dim);border-top:1px dashed var(--line-l);padding-top:10px}
+
+/* Ambient hero motion loop — sits under the gradient/grain layers, above the
+   navy base. Killed for reduced-motion users and small screens (data). */
+.hero-video{position:absolute;inset:0;z-index:0;width:100%;height:100%;object-fit:cover;opacity:.30;pointer-events:none;filter:saturate(.85)}
+.hero .wrap{position:relative;z-index:2}
+@media (prefers-reduced-motion: reduce){.hero-video{display:none}}
+@media (max-width: 700px){.hero-video{display:none}}
