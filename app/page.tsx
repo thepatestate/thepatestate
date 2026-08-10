@@ -15,6 +15,7 @@ import Reveal from "@/components/Reveal";
 import SlateStrip from "@/components/SlateStrip";
 import ShowSection from "@/components/ShowSection";
 import MyTeams from "@/components/MyTeams";
+import TrendingPorch from "@/components/TrendingPorch";
 
 export const metadata: Metadata = { alternates: { canonical: "/" } };
 
@@ -485,6 +486,8 @@ export default async function Home() {
           </Reveal>
         </div>
       </section>
+
+      <TrendingPorch />
 
       <section className="tight poll-band">
         <div className="wrap">

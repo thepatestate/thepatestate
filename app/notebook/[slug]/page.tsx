@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getArticleBySlug } from "@/lib/sanity";
+import { getBoards } from "@/lib/community";
 import ArticleBody from "@/components/ArticleBody";
 import EditorialLabel, { Corrections } from "@/components/EditorialLabel";
 import { CHANNEL_URL, SOCIAL_LINKS } from "@/lib/youtube";
@@ -53,6 +54,7 @@ export default async function ArticlePage({
   const { slug } = await params;
   const article = await getArticleBySlug(slug);
   if (!article) notFound();
+  const boards = await getBoards().catch(() => []);
 
   const teamHref = article.primaryTeam === "georgia" ? "/teams/georgia" : "/teams";
   const authorSlug = /josh pate/i.test(article.byline) ? "josh-pate" : "the-pate-state-staff";
@@ -179,6 +181,26 @@ export default async function ArticlePage({
               <ArticleBody article={article} />
 
               <Corrections corrections={article.corrections} />
+
+              {/* §3.8 growth loop: every article ends at the Porch. Team
+                  articles land on their team's board when one exists. */}
+              {(() => {
+                const teamBoard = article.primaryTeam
+                  ? boards.find((b) => b.kind === "team" && b.team_slug === article.primaryTeam)
+                  : null;
+                const target = teamBoard ?? boards.find((b) => b.slug === "front-porch");
+                return target ? (
+                  <div style={{ marginTop: 24 }}>
+                    <Link
+                      className="btn"
+                      href={`/community/${target.slug}`}
+                      style={{ borderColor: "var(--navy)", color: "var(--navy)" }}
+                    >
+                      💬 Discuss this on {teamBoard ? `the ${target.name}` : "the Porch"} →
+                    </Link>
+                  </div>
+                ) : null;
+              })()}
 
               {article.episode && (
                 <a

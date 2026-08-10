@@ -12,6 +12,7 @@ export interface Citizen {
   display_handle: string;
   favorite_team: string | null;
   joined_at: string;
+  role: "citizen" | "staff";
 }
 
 export async function createClient() {
@@ -56,7 +57,7 @@ export async function getCitizen(): Promise<Citizen | null> {
   if (!user) return null;
   const { data } = await supabase
     .from("citizens")
-    .select("id, handle, display_handle, favorite_team, joined_at")
+    .select("id, handle, display_handle, favorite_team, joined_at, role")
     .eq("id", user.id)
     .maybeSingle();
   return (data as Citizen) ?? null;

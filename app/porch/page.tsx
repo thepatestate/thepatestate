@@ -212,10 +212,10 @@ export default async function PorchPage() {
           {!DEMO_MODE && (
             <div style={{ maxWidth: 820, marginTop: 14 }}>
               <EmptyState
-                kicker="THE PORCH IS BEING BUILT"
-                title="Community threads open this season"
-                body="Game threads, the mailbag, and the loudest arguments on the porch — all landing with the first slate. For now, the conversation lives in the show comments."
-                cta={{ href: "/show", label: "Join the show comments" }}
+                kicker="THE BOARDS ARE OPEN"
+                title="The Porch is live — pull up a chair"
+                body="The national Front Porch, recruiting and portal talk, the Film Room, and a porch for every big fanbase. Citizenship is the only ticket in."
+                cta={{ href: "/community", label: "Open the Boards →" }}
               />
             </div>
           )}
