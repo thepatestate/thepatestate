@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>The Pate State — Site Handover</title>
+<style>
+  @page { size: letter; margin: 18mm 16mm; }
+  * { box-sizing: border-box; }
+  body { font-family: Georgia, "Times New Roman", serif; color: #16213A; margin: 0; font-size: 11.5px; line-height: 1.55; }
+  h1, h2, h3, h4 { font-family: "Helvetica Neue", Arial, sans-serif; letter-spacing: -0.01em; }
+  h1 { font-size: 30px; margin: 0 0 4px; }
+  h2 { font-size: 19px; border-bottom: 3px solid #E8A33D; padding-bottom: 5px; margin: 26px 0 12px; page-break-after: avoid; }
+  h3 { font-size: 14px; margin: 16px 0 6px; color: #1E3B2E; page-break-after: avoid; }
+  p { margin: 6px 0; }
+  .cover { background: #16213A; color: #F3EFE6; padding: 34px 36px; border-radius: 8px; margin-bottom: 24px; }
+  .cover .gold { color: #E8A33D; }
+  .cover p { color: #cfc9ba; max-width: 60ch; }
+  .kicker { font-family: "Courier New", monospace; font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: #B8842C; margin-bottom: 8px; }
+  table { border-collapse: collapse; width: 100%; margin: 8px 0 14px; page-break-inside: avoid; }
+  th, td { text-align: left; padding: 5px 8px; border-bottom: 1px solid #ddd6c5; vertical-align: top; font-size: 10.5px; }
+  th { font-family: "Helvetica Neue", Arial, sans-serif; font-size: 9.5px; text-transform: uppercase; letter-spacing: .06em; color: #6b6552; background: #F7F3E8; }
+  code, .mono { font-family: "Courier New", monospace; font-size: 10px; }
+  .callout { background: #F7F3E8; border-left: 4px solid #E8A33D; padding: 10px 14px; margin: 12px 0; page-break-inside: avoid; }
+  .warn { border-left-color: #A33D3D; background: #F8EFEA; }
+  .green { border-left-color: #1E3B2E; }
+  ul { margin: 6px 0; padding-left: 20px; }
+  li { margin: 3px 0; }
+  .pagebreak { page-break-before: always; }
+  .footer-note { font-size: 9.5px; color: #8a8471; margin-top: 30px; border-top: 1px solid #ddd6c5; padding-top: 8px; }
+  .checklist li { list-style: none; margin: 5px 0; }
+  .checklist li::before { content: "☐  "; color: #B8842C; font-weight: bold; }
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <div class="kicker">Confidential · Prepared for Josh Pate &amp; team</div>
+  <h1>THE PATE STATE<span class="gold">.</span></h1>
+  <p style="font-size:15px; color:#F3EFE6;">Site Handover &amp; Operations Guide</p>
+  <p>Everything your team needs to own and run <b>thepatestate.com</b> — what it is, how it runs itself,
+  the one job that needs a human every day, and the checklist for transferring full control.</p>
+  <p class="mono" style="color:#8f9bb3;">Prepared August 10, 2026 · Isaac Meek · Version 1.0</p>
+</div>
+
+<h2>1 · What You're Receiving</h2>
+<p><b>thepatestate.com</b> is a self-running college football site built around Josh's show. It was designed
+to the specification in the Operations Manual v1.2 (in the repo at <code>docs/</code>) with one governing rule:
+<b>the site publishes autonomously, except anything in Josh's voice or under Josh's byline — that always waits
+for a human click.</b></p>
+<ul>
+  <li><b>The Show</b> — every episode, pulled automatically from YouTube minutes after it publishes.</li>
+  <li><b>The Notebook</b> — AI-drafted companion articles for every episode, grounded in the real transcript with
+      Josh's verbatim quotes deep-linked to the video, waiting in an approval queue.</li>
+  <li><b>The Wire</b> — an autonomous breaking-news desk that monitors ESPN/CBS/Yahoo feeds every 10 minutes,
+      writes attributed news items, and auto-publishes verified full stories with Josh's real archived takes attached.</li>
+  <li><b>The Playbook</b> — a daily 6:00&nbsp;AM ET email to registered citizens, assembled from real site content.</li>
+  <li><b>Citizenship</b> — free registration (magic link or Google) storing fans in your own database.</li>
+  <li><b>Scores &amp; Schedules</b> — real FBS schedule data live now; scores flow automatically on gamedays.</li>
+  <li><b>JP Poll, Pick'em, Playoffs, Recruiting, Tailgate, Store</b> — designed and built; the interactive engines
+      (voting, picks, brackets) are labeled preseason previews and activate as those features launch with the season.</li>
+</ul>
+
+<h2>2 · The Accounts (all clean-slate, all yours)</h2>
+<p>Every account was created fresh for this project — nothing is entangled with any other business. The root of
+everything is the Gmail account: it owns or recovers all the others.</p>
+<table>
+  <tr><th>Service</th><th>Identity / Project</th><th>What it does</th><th>Cost today</th></tr>
+  <tr><td><b>Google (root)</b></td><td class="mono">the.pate.state@gmail.com</td><td>Owns/recovers every account below; Google OAuth login; brand Drive</td><td>Free</td></tr>
+  <tr><td><b>GitHub</b></td><td class="mono">github.com/thepatestate/thepatestate</td><td>All site code (85 commits), prompts, manuals, migrations</td><td>Free</td></tr>
+  <tr><td><b>Vercel</b></td><td class="mono">thepatestate-8303</td><td>Hosting, deploys on every push, edge caching, env secrets</td><td>Free (Hobby)</td></tr>
+  <tr><td><b>Cloudflare</b></td><td class="mono">thepatestate.com</td><td>Domain registration + DNS</td><td>~$10/yr</td></tr>
+  <tr><td><b>Sanity</b></td><td class="mono">project kuv6jjyo · thepatestate.sanity.studio</td><td>CMS: episodes, articles, wire items — and the approval queue</td><td>Free</td></tr>
+  <tr><td><b>Supabase</b></td><td class="mono">project ddzwgmbptcnopqdzvrhl</td><td>Citizens database, quote archive, wire dedup, all cron schedules</td><td>Free</td></tr>
+  <tr><td><b>Anthropic</b></td><td>API workspace</td><td>Claude (the AI writing articles, wire stories, email intros)</td><td>~$10–30/mo</td></tr>
+  <tr><td><b>Resend</b></td><td class="mono">porch@thepatestate.com (verified)</td><td>Sends the Playbook email + login links</td><td>Free ≤100/day</td></tr>
+  <tr><td><b>Black Forest Labs</b></td><td>API account</td><td>Generates article hero images (~4¢ each)</td><td>~$2–5/mo</td></tr>
+  <tr><td><b>Supadata</b></td><td>API account</td><td>Episode transcripts (100/mo free covers current volume)</td><td>Free</td></tr>
+  <tr><td><b>CollegeFootballData</b></td><td>API key</td><td>Real schedules, scores, conferences</td><td>Free</td></tr>
+</table>
+<div class="callout warn"><b>Secrets are NOT in this document.</b> All passwords and API keys are delivered
+separately and securely (password-manager share). Live API keys exist in exactly two places: the repo's untracked
+<code>.env.local</code> file and Vercel's environment settings. If a key ever leaks, rotate it at the issuing
+service and update both places.</div>
+
+<div class="pagebreak"></div>
+<h2>3 · How It Runs Itself</h2>
+<h3>The autonomous clock (all times ET)</h3>
+<table>
+  <tr><th>When</th><th>What happens</th><th>Human involved?</th></tr>
+  <tr><td>Instantly on upload</td><td>YouTube pings the site → episode ingested → transcript fetched → Josh's 5–10 biggest quotes archived verbatim → companion article drafted with a generated hero image → <b>approval queue</b></td><td>Approve to publish (5–10 min)</td></tr>
+  <tr><td>Every 15 min</td><td>Backup poll of the channel (catches anything the webhook missed)</td><td>No</td></tr>
+  <tr><td>Every 10 min, 6am–midnight</td><td>Wire Desk sweeps national feeds → clusters stories → publishes attributed wire items → big stories (importance ≥7) become full verified articles automatically</td><td>No — monitor after the fact</td></tr>
+  <tr><td>Weekdays 6:00 AM</td><td>The Playbook email assembles itself (yesterday's episode + top wire items + the day's ritual) and sends to all citizens</td><td>No</td></tr>
+  <tr><td>Daily 5:00 AM</td><td>Episode view counts refresh; most-popular reordering</td><td>No</td></tr>
+  <tr><td>Weekly Mon</td><td>YouTube webhook subscription renews itself</td><td>No</td></tr>
+</table>
+
+<h3>The one daily human job</h3>
+<div class="callout green">
+<p><b>Open <a href="https://thepatestate.sanity.studio">thepatestate.sanity.studio</a> → Approval Queue.</b>
+New AI drafts sit in state <i>ai-drafted</i>. Read the draft (5–10 minutes — the quotes are verbatim from the
+transcript and deep-linked, so spot-checking is fast). Fix anything you want, then change
+<b>workflowState → approved</b>. The article publishes to the live site within a minute, with its hero image,
+video embeds, and SEO fields already in place.</p>
+<p>Drafts flagged <b>⚠ lowConfidence</b> deserve a closer read — it means the transcript was missing or a
+quote couldn't be verified word-for-word.</p></div>
+
+<h3>Editorial rules already enforced in software</h3>
+<ul>
+  <li><b>Bylines:</b> "Josh Pate" appears only on content Josh wrote or approved. AI staff coverage is bylined
+      "The Pate State Staff" (third-person). Autonomous news is "The Wire Desk" with an AI disclosure on every story.</li>
+  <li><b>Quotes:</b> anything inside quotation marks is machine-verified as a word-for-word transcript match.
+      The system physically cannot publish an invented Josh quote.</li>
+  <li><b>Wire sourcing:</b> every story names its source in sentence one, passes an independent AI fact-check
+      against the sources, and blocks a banned-inference list (no motive speculation, no health prognosis,
+      no "sources tell The Pate State"). Injury/legal stories use a sober register with zero humor.</li>
+  <li><b>Corrections:</b> never edit facts silently — strike through and append a timestamped correction.</li>
+  <li>The full standards live in the repo: <code>prompts/voice-manual.md</code> and <code>prompts/wire-desk-manual.md</code>
+      (Josh's own documents, implemented as written).</li>
+</ul>
+
+<div class="pagebreak"></div>
+<h2>4 · Architecture (for whoever inherits the code)</h2>
+<table>
+  <tr><th>Layer</th><th>Technology</th><th>Notes</th></tr>
+  <tr><td>Framework</td><td>Next.js 16 (App Router, TypeScript) on Vercel</td><td>Static + ISR; pushes to <code>main</code> auto-deploy</td></tr>
+  <tr><td>CMS</td><td>Sanity (hosted Studio)</td><td>Types: episode, article, wireItem, wireStory; webhook publishes approved articles</td></tr>
+  <tr><td>Database</td><td>Supabase Postgres</td><td>citizens (RLS-locked), josh_quotes (120+ verbatim quotes), wire_clusters; pg_cron drives every schedule</td></tr>
+  <tr><td>Auth</td><td>Supabase Auth</td><td>Email magic link + Google OAuth; 30-second signup</td></tr>
+  <tr><td>AI</td><td>Anthropic Claude (claude-sonnet-5)</td><td>Structured JSON outputs; all prompts versioned in <code>/prompts</code></td></tr>
+  <tr><td>Email</td><td>Resend</td><td>RFC-8058 one-click unsubscribe; CAN-SPAM address via env var</td></tr>
+  <tr><td>Images</td><td>Black Forest Labs FLUX API</td><td>Article heroes auto-generated; brand imagery in <code>public/img</code></td></tr>
+  <tr><td>Transcripts</td><td>Supadata API (+ direct YouTube fallback)</td><td>Word-timestamped; feeds quotes + articles</td></tr>
+  <tr><td>Sports data</td><td>CollegeFootballData API</td><td>Schedules live; scores auto-flow on gamedays</td></tr>
+</table>
+<p>Tests: 103 unit tests (<code>npm test</code>). Local dev: <code>npm install &amp;&amp; npm run dev</code> with
+<code>.env.local</code> present. Every pipeline is fail-soft: if an external service is down, the site serves its
+last good state rather than erroring.</p>
+
+<h3>Runbook — the five most likely situations</h3>
+<table>
+  <tr><th>Situation</th><th>What to do</th></tr>
+  <tr><td>A wire story is wrong</td><td>Open Studio → Wire Story → edit with a strikethrough + timestamped correction line, or unpublish (delete) to retract. The story's sources are listed on every item.</td></tr>
+  <tr><td>Pause ALL wire publishing</td><td>Supabase dashboard → Database → Extensions → pg_cron → unschedule <code>wire-monitor</code> (or ask a developer to run <code>select cron.unschedule('wire-monitor')</code>).</td></tr>
+  <tr><td>An article draft is bad</td><td>Just leave it un-approved (nothing publishes without the click), or delete it in Studio.</td></tr>
+  <tr><td>Stop the daily email</td><td>Unschedule <code>send-playbook</code> the same way as the wire, or remove RESEND_API_KEY from Vercel env.</td></tr>
+  <tr><td>Site looks broken after a code change</td><td>Vercel dashboard → Deployments → promote the previous deployment (instant rollback).</td></tr>
+</table>
+
+<h2>5 · Monthly Cost Summary</h2>
+<table>
+  <tr><th>Line</th><th>Current spend</th><th>Scales with</th></tr>
+  <tr><td>Anthropic API (articles + wire + email intros)</td><td>~$10–30</td><td>News volume; in-season expect the top of that range</td></tr>
+  <tr><td>Image generation (heroes)</td><td>~$2–5</td><td>~4¢ per article</td></tr>
+  <tr><td>Domain</td><td>~$1 (≈$10/yr)</td><td>—</td></tr>
+  <tr><td>Vercel / Sanity / Supabase / Resend / Supadata / CFBD</td><td>$0</td><td>Free tiers cover current traffic; first paid upgrades will be Resend (&gt;100 emails/day as citizens grow) and Vercel Pro (~$20/mo) for team seats</td></tr>
+  <tr><td><b>Total</b></td><td><b>≈ $15–40/mo</b></td><td></td></tr>
+</table>
+
+<div class="pagebreak"></div>
+<h2>6 · Transfer Checklist</h2>
+<p>Do these in order, on a call together if possible. The Gmail root makes most of it simple.</p>
+<ul class="checklist">
+  <li>Hand over <b>the.pate.state@gmail.com</b> (password + set YOUR phone as 2FA and recovery). This is the master key — after this step, your team controls recovery for everything.</li>
+  <li>Change the Gmail password and add 2FA immediately.</li>
+  <li>Receive the password-manager share with all service passwords + API keys (never email these).</li>
+  <li>GitHub: accept owner invite to the <b>thepatestate</b> org; remove Isaac when comfortable.</li>
+  <li>Vercel: accept team ownership transfer; verify env variables are intact (Settings → Environment Variables).</li>
+  <li>Cloudflare: confirm domain + DNS access; update billing card for the annual renewal.</li>
+  <li>Sanity: accept admin invite to org <b>orA50NKiO</b>; add Josh/producer as Studio editors (they only ever need the Studio, not the code). <i>Note: a second, empty Sanity account with a typo name ("thepatestatee") exists — delete it.</i></li>
+  <li>Supabase, Anthropic, Resend, BFL, Supadata, CFBD: log in via the Gmail root or transferred passwords; update billing cards where applicable (Anthropic and BFL hold small credit balances).</li>
+  <li>Rotate the Supabase database password and the Sanity write token after transfer (both were used during the build; rotating voids any residual exposure). A developer does this in ~15 minutes: change in Supabase/Sanity dashboards → update <code>.env.local</code> + Vercel env → redeploy.</li>
+  <li>Update <code>PLAYBOOK_POSTAL_ADDRESS</code> in Vercel env to your preferred business mailing address (CAN-SPAM footer).</li>
+  <li>Decide who holds the daily approval seat (the §22 "human monitor") and bookmark the Studio on their machine.</li>
+</ul>
+
+<h2>7 · What's Live vs. What Activates With the Season</h2>
+<table>
+  <tr><th>Live today</th><th>Labeled "preseason preview" — activates in-season</th></tr>
+  <tr><td>
+    Show pages (all real videos) · article pipeline + approval queue · Wire Desk (real news now) ·
+    Playbook email · citizenship/signup · real Week 1 schedule &amp; slate strip · Josh's published
+    bracket article · quote archive (120+ takes) · store links to patestatematerial.com
+  </td><td>
+    JP Poll voting/tabulation · Porch Pick'em grading + pros board harvesting · Bracket Challenge ·
+    live in-game scoreboard refresh · Josh's real Watch Order (replaces demo Top-10 list) ·
+    recruiting data sync · team pages ×136
+  </td></tr>
+</table>
+<div class="callout">
+<b>Recommended next steps for your team:</b> (1) publish 2–3 articles from the queue this week so launch day
+isn't empty; (2) send Josh's real Week 1 Watch Order to replace the demo list; (3) supply real tailgate
+photography for the guide tiles; (4) create @ThePateState social handles if you want the site auto-posting
+wire headlines (the hook is built, just needs accounts); (5) an X/Twitter API subscription is the single
+biggest upgrade for breaking-news speed if you want the Wire to beat the big sites consistently.
+</div>
+
+<h2>8 · Key Links</h2>
+<table>
+  <tr><td class="mono">Site</td><td class="mono">https://thepatestate.com</td></tr>
+  <tr><td class="mono">Approval queue (Studio)</td><td class="mono">https://thepatestate.sanity.studio</td></tr>
+  <tr><td class="mono">Code</td><td class="mono">https://github.com/thepatestate/thepatestate</td></tr>
+  <tr><td class="mono">Hosting</td><td class="mono">https://vercel.com (team thepatestate-8303)</td></tr>
+  <tr><td class="mono">Database</td><td class="mono">https://supabase.com/dashboard (project ddzwgmbptcnopqdzvrhl)</td></tr>
+  <tr><td class="mono">Ops manual v1.2</td><td class="mono">repo: docs/pate-state-operations-manual.md</td></tr>
+  <tr><td class="mono">Voice + Wire manuals</td><td class="mono">repo: prompts/voice-manual.md · prompts/wire-desk-manual.md</td></tr>
+</table>
+
+<p class="footer-note">Prepared by Isaac Meek with the site's build history · August 10, 2026 · The Pate State v1
+· Questions during transition: Isaac remains available for a handover call and 30 days of email support.</p>
+
+</body>
+</html>
