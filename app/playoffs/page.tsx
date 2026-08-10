@@ -228,9 +228,9 @@ export default function PlayoffsPage() {
         </div>
       </section>
 
-      <section className="on-field">
+      <section>
         <div className="wrap">
-          <span className="fr">🏆 THE CITIZENS&apos; BRACKET CHALLENGE</span>
+          <span className="fr fr-field">🏆 THE CITIZENS&apos; BRACKET CHALLENGE</span>
           <p className="eyebrow">Free for Every Citizen · Two Windows, One Champion</p>
           <h2 className="display" style={{ fontSize: 38 }}>Build Yours. Beat Everybody.</h2>
           <PreseasonChip />
@@ -239,31 +239,31 @@ export default function PlayoffsPage() {
             season, standings live on the porch, receipts forever.
           </p>
           <div className="feat-grid" style={{ marginTop: 26 }}>
-            <div className="panel panel-field" style={{ border: "1px solid var(--line-d)" }}>
+            <div className="panel panel-accent-field">
               <p className="eyebrow">Window 1 — August</p>
               <h3>The Preseason Bracket</h3>
               <p>
                 Pick your 12, seed your byes, crown a champion — locked at Week 1 kickoff.{" "}
-                <b style={{ color: "var(--lamp)" }}>+10</b> for every team that makes the field,{" "}
-                <b style={{ color: "var(--lamp)" }}>+25</b> for an exact seed,{" "}
-                <b style={{ color: "var(--lamp)" }}>+100</b> if your champ wins it all.
+                <b style={{ color: "var(--lamp-deep)" }}>+10</b> for every team that makes the field,{" "}
+                <b style={{ color: "var(--lamp-deep)" }}>+25</b> for an exact seed,{" "}
+                <b style={{ color: "var(--lamp-deep)" }}>+100</b> if your champ wins it all.
               </p>
             </div>
-            <div className="panel panel-field" style={{ border: "1px solid var(--line-d)" }}>
+            <div className="panel panel-accent-field">
               <p className="eyebrow">Window 2 — December</p>
               <h3>The Real Bracket</h3>
               <p>
                 Selection Sunday, the field is set — fill out the actual bracket, round by round. Points double as
-                you go: <b style={{ color: "var(--lamp)" }}>10 · 20 · 40 · 80</b>. Your August foresight plus your
+                you go: <b style={{ color: "var(--lamp-deep)" }}>10 · 20 · 40 · 80</b>. Your August foresight plus your
                 December nerve, one combined score.
               </p>
             </div>
-            <div className="panel panel-field" style={{ border: "1px solid var(--line-d)" }}>
+            <div className="panel panel-accent-field">
               <p className="eyebrow">The Payout</p>
               <h3>Real Prizes</h3>
               <p>
                 Monthly leaders: merch + a shoutout on the show. Top 10 combined: signed Pate Report.{" "}
-                <b style={{ color: "var(--lamp)" }}>The champion watches the National Championship with Josh</b> —
+                <b style={{ color: "var(--lamp-deep)" }}>The champion watches the National Championship with Josh</b> —
                 and goes on the Wall of Champions, forever.
               </p>
             </div>

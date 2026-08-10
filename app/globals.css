@@ -11,7 +11,7 @@ a{color:inherit;text-decoration:none}.wrap{max-width:1180px;margin:0 auto;paddin
 .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--lamp-deep)}
 .on-dark .eyebrow,.on-field .eyebrow{color:var(--lamp)}
 .display{font-family:var(--display);font-weight:800;text-transform:uppercase;line-height:.92}
-h2.display{font-size:clamp(34px,5vw,56px);margin:10px 0 14px}
+h2.display{font-size:clamp(34px,5vw,56px);margin:6px 0 10px}
 .lede{color:var(--ink-dim);max-width:58ch}.on-dark .lede,.on-field .lede{color:var(--chalk-dim)}
 .btn{display:inline-block;font-family:var(--mono);font-size:13px;letter-spacing:.08em;text-transform:uppercase;padding:13px 22px;border:1.5px solid var(--navy);color:var(--navy);border-radius:2px;cursor:pointer;background:none;transition:.15s}
 .btn:hover,.btn:focus-visible{background:var(--navy);color:var(--chalk)}
@@ -23,7 +23,7 @@ h2.display{font-size:clamp(34px,5vw,56px);margin:10px 0 14px}
 :focus-visible{outline:2px solid var(--lamp-deep);outline-offset:3px}
 .note{display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:.06em;color:#fff;background:var(--field);padding:3px 8px;border-radius:2px;margin-bottom:14px}
 .on-field .note,.on-dark .note{background:var(--lamp);color:var(--navy)}
-section{padding:78px 0}section.tight{padding:56px 0}
+section{padding:40px 0}section.tight{padding:26px 0}
 .on-dark{background:var(--navy);color:var(--chalk)}.on-field{background:var(--field);color:var(--chalk)}.on-soft{background:var(--paper-2)}
 .yardline{height:26px;background:repeating-linear-gradient(90deg,var(--line-l) 0 2px,transparent 2px 34px) center/100% 12px no-repeat,linear-gradient(var(--line-l),var(--line-l)) center/100% 1px no-repeat}
 .ticker{background:var(--field);overflow:hidden;white-space:nowrap}
@@ -48,20 +48,20 @@ nav{position:sticky;top:0;z-index:50;background:rgba(253,252,248,.94);backdrop-f
 .banner-photo{position:relative;aspect-ratio:21/6;border-radius:8px;overflow:hidden;margin-bottom:28px;border:1px solid var(--line-d)}
 .banner-photo .overlay{position:absolute;inset:0;background:linear-gradient(100deg,rgba(15,27,45,.72) 15%,rgba(15,27,45,.2) 75%)}
 @media(max-width:700px){.banner-photo{aspect-ratio:16/9}}
-.page-head{background:var(--navy);color:var(--chalk);padding:64px 0 54px}
-.page-head h1{font-family:var(--display);font-weight:800;text-transform:uppercase;font-size:clamp(44px,7vw,84px);line-height:.92}
-.page-head .lede{color:var(--chalk-dim);margin-top:14px}
-.crumb{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--lamp);margin-bottom:12px}
-.hero{color:var(--chalk);padding:104px 0 60px;position:relative;overflow:hidden;background-color:var(--navy)}
-/* Photo layer lives on ::before (not directly on .hero) so the very-slow
-   drift/zoom below can transform:scale() just the image, never the text in
-   .hero .wrap (already position:relative;z-index:1, so it stacks above this). */
+.page-head{background:var(--navy);color:var(--chalk);padding:32px 0 26px}
+.page-head h1{font-family:var(--display);font-weight:800;text-transform:uppercase;font-size:clamp(40px,6.5vw,76px);line-height:.92}
+.page-head .lede{color:var(--chalk-dim);margin-top:10px}
+.crumb{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--lamp);margin-bottom:10px}
+.hero{color:var(--chalk);padding:44px 0 26px;position:relative;overflow:hidden;background-color:var(--navy)}
+/* No photo layer any more (client: "the front porch background image needs
+   to go") — ::before now carries only a subtle navy gradient for depth, plus
+   the shared dark-band grain texture (.hero is added to the grain selector
+   below) so the hero keeps the same tactile quality other dark bands have. */
 .hero::before{content:"";position:absolute;inset:0;z-index:0;
-background-image:linear-gradient(100deg,rgba(15,27,45,.94) 32%,rgba(15,27,45,.68) 58%,rgba(15,27,45,.4) 100%),url(/img/hero-porch.jpg);
-background-size:cover;background-position:center right}
-.hero h1{font-size:clamp(54px,9.5vw,126px)}.hero h1 .row2{display:block;color:var(--lamp)}
-.hero .lede{font-size:20px;margin:22px 0 30px;color:var(--chalk-dim)}
-.hero-ctas{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:64px}
+background-image:radial-gradient(ellipse at 15% 20%,rgba(30,59,46,.35),transparent 55%),linear-gradient(160deg,var(--navy) 0%,var(--navy-2) 100%)}
+.hero h1{font-size:clamp(48px,8vw,108px)}.hero h1 .row2{display:block;color:var(--lamp)}
+.hero .lede{font-size:19px;margin:14px 0 18px;color:var(--chalk-dim)}
+.hero-ctas{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:0}
 .horizon{position:relative;height:140px;border-bottom:1px solid var(--line-d)}
 .hero-media{position:relative;aspect-ratio:16/7;max-height:440px;width:100%;margin-top:8px;background:linear-gradient(160deg,var(--navy-2) 0%,#1A2E47 55%,var(--field) 100%);border:1px solid var(--line-d);border-radius:8px;box-shadow:0 14px 40px rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;overflow:hidden}
 .hero-media::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent 0 118px,rgba(243,239,230,.05) 118px 120px)}
@@ -74,7 +74,8 @@ background-size:cover;background-position:center right}
 .tower::before{content:"";position:absolute;top:-6px;left:50%;transform:translateX(-50%);width:26px;height:7px;background:var(--lamp);box-shadow:0 0 18px 4px rgba(232,163,61,.6);border-radius:1px}
 .show-grid{display:grid;grid-template-columns:1.5fr 1fr;gap:34px;margin-top:34px}
 @media(max-width:900px){.show-grid{grid-template-columns:1fr}}
-.player{position:relative;aspect-ratio:16/9;background:var(--navy-2);border:1px solid var(--line-d);display:flex;align-items:center;justify-content:center;border-radius:4px}
+.player{position:relative;aspect-ratio:16/9;background:var(--navy-2);border:1px solid var(--line-d);display:flex;align-items:center;justify-content:center;border-radius:4px;overflow:hidden}
+.player .playbtn{position:relative;z-index:2}
 .playbtn{width:84px;height:84px;border-radius:50%;border:2px solid var(--lamp);display:flex;align-items:center;justify-content:center;color:var(--lamp);font-size:30px;cursor:pointer;background:rgba(15,27,45,.55);transition:transform .15s}
 .playbtn:hover{transform:scale(1.06)}
 .player .tag{position:absolute;top:14px;left:14px;font-family:var(--mono);font-size:11px;letter-spacing:.12em;background:var(--lamp);color:var(--navy);padding:4px 10px;border-radius:2px}
@@ -299,7 +300,10 @@ td.rk{color:var(--lamp-deep);font-weight:600;width:44px}td.rating{text-align:rig
 .prize-row .tier{font-family:var(--display);font-weight:800;font-size:22px;color:var(--lamp-deep);flex:0 0 130px;text-transform:uppercase}
 .prize-row .what b{font-size:16px}
 .prize-row .what p{font-size:14px;color:var(--ink-dim);margin-top:2px}
-.cta-band{background:var(--field);color:var(--chalk);padding:34px 0}
+/* Color-rebalance: was full-green (var(--field)); now navy so it reads as
+   part of the same dark zone as the footer directly beneath it, keeping
+   green down to tiny accents only per the client's hierarchy ask. */
+.cta-band{background:var(--navy);color:var(--chalk);padding:22px 0}
 .cta-band .row{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap}
 .cta-band h3{font-family:var(--display);font-weight:800;font-size:clamp(24px,3.4vw,34px);text-transform:uppercase}
 .cta-band p{color:var(--chalk-dim);font-family:var(--mono);font-size:12px;letter-spacing:.06em;margin-top:4px}
@@ -399,7 +403,7 @@ td.star{color:var(--lamp-deep);font-weight:600}
 .guide .body{padding:14px}
 .guide h4{font-family:var(--display);font-weight:700;font-size:19px;text-transform:uppercase;color:var(--chalk)}
 .guide .meta{font-family:var(--mono);font-size:11px;color:var(--chalk-dim);margin-top:4px}
-.guide .team-chip{position:absolute;left:10px;top:100%;transform:translateY(-50%);z-index:2;width:44px;height:44px;border-radius:50%;background:var(--chalk);border:2px solid var(--paper);box-shadow:0 3px 8px rgba(15,27,45,.4);display:flex;align-items:center;justify-content:center;overflow:hidden}
+.guide .team-chip{position:absolute;right:10px;top:100%;transform:translateY(-50%);z-index:2;width:44px;height:44px;border-radius:50%;background:var(--chalk);border:2px solid var(--paper);box-shadow:0 3px 8px rgba(15,27,45,.4);display:flex;align-items:center;justify-content:center;overflow:hidden}
 .guide .team-chip img{width:26px;height:26px;object-fit:contain}
 .log-strip{display:flex;gap:12px;overflow-x:auto;padding:6px 2px;margin-top:24px}
 .log-card{flex:0 0 210px;border:1px solid var(--line-l);background:#fff;padding:16px;border-radius:4px;color:var(--ink)}
@@ -472,7 +476,7 @@ td.star{color:var(--lamp-deep);font-weight:600}
 .mail .from{font-family:var(--mono);font-size:11px;color:var(--ink-dim);margin:4px 0 10px}
 .mail .a{font-size:15px;color:var(--ink-dim);border-left:3px solid var(--lamp);padding-left:14px;font-style:italic}
 .cover-img{width:100%;border-radius:6px;box-shadow:0 18px 50px rgba(15,27,45,.35);display:block}
-footer{background:var(--navy);color:var(--chalk-dim);padding:44px 0 60px;font-family:var(--mono);font-size:12px}
+footer{background:var(--navy);color:var(--chalk-dim);padding:34px 0 40px;font-family:var(--mono);font-size:12px}
 .foot-row{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap}
 .foot-links{display:flex;gap:18px;flex-wrap:wrap;letter-spacing:.08em;text-transform:uppercase}
 .foot-links a:hover{color:var(--chalk)}
@@ -524,23 +528,12 @@ footer{background:var(--navy);color:var(--chalk-dim);padding:44px 0 60px;font-fa
    section automatically with no JSX changes. Inline feTurbulence noise
    SVG, tiled, at ~5% opacity via mix-blend-mode so it never meaningfully
    touches text contrast; pointer-events:none keeps it click-through. */
-.on-dark,.on-field{position:relative}
-.on-dark::after,.on-field::after{
+.on-dark,.on-field,.hero{position:relative}
+.on-dark::after,.on-field::after,.hero::after{
   content:"";position:absolute;inset:0;pointer-events:none;z-index:1;
   opacity:.05;mix-blend-mode:overlay;
   background-repeat:repeat;background-size:220px 220px;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='grain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23grain)'/%3E%3C/svg%3E");
-}
-
-/* --- motion: hero background drift ---
-   Very slow alternate zoom/pan on .hero::before (the photo layer) via
-   transform:scale — never on .hero itself — so text/CTAs in .hero .wrap
-   never move, and overflow:hidden on .hero clips the scaled edges (1→1.06
-   only ever grows past the box, so no gap ever shows). Disabled under
-   reduced-motion. */
-@keyframes heroDrift{from{transform:scale(1)}to{transform:scale(1.06)}}
-@media(prefers-reduced-motion:no-preference){
-  .hero::before{animation:heroDrift 40s ease-in-out infinite alternate}
 }
 
 /* --- homepage-only Week 1 slate strip: slim dark bar below the nav, above
@@ -550,7 +543,7 @@ footer{background:var(--navy);color:var(--chalk-dim);padding:44px 0 60px;font-fa
 .slate-tag{flex:0 0 auto;font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;background:var(--lamp);color:var(--navy);padding:4px 9px;border-radius:2px;white-space:nowrap}
 .slate-item{flex:0 0 auto;display:flex;align-items:center;gap:7px;font-family:var(--mono);font-size:11px;color:var(--chalk-dim);white-space:nowrap;padding:2px 12px;border-left:1px solid var(--line-d)}
 .slate-item:hover{color:var(--chalk)}
-.slate-hel{flex:0 0 auto;width:22px;height:22px;border-radius:50%;overflow:hidden;background:var(--navy-2);display:flex;align-items:center;justify-content:center}
+.slate-hel{flex:0 0 auto;width:22px;height:22px;border-radius:50%;overflow:hidden;background:var(--chalk);display:flex;align-items:center;justify-content:center}
 .slate-hel img{width:100%;height:100%}
 .slate-code{flex:0 0 auto;width:22px;height:22px;border-radius:50%;background:var(--navy-2);color:var(--chalk-dim);font-size:8px;display:flex;align-items:center;justify-content:center}
 .slate-at{color:var(--lamp)}
@@ -653,11 +646,57 @@ footer{background:var(--navy);color:var(--chalk-dim);padding:44px 0 60px;font-fa
 .on-dark .sec-head .view-all:hover,.on-field .sec-head .view-all:hover{color:var(--chalk)}
 
 /* --- poll-band: subtle fixed image texture behind the JP Poll + Pick'Em
-   duo section so the flat navy panels aren't dead — cfb-aerial blended in
-   at ~8% visibility behind the navy via a heavy-alpha gradient layer. --- */
-.poll-band{background-color:var(--navy);
-  background-image:linear-gradient(rgba(15,27,45,.92),rgba(15,27,45,.92)),url(/img/cfb-aerial.jpg);
+   duo section. Color-rebalance pass (client: white/cream dominant, navy
+   second, green least): this band no longer paints full navy — it's cream
+   with the cfb-aerial photo blended in at ~6% visibility, panels inside are
+   the light .panel variant, and the parent no longer carries .on-dark. --- */
+.poll-band{background-color:var(--paper-2);
+  background-image:linear-gradient(rgba(253,252,248,.94),rgba(253,252,248,.94)),url(/img/cfb-aerial.jpg);
   background-size:cover;background-position:center;background-blend-mode:normal}
+
+/* --- color-rebalance helpers: light-band accents ---
+   A light-background variant of .panel that keeps a thin brand-colored top
+   rule as the only navy/green signal, used where a section that used to be
+   a full .panel-dark/.panel-field band converts to a light card instead
+   (client: green reserved for tiny accents, not full bands). .fr-field is
+   the green reading of the existing .fr "franchise badge" chip. */
+.panel-accent-navy{border-top:3px solid var(--navy)}
+.panel-accent-field{border-top:3px solid var(--field)}
+.fr-field{color:var(--field);border-color:var(--field)}
+
+/* --- ep-card: thumbnail-ON-TOP episode card (photo above, title + date
+   below), replacing the old side-by-side .ep row wherever the client asked
+   for bigger, ESPN-Watch-style video tiles — homepage Show band rail and
+   the /show page's dense all-episodes grid. --- */
+.ep-card{display:block}
+.ep-card .ep-thumb{position:relative;aspect-ratio:16/9;border-radius:5px;overflow:hidden;background:var(--navy-2);box-shadow:0 8px 20px rgba(15,27,45,.18)}
+.ep-card .ep-thumb img{transition:transform .5s ease-out}
+.ep-card:hover .ep-thumb img{transform:scale(1.05)}
+.ep-card h4{font-family:var(--display);font-weight:700;font-size:16px;text-transform:uppercase;line-height:1.2;margin-top:10px}
+.ep-card .meta{font-family:var(--mono);font-size:11px;color:var(--ink-dim);margin-top:5px}
+.on-dark .ep-card h4,.on-field .ep-card h4{color:var(--chalk)}
+.on-dark .ep-card .meta,.on-field .ep-card .meta{color:var(--chalk-dim)}
+@media(prefers-reduced-motion:reduce){.ep-card .ep-thumb img{transition:none}}
+.ep-stack{display:flex;flex-direction:column;gap:20px}
+.ep-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;margin-top:26px}
+@media(max-width:1100px){.ep-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:760px){.ep-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:480px){.ep-grid{grid-template-columns:1fr}}
+
+/* --- franchise-strip: horizontal strip of the weekly show franchises
+   (Weekend Truths, Poll Day, ...) on /show — a denser, scannable rework of
+   the old plain <table>, kept per the client (this is the show's actual
+   weekly lineup, not the "host chapters" concept that was removed). --- */
+.franchise-strip{display:flex;gap:12px;overflow-x:auto;padding:6px 2px 10px;margin-top:20px}
+.franchise-chip{flex:0 0 200px;border:1px solid var(--line-l);background:#fff;border-radius:6px;padding:15px 17px}
+.franchise-chip .day{font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--lamp-deep);text-transform:uppercase}
+.franchise-chip b{display:block;font-family:var(--display);font-weight:700;font-size:18px;text-transform:uppercase;margin-top:5px;color:var(--ink)}
+.franchise-chip p{font-size:12.5px;color:var(--ink-dim);margin-top:4px}
+
+/* --- wrap-wide: widened container for pages the client wants denser/less
+   side gutter (currently /show, per the "complete overhaul" density note)
+   without changing the sitewide .wrap max-width everywhere else. --- */
+.wrap-wide{max-width:1440px;margin:0 auto;padding:0 22px}
 
 /* --- rank numerals: oversized gold outlined numerals as graphic elements
    in the JP Poll rankcards, instead of a flat small number. --- */

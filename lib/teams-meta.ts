@@ -118,3 +118,13 @@ const HELMET_SLUGS = new Set<string>([
 export function helmetUrl(slug: string): string | null {
   return HELMET_SLUGS.has(slug) ? `/img/helmets/${slug}.jpg` : null;
 }
+
+// Light-background companion set (public/img/helmets-light/, same 39 slugs)
+// for use on light/cream sections — cream background instead of dark
+// charcoal-navy, so the helmet reads clearly without a dark chip behind it.
+// Every helmet in this set faces RIGHT (mirror of the dark set); mirror
+// with CSS transform:scaleX(-1) wherever a helmet needs to face left (e.g.
+// the away side of a matchup).
+export function helmetLightUrl(slug: string): string | null {
+  return HELMET_SLUGS.has(slug) ? `/img/helmets-light/${slug}.jpg` : null;
+}

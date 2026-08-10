@@ -186,7 +186,7 @@ export default function RecruitingPage() {
         </div>
       </section>
 
-      <section className="on-field">
+      <section className="on-soft">
         <div className="wrap">
           <div className="duo">
             <div>
@@ -194,8 +194,8 @@ export default function RecruitingPage() {
               <h2 className="display" style={{ fontSize: 34 }}>Recruiting News</h2>
               <div style={{ marginTop: 18 }}>
                 {DEMO_RECRUITING_NEWS.map((n) => (
-                  <div className="news-item" style={{ borderColor: "var(--lamp)" }} key={n.headline}>
-                    <b style={{ color: "var(--chalk)" }}>{n.headline}</b>
+                  <div className="news-item" style={{ borderColor: "var(--lamp-deep)" }} key={n.headline}>
+                    <b style={{ color: "var(--ink)" }}>{n.headline}</b>
                     <p>{n.body}</p>
                     <div className="src">{n.src}</div>
                   </div>

@@ -134,7 +134,7 @@ export default function ReportPage() {
         </div>
       </section>
 
-      <section className="on-field tight">
+      <section className="on-soft tight">
         <div className="wrap">
           <p className="eyebrow">Beyond the Newsstand</p>
           <h2 className="display" style={{ fontSize: 32 }}>The Next Level Past Phil Steele</h2>

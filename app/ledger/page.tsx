@@ -64,7 +64,7 @@ export default function LedgerPage() {
         </div>
       </section>
 
-      <section className="on-field tight">
+      <section className="on-soft tight">
         <div className="wrap">
           <p className="eyebrow">Coming This Season</p>
           <h2 className="display" style={{ fontSize: 32 }}>Year-End Wrapped, For Football</h2>

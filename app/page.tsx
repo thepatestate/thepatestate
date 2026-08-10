@@ -5,9 +5,8 @@ import { getPublishedArticles } from "@/lib/sanity";
 import { formatDate } from "@/lib/format";
 import { slugifyTeam, teamLogoUrl } from "@/lib/teams-meta";
 import { createArtPicker } from "@/lib/editorial-art";
-import EpisodeHero from "@/components/EpisodeHero";
+import EpisodeLead from "@/components/EpisodeLead";
 import VideoGrid from "@/components/VideoGrid";
-import SubscribeCTA from "@/components/SubscribeCTA";
 import PreseasonChip from "@/components/PreseasonChip";
 import Reveal from "@/components/Reveal";
 import SlateStrip from "@/components/SlateStrip";
@@ -176,8 +175,8 @@ export default async function Home() {
             and a seat that&apos;s always open. Pull up a chair.
           </p>
           <div className="hero-ctas">
-            <SubscribeCTA label="▶ Watch on YouTube" />
-            <Link className="btn" href="/show">Browse the Show</Link>
+            <Link className="btn gold" href="/show">Browse the Show</Link>
+            <Link className="btn" href="/join">Become a Citizen — Free</Link>
           </div>
         </div>
       </section>
@@ -189,14 +188,14 @@ export default async function Home() {
             <h2 className="display">The Show</h2>
             <div className="show-grid">
               <div>
-                <EpisodeHero video={latest} tag="NEW EPISODE" />
+                <EpisodeLead video={latest} tag="NEW EPISODE" priority />
                 <div className="platforms">
                   <a className="chip" href={CHANNEL_URL} target="_blank" rel="noopener">YouTube</a>
                   <a className="chip" href={APPLE_PODCASTS_URL} target="_blank" rel="noopener">Apple Podcasts</a>
                   <a className="chip" href={SPOTIFY_URL} target="_blank" rel="noopener">Spotify</a>
                 </div>
               </div>
-              <VideoGrid videos={recentEpisodes} />
+              <VideoGrid videos={recentEpisodes} variant="stack" sizes="(max-width: 900px) 45vw, 360px" />
             </div>
             <p className="sched">
               <b>MON</b> Weekend Truths · <b>TUE</b> Poll Day · <b>WED</b> The Sit-Down ·{" "}
@@ -210,92 +209,6 @@ export default async function Home() {
       )}
 
       <div className="yardline" />
-
-      <section className="on-dark tight poll-band">
-        <div className="wrap">
-          <Reveal>
-          <div className="duo">
-            <div className="panel panel-dark">
-              <span className="fr">🗳 THE JP POLL</span>
-              <p className="eyebrow">Vote Sunday · Reveal Tuesday</p>
-              <h3>The People&apos;s Power Ranking</h3>
-              <PreseasonChip />
-              <p>One board, voted by those who actually watch, revealed every Tuesday. The top of this week&apos;s:</p>
-              {DEMO_POLL.map((t) => {
-                const logoUrl = teamLogoUrl(slugifyTeam(t.team));
-                return (
-                <div className="rankcard dark" key={t.rank}>
-                  <div className="rk-num">{t.rank}</div>
-                  {logoUrl ? (
-                    <Image src={logoUrl} alt={`${t.team} logo`} width={60} height={60} className="logo-img" />
-                  ) : (
-                    <div className="logo-box">{t.code}</div>
-                  )}
-                  <div className="rk-main">
-                    <b>{t.team}</b>
-                    <span className="rk-rec">PRESEASON</span>
-                    <div className="pills">
-                      <span className="pill">OFF {t.off}</span>
-                      <span className="pill">DEF {t.def}</span>
-                      <span className="pill">SOS {t.sos}</span>
-                    </div>
-                  </div>
-                  <div className="rk-score">
-                    <span className="val">{t.rating}</span>
-                    {t.delta && (
-                      <span className={`dl ${t.delta}`}>
-                        {t.delta === "up" ? "▲" : "▼"} {t.deltaVal}
-                      </span>
-                    )}
-                    <span className="lbl">JP RATING</span>
-                  </div>
-                </div>
-                );
-              })}
-              <Link className="btn" href="/poll" style={{ width: "100%", textAlign: "center" }}>VIEW ALL 136 →</Link>
-            </div>
-
-            <div className="panel panel-field">
-              <span className="fr">✓ PORCH PICK&apos;EM</span>
-              <p className="eyebrow">Free to Play · Bragging Rights Forever</p>
-              <h3>Porch Pick&apos;Em</h3>
-              <PreseasonChip />
-              <p>Ten games a week against Josh and the whole State. Build a streak. Earn your patches.</p>
-              {DEMO_LEADERBOARD.map((row) => (
-                <div className="lb-row" key={row.rank}>
-                  <span>{row.rank}. {row.name}</span>
-                  <span className="streak">{row.pts}{row.streak ? ` · 🔥 ${row.streak}` : ""}</span>
-                </div>
-              ))}
-              <div
-                style={{
-                  marginTop: 12,
-                  border: "1px dashed var(--line-d)",
-                  borderRadius: 4,
-                  padding: "10px 12px",
-                  fontFamily: "var(--mono)",
-                  fontSize: 12,
-                  color: "var(--chalk)",
-                }}
-              >
-                🎯 <b style={{ color: "var(--lamp)" }}>ONLY 32% OF CITIZENS BEAT JOSH LAST WEEK.</b> Think you can?
-                Picks lock Saturday 11:58 AM ET.
-              </div>
-              <div className="badges">
-                <div className="badge">🏆</div>
-                <div className="badge">🎯</div>
-                <div className="badge">🗳️</div>
-                <div className="badge locked">🏟️</div>
-              </div>
-              <p style={{ marginTop: 14, fontSize: 13 }}>
-                Season champion watches a game with Josh. Top 10 win game tickets.
-              </p>
-              <Link className="btn" href="/pickem">Play Free — See the Prizes</Link>
-            </div>
-          </div>
-          </Reveal>
-        </div>
-      </section>
 
       <section>
         <div className="wrap">
@@ -437,7 +350,93 @@ export default async function Home() {
         </div>
       </section>
 
-      <section className="on-field" id="citizen">
+      <section className="tight poll-band">
+        <div className="wrap">
+          <Reveal>
+          <div className="duo">
+            <div className="panel panel-accent-navy">
+              <span className="fr">🗳 THE JP POLL</span>
+              <p className="eyebrow">Vote Sunday · Reveal Tuesday</p>
+              <h3>The People&apos;s Power Ranking</h3>
+              <PreseasonChip />
+              <p>One board, voted by those who actually watch, revealed every Tuesday. The top of this week&apos;s:</p>
+              {DEMO_POLL.map((t) => {
+                const logoUrl = teamLogoUrl(slugifyTeam(t.team));
+                return (
+                <div className="rankcard" key={t.rank}>
+                  <div className="rk-num">{t.rank}</div>
+                  {logoUrl ? (
+                    <Image src={logoUrl} alt={`${t.team} logo`} width={60} height={60} className="logo-img" />
+                  ) : (
+                    <div className="logo-box">{t.code}</div>
+                  )}
+                  <div className="rk-main">
+                    <b>{t.team}</b>
+                    <span className="rk-rec">PRESEASON</span>
+                    <div className="pills">
+                      <span className="pill">OFF {t.off}</span>
+                      <span className="pill">DEF {t.def}</span>
+                      <span className="pill">SOS {t.sos}</span>
+                    </div>
+                  </div>
+                  <div className="rk-score">
+                    <span className="val">{t.rating}</span>
+                    {t.delta && (
+                      <span className={`dl ${t.delta}`}>
+                        {t.delta === "up" ? "▲" : "▼"} {t.deltaVal}
+                      </span>
+                    )}
+                    <span className="lbl">JP RATING</span>
+                  </div>
+                </div>
+                );
+              })}
+              <Link className="btn" href="/poll" style={{ width: "100%", textAlign: "center" }}>VIEW ALL 136 →</Link>
+            </div>
+
+            <div className="panel panel-accent-field">
+              <span className="fr fr-field">✓ PORCH PICK&apos;EM</span>
+              <p className="eyebrow">Free to Play · Bragging Rights Forever</p>
+              <h3>Porch Pick&apos;Em</h3>
+              <PreseasonChip />
+              <p>Ten games a week against Josh and the whole State. Build a streak. Earn your patches.</p>
+              {DEMO_LEADERBOARD.map((row) => (
+                <div className="lb-row" key={row.rank}>
+                  <span>{row.rank}. {row.name}</span>
+                  <span className="streak">{row.pts}{row.streak ? ` · 🔥 ${row.streak}` : ""}</span>
+                </div>
+              ))}
+              <div
+                style={{
+                  marginTop: 12,
+                  border: "1px dashed var(--line-l)",
+                  borderRadius: 4,
+                  padding: "10px 12px",
+                  fontFamily: "var(--mono)",
+                  fontSize: 12,
+                  color: "var(--ink)",
+                }}
+              >
+                🎯 <b style={{ color: "var(--field)" }}>ONLY 32% OF CITIZENS BEAT JOSH LAST WEEK.</b> Think you can?
+                Picks lock Saturday 11:58 AM ET.
+              </div>
+              <div className="badges">
+                <div className="badge">🏆</div>
+                <div className="badge">🎯</div>
+                <div className="badge">🗳️</div>
+                <div className="badge locked">🏟️</div>
+              </div>
+              <p style={{ marginTop: 14, fontSize: 13 }}>
+                Season champion watches a game with Josh. Top 10 win game tickets.
+              </p>
+              <Link className="btn" href="/pickem">Play Free — See the Prizes</Link>
+            </div>
+          </div>
+          </Reveal>
+        </div>
+      </section>
+
+      <section className="on-soft" id="citizen">
         <div className="wrap" style={{ textAlign: "center" }}>
           <p className="eyebrow">Free Citizenship · The Daily Briefing</p>
           <h2 className="display">The Pate Playbook</h2>
@@ -483,6 +482,15 @@ export default async function Home() {
               <p className="eyebrow">The Porch Goes On the Road</p>
               <h2 className="display" style={{ fontSize: 36 }}>Live &amp; On Campus</h2>
               <PreseasonChip />
+              <div style={{ position: "relative", aspectRatio: "16/9", borderRadius: 6, overflow: "hidden", marginBottom: 16 }}>
+                <Image
+                  src="/img/campus-live.jpg"
+                  alt="The Pate State broadcast desk set up live on a college quad"
+                  fill
+                  sizes="(max-width: 900px) 100vw, 560px"
+                  style={{ objectFit: "cover" }}
+                />
+              </div>
               {DEMO_TOUR.map((t) => (
                 <div className="tour-row" key={`${t.date}-${t.city}`}>
                   <span>{t.date} — {t.city}</span>
@@ -495,7 +503,7 @@ export default async function Home() {
         </div>
       </section>
 
-      <section className="on-field">
+      <section className="on-soft">
         <div className="wrap">
           <p className="eyebrow">Every Stadium. Every Tradition. Every Tailgate.</p>
           <h2 className="display">Pate Tailgate</h2>
@@ -570,7 +578,7 @@ export default async function Home() {
         </div>
       </section>
 
-      <section className="on-dark tight">
+      <section className="tight on-soft on-light">
         <div className="wrap" style={{ textAlign: "center" }}>
           <p className="eyebrow">Follow the Porch Everywhere</p>
           <div className="platforms" style={{ justifyContent: "center" }}>

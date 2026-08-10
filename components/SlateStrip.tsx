@@ -1,18 +1,29 @@
 import Image from "next/image";
 import Link from "next/link";
 import { DEMO_WATCHLIST } from "@/lib/scores-demo";
-import { slugifyTeam, teamLogoUrl, helmetUrl } from "@/lib/teams-meta";
+import { slugifyTeam, teamLogoUrl, helmetLightUrl } from "@/lib/teams-meta";
 
-// Small helmet/logo mark for the slate strip's ~22px team icons. Falls back
-// to a plain three-letter code chip for any team without generated helmet
-// art or a mapped ESPN logo yet (see lib/teams-meta).
-function TeamMark({ team, code }: { team: string; code: string }) {
+// Small helmet/logo mark for the slate strip's ~22px team icons. Uses the
+// light (cream-background) helmet set on a cream chip — no dark navy disc
+// behind it — per the client's color-rebalance pass. Every helmet in that
+// set faces right, so the away/left-side helmet in a matchup is mirrored
+// with scaleX(-1) to face back toward its opponent; the home/right-side
+// helmet is left as-is. Falls back to a plain three-letter code chip for
+// any team without generated helmet art or a mapped ESPN logo yet.
+function TeamMark({ team, code, flip }: { team: string; code: string; flip?: boolean }) {
   const slug = slugifyTeam(team);
-  const src = helmetUrl(slug) ?? teamLogoUrl(slug);
+  const src = helmetLightUrl(slug) ?? teamLogoUrl(slug);
   if (!src) return <span className="slate-code">{code}</span>;
   return (
     <span className="slate-hel">
-      <Image src={src} alt={`${team} helmet`} width={22} height={22} style={{ objectFit: "cover" }} priority />
+      <Image
+        src={src}
+        alt={`${team} helmet`}
+        width={22}
+        height={22}
+        style={{ objectFit: "cover", transform: flip ? "scaleX(-1)" : undefined }}
+        priority
+      />
     </span>
   );
 }
@@ -29,7 +40,7 @@ export default function SlateStrip() {
         <span className="slate-tag">WK 1 PREVIEW</span>
         {games.map((g) => (
           <Link href="/scores" className="slate-item" key={g.n}>
-            <TeamMark team={g.teamA} code={g.codeA} />
+            <TeamMark team={g.teamA} code={g.codeA} flip />
             <span className="slate-at">@</span>
             <TeamMark team={g.teamB} code={g.codeB} />
             <span className="slate-names">

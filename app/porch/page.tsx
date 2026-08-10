@@ -228,10 +228,10 @@ export default async function PorchPage() {
         </div>
       </section>
 
-      <section className="on-field tight">
+      <section className="on-soft tight">
         <div className="wrap">
           <div className="duo">
-            <div className="panel panel-field" style={{ border: "1px solid var(--line-d)" }}>
+            <div className="panel panel-accent-field">
               <p className="eyebrow">Saturdays Together</p>
               <h3>Citizen Watch Parties</h3>
               <p>
@@ -243,7 +243,7 @@ export default async function PorchPage() {
                 <Link href="/tailgate" className="btn">Pate Tailgate: 136 Stadium Guides →</Link>
               </div>
             </div>
-            <div className="panel panel-field" style={{ border: "1px solid var(--line-d)" }}>
+            <div className="panel panel-accent-field">
               <p className="eyebrow">The Tour</p>
               <h3>The Porch, Live</h3>
               {DEMO_TOUR.map((t) => (

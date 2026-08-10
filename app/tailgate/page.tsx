@@ -44,7 +44,7 @@ export default function TailgatePage() {
         </div>
       </header>
 
-      <section className="on-field">
+      <section className="on-soft">
         <div className="wrap">
           <p className="eyebrow">Featured This Week</p>
           <h2 className="display" style={{ fontSize: 38 }}>Week 1: Athens, Georgia</h2>

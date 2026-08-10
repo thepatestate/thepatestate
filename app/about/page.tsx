@@ -79,7 +79,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="on-field">
+      <section>
         <div className="wrap" style={{ textAlign: "center" }}>
           <p className="eyebrow">Pull Up a Chair</p>
           <h2 className="display">Watch the Show</h2>
