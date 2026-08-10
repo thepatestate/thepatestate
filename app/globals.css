@@ -152,7 +152,15 @@ td.rk{color:var(--lamp-deep);font-weight:600;width:44px}td.rating{text-align:rig
 .art p{font-size:14px;color:var(--ink-dim)}
 .art .meta{font-family:var(--mono);font-size:11px;color:var(--ink-dim);margin-top:auto}
 .video-slot{position:relative;aspect-ratio:16/9;background:var(--navy-2);border:1px solid var(--line-d);border-radius:4px;display:flex;align-items:center;justify-content:center}
-.art{flex-direction:row;align-items:stretch}
+/* .art-thumbrow: modifier for the thumbnail+body row layout (team-page
+   "Latest Articles" list, Film Room video card). Was previously a bare
+   `.art{flex-direction:row}` override that clobbered EVERY .art on the
+   site — including /poll's column-layout "Poll Day, Explained" card, which
+   has no .art-thumb/.art-body children, so its kicker/heading/paragraph/
+   button all got forced into a single squashed row. Scoping the row layout
+   to this modifier restores .art's base column layout (declared above) for
+   plain teaser cards while keeping the thumb+body row for cards that use it. */
+.art-thumbrow{flex-direction:row;align-items:stretch}
 .art-thumb{flex:0 0 120px;border-radius:5px;position:relative;overflow:hidden;background:var(--paper-2)}
 .art-thumb.navy{background:var(--navy-2)}
 .art-body{display:flex;flex-direction:column;gap:7px;flex:1}
@@ -340,7 +348,7 @@ td.rk{color:var(--lamp-deep);font-weight:600;width:44px}td.rating{text-align:rig
 .game .tm{display:flex;align-items:center;gap:8px;padding:9px 11px;font-family:var(--mono);font-size:12.5px;border-bottom:1px solid var(--line-l);color:var(--ink)}
 .game .tm:last-child{border-bottom:none}
 .game .tm .sd{color:var(--lamp-deep);font-weight:600;width:18px}
-.game .tm .bracket-helmet{flex:0 0 auto;width:26px;height:26px;border-radius:50%;overflow:hidden;background:var(--navy);display:inline-flex;align-items:center;justify-content:center}
+.game .tm .bracket-helmet{flex:0 0 auto;width:26px;height:26px;border-radius:50%;overflow:hidden;background:var(--paper-2);border:1px solid var(--line-l);display:inline-flex;align-items:center;justify-content:center}
 .game .tm .bracket-helmet img{width:100%;height:100%;transform:scale(1.18)}
 .game .tm.w{background:var(--field-lt);font-weight:600}
 .game .tm.w::after{content:"✓";margin-left:auto;color:#2C7A44;font-weight:700}
@@ -374,7 +382,7 @@ td.rk{color:var(--lamp-deep);font-weight:600;width:44px}td.rating{text-align:rig
 .wk .n{font-family:var(--display);font-weight:800;font-size:30px;color:var(--lamp-deep);width:44px}
 .wk .helms{display:flex;align-items:center;gap:6px;flex:0 0 150px}
 .wk .helms .at{font-family:var(--mono);font-size:10px;color:var(--ink-dim)}
-.wk .helms .helmet-chip{flex:0 0 auto;width:52px;height:52px;border-radius:50%;overflow:hidden;background:var(--navy);display:flex;align-items:center;justify-content:center;border:1px solid var(--line-l)}
+.wk .helms .helmet-chip{flex:0 0 auto;width:52px;height:52px;border-radius:50%;overflow:hidden;background:var(--paper-2);display:flex;align-items:center;justify-content:center;border:1px solid var(--line-l)}
 .wk .helms .helmet-chip img{width:100%;height:100%}
 .wk .who{flex:1}
 .wk .who b{font-size:16px}
@@ -555,6 +563,49 @@ footer{background:var(--navy);color:var(--chalk-dim);padding:34px 0 40px;font-fa
 .week-pill{flex:0 0 auto;font-family:var(--mono);font-size:11px;letter-spacing:.04em;white-space:nowrap;padding:8px 14px;border-radius:20px;border:1px solid var(--line-l);color:var(--ink-dim)}
 .week-pill.active{background:var(--lamp);border-color:var(--lamp);color:var(--navy);font-weight:600}
 .week-pill.disabled{opacity:.45}
+
+/* --- /scores conference-filter tabs (components/ScoreboardTabs.tsx) —
+   same gold-active pill language as .week-pill above, but a clickable
+   <button> row driving client-side filtering rather than a static list. */
+.conf-tabs{display:flex;gap:8px;overflow-x:auto;padding:4px 2px 8px;margin-top:14px;flex-wrap:wrap}
+.conf-tab{flex:0 0 auto;font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;padding:9px 16px;border-radius:20px;border:1px solid var(--line-l);color:var(--ink-dim);background:#fff;cursor:pointer;transition:.15s}
+.conf-tab:hover{border-color:var(--lamp-deep);color:var(--ink)}
+.conf-tab.active{background:var(--lamp);border-color:var(--lamp);color:var(--navy);font-weight:700}
+
+/* --- /scores "This Week's Slate" day-by-day schedule rows --- */
+.dayslate{margin-top:22px}
+.dayslate-day{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--lamp-deep);border-bottom:1px solid var(--line-l);padding-bottom:6px;margin-bottom:2px}
+.dayslate-row{display:flex;align-items:center;gap:12px;padding:9px 2px;border-bottom:1px solid var(--line-l)}
+.dayslate-row:last-child{border-bottom:none}
+.dayslate-row .dr-hel{width:28px;height:28px;border-radius:50%;overflow:hidden;background:var(--paper-2);display:flex;align-items:center;justify-content:center;flex:0 0 auto;border:1px solid var(--line-l)}
+.dayslate-row .dr-hel img{width:100%;height:100%;object-fit:cover}
+.dayslate-row .dr-teams{display:flex;align-items:center;gap:8px;flex:1;font-size:14.5px;font-weight:600;color:var(--ink)}
+.dayslate-row .dr-teams .at{font-family:var(--mono);font-size:10px;color:var(--ink-dim);font-weight:400}
+.dayslate-row .dr-net{font-family:var(--mono);font-size:12px;color:var(--field);font-weight:600;width:64px;text-align:right;flex:0 0 auto}
+.dayslate-row .dr-time{font-family:var(--mono);font-size:12px;color:var(--ink-dim);width:88px;text-align:right;flex:0 0 auto}
+@media(max-width:640px){.dayslate-row .dr-time{width:auto}}
+
+/* --- /playoffs Playoff Predictor bars: gold fill on a light track --- */
+.predictor-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px 28px;margin-top:20px}
+@media(max-width:800px){.predictor-grid{grid-template-columns:1fr}}
+.predictor-row{display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid var(--line-l)}
+.predictor-row .pr-hel{width:30px;height:30px;border-radius:50%;overflow:hidden;background:var(--paper-2);border:1px solid var(--line-l);flex:0 0 auto;display:flex;align-items:center;justify-content:center}
+.predictor-row .pr-hel img{width:100%;height:100%;object-fit:contain}
+.predictor-row .pr-name{flex:0 0 128px;font-size:14px;font-weight:600;color:var(--ink)}
+.predictor-row .pr-bar-track{flex:1;height:8px;border-radius:4px;background:var(--paper-2);border:1px solid var(--line-l);overflow:hidden}
+.predictor-row .pr-bar-fill{height:100%;background:linear-gradient(90deg,var(--lamp-deep),var(--lamp));border-radius:4px}
+.predictor-row .pr-pct{flex:0 0 40px;font-family:var(--mono);font-size:13px;font-weight:700;color:var(--lamp-deep);text-align:right}
+
+/* --- shared right-rail card (used by /poll's Poll Movement / How the Poll
+   Works / latest-video widgets — same boxed-white-card language as .wire) */
+.rail-card{border:1px solid var(--line-l);background:#fff;border-radius:4px;padding:18px;margin-bottom:16px}
+.rail-card h4{font-family:var(--display);font-weight:800;font-size:18px;text-transform:uppercase;margin-bottom:10px}
+.rail-card p{font-size:13.5px;color:var(--ink-dim)}
+.rail-row{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--line-l);font-size:13.5px}
+.rail-row:last-child{border-bottom:none}
+.rail-row .rr-hel{width:22px;height:22px;border-radius:50%;overflow:hidden;flex:0 0 auto;background:var(--paper-2);border:1px solid var(--line-l)}
+.rail-row .rr-hel img{width:100%;height:100%;object-fit:contain}
+.rail-row .rr-name{flex:1;font-weight:600;color:var(--ink)}
 
 /* ==========================================================================
    2026 design pass — image-first tiles, bento grids, unique editorial art

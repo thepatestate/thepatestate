@@ -2,16 +2,18 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import PreseasonChip from "@/components/PreseasonChip";
+import EpisodeLead from "@/components/EpisodeLead";
+import ScoreboardTabs from "@/components/ScoreboardTabs";
 import { TEAMS_TOP25, TEAMS_ALL } from "@/lib/teams";
-import { slugifyTeam, teamLogoUrl, helmetUrl } from "@/lib/teams-meta";
+import { slugifyTeam, teamLogoUrl, helmetLightUrl } from "@/lib/teams-meta";
+import { getVideos } from "@/lib/youtube";
+import { createArtPicker } from "@/lib/editorial-art";
 import {
-  DEMO_LIVE_SCORES,
-  DEMO_UPCOMING_SCORES,
+  DEMO_SCOREBOARD_GAMES,
   DEMO_CONF_COL1,
   DEMO_CONF_COL2,
   DEMO_WATCHLIST,
-  teamNameFromLabel,
-  type ScoreCardData,
+  type WatchlistGame,
 } from "@/lib/scores-demo";
 
 export const metadata: Metadata = { title: "Scores & Schedule" };
@@ -36,31 +38,6 @@ const CFB_WEEKS = [
   { wk: 13, range: "NOV 24–30" },
   { wk: 14, range: "DEC 1–7" },
 ] as const;
-
-function ScoreCard({ card }: { card: ScoreCardData }) {
-  return (
-    <div className="score-card">
-      <div className="st">
-        {card.live ? <span className="live">{card.st}</span> : <span>{card.st}</span>}
-        <span>{card.net}</span>
-      </div>
-      {card.teams.map((t) => {
-        const logoUrl = teamLogoUrl(slugifyTeam(teamNameFromLabel(t.label)));
-        return (
-          <div className={t.lead ? "tm lead" : "tm"} key={t.label}>
-            <span style={{ display: "flex", alignItems: "center", gap: 6 }}>
-              {logoUrl && (
-                <Image src={logoUrl} alt="" width={20} height={20} style={{ objectFit: "contain" }} />
-              )}
-              <b>{t.label}</b>
-            </span>
-            <span className="pts">{t.pts}</span>
-          </div>
-        );
-      })}
-    </div>
-  );
-}
 
 const MATCHUP_STYLE = { background: "var(--navy-2)", borderColor: "var(--line-d)", color: "var(--chalk)" } as const;
 
@@ -127,13 +104,14 @@ function TeamIcon({ team, fill, mask, flip }: { team: string; fill: string; mask
 }
 
 // Real blank-helmet studio photo for the Watch List matchups, noticeably
-// larger than the plain TeamIcon logo it replaces. Every source photo faces
-// LEFT in identical framing, so the home/right-side helmet (flip) is
-// mirrored with scaleX(-1) to make the pair face each other like a matchup
-// poster. Falls back to TeamIcon (real logo, or the placeholder SVG) for
-// any team without a generated helmet yet.
+// larger than the plain TeamIcon logo it replaces. Every source photo in the
+// light (cream-background) set faces RIGHT in identical framing, so the
+// away/left-side helmet (flip) is mirrored with scaleX(-1) to face back
+// toward its opponent — the home/right-side helmet keeps its natural
+// rightward-facing orientation. Falls back to TeamIcon (real logo, or the
+// placeholder SVG) for any team without a generated helmet yet.
 function MatchupHelmet({ team, fill, mask, flip }: { team: string; fill: string; mask: string; flip?: boolean }) {
-  const helmet = helmetUrl(slugifyTeam(team));
+  const helmet = helmetLightUrl(slugifyTeam(team));
   if (helmet) {
     return (
       <span className="helmet-chip">
@@ -150,7 +128,48 @@ function MatchupHelmet({ team, fill, mask, flip }: { team: string; fill: string;
   return <TeamIcon team={team} fill={fill} mask={mask} flip={flip} />;
 }
 
-export default function ScoresPage() {
+// Small circular helmet mark for the "This Week's Slate" day-by-day rows —
+// same light-helmet-on-cream-chip treatment as the Watch List above, just
+// smaller. Falls back to the plain ESPN logo (no chip) for any team without
+// generated helmet art.
+function SlateHelmet({ team, flip }: { team: string; flip?: boolean }) {
+  const slug = slugifyTeam(team);
+  const helmet = helmetLightUrl(slug);
+  if (helmet) {
+    return (
+      <span className="dr-hel">
+        <Image src={helmet} alt="" width={28} height={28} style={{ transform: flip ? "scaleX(-1)" : undefined }} />
+      </span>
+    );
+  }
+  const logoUrl = teamLogoUrl(slug);
+  return logoUrl ? (
+    <span className="dr-hel">
+      <Image src={logoUrl} alt="" width={28} height={28} style={{ objectFit: "contain" }} />
+    </span>
+  ) : null;
+}
+
+// This Week's Slate groups the same 10 Watch List games (lib/scores-demo's
+// DEMO_WATCHLIST) by kickoff day/session instead of the Watch List's
+// ranked-by-quality order — a day-by-day view of the same real demo
+// schedule, not a second copy-pasted game list. Grouped by each game's `n`
+// so both sections stay driven from one source of truth.
+const SLATE_DAYPARTS: { label: string; gameNs: readonly WatchlistGame["n"][] }[] = [
+  { label: "THU AUG 27", gameNs: ["08"] },
+  { label: "FRI AUG 28", gameNs: ["09"] },
+  { label: "SAT AUG 29 — MORNING / AFTERNOON", gameNs: ["03", "06", "02", "07"] },
+  { label: "SAT AUG 29 — NIGHT", gameNs: ["01", "05"] },
+  { label: "SUN AUG 30", gameNs: ["04"] },
+  { label: "MON SEP 7", gameNs: ["10"] },
+];
+
+export default async function ScoresPage() {
+  const videos = await getVideos();
+  const latestVideo = videos[0] ?? null;
+  const art = createArtPicker();
+  const filmTeaser = art.pick("schedule", "A stadium lit up at night, seen from above");
+
   return (
     <main>
       <header className="page-head">
@@ -179,23 +198,47 @@ export default function ScoresPage() {
               </span>
             ))}
           </div>
-          <span className="note" style={{ display: "inline-block" }}>Live weekly slates arrive with the season</span>
-          <div className="score-strip">
-            {DEMO_LIVE_SCORES.map((c) => <ScoreCard card={c} key={c.st + c.net} />)}
-          </div>
-          <div className="score-strip" style={{ marginTop: 12 }}>
-            {DEMO_UPCOMING_SCORES.map((c) => <ScoreCard card={c} key={c.st + c.net} />)}
-          </div>
-          <div style={{ marginTop: 18 }}><Link className="btn" href="/teams">Full Scoreboard — All 136 Teams</Link></div>
+          <ScoreboardTabs games={DEMO_SCOREBOARD_GAMES} />
+          <div style={{ marginTop: 14 }}><Link className="btn" href="/teams">Full Scoreboard — All 136 Teams</Link></div>
         </div>
       </section>
 
-      <section className="on-dark">
+      <section>
+        <div className="wrap">
+          <p className="eyebrow">Plan Your Saturday (and Thursday, and Monday)</p>
+          <h2 className="display" style={{ fontSize: 34 }}>This Week&apos;s Slate</h2>
+          <PreseasonChip />
+          <div className="dayslate">
+            {SLATE_DAYPARTS.map((part) => (
+              <div key={part.label} style={{ marginBottom: 18 }}>
+                <div className="dayslate-day">{part.label}</div>
+                {part.gameNs.map((n) => {
+                  const g = DEMO_WATCHLIST.find((game) => game.n === n);
+                  if (!g) return null;
+                  return (
+                    <div className="dayslate-row" key={g.n}>
+                      <SlateHelmet team={g.teamA} flip />
+                      <div className="dr-teams">
+                        {g.teamA} <span className="at">at</span> {g.teamB}
+                      </div>
+                      <SlateHelmet team={g.teamB} />
+                      <span className="dr-net">{g.tv.split(" · ")[0]}</span>
+                      <span className="dr-time">{g.tv.split(" · ")[1] ?? g.tv}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="on-dark tight">
         <div className="wrap">
           <p className="eyebrow">The Porch Guide to the Week</p>
           <h2 className="display" style={{ fontSize: 36 }}>The Best Game in Every Conference</h2>
           <PreseasonChip />
-          <div className="duo" style={{ marginTop: 20 }}>
+          <div className="duo" style={{ marginTop: 18 }}>
             <div><ConfMatchups rows={DEMO_CONF_COL1} /></div>
             <div>
               <ConfMatchups rows={DEMO_CONF_COL2} />
@@ -209,7 +252,7 @@ export default function ScoresPage() {
         </div>
       </section>
 
-      <section className="on-soft">
+      <section className="on-soft tight">
         <div className="wrap">
           <p className="eyebrow">Find Your Team</p>
           <h2 className="display" style={{ fontSize: 36 }}>Every Schedule, One Tap</h2>
@@ -218,7 +261,7 @@ export default function ScoresPage() {
             Pick your program and get the full slate — home games in gold, ranked opponents flagged. All 136 teams
             in production; six shown in this demo.
           </p>
-          <div className="tool" style={{ margin: "20px 0 0", maxWidth: 820 }}>
+          <div className="tool" style={{ margin: "18px 0 0", maxWidth: 820 }}>
             <label htmlFor="teamSel">Your team</label>
             <select id="teamSel" disabled defaultValue="georgia">
               <optgroup label="THE JP TOP 25">
@@ -260,14 +303,45 @@ export default function ScoresPage() {
               <div className="wk" key={g.n}>
                 <div className="n">{g.n}</div>
                 <div className="helms">
-                  <MatchupHelmet team={g.teamA} fill={g.left.fill} mask={g.left.mask} />
+                  <MatchupHelmet team={g.teamA} fill={g.left.fill} mask={g.left.mask} flip />
                   <span className="at">AT</span>
-                  <MatchupHelmet team={g.teamB} fill={g.right.fill} mask={g.right.mask} flip />
+                  <MatchupHelmet team={g.teamB} fill={g.right.fill} mask={g.right.mask} />
                 </div>
                 <div className="who"><b>{g.title}</b><div className="meta">{g.meta}</div></div>
                 <div className="tv">{g.tv}</div>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="on-soft">
+        <div className="wrap">
+          <p className="eyebrow">Catch Up</p>
+          <h2 className="display" style={{ fontSize: 34 }}>The Film Room</h2>
+          <PreseasonChip />
+          <div className="duo" style={{ marginTop: 18 }}>
+            {latestVideo ? (
+              <EpisodeLead video={latestVideo} tag="LATEST FROM THE SHOW" />
+            ) : (
+              <div className="art">
+                <span className="kick">Latest From the Show</span>
+                <h4>New Episodes Every Week</h4>
+                <p>Video loads live from the channel — check back once the feed is connected.</p>
+              </div>
+            )}
+            <Link href="/notebook" className="art" style={{ textDecoration: "none" }}>
+              <div className="bleed-thumb" style={{ position: "relative", height: 160 }}>
+                <Image src={filmTeaser.src} alt={filmTeaser.alt} fill sizes="(max-width: 860px) 100vw, 400px" style={{ objectFit: "cover" }} />
+              </div>
+              <span className="kick">The Written Companion</span>
+              <h4>Poll Day, Explained</h4>
+              <p>
+                Every ranked score, every kickoff window, every network — the week&apos;s full slate broken down in
+                writing, the same day the games are decided.
+              </p>
+              <span className="meta">JOSH PATE · READ IN THE NOTEBOOK →</span>
+            </Link>
           </div>
         </div>
       </section>

@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import PreseasonChip from "@/components/PreseasonChip";
-import { slugifyTeam, teamLogoUrl, helmetUrl } from "@/lib/teams-meta";
+import { slugifyTeam, teamLogoUrl, helmetLightUrl } from "@/lib/teams-meta";
+import { createArtPicker } from "@/lib/editorial-art";
 
 export const metadata: Metadata = { title: "The Playoffs" };
 
@@ -74,7 +75,7 @@ const DEMO_JOSH_BRACKET: readonly BRound[] = [
 // nothing when the team has no generated helmet yet (the row layout is
 // unaffected either way since the .tm flex row already has a gap).
 function BracketHelmet({ team }: { team: string }) {
-  const helmet = helmetUrl(slugifyTeam(team));
+  const helmet = helmetLightUrl(slugifyTeam(team));
   if (!helmet) return null;
   return (
     <span className="bracket-helmet">
@@ -159,11 +160,49 @@ function SeedTable({ rows }: { rows: typeof DEMO_SEEDS_COL1 | typeof DEMO_SEEDS_
   );
 }
 
+// Playoff Predictor percentages — same 16 teams as the seed tables above
+// (the 12 seeds plus the 4 "First Four Out" already named in that section's
+// footnote), in descending JP Poll order. Demo numbers only; PreseasonChip
+// labels the whole section.
+const DEMO_PREDICTOR_PCTS = [
+  { team: "Georgia", pct: 97 },
+  { team: "Ohio State", pct: 95 },
+  { team: "Clemson", pct: 91 },
+  { team: "Boise State", pct: 88 },
+  { team: "Texas", pct: 82 },
+  { team: "Oregon", pct: 79 },
+  { team: "Penn State", pct: 74 },
+  { team: "LSU", pct: 68 },
+  { team: "Notre Dame", pct: 61 },
+  { team: "Alabama", pct: 54 },
+  { team: "Miami", pct: 47 },
+  { team: "Indiana", pct: 41 },
+  { team: "Michigan", pct: 34 },
+  { team: "Utah", pct: 27 },
+  { team: "Tennessee", pct: 21 },
+  { team: "Texas Tech", pct: 16 },
+] as const;
+
+// "Read the Room" articles strip — sample teasers only, never linked to a
+// real article route (matches the site's established demo-card pattern);
+// the lead card points at /notebook, where part C will publish Josh's real
+// bracket column (docs/content/josh-playoff-bracket-2026.md). Art categories
+// deliberately avoid "playoffs" a second time — its fallback candidate is
+// matchup-helmets.jpg, and this page must show zero references to that
+// banner image now that the top-of-page banner is gone.
+const DEMO_READ_ROOM = [
+  { title: "Why the AI Predictor Still Has Texas", meta: "THE MACHINE'S CASE · STAFF", art: "media" as const },
+  { title: "The Case for Indiana's Cinderella Run", meta: "UPSET WATCH · STAFF", art: "rankings-movement" as const },
+  { title: "First Four Out: The Committee Explains the Snubs", meta: "THE SELECTION SHOW · STAFF", art: "state" as const },
+] as const;
+
 const DEMO_CHAMP_OPTIONS = ["Georgia", "Ohio State", "Texas", "Oregon", "Penn State", "LSU", "Clemson", "Notre Dame", "Alabama", "Miami", "Indiana", "Boise State"] as const;
 const DEMO_DARKHORSE_OPTIONS = ["Indiana", "Missouri", "Texas Tech", "Utah", "Tennessee", "Michigan", "Vanderbilt", "Iowa State"] as const;
 const DEMO_PREDICTOR_WEEKS = ["Preseason — project from talent & schedules", "Mid-October — contenders separating", "Selection Sunday — final field"] as const;
 
 export default function PlayoffsPage() {
+  const art = createArtPicker();
+  const readRoomLead = art.pick("playoffs", "Josh Pate breaking down his 2026 playoff bracket on the show");
   return (
     <main>
       <header className="page-head">
@@ -179,17 +218,6 @@ export default function PlayoffsPage() {
 
       <section>
         <div className="wrap">
-          <div className="banner-photo">
-            <Image
-              src="/img/matchup-helmets.jpg"
-              alt="Blank navy and gold helmets facing off before kickoff"
-              fill
-              sizes="(max-width: 900px) 100vw, 1180px"
-              style={{ objectFit: "cover" }}
-              priority
-            />
-            <div className="overlay" />
-          </div>
           <p className="eyebrow">If the Season Ended Today</p>
           <h2 className="display" style={{ fontSize: 38 }}>Two Brackets. One January.</h2>
           <PreseasonChip />
@@ -212,7 +240,7 @@ export default function PlayoffsPage() {
           <PreseasonChip />
           <TourneyBracket rounds={DEMO_JOSH_BRACKET} champTitle="JOSH'S CHAMPION" champName="Georgia" />
 
-          <div style={{ marginTop: 44 }}>
+          <div style={{ marginTop: 30 }}>
             <p className="eyebrow">The Committee of the Citizens</p>
             <h2 className="display" style={{ fontSize: 34 }}>Current Playoff Rankings</h2>
             <PreseasonChip />
@@ -334,6 +362,74 @@ export default function PlayoffsPage() {
               <button className="btn solid" id="predictBtn" disabled>Project the Field</button>
             </div>
             <p className="note" style={{ marginTop: 14 }}>Predictor arrives with the season.</p>
+          </div>
+        </div>
+      </section>
+
+      <section className="tight">
+        <div className="wrap">
+          <p className="eyebrow">The Field, Ranked by Odds</p>
+          <h2 className="display" style={{ fontSize: 34 }}>Playoff Predictor</h2>
+          <PreseasonChip />
+          <p className="lede">
+            Every team still alive for the 12-team field, seeded from the JP Poll, with the machine&apos;s current
+            chance to make it.
+          </p>
+          <div className="predictor-grid">
+            {DEMO_PREDICTOR_PCTS.map((r, i) => {
+              const logoUrl = teamLogoUrl(slugifyTeam(r.team));
+              return (
+                <div className="predictor-row" key={r.team}>
+                  <span style={{ fontFamily: "var(--mono)", fontSize: 11, color: "var(--ink-dim)", width: 20 }}>{i + 1}</span>
+                  <span className="pr-hel">
+                    {logoUrl && <Image src={logoUrl} alt={`${r.team} logo`} width={30} height={30} style={{ objectFit: "contain" }} />}
+                  </span>
+                  <span className="pr-name">{r.team}</span>
+                  <span className="pr-bar-track">
+                    <span className="pr-bar-fill" style={{ width: `${r.pct}%` }} />
+                  </span>
+                  <span className="pr-pct">{r.pct}%</span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      <section className="on-soft tight">
+        <div className="wrap">
+          <p className="eyebrow">Read the Room</p>
+          <h2 className="display" style={{ fontSize: 34 }}>More on the Bracket</h2>
+          <PreseasonChip />
+          <div className="bento" style={{ marginTop: 18 }}>
+            <Link href="/notebook" className="tile tile-lead">
+              <div className="tile-media">
+                <Image src={readRoomLead.src} alt={readRoomLead.alt} fill sizes="(max-width: 900px) 100vw, 640px" style={{ objectFit: "cover" }} />
+              </div>
+              <div className="tile-scrim" />
+              <div className="tile-body">
+                <span className="tile-kicker">Josh Pate · On the Record</span>
+                <h3 className="tile-headline">My 2026 Playoff Bracket, On the Record</h3>
+                <span className="tile-meta">JOSH PATE · READ IN THE NOTEBOOK →</span>
+              </div>
+            </Link>
+            <div className="bento-stack">
+              {DEMO_READ_ROOM.map((item) => {
+                const img = art.pick(item.art, item.title);
+                return (
+                  <Link href="/notebook" className="tile" key={item.title}>
+                    <div className="tile-media">
+                      <Image src={img.src} alt={img.alt} fill sizes="(max-width: 900px) 100vw, 320px" style={{ objectFit: "cover" }} />
+                    </div>
+                    <div className="tile-scrim" />
+                    <div className="tile-body">
+                      <h4 className="tile-headline" style={{ fontSize: "clamp(15px,1.6vw,19px)" }}>{item.title}</h4>
+                      <span className="tile-meta">{item.meta}</span>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
           </div>
         </div>
       </section>

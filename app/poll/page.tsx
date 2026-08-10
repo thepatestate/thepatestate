@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import PreseasonChip from "@/components/PreseasonChip";
+import EpisodeLead from "@/components/EpisodeLead";
 import { slugifyTeam, teamLogoUrl } from "@/lib/teams-meta";
+import { getVideos } from "@/lib/youtube";
 
 export const metadata: Metadata = { title: "The JP Poll" };
 
@@ -24,6 +26,10 @@ const UP = (n: number): Delta => ({ sym: `▲${n}`, cls: "up" });
 const DN = (n: number): Delta => ({ sym: `▼${n}`, cls: "dn" });
 const SAME: Delta = { sym: "↔", cls: null };
 
+// Full JP Top 25, all 25 rows (was previously truncated at 12 with a dead
+// "See 13-25" link) — every team here is already mapped in
+// lib/teams-meta's TEAM_LOGOS, so the full board can show a real logo
+// instead of a letter tile.
 const DEMO_DISAGREE = [
   { rk: "01", team: "Georgia", ap: SAME, coaches: SAME, cfp: SAME, star: false },
   { rk: "02", team: "Ohio State", ap: SAME, coaches: DN(1), cfp: SAME, star: false },
@@ -37,6 +43,30 @@ const DEMO_DISAGREE = [
   { rk: "10", team: "Miami", ap: UP(2), coaches: UP(1), cfp: SAME, star: false },
   { rk: "11", team: "Indiana", ap: UP(4), coaches: UP(5), cfp: UP(3), star: true },
   { rk: "12", team: "Michigan", ap: DN(1), coaches: SAME, cfp: DN(1), star: false },
+  { rk: "13", team: "Nebraska", ap: DN(2), coaches: SAME, cfp: DN(1), star: false },
+  { rk: "14", team: "Ole Miss", ap: UP(3), coaches: UP(2), cfp: UP(4), star: true },
+  { rk: "15", team: "Wisconsin", ap: SAME, coaches: DN(1), cfp: SAME, star: false },
+  { rk: "16", team: "USC", ap: UP(1), coaches: SAME, cfp: UP(2), star: false },
+  { rk: "17", team: "Oklahoma", ap: DN(4), coaches: DN(3), cfp: DN(2), star: true },
+  { rk: "18", team: "Tennessee", ap: UP(2), coaches: UP(1), cfp: SAME, star: false },
+  { rk: "19", team: "Florida", ap: SAME, coaches: SAME, cfp: UP(1), star: false },
+  { rk: "20", team: "Missouri", ap: UP(5), coaches: UP(4), cfp: UP(6), star: true },
+  { rk: "21", team: "Iowa", ap: DN(1), coaches: SAME, cfp: DN(2), star: false },
+  { rk: "22", team: "Washington", ap: SAME, coaches: UP(1), cfp: SAME, star: false },
+  { rk: "23", team: "Utah", ap: UP(2), coaches: UP(3), cfp: UP(1), star: false },
+  { rk: "24", team: "Colorado", ap: DN(3), coaches: DN(2), cfp: DN(4), star: false },
+  { rk: "25", team: "BYU", ap: UP(1), coaches: SAME, cfp: UP(2), star: false },
+] as const;
+
+// Poll Movement rail widget — the JP Poll's own week-over-week risers and
+// fallers (not a comparison against another poll, unlike the table above).
+const DEMO_POLL_MOVEMENT = [
+  { team: "LSU", dir: "up" as const, delta: 3 },
+  { team: "Missouri", dir: "up" as const, delta: 5 },
+  { team: "Indiana", dir: "up" as const, delta: 4 },
+  { team: "Alabama", dir: "dn" as const, delta: 3 },
+  { team: "Oklahoma", dir: "dn" as const, delta: 4 },
+  { team: "Colorado", dir: "dn" as const, delta: 3 },
 ] as const;
 
 const DEMO_FOUR_BOARDS = [
@@ -59,7 +89,18 @@ const DEMO_BALLOT_ITEMS = [
   "Best atmosphere you attended",
 ] as const;
 
-export default function PollPage() {
+// Small inline team mark for table rows — letter tiles die per the client's
+// note; every team on this page already has a logo mapped in
+// lib/teams-meta, so this never needs a fallback.
+function TeamMark({ team }: { team: string }) {
+  const logoUrl = teamLogoUrl(slugifyTeam(team));
+  if (!logoUrl) return null;
+  return <Image src={logoUrl} alt="" width={22} height={22} style={{ objectFit: "contain", verticalAlign: "middle" }} />;
+}
+
+export default async function PollPage() {
+  const videos = await getVideos();
+  const latestVideo = videos[0] ?? null;
   return (
     <main>
       <header className="page-head">
@@ -77,103 +118,148 @@ export default function PollPage() {
         <div className="wrap">
           <span className="fr">🗳 THE JP POLL</span>
           <p className="eyebrow">This Week&apos;s Board</p>
-          <h2 className="display" style={{ fontSize: 38 }}>The Top Five</h2>
+          <h2 className="display" style={{ fontSize: 38 }}>The Top 25</h2>
           <PreseasonChip />
-          <div style={{ maxWidth: 860, marginTop: 16 }}>
-            {DEMO_TOP5.map((t) => {
-              const logoUrl = teamLogoUrl(slugifyTeam(t.team));
-              return (
-              <div className="rankcard" key={t.rank}>
-                <div className="rk-num">{t.rank}</div>
-                {logoUrl ? (
-                  <Image src={logoUrl} alt={`${t.team} logo`} width={60} height={60} className="logo-img" />
-                ) : (
-                  <div className="logo-box">{t.code}</div>
-                )}
-                <div className="rk-main">
-                  <b>{t.team}</b>
-                  <span className="rk-rec">{t.rec}</span>
-                  <div className="pills">
-                    <span className="pill">OFF {t.off}</span>
-                    <span className="pill">DEF {t.def}</span>
-                    <span className="pill">SOS {t.sos}</span>
+          <div className="duo" style={{ gridTemplateColumns: "2fr 1fr", marginTop: 16, alignItems: "start" }}>
+            <div>
+              <p className="eyebrow" style={{ marginBottom: 6 }}>The Top Five</p>
+              {DEMO_TOP5.map((t) => {
+                const logoUrl = teamLogoUrl(slugifyTeam(t.team));
+                return (
+                <div className="rankcard" key={t.rank}>
+                  <div className="rk-num">{t.rank}</div>
+                  {logoUrl ? (
+                    <Image src={logoUrl} alt={`${t.team} logo`} width={60} height={60} className="logo-img" />
+                  ) : (
+                    <div className="logo-box">{t.code}</div>
+                  )}
+                  <div className="rk-main">
+                    <b>{t.team}</b>
+                    <span className="rk-rec">{t.rec}</span>
+                    <div className="pills">
+                      <span className="pill">OFF {t.off}</span>
+                      <span className="pill">DEF {t.def}</span>
+                      <span className="pill">SOS {t.sos}</span>
+                    </div>
+                  </div>
+                  <div className="rk-score">
+                    <span className="val">{t.rating}</span>
+                    {t.delta && (
+                      <span className={`dl ${t.delta}`}>{t.delta === "up" ? "▲" : "▼"} {t.deltaVal}</span>
+                    )}
+                    <span className="lbl">JP RATING</span>
                   </div>
                 </div>
-                <div className="rk-score">
-                  <span className="val">{t.rating}</span>
-                  {t.delta && (
-                    <span className={`dl ${t.delta}`}>{t.delta === "up" ? "▲" : "▼"} {t.deltaVal}</span>
-                  )}
-                  <span className="lbl">JP RATING</span>
+                );
+              })}
+              <div style={{ marginTop: 8 }}><Link className="btn" href="/teams">VIEW ALL 136 →</Link></div>
+
+              <div style={{ marginTop: 34 }}>
+                <p className="eyebrow">Week 1 — The Full Board</p>
+                <h2 className="display" style={{ fontSize: 30 }}>Where the Porch Disagrees</h2>
+                <PreseasonChip />
+                <table style={{ marginTop: 14 }}>
+                  <thead>
+                    <tr><th>JP</th><th>TEAM</th><th>VS. AP</th><th>VS. COACHES</th><th>VS. CFP</th><th></th></tr>
+                  </thead>
+                  <tbody>
+                    {DEMO_DISAGREE.map((r) => (
+                      <tr key={r.rk}>
+                        <td className="rk">{r.rk}</td>
+                        <td>
+                          <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
+                            <TeamMark team={r.team} /> <b>{r.team}</b>
+                          </span>
+                        </td>
+                        <td className={r.ap.cls ?? undefined}>{r.ap.sym}</td>
+                        <td className={r.coaches.cls ?? undefined}>{r.coaches.sym}</td>
+                        <td className={r.cfp.cls ?? undefined}>{r.cfp.sym}</td>
+                        <td className={r.star ? "star" : undefined}>{r.star ? "★" : ""}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+                <div className="legend">
+                  <span><b>▲▼</b> spots higher / lower than that poll</span>
+                  <span><b>↔</b> same spot</span>
+                  <span><b>★</b> biggest disagreement of the week</span>
+                </div>
+                <div style={{ marginTop: 12, fontFamily: "var(--mono)", fontSize: 12, color: "var(--ink-dim)" }}>
+                  All 25, full ballot data ·{" "}
+                  <Link href="/#" style={{ color: "var(--lamp-deep)" }}>All 136 Teams Rated</Link> ·{" "}
+                  <Link href="/#" style={{ color: "var(--lamp-deep)" }}>Poll Archive</Link>
                 </div>
               </div>
-              );
-            })}
-          </div>
-          <div style={{ marginTop: 8 }}><Link className="btn" href="/teams">VIEW ALL 136 →</Link></div>
-        </div>
-      </section>
 
-      <section>
-        <div className="wrap">
-          <p className="eyebrow">Week 1 — The JP Top 25 vs. Everybody</p>
-          <h2 className="display" style={{ fontSize: 36 }}>Where the Porch Disagrees</h2>
-          <PreseasonChip />
-          <table style={{ marginTop: 18 }}>
-            <thead>
-              <tr><th>JP</th><th>TEAM</th><th>VS. AP</th><th>VS. COACHES</th><th>VS. CFP</th><th></th></tr>
-            </thead>
-            <tbody>
-              {DEMO_DISAGREE.map((r) => (
-                <tr key={r.rk}>
-                  <td className="rk">{r.rk}</td>
-                  <td><b>{r.team}</b></td>
-                  <td className={r.ap.cls ?? undefined}>{r.ap.sym}</td>
-                  <td className={r.coaches.cls ?? undefined}>{r.coaches.sym}</td>
-                  <td className={r.cfp.cls ?? undefined}>{r.cfp.sym}</td>
-                  <td className={r.star ? "star" : undefined}>{r.star ? "★" : ""}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+              <div style={{ marginTop: 34 }}>
+                <p className="eyebrow">Four Boards, Side by Side</p>
+                <h2 className="display" style={{ fontSize: 30 }}>JP Poll vs. CFP vs. Coaches vs. AP</h2>
+                <PreseasonChip />
+                <p className="lede">
+                  Same week, four top tens. The gold cells are where the citizens see it differently than everyone
+                  else.
+                </p>
+                <table style={{ marginTop: 14 }}>
+                  <thead>
+                    <tr><th>RK</th><th>THE JP POLL</th><th>CFP</th><th>COACHES</th><th>AP</th></tr>
+                  </thead>
+                  <tbody>
+                    {DEMO_FOUR_BOARDS.map((r) => (
+                      <tr key={r.rk}>
+                        <td className="rk">{r.rk}</td>
+                        <td>
+                          <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+                            <TeamMark team={r.jp} />{" "}
+                            <b style={r.jpGold ? { color: "var(--lamp-deep)" } : undefined}>{r.jp}</b>
+                          </span>
+                        </td>
+                        <td><span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}><TeamMark team={r.cfp} /> {r.cfp}</span></td>
+                        <td><span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}><TeamMark team={r.coaches} /> {r.coaches}</span></td>
+                        <td><span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}><TeamMark team={r.ap} /> {r.ap}</span></td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+                <p style={{ marginTop: 12, fontFamily: "var(--mono)", fontSize: 11, color: "var(--ink-dim)" }}>
+                  GOLD = JP POLL DISAGREES WITH THE CONSENSUS AT THAT SPOT · UPDATED EVERY TUESDAY AFTER THE REVEAL
+                </p>
+              </div>
+            </div>
 
-          <div style={{ marginTop: 44 }}>
-            <p className="eyebrow">Four Boards, Side by Side</p>
-            <h2 className="display" style={{ fontSize: 34 }}>JP Poll vs. CFP vs. Coaches vs. AP</h2>
-            <PreseasonChip />
-            <p className="lede">
-              Same week, four top tens. The gold cells are where the citizens see it differently than everyone else.
-            </p>
-            <table style={{ marginTop: 16 }}>
-              <thead>
-                <tr><th>RK</th><th>THE JP POLL</th><th>CFP</th><th>COACHES</th><th>AP</th></tr>
-              </thead>
-              <tbody>
-                {DEMO_FOUR_BOARDS.map((r) => (
-                  <tr key={r.rk}>
-                    <td className="rk">{r.rk}</td>
-                    <td><b style={r.jpGold ? { color: "var(--lamp-deep)" } : undefined}>{r.jp}</b></td>
-                    <td>{r.cfp}</td>
-                    <td>{r.coaches}</td>
-                    <td>{r.ap}</td>
-                  </tr>
+            <aside>
+              <div className="rail-card">
+                <h4>Poll Movement</h4>
+                {DEMO_POLL_MOVEMENT.map((m) => (
+                  <div className="rail-row" key={m.team}>
+                    <span className="rr-hel">
+                      <TeamMark team={m.team} />
+                    </span>
+                    <span className="rr-name">{m.team}</span>
+                    <span className={m.dir}>{m.dir === "up" ? "▲" : "▼"} {m.delta}</span>
+                  </div>
                 ))}
-              </tbody>
-            </table>
-            <p style={{ marginTop: 12, fontFamily: "var(--mono)", fontSize: 11, color: "var(--ink-dim)" }}>
-              GOLD = JP POLL DISAGREES WITH THE CONSENSUS AT THAT SPOT · UPDATED EVERY TUESDAY AFTER THE REVEAL
-            </p>
-          </div>
-
-          <div className="legend">
-            <span><b>▲▼</b> spots higher / lower than that poll</span>
-            <span><b>↔</b> same spot</span>
-            <span><b>★</b> biggest disagreement of the week</span>
-          </div>
-          <div style={{ marginTop: 16, fontFamily: "var(--mono)", fontSize: 12, color: "var(--ink-dim)" }}>
-            Showing 1–12 of 25 · <Link href="/#" style={{ color: "var(--lamp-deep)" }}>See 13–25 →</Link> ·{" "}
-            <Link href="/#" style={{ color: "var(--lamp-deep)" }}>All 136 Teams Rated</Link> ·{" "}
-            <Link href="/#" style={{ color: "var(--lamp-deep)" }}>Poll Archive</Link>
+              </div>
+              <div className="rail-card">
+                <h4>How the Poll Works</h4>
+                <p>
+                  Every citizen ranks a top 10 each week. Ballots lock Sunday 8PM ET and the board tabulates
+                  Monday night — no editorial panel, no anonymous ballots. The full vote distribution is public;
+                  the AP&apos;s isn&apos;t.
+                </p>
+                <p style={{ marginTop: 10 }}>
+                  Reveal airs live every Tuesday, with every disagreement against the AP, Coaches, and CFP polls
+                  marked in gold below.
+                </p>
+              </div>
+              <div className="rail-card">
+                <h4>Latest From the Show</h4>
+                {latestVideo ? (
+                  <EpisodeLead video={latestVideo} tag="NEW EPISODE" />
+                ) : (
+                  <p>Video loads live from the channel — check back once the feed is connected.</p>
+                )}
+              </div>
+            </aside>
           </div>
         </div>
       </section>

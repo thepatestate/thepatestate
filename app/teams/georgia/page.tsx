@@ -124,7 +124,7 @@ function LatestArticles({ team }: { team: Team }) {
         {team.articles.map((a) => {
           const img = art.pick(a.art, `${team.name} — ${a.title}`);
           return a.href ? (
-            <Link className="art" href={a.href} key={a.title}>
+            <Link className="art art-thumbrow" href={a.href} key={a.title}>
               <div className={a.navy ? "art-thumb navy bleed-thumb" : "art-thumb bleed-thumb"}>
                 <Image src={img.src} alt={img.alt} fill sizes="120px" style={{ objectFit: "cover" }} />
               </div>
@@ -135,7 +135,7 @@ function LatestArticles({ team }: { team: Team }) {
               </div>
             </Link>
           ) : (
-            <div className="art" key={a.title}>
+            <div className="art art-thumbrow" key={a.title}>
               <div className={a.navy ? "art-thumb navy bleed-thumb" : "art-thumb bleed-thumb"}>
                 <Image src={img.src} alt={img.alt} fill sizes="120px" style={{ objectFit: "cover" }} />
               </div>

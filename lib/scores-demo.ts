@@ -6,20 +6,53 @@
 // JSX at each call site only touches these arrays.
 
 export type ScoreTeam = { label: string; pts: string; lead: boolean };
-export type ScoreCardData = { st: string; live: boolean; net: string; teams: readonly [ScoreTeam, ScoreTeam] };
 
-export const DEMO_LIVE_SCORES: readonly ScoreCardData[] = [
-  { st: "LIVE · Q3 8:42", live: true, net: "CBS", teams: [{ label: "#1 Georgia", pts: "24", lead: true }, { label: "#9 Alabama", pts: "17", lead: false }] },
-  { st: "LIVE · Q2 0:38", live: true, net: "FOX", teams: [{ label: "#6 Oregon", pts: "14", lead: false }, { label: "#12 Michigan", pts: "17", lead: true }] },
-  { st: "LIVE · Q4 3:12", live: true, net: "ESPN", teams: [{ label: "#11 Indiana", pts: "31", lead: true }, { label: "Iowa", pts: "13", lead: false }] },
-  { st: "FINAL", live: false, net: "SECN", teams: [{ label: "#8 LSU", pts: "38", lead: true }, { label: "Ole Miss", pts: "35", lead: false }] },
-] as const;
+// Conference tag every scoreboard card carries, so /scores' tab filter
+// (TOP 25 / SEC / BIG TEN / BIG 12 / ACC / G5 / ALL 136) can slice one
+// shared list instead of maintaining a separate array per tab. "IND"
+// (independents, e.g. Notre Dame) has no dedicated tab — those games only
+// surface under TOP 25 (if ranked) and ALL 136, same as real scheduling.
+export type Conference = "SEC" | "BIG TEN" | "BIG 12" | "ACC" | "G5" | "IND";
+export type ScoreCardData = {
+  id: string;
+  st: string;
+  live: boolean;
+  net: string;
+  conf: Conference;
+  teams: readonly [ScoreTeam, ScoreTeam];
+};
 
-export const DEMO_UPCOMING_SCORES: readonly ScoreCardData[] = [
-  { st: "7:30 PM ET", live: false, net: "NBC", teams: [{ label: "#8 Notre Dame", pts: "—", lead: false }, { label: "USC", pts: "—", lead: false }] },
-  { st: "7:00 PM ET", live: false, net: "ACCN", teams: [{ label: "#7 Clemson", pts: "—", lead: false }, { label: "Florida State", pts: "—", lead: false }] },
-  { st: "10:15 PM ET", live: false, net: "ESPN", teams: [{ label: "Boise State", pts: "—", lead: false }, { label: "UNLV", pts: "—", lead: false }] },
-  { st: "FINAL — NOON", live: false, net: "BIG NOON", teams: [{ label: "#2 Ohio State", pts: "41", lead: true }, { label: "Penn State", pts: "20", lead: false }] },
+// Every demo scoreboard card, tagged by conference. Combines the original
+// "live now" + "upcoming" sets with enough additional games per conference
+// that every tab in the /scores filter (components/ScoreboardTabs.tsx)
+// shows at least 4 cards. ALL 136 just renders this whole list — a real
+// 136-team slate ships with the season engine.
+export const DEMO_SCOREBOARD_GAMES: readonly ScoreCardData[] = [
+  // --- originally "live now" ---
+  { id: "g1", st: "LIVE · Q3 8:42", live: true, net: "CBS", conf: "SEC", teams: [{ label: "#1 Georgia", pts: "24", lead: true }, { label: "#9 Alabama", pts: "17", lead: false }] },
+  { id: "g2", st: "LIVE · Q2 0:38", live: true, net: "FOX", conf: "BIG TEN", teams: [{ label: "#6 Oregon", pts: "14", lead: false }, { label: "#12 Michigan", pts: "17", lead: true }] },
+  { id: "g3", st: "LIVE · Q4 3:12", live: true, net: "ESPN", conf: "BIG TEN", teams: [{ label: "#11 Indiana", pts: "31", lead: true }, { label: "Iowa", pts: "13", lead: false }] },
+  { id: "g4", st: "FINAL", live: false, net: "SECN", conf: "SEC", teams: [{ label: "#8 LSU", pts: "38", lead: true }, { label: "Ole Miss", pts: "35", lead: false }] },
+  // --- originally "upcoming" ---
+  { id: "g5", st: "7:30 PM ET", live: false, net: "NBC", conf: "IND", teams: [{ label: "#8 Notre Dame", pts: "—", lead: false }, { label: "USC", pts: "—", lead: false }] },
+  { id: "g6", st: "7:00 PM ET", live: false, net: "ACCN", conf: "ACC", teams: [{ label: "#7 Clemson", pts: "—", lead: false }, { label: "Florida State", pts: "—", lead: false }] },
+  { id: "g7", st: "10:15 PM ET", live: false, net: "ESPN", conf: "G5", teams: [{ label: "#4 Boise State", pts: "—", lead: false }, { label: "UNLV", pts: "—", lead: false }] },
+  { id: "g8", st: "FINAL — NOON", live: false, net: "BIG NOON", conf: "BIG TEN", teams: [{ label: "#2 Ohio State", pts: "41", lead: true }, { label: "Penn State", pts: "20", lead: false }] },
+  // --- added so every conference tab clears 4 games ---
+  { id: "g9", st: "3:30 PM ET", live: false, net: "ESPN", conf: "SEC", teams: [{ label: "#3 Texas", pts: "—", lead: false }, { label: "Texas A&M", pts: "—", lead: false }] },
+  { id: "g10", st: "7:00 PM ET", live: false, net: "SECN", conf: "SEC", teams: [{ label: "Tennessee", pts: "—", lead: false }, { label: "Florida", pts: "—", lead: false }] },
+  { id: "g11", st: "4:00 PM ET", live: false, net: "SECN", conf: "SEC", teams: [{ label: "Missouri", pts: "—", lead: false }, { label: "Vanderbilt", pts: "—", lead: false }] },
+  { id: "g12", st: "8:00 PM ET", live: false, net: "BTN", conf: "BIG TEN", teams: [{ label: "Wisconsin", pts: "—", lead: false }, { label: "Nebraska", pts: "—", lead: false }] },
+  { id: "g13", st: "3:30 PM ET", live: false, net: "ACCN", conf: "ACC", teams: [{ label: "Miami", pts: "—", lead: false }, { label: "Georgia Tech", pts: "—", lead: false }] },
+  { id: "g14", st: "Noon ET", live: false, net: "ACCN", conf: "ACC", teams: [{ label: "SMU", pts: "—", lead: false }, { label: "Louisville", pts: "—", lead: false }] },
+  { id: "g15", st: "7:30 PM ET", live: false, net: "ESPN2", conf: "ACC", teams: [{ label: "NC State", pts: "—", lead: false }, { label: "Duke", pts: "—", lead: false }] },
+  { id: "g16", st: "4:00 PM ET", live: false, net: "ESPN2", conf: "BIG 12", teams: [{ label: "Texas Tech", pts: "—", lead: false }, { label: "Oklahoma State", pts: "—", lead: false }] },
+  { id: "g17", st: "3:30 PM ET", live: false, net: "ESPN", conf: "BIG 12", teams: [{ label: "BYU", pts: "—", lead: false }, { label: "Kansas State", pts: "—", lead: false }] },
+  { id: "g18", st: "7:00 PM ET", live: false, net: "FS1", conf: "BIG 12", teams: [{ label: "Iowa State", pts: "—", lead: false }, { label: "Arizona State", pts: "—", lead: false }] },
+  { id: "g19", st: "9:00 PM ET", live: false, net: "FOX", conf: "BIG 12", teams: [{ label: "Colorado", pts: "—", lead: false }, { label: "Utah", pts: "—", lead: false }] },
+  { id: "g20", st: "6:00 PM ET", live: false, net: "CBSSN", conf: "G5", teams: [{ label: "Army", pts: "—", lead: false }, { label: "Tulane", pts: "—", lead: false }] },
+  { id: "g21", st: "7:00 PM ET", live: false, net: "ESPN+", conf: "G5", teams: [{ label: "Memphis", pts: "—", lead: false }, { label: "Navy", pts: "—", lead: false }] },
+  { id: "g22", st: "3:30 PM ET", live: false, net: "ESPNU", conf: "G5", teams: [{ label: "App State", pts: "—", lead: false }, { label: "James Madison", pts: "—", lead: false }] },
 ] as const;
 
 // Score-card labels carry a "#<rank> " prefix (e.g. "#1 Georgia"); strip it
