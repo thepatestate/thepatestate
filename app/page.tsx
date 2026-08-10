@@ -170,11 +170,8 @@ export default async function Home() {
     <main>
       <SlateStrip />
       <section className="hero">
-        {/* Ambient motion loop (client request) — decorative, muted, low
-            opacity; hidden for reduced-motion users and phones. */}
-        <video className="hero-video" autoPlay muted loop playsInline aria-hidden="true" preload="metadata">
-          <source src="/video/hero-ambient.mp4" type="video/mp4" />
-        </video>
+        {/* Ambient hero video (public/video/hero-ambient.mp4) removed for now —
+            reintroduce when the client asks for more life up top. */}
         <div className="wrap">
           <p className="eyebrow">Est. in Columbus, GA — population: everyone who lives for Saturdays</p>
           <h1 className="display">The Front Porch<span className="row2">of College Football.</span></h1>
@@ -274,6 +271,29 @@ export default async function Home() {
                               {a.publishedAt ? ` · ${formatDate(a.publishedAt)}` : ""}
                             </span>
                             <h4 className="tile-headline" style={{ fontSize: "clamp(15px,1.6vw,19px)" }}>{a.headline}</h4>
+                          </div>
+                        </Link>
+                      );
+                    })}
+                    {/* Demo tiles backfill the stack until enough real articles
+                        exist — an empty column reads as a broken layout. */}
+                    {DEMO_NOTEBOOK_FEATURED.slice(0, Math.max(0, 2 - notebookNext.length)).map((item) => {
+                      const img = art.pick(item.art, item.title);
+                      return (
+                        <Link href="/notebook" className="tile" key={item.title}>
+                          <div className="tile-media">
+                            <Image src={img.src} alt={img.alt} fill sizes="(max-width: 860px) 50vw, 280px" style={{ objectFit: "cover" }} />
+                          </div>
+                          <div className="tile-scrim" />
+                          <span className="tile-badge" style={{ background: item.badgeBg, color: item.badgeColor }}>
+                            {item.badgeText}
+                          </span>
+                          <div className="tile-body">
+                            <span className="tile-kicker">
+                              {item.by} · {item.when}
+                              {item.citizenBadge ? " · Citizens Only" : ""}
+                            </span>
+                            <h4 className="tile-headline" style={{ fontSize: "clamp(15px,1.6vw,19px)" }}>{item.title}</h4>
                           </div>
                         </Link>
                       );
