@@ -176,7 +176,7 @@ export default async function Home() {
           </p>
           <div className="hero-ctas">
             <Link className="btn gold" href="/show">Browse the Show</Link>
-            <Link className="btn" href="/join">Become a Citizen — Free</Link>
+            <Link className="btn" href="/join" style={{ borderColor: "rgba(243,239,230,.5)", color: "var(--chalk, #F3EFE6)" }}>Become a Citizen — Free</Link>
           </div>
         </div>
       </section>
