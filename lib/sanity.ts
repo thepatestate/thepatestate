@@ -46,6 +46,10 @@ export interface SanityArticle {
   seoTitle?: string;
   seoDescription?: string;
   publishedAt?: string;
+  contentType?: string;
+  productionMethod?: "josh" | "staff" | "ai-reviewed" | "automated";
+  reviewedBy?: string;
+  corrections?: { at: string; note: string }[];
   episode?: {
     ytId: string;
     title: string;
@@ -59,6 +63,7 @@ export interface SanityArticle {
 
 const ARTICLE_FIELDS = `_id, headline, slug, dek, bodyMarkdown, pullQuote, byline,
   workflowState, lowConfidence, primaryTeam, teams, tags, seoTitle, seoDescription, publishedAt,
+  contentType, productionMethod, reviewedBy, corrections,
   "heroUrl": heroImage.asset->url,
   "episode": episode->{ ytId, title, durationSeconds, series, description, thumbnailUrl, publishedAt }`;
 
@@ -165,10 +170,11 @@ export interface SanityWireStory {
   sources?: { outlet?: string; url?: string }[];
   publishedAt?: string;
   updatedAt?: string;
+  corrections?: { at: string; note: string }[];
 }
 
 const WIRE_STORY_FIELDS = `_id, headline, slug, verification, category, teams, whatHappened,
-  whyItMatters, joshReceipt, readLabel, readBody, whatsNext, sources, publishedAt, updatedAt`;
+  whyItMatters, joshReceipt, readLabel, readBody, whatsNext, sources, publishedAt, updatedAt, corrections`;
 
 export async function getWireItems(limit = 8): Promise<SanityWireItem[]> {
   return await readClient.fetch(

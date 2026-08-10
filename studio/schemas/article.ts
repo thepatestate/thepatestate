@@ -33,6 +33,41 @@ export default defineType({
     defineField({ name: "seoTitle", type: "string" }),
     defineField({ name: "seoDescription", type: "text", rows: 2 }),
     defineField({ name: "publishedAt", type: "datetime" }),
+    // Editorial labels (v2 brief §0.4): every published page shows content
+    // type + production method. Left unset, the site infers sensible values
+    // (Analysis + AI-drafted-reviewed for staff companions).
+    defineField({
+      name: "contentType", title: "Content type",
+      type: "string",
+      options: { list: ["News", "Analysis", "Opinion", "Projection", "Data", "Community", "Sponsored"] },
+    }),
+    defineField({
+      name: "productionMethod", title: "Production method",
+      type: "string",
+      options: {
+        list: [
+          { title: "Written by Josh Pate", value: "josh" },
+          { title: "Written by The Pate State editorial team", value: "staff" },
+          { title: "Produced with Pate State AI, reviewed by the editorial team", value: "ai-reviewed" },
+          { title: "Automated data update", value: "automated" },
+        ],
+      },
+    }),
+    defineField({ name: "reviewedBy", title: "Reviewed by (editor)", type: "string" }),
+    // Corrections are appended, timestamped, never silent (§0.4, standards
+    // page). Rendered at the end of the article.
+    defineField({
+      name: "corrections", title: "Corrections",
+      type: "array",
+      of: [{
+        type: "object",
+        fields: [
+          defineField({ name: "at", type: "datetime", validation: (r) => r.required() }),
+          defineField({ name: "note", type: "text", rows: 2, validation: (r) => r.required() }),
+        ],
+        preview: { select: { title: "note", subtitle: "at" } },
+      }],
+    }),
   ],
   preview: { select: { title: "headline", subtitle: "workflowState" } },
 });

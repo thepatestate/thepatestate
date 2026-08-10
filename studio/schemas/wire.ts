@@ -76,6 +76,18 @@ export const wireStory = defineType({
     }),
     defineField({ name: "publishedAt", type: "datetime" }),
     defineField({ name: "updatedAt", type: "datetime" }),
+    defineField({
+      name: "corrections", title: "Corrections (timestamped, never silent)",
+      type: "array",
+      of: [{
+        type: "object",
+        fields: [
+          defineField({ name: "at", type: "datetime", validation: (r) => r.required() }),
+          defineField({ name: "note", type: "text", rows: 2, validation: (r) => r.required() }),
+        ],
+        preview: { select: { title: "note", subtitle: "at" } },
+      }],
+    }),
   ],
   preview: {
     select: { title: "headline", subtitle: "verification" },

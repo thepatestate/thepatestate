@@ -889,3 +889,10 @@ footer{background:var(--navy);color:var(--chalk-dim);padding:34px 0 40px;font-fa
 .short-card .short-scrim{position:absolute;inset:0;background:linear-gradient(to top,rgba(10,20,36,.85) 0%,transparent 45%)}
 .short-card .short-title{position:absolute;left:0;right:0;bottom:0;padding:10px;color:var(--chalk);font-size:12px;font-weight:700;line-height:1.25;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 .short-card:hover .short-title{color:var(--lamp)}
+
+/* --- Editorial labels + corrections (v2 brief §0.4) --- */
+.ed-label{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:14px 0 4px;padding:9px 12px;border:1px solid var(--line-l);border-radius:4px;background:var(--paper-2)}
+.ed-label .ed-type{font-family:var(--mono);font-size:10px;letter-spacing:.12em;background:var(--navy);color:var(--chalk);padding:3px 8px;border-radius:2px}
+.ed-label .ed-method{font-family:var(--mono);font-size:11px;color:var(--ink-dim);letter-spacing:.03em}
+.ed-label .ed-standards{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--lamp-deep);margin-left:auto}
+.corrections{margin-top:26px;padding:14px 16px;border-left:3px solid var(--lamp-deep);background:var(--paper-2);border-radius:0 4px 4px 0}

@@ -5,6 +5,7 @@ import { getWireStoryBySlug, getWireStories } from "@/lib/sanity";
 import { teamLogoUrl } from "@/lib/teams-meta";
 import { getVideos, videoUrl, CHANNEL_URL } from "@/lib/youtube";
 import { formatDate } from "@/lib/format";
+import EditorialLabel, { Corrections } from "@/components/EditorialLabel";
 import Image from "next/image";
 
 export const revalidate = 120;
@@ -91,6 +92,7 @@ export default async function WireStoryPage({ params }: { params: Promise<{ slug
             )}
           </div>
           <h1 style={{ maxWidth: 900 }}>{story.headline}</h1>
+          <EditorialLabel contentType="News" productionMethod="ai-monitored" />
         </div>
       </header>
 
@@ -151,6 +153,8 @@ export default async function WireStoryPage({ params }: { params: Promise<{ slug
               </ul>
             </>
           )}
+
+          <Corrections corrections={story.corrections} />
 
           <div style={{ marginTop: 32, borderTop: "1px solid var(--line-l)", paddingTop: 16, display: "grid", gap: 8 }}>
             <a

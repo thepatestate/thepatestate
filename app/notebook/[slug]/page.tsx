@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getArticleBySlug } from "@/lib/sanity";
 import ArticleBody from "@/components/ArticleBody";
+import EditorialLabel, { Corrections } from "@/components/EditorialLabel";
 import { CHANNEL_URL, SOCIAL_LINKS } from "@/lib/youtube";
 import { formatDate } from "@/lib/format";
 
@@ -168,7 +169,16 @@ export default async function ArticlePage({
                 </>
               )}
 
+              <EditorialLabel
+                contentType={article.contentType}
+                productionMethod={article.productionMethod}
+                byline={article.byline}
+                reviewedBy={article.reviewedBy}
+              />
+
               <ArticleBody article={article} />
+
+              <Corrections corrections={article.corrections} />
 
               {article.episode && (
                 <a
