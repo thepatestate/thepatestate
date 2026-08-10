@@ -14,6 +14,7 @@ import { DEMO_MODE } from "@/lib/demo";
 import Reveal from "@/components/Reveal";
 import SlateStrip from "@/components/SlateStrip";
 import ShowSection from "@/components/ShowSection";
+import MyTeams from "@/components/MyTeams";
 
 export const metadata: Metadata = { alternates: { canonical: "/" } };
 
@@ -236,6 +237,8 @@ export default async function Home() {
           </div>
         </div>
       </section>
+
+      <MyTeams />
 
       {latest && (
         <ShowSection latest={latest} stacked={recentEpisodes} more={moreEpisodes} shorts={shorts} />

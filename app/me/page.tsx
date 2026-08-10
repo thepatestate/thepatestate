@@ -1,8 +1,10 @@
 import { redirect } from "next/navigation";
 import type { Metadata } from "next";
-import { getCitizen, getUser } from "@/lib/supabase/server";
+import { getCitizen, getUser, createClient } from "@/lib/supabase/server";
 import { signOut } from "@/app/me/actions";
 import ProfileForm from "@/components/ProfileForm";
+import TeamFollowForm from "@/components/TeamFollowForm";
+import { getTeamDirectory } from "@/lib/cfbd";
 
 export const metadata: Metadata = {
   title: "Your Seat",
@@ -15,6 +17,15 @@ export default async function MePage() {
   const citizen = await getCitizen();
   if (!citizen) redirect("/welcome?next=/me");
   const user = await getUser();
+  const supabase = await createClient();
+  const [{ data: followRows }, dir] = await Promise.all([
+    supabase.from("team_follows").select("team_slug").order("created_at"),
+    getTeamDirectory(),
+  ]);
+  const follows = (followRows ?? []).map((r) => r.team_slug as string);
+  const teamOptions = Object.values(dir)
+    .sort((a, b) => a.school.localeCompare(b.school))
+    .map((t) => ({ value: t.slug, label: t.school }));
 
   return (
     <main>
@@ -36,6 +47,9 @@ export default async function MePage() {
           </div>
           <div className="panel" style={{ marginBottom: 20 }}>
             <ProfileForm favoriteTeam={citizen.favorite_team} />
+          </div>
+          <div className="panel" style={{ marginBottom: 20 }}>
+            <TeamFollowForm teams={teamOptions} current={follows} />
           </div>
           <form action={signOut}>
             <button className="btn" type="submit">Hand In My Key</button>

@@ -896,3 +896,8 @@ footer{background:var(--navy);color:var(--chalk-dim);padding:34px 0 40px;font-fa
 .ed-label .ed-method{font-family:var(--mono);font-size:11px;color:var(--ink-dim);letter-spacing:.03em}
 .ed-label .ed-standards{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--lamp-deep);margin-left:auto}
 .corrections{margin-top:26px;padding:14px 16px;border-left:3px solid var(--lamp-deep);background:var(--paper-2);border-radius:0 4px 4px 0}
+.myteams-bar{display:flex;align-items:center;gap:16px;flex-wrap:wrap;border:1px solid var(--line-l);border-radius:6px;padding:12px 18px;background:var(--paper-2)}
+.myteams-bar>span:first-child{font-size:14.5px}
+.myteams-row{display:flex;gap:10px;flex-wrap:wrap}
+.myteams-chip{display:inline-flex;align-items:center;gap:7px;text-decoration:none;color:var(--ink);border:1px solid var(--line-l);border-radius:20px;padding:4px 12px 4px 5px;background:#fff;font-family:var(--mono);font-size:11px}
+.myteams-chip:hover{border-color:var(--lamp-deep)}
