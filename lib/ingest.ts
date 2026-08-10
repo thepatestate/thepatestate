@@ -1,7 +1,8 @@
 import type { Video } from "@/lib/youtube";
 import { writeClient, isSanityWriteConfigured, articleExistsForEpisode, uploadHeroImage, setArticleHeroImage } from "@/lib/sanity";
 import { fetchTranscript, transcriptToPromptText } from "@/lib/transcript";
-import { classifySeries, draftCompanion, BYLINE_STAFF } from "@/lib/generate";
+import { classifySeries, draftCompanion, extractQuotes, BYLINE_STAFF } from "@/lib/generate";
+import { storeQuotes } from "@/lib/quotes";
 import { generateArticleHero } from "@/lib/hero-image";
 import { slugify } from "@/lib/slug";
 
@@ -62,10 +63,15 @@ export async function ingestEpisode(v: IngestVideo): Promise<IngestResult> {
     const transcriptText = segs ? transcriptToPromptText(segs) : null;
     await writeClient.patch(episodeId).set({ transcriptStatus: segs ? "fetched" : "unavailable" }).commit();
 
-    // 4. Draft
+    // 4. Quote-extraction pass (§2.4a) — verbatim takes into the archive, then
+    // fed to the draft so [QUOTE:] markers and the pull quote come from them.
+    const quotes = transcriptText ? await extractQuotes(transcriptText) : [];
+    if (quotes.length > 0) await storeQuotes(v.id, quotes);
+
+    // 5. Draft
     const draft = await draftCompanion({
       title: v.title, description: v.description ?? "", publishedAt: v.published,
-      series: series ?? "general", transcriptText,
+      series: series ?? "general", transcriptText, extractedQuotes: quotes,
     });
     if (!draft) return "episode-only"; // poll cycle retries later
 

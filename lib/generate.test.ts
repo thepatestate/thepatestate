@@ -133,3 +133,22 @@ describe("draftCompanion verbatim-quote gate", () => {
     expect(result?.lowConfidence).toBeUndefined();
   });
 });
+
+describe("v1.2 quote pipeline", () => {
+  const transcript = "[00:10] I think Georgia's line is the [00:12] best in America at the thing [00:15] that matters most and you can [00:18] book that right now folks";
+
+  it("QUOTE marker contents are verbatim-checked", () => {
+    const body = `Pate said it plainly. [QUOTE:00:10]I think Georgia's line is the best in America[/QUOTE] and he did not hedge.`;
+    expect(findNonVerbatimQuotes(body, transcript)).toEqual([]);
+  });
+
+  it("non-verbatim QUOTE marker contents are flagged", () => {
+    const body = `[QUOTE:00:10]Georgia has definitely got the greatest line in the country[/QUOTE]`;
+    expect(findNonVerbatimQuotes(body, transcript)).toHaveLength(1);
+  });
+
+  it("QUOTE markers are stripped before scanning stray quotation marks", () => {
+    const body = `He also said "book that right now folks" after [QUOTE:00:12]best in America at the thing that matters most[/QUOTE] ended.`;
+    expect(findNonVerbatimQuotes(body, transcript)).toEqual([]);
+  });
+});

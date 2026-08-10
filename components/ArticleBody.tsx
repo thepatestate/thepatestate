@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { parseMarkers } from "@/lib/markers";
+import { parseMarkers, tsToSeconds } from "@/lib/markers";
 import { formatDate } from "@/lib/format";
 import type { SanityArticle } from "@/lib/sanity";
 
@@ -45,7 +45,42 @@ function renderInline(text: string): ReactNode[] {
   return nodes;
 }
 
-function TextBlocks({ markdown }: { markdown: string }) {
+// v1.2 §2.4a: [QUOTE:HH:MM:SS]verbatim words[/QUOTE] renders as a quoted span
+// deep-linked to that moment of the episode on YouTube. Runs before the
+// bold/italic pass so quote text still gets inline formatting.
+function renderWithQuotes(text: string, ytId?: string): ReactNode[] {
+  const re = /\[QUOTE:([\d:]+)\]([\s\S]+?)\[\/QUOTE\]/g;
+  const nodes: ReactNode[] = [];
+  let last = 0;
+  let m: RegExpExecArray | null;
+  let key = 0;
+  while ((m = re.exec(text))) {
+    if (m.index > last) nodes.push(...renderInline(text.slice(last, m.index)));
+    const seconds = tsToSeconds(m[1]);
+    const quoted = <>&ldquo;{renderInline(m[2].trim())}&rdquo;</>;
+    nodes.push(
+      ytId ? (
+        <a
+          key={`q${key++}`}
+          className="quote-link"
+          href={`https://www.youtube.com/watch?v=${ytId}&t=${seconds}s`}
+          target="_blank"
+          rel="noopener"
+          title={`Watch this moment (${m[1]})`}
+        >
+          {quoted}
+        </a>
+      ) : (
+        <span key={`q${key++}`}>{quoted}</span>
+      )
+    );
+    last = m.index + m[0].length;
+  }
+  if (last < text.length) nodes.push(...renderInline(text.slice(last)));
+  return nodes;
+}
+
+function TextBlocks({ markdown, ytId }: { markdown: string; ytId?: string }) {
   const blocks = markdown.split(/\n{2,}/).map((b) => b.trim()).filter(Boolean);
   return (
     <>
@@ -55,7 +90,7 @@ function TextBlocks({ markdown }: { markdown: string }) {
             {renderInline(block.slice(3).trim())}
           </h3>
         ) : (
-          <p key={i}>{renderInline(block)}</p>
+          <p key={i}>{renderWithQuotes(block, ytId)}</p>
         )
       )}
     </>
@@ -79,13 +114,15 @@ export default function ArticleBody({ article }: { article: SanityArticle }) {
       </div>
       <div className="story-body">
         {segments.map((seg, i) => {
-          if (seg.type === "text") return <TextBlocks markdown={seg.markdown} key={i} />;
+          if (seg.type === "text") return <TextBlocks markdown={seg.markdown} ytId={article.episode?.ytId} key={i} />;
           if (seg.type === "pullquote") {
             if (!article.pullQuote) return null;
+            // Pull quotes are Josh's verbatim takes from the show (§26) — always
+            // his attribution, regardless of the article byline.
             return (
               <div className="pullquote" key={i}>
                 &ldquo;{article.pullQuote}&rdquo;
-                <span className="who">— {article.byline}</span>
+                <span className="who">— Josh Pate</span>
               </div>
             );
           }

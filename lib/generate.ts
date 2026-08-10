@@ -54,13 +54,20 @@ function normalizeForCompare(s: string): string {
 
 const STRAIGHT_QUOTE_RE = /"([^"]+)"/g;
 const CURLY_QUOTE_RE = /“([^”]+)”/g;
+const QUOTE_MARKER_RE = /\[QUOTE:[\d:]+\]([\s\S]+?)\[\/QUOTE\]/g;
 
 function extractQuotedSpans(body: string): string[] {
   const spans: string[] = [];
+  // [QUOTE:ts]…[/QUOTE] blocks are quoted spans too (v1.2 §2.4a) — validate their
+  // contents, then strip them so quote-mark scanning doesn't double-count.
+  QUOTE_MARKER_RE.lastIndex = 0;
+  let qm: RegExpExecArray | null;
+  while ((qm = QUOTE_MARKER_RE.exec(body))) spans.push(qm[1]);
+  const withoutMarkers = body.replace(QUOTE_MARKER_RE, " ");
   for (const re of [STRAIGHT_QUOTE_RE, CURLY_QUOTE_RE]) {
     re.lastIndex = 0;
     let m: RegExpExecArray | null;
-    while ((m = re.exec(body))) spans.push(m[1]);
+    while ((m = re.exec(withoutMarkers))) spans.push(m[1]);
   }
   return spans;
 }
@@ -162,12 +169,90 @@ export async function classifySeries(input: {
   }
 }
 
+export interface ExtractedQuote {
+  quote: string;
+  timestamp: string;
+  topic: string;
+  teams: string[];
+  heat: number;
+}
+
+const QUOTES_SCHEMA = {
+  type: "object",
+  properties: {
+    quotes: {
+      type: "array",
+      items: {
+        type: "object",
+        properties: {
+          quote: { type: "string" },
+          timestamp: { type: "string" },
+          topic: { type: "string" },
+          teams: { type: "array", items: { type: "string" } },
+          heat: { type: "integer", minimum: 1, maximum: 5 },
+        },
+        required: ["quote", "timestamp", "topic", "teams", "heat"],
+        additionalProperties: false,
+      },
+    },
+  },
+  required: ["quotes"],
+  additionalProperties: false,
+} as const;
+
+/** §2.4a quote-extraction pass: Josh's 5–10 biggest takes, word-for-word with
+ * timestamps. Verbatim-checked against the transcript; non-verbatim extractions
+ * are dropped rather than repaired. Returns [] on any failure — never throws. */
+export async function extractQuotes(transcriptText: string): Promise<ExtractedQuote[]> {
+  const c = client();
+  if (!c) return [];
+  try {
+    const res = await c.messages.create({
+      model: MODEL,
+      max_tokens: 4096,
+      output_config: { format: { type: "json_schema", schema: QUOTES_SCHEMA } },
+      system: prompt("quote-extractor.md"),
+      messages: [{ role: "user", content: `Transcript (timestamped):\n${transcriptText}` }],
+    });
+    const parsed = JSON.parse(textOf(res)) as { quotes?: ExtractedQuote[] };
+    if (!Array.isArray(parsed.quotes)) return [];
+    const normTranscript = normalizeForCompare(transcriptText);
+    return parsed.quotes
+      .filter((q) =>
+        typeof q.quote === "string" && q.quote.trim().length > 0 &&
+        typeof q.timestamp === "string" &&
+        // verbatim gate: every extracted quote must exist in the transcript
+        // (ellipsis trims are checked segment-by-segment)
+        q.quote.split(/\s*(?:\.\.\.|…)\s*/).every(
+          (seg) => !seg.trim() || normTranscript.includes(normalizeForCompare(seg))
+        )
+      )
+      .slice(0, 10)
+      .map((q) => ({
+        quote: q.quote.trim(),
+        timestamp: q.timestamp,
+        topic: typeof q.topic === "string" ? q.topic : "",
+        teams: Array.isArray(q.teams) ? q.teams.filter((t) => typeof t === "string") : [],
+        heat: typeof q.heat === "number" && q.heat >= 1 && q.heat <= 5 ? q.heat : 3,
+      }));
+  } catch (err) {
+    console.error("[generate:extractQuotes]", err);
+    return [];
+  }
+}
+
 export async function draftCompanion(input: {
   title: string; description: string; publishedAt: string; series: string; transcriptText: string | null;
+  extractedQuotes?: ExtractedQuote[];
 }): Promise<CompanionDraft | null> {
   const c = client();
   if (!c) return null;
   const system = `${prompt("global-preamble.md")}\n\n${prompt("companion-article.md")}`;
+  const quotesBlock = input.extractedQuotes?.length
+    ? `Extracted verbatim quotes (weave 2–4 in as [QUOTE:timestamp]…[/QUOTE]; pull_quote must be one of these word-for-word):\n${input.extractedQuotes
+        .map((q, i) => `${i + 1}. [${q.timestamp}] "${q.quote}" (${q.topic}, heat ${q.heat})`)
+        .join("\n")}`
+    : null;
   const baseUser = [
     `Episode title: ${input.title}`,
     `Series: ${input.series}`,
@@ -176,6 +261,7 @@ export async function draftCompanion(input: {
     input.transcriptText
       ? `Transcript (timestamped):\n${input.transcriptText}`
       : `NO TRANSCRIPT AVAILABLE — draft from the title and description only, per your instructions.`,
+    ...(quotesBlock ? [quotesBlock] : []),
   ].join("\n\n");
 
   // Two attempts total. A schema/parse miss just retries with the same prompt (loop
@@ -201,6 +287,13 @@ export async function draftCompanion(input: {
       if (!input.transcriptText) return draft; // nothing to verify quotes against
 
       const badQuotes = findNonVerbatimQuotes(draft.bodyMarkdown, input.transcriptText);
+      // v1.2: the pull quote itself must also be verbatim from the transcript.
+      if (
+        draft.pullQuote.trim().split(/\s+/).length >= 5 &&
+        findNonVerbatimQuotes(`"${draft.pullQuote}"`, input.transcriptText).length > 0
+      ) {
+        badQuotes.push(draft.pullQuote.trim());
+      }
       if (badQuotes.length === 0) return draft;
 
       lastDraft = draft;
