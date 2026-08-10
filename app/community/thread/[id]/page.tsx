@@ -52,7 +52,7 @@ export default async function ThreadPage({ params }: { params: Promise<{ id: str
       <div className={board?.kind === "team" ? "board-bar team" : "board-bar"}>
         <div className="wrap">
           <p className="kicker">
-            The Front Porch · <Link href={`/community/${thread.board_slug}`} style={{ color: "var(--lamp)" }}>{board?.name ?? thread.board_slug}</Link>
+            The Pate State · <Link href={`/community/${thread.board_slug}`} style={{ color: "var(--lamp)" }}>{board?.name ?? thread.board_slug}</Link>
           </p>
           <h1 style={{ fontSize: "clamp(24px,3.4vw,38px)" }}>
             {thread.title}
