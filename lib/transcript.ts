@@ -283,10 +283,79 @@ export async function fetchTranscriptSupadata(ytId: string): Promise<TranscriptS
   }
 }
 
-/** Fetches a transcript for a YouTube video. Tries the InnerTube player API first, then the
- * watch-page scrape, then (if configured) the Supadata third-party API as a last resort for
- * when YouTube itself is unreachable from the deployment's IP. Null on total failure. */
+/** Parses SubRip captions (the official captions.download tfmt=srt format)
+ * into segments: "1\n00:00:01,240 --> 00:00:03,900\nline\n". */
+export function parseSrt(srt: string): TranscriptSegment[] {
+  const out: TranscriptSegment[] = [];
+  for (const block of srt.split(/\r?\n\r?\n/)) {
+    const lines = block.trim().split(/\r?\n/);
+    if (lines.length < 2) continue;
+    const timeIdx = lines.findIndex((l) => /-->/.test(l));
+    if (timeIdx === -1) continue;
+    const m = lines[timeIdx].match(/(\d+):(\d+):(\d+)[,.](\d+)\s*-->/);
+    if (!m) continue;
+    const start = Number(m[1]) * 3600 + Number(m[2]) * 60 + Number(m[3]) + Number(m[4]) / 1000;
+    const text = lines.slice(timeIdx + 1).join(" ").replace(/<[^>]+>/g, "").trim();
+    if (text) out.push({ start, text });
+  }
+  return out;
+}
+
+/** Official captions via the YouTube Data API, using the channel's own OAuth
+ * grant — the sturdy path that replaces scraping once the channel is
+ * connected. Null when not connected or on any failure (callers fall back). */
+export async function fetchTranscriptViaCaptionsApi(ytId: string): Promise<TranscriptSegment[] | null> {
+  // Lazy import keeps this module free of Supabase deps for callers/tests
+  // that never touch the OAuth path.
+  const { getChannelAccessToken } = await import("@/lib/youtube-oauth");
+  const token = await getChannelAccessToken();
+  if (!token) return null;
+  try {
+    const listRes = await fetch(
+      `https://www.googleapis.com/youtube/v3/captions?part=snippet&videoId=${ytId}`,
+      { headers: { Authorization: `Bearer ${token}` }, cache: "no-store" },
+    );
+    if (!listRes.ok) {
+      console.error("[transcript:captionsApi] list", ytId, listRes.status);
+      return null;
+    }
+    const list = (await listRes.json()) as {
+      items?: { id: string; snippet?: { language?: string; trackKind?: string } }[];
+    };
+    const tracks = list.items ?? [];
+    // Prefer a human-uploaded English track; fall back to the auto (ASR) one.
+    const track =
+      tracks.find((t) => t.snippet?.language?.startsWith("en") && t.snippet?.trackKind !== "asr") ??
+      tracks.find((t) => t.snippet?.language?.startsWith("en")) ??
+      tracks[0];
+    if (!track) return null;
+    const dlRes = await fetch(
+      `https://www.googleapis.com/youtube/v3/captions/${encodeURIComponent(track.id)}?tfmt=srt`,
+      { headers: { Authorization: `Bearer ${token}` }, cache: "no-store" },
+    );
+    if (!dlRes.ok) {
+      console.error("[transcript:captionsApi] download", ytId, dlRes.status);
+      return null;
+    }
+    const segs = parseSrt(await dlRes.text());
+    return segs.length > 0 ? segs : null;
+  } catch (err) {
+    console.error("[transcript:captionsApi]", ytId, err);
+    return null;
+  }
+}
+
+/** Fetches a transcript for a YouTube video. Order: the official captions
+ * API via the channel's OAuth grant (sturdiest — no scraping), then the
+ * InnerTube player API, then the watch-page scrape, then (if configured)
+ * the Supadata third-party API as a last resort. Null on total failure. */
 export async function fetchTranscript(ytId: string): Promise<TranscriptSegment[] | null> {
+  try {
+    const segs = await fetchTranscriptViaCaptionsApi(ytId);
+    if (segs) return segs;
+  } catch (err) {
+    console.error("[transcript:fetchTranscript] captions api failed", ytId, err);
+  }
   try {
     const segs = await fetchTranscriptViaInnerTube(ytId);
     if (segs) return segs;

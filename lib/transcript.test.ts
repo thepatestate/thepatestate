@@ -169,3 +169,29 @@ describe("transcriptToPromptText", () => {
     expect(transcriptToPromptText(segs).length).toBeLessThanOrEqual(60000);
   });
 });
+
+import { parseSrt } from "./transcript";
+
+describe("parseSrt", () => {
+  it("parses standard SubRip blocks into segments", () => {
+    const srt = `1
+00:00:01,240 --> 00:00:03,900
+Welcome back to the show.
+
+2
+00:01:02,000 --> 00:01:05,500
+Georgia is <i>different</i>
+this year.
+
+`;
+    const segs = parseSrt(srt);
+    expect(segs).toEqual([
+      { start: 1.24, text: "Welcome back to the show." },
+      { start: 62, text: "Georgia is different this year." },
+    ]);
+  });
+
+  it("returns [] for garbage input", () => {
+    expect(parseSrt("not srt at all")).toEqual([]);
+  });
+});
