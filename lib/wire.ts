@@ -131,7 +131,7 @@ const ITEM_SCHEMA = {
     sub: { type: "string" },
     category: { type: "string", enum: ["recruiting", "coaching", "injury", "transfer", "playoff", "media", "legal", "general"] },
     teams: { type: "array", items: { type: "string" } },
-    importance: { type: "integer", minimum: 1, maximum: 10 },
+    importance: { type: "integer" },
     importance_reason: { type: "string" },
   },
   required: ["headline", "sub", "category", "teams", "importance", "importance_reason"],
@@ -250,6 +250,7 @@ export async function runWireMonitor(): Promise<{
         headline: string; sub: string; category: string; teams: string[];
         importance: number; importance_reason: string;
       };
+      item.importance = Math.max(1, Math.min(10, Math.round(item.importance ?? 1)));
 
       const clusterKey = slugify(cluster.title).slice(0, 80);
       const { data: inserted, error: insErr } = await db

@@ -189,7 +189,7 @@ const QUOTES_SCHEMA = {
           timestamp: { type: "string" },
           topic: { type: "string" },
           teams: { type: "array", items: { type: "string" } },
-          heat: { type: "integer", minimum: 1, maximum: 5 },
+          heat: { type: "integer" },
         },
         required: ["quote", "timestamp", "topic", "teams", "heat"],
         additionalProperties: false,
