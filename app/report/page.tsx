@@ -124,7 +124,7 @@ export default function ReportPage() {
           <PreseasonChip />
           <div className="guide-grid" style={{ gridTemplateColumns: "repeat(3,1fr)" }}>
             {DEMO_SPREADS.map((s) => (
-              <Link className="guide on-light-guide" href="/#" key={s.title}>
+              <div className="guide on-light-guide" key={s.title}>
                 <div className="ph" style={{ position: "relative" }}>
                   <Image src={s.photo} alt={s.alt} fill sizes="(max-width: 900px) 33vw, 280px" style={{ objectFit: "cover" }} />
                 </div>
@@ -132,7 +132,7 @@ export default function ReportPage() {
                   <h4>{s.title}</h4>
                   <div className="meta">{s.meta}</div>
                 </div>
-              </Link>
+              </div>
             ))}
           </div>
         </div>
