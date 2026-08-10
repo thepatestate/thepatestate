@@ -16,9 +16,16 @@ function isRanked(card: ScoreCardData): boolean {
   return card.teams.some((t) => /^#\d+/.test(t.label));
 }
 
-function matchesTab(card: ScoreCardData, tab: Tab): boolean {
+// Real CFBD games carry no "#N" rank prefixes (polls drop later in August),
+// so the TOP 25 tab falls back to marquee games: both teams recognizable
+// (mapped in the logo set). Demo data keeps the rank-prefix behavior.
+function isMarquee(card: ScoreCardData): boolean {
+  return card.teams.every((t) => teamLogoUrl(slugifyTeam(teamNameFromLabel(t.label))) !== null);
+}
+
+function matchesTab(card: ScoreCardData, tab: Tab, anyRanked: boolean): boolean {
   if (tab === "ALL 136") return true;
-  if (tab === "TOP 25") return isRanked(card);
+  if (tab === "TOP 25") return anyRanked ? isRanked(card) : isMarquee(card);
   return card.conf === (tab as Conference);
 }
 
@@ -47,7 +54,8 @@ function ScoreCard({ card }: { card: ScoreCardData }) {
 
 export default function ScoreboardTabs({ games }: { games: readonly ScoreCardData[] }) {
   const [tab, setTab] = useState<Tab>("TOP 25");
-  const filtered = games.filter((g) => matchesTab(g, tab));
+  const anyRanked = games.some(isRanked);
+  const filtered = games.filter((g) => matchesTab(g, tab, anyRanked));
 
   return (
     <>

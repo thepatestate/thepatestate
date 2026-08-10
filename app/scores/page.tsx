@@ -7,6 +7,7 @@ import ScoreboardTabs from "@/components/ScoreboardTabs";
 import { TEAMS_TOP25, TEAMS_ALL } from "@/lib/teams";
 import { slugifyTeam, teamLogoUrl, helmetLightUrl } from "@/lib/teams-meta";
 import { getVideos } from "@/lib/youtube";
+import { getWeekScoreboard } from "@/lib/cfbd";
 import { createArtPicker } from "@/lib/editorial-art";
 import {
   DEMO_SCOREBOARD_GAMES,
@@ -166,6 +167,9 @@ const SLATE_DAYPARTS: { label: string; gameNs: readonly WatchlistGame["n"][] }[]
 
 export default async function ScoresPage() {
   const videos = await getVideos();
+  // Real Week 1 slate from CollegeFootballData; demo cards only as fallback.
+  const realGames = await getWeekScoreboard(1);
+  const scoreboardGames = realGames.length > 0 ? realGames : DEMO_SCOREBOARD_GAMES;
   const latestVideo = videos[0] ?? null;
   const art = createArtPicker();
   const filmTeaser = art.pick("schedule", "A stadium lit up at night, seen from above");
@@ -182,9 +186,13 @@ export default async function ScoresPage() {
 
       <section>
         <div className="wrap">
-          <p className="eyebrow">Live Now — Saturday Slate</p>
+          <p className="eyebrow">{realGames.length > 0 ? "Week 1 — The Real Slate" : "Live Now — Saturday Slate"}</p>
           <h2 className="display" style={{ fontSize: 38 }}>The Scoreboard</h2>
-          <PreseasonChip />
+          {realGames.length > 0 ? (
+            <span className="note">Live schedule data · scores flow in on gameday</span>
+          ) : (
+            <PreseasonChip />
+          )}
           <div className="week-strip" role="list" aria-label="Season week selector">
             {CFB_WEEKS.map((w) => (
               <span
@@ -198,7 +206,7 @@ export default async function ScoresPage() {
               </span>
             ))}
           </div>
-          <ScoreboardTabs games={DEMO_SCOREBOARD_GAMES} />
+          <ScoreboardTabs games={scoreboardGames} />
           <div style={{ marginTop: 14 }}><Link className="btn" href="/teams">Full Scoreboard — All 136 Teams</Link></div>
         </div>
       </section>
