@@ -2,9 +2,13 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import PreseasonChip from "@/components/PreseasonChip";
+import VideoCard from "@/components/VideoCard";
 import { slugifyTeam, teamLogoUrl } from "@/lib/teams-meta";
+import { createArtPicker } from "@/lib/editorial-art";
+import { getVideos, videoUrl } from "@/lib/youtube";
 
 export const metadata: Metadata = { title: "Recruiting — The Next Wave" };
+export const revalidate = 21600;
 
 // --- Preseason-preview sample data ---------------------------------------
 // Stands in for the Pate Recruiting Index (247Sports Composite + On3/Rivals
@@ -58,20 +62,68 @@ const DEMO_RECRUITING_NEWS = [
     headline: "The last 2027 five-stars are off the board",
     body: "The final two uncommitted five-stars made their calls: a five-star WR chose Indiana and a five-star RB stayed home with Tennessee — pivotal in-state wins that moved both classes up the rankings.",
     src: "SAMPLE — RECRUITING WIRE",
+    teams: ["indiana", "tennessee"],
+    art: "recruiting" as const,
   },
   {
     headline: "A&M is building a monster",
     body: "Texas A&M sits No. 1 on both major services with 26 commits — six five-stars and 19 blue-chips — putting the coaching staff in position for a second top-five class in three cycles.",
     src: "SAMPLE — RECRUITING WIRE",
+    teams: ["texas-am"],
+    art: "state" as const,
   },
   {
     headline: "Blue bloods lurking, not leading",
     body: "Georgia (13th on the Pate Index), Alabama (outside the top 30 on both services), and Texas (6th) are unusually quiet this cycle — which historically means a December surge is coming.",
     src: "THE PATE READ · AUG 6",
+    teams: ["georgia", "alabama", "texas"],
+    art: "rankings-movement" as const,
   },
 ] as const;
 
-export default function RecruitingPage() {
+// Expanded storylines for the new articles grid — same voice/subjects as
+// DEMO_RECRUITING_NEWS and DEMO_TEAM_INDEX above, just told as full-tile
+// article teasers instead of wire blurbs. All invented preseason content,
+// hence the PreseasonChip sitting over the section.
+const DEMO_ARTICLES = [
+  {
+    headline: "Why the Aggies' Class Is Built to Last, Not Just Rank High",
+    dek: "26 commits, six five-stars, and — more importantly — almost no overlap at any one position. Roster-fit grading on the No. 1 class in the country.",
+    art: "recruiting" as const,
+  },
+  {
+    headline: "The December Surge Nobody's Pricing In",
+    dek: "Georgia, Alabama, and Texas are all outside the top six on at least one service. History says that's exactly when the blue bloods make their move.",
+    art: "rankings-movement" as const,
+  },
+  {
+    headline: "Indiana's Recruiting Class Is Starting to Look Like Its Roster",
+    dek: "A five-star WR closes the board, and the Hoosiers' 2027 class is quietly following the same undervalued-but-detail-obsessed blueprint as the current team.",
+    art: "state" as const,
+  },
+  {
+    headline: "The Portal's August Ripple, Explained",
+    dek: "Two projected Week 1 starters entered the portal this week and three contenders are already circling. Who actually needs the help.",
+    art: "coaching" as const,
+  },
+  {
+    headline: "Five-Star QBs Are Landing in Different Places Than Usual",
+    dek: "Three of the four best quarterback prospects in the 2027 class picked programs outside the traditional QB factories. What changed.",
+    art: "season-preview" as const,
+  },
+  {
+    headline: "247 vs. On3: Where the Two Big Boards Actually Disagree",
+    dek: "The Pate Index averages them, but the gaps are the story — four teams are ranked ten spots apart or more between the two services.",
+    art: "media" as const,
+  },
+] as const;
+
+export default async function RecruitingPage() {
+  const art = createArtPicker();
+  const videos = await getVideos();
+  const recruitingVideo =
+    videos.find((v) => /recruit|portal/i.test(v.title)) ?? videos[0] ?? null;
+
   return (
     <main>
       <header className="page-head">
@@ -188,18 +240,74 @@ export default function RecruitingPage() {
 
       <section className="on-soft">
         <div className="wrap">
+          <p className="eyebrow">More From the Next Wave</p>
+          <h2 className="display" style={{ fontSize: 34 }}>Recruiting &amp; Portal Coverage</h2>
+          <PreseasonChip />
+          <div className="tile-grid">
+            {DEMO_ARTICLES.map((a) => {
+              const img = art.pick(a.art, a.headline);
+              return (
+                <div className="tile" key={a.headline}>
+                  <div className="tile-media">
+                    <Image src={img.src} alt={img.alt} fill sizes="(max-width: 860px) 100vw, 380px" style={{ objectFit: "cover" }} />
+                  </div>
+                  <div className="tile-scrim" />
+                  <div className="tile-body">
+                    <h4 className="tile-headline" style={{ fontSize: "clamp(16px,1.8vw,20px)" }}>{a.headline}</h4>
+                    <span className="tile-meta">{a.dek}</span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div className="wrap">
           <div className="duo">
             <div>
               <p className="eyebrow">The Wire — What Just Happened</p>
               <h2 className="display" style={{ fontSize: 34 }}>Recruiting News</h2>
               <div style={{ marginTop: 18 }}>
-                {DEMO_RECRUITING_NEWS.map((n) => (
-                  <div className="news-item" style={{ borderColor: "var(--lamp-deep)" }} key={n.headline}>
-                    <b style={{ color: "var(--ink)" }}>{n.headline}</b>
-                    <p>{n.body}</p>
-                    <div className="src">{n.src}</div>
-                  </div>
-                ))}
+                {DEMO_RECRUITING_NEWS.map((n) => {
+                  const img = art.pick(n.art, n.headline);
+                  return (
+                    <div className="news-item" style={{ borderColor: "var(--lamp-deep)", display: "flex", gap: 16 }} key={n.headline}>
+                      <div style={{ flex: 1 }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+                          <b style={{ color: "var(--ink)" }}>{n.headline}</b>
+                          <span style={{ display: "flex", gap: 4 }}>
+                            {n.teams.map((slug) => {
+                              const logoUrl = teamLogoUrl(slug);
+                              return logoUrl ? (
+                                <Image
+                                  key={slug}
+                                  src={logoUrl}
+                                  alt={`${slug} team logo`}
+                                  width={22}
+                                  height={22}
+                                  style={{
+                                    borderRadius: "50%",
+                                    background: "#fff",
+                                    border: "1px solid var(--line-l)",
+                                    objectFit: "contain",
+                                    padding: 2,
+                                  }}
+                                />
+                              ) : null;
+                            })}
+                          </span>
+                        </div>
+                        <p>{n.body}</p>
+                        <div className="src">{n.src}</div>
+                      </div>
+                      <div className="bleed-thumb" style={{ position: "relative", flex: "0 0 96px", height: 72 }}>
+                        <Image src={img.src} alt={img.alt} fill sizes="96px" style={{ objectFit: "cover" }} />
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             </div>
             <div className="panel">
@@ -210,6 +318,19 @@ export default function RecruitingPage() {
                 the one signing nobody&apos;s talking about that matters most. Weekly portal tracker in season, with
                 Josh&apos;s &quot;keep an eye on this&quot; flags.
               </p>
+              {recruitingVideo ? (
+                <div style={{ marginTop: 4, marginBottom: 18 }}>
+                  <VideoCard video={recruitingVideo} sizes="(max-width: 700px) 90vw, 380px" />
+                  <a
+                    href={videoUrl(recruitingVideo.id)}
+                    target="_blank"
+                    rel="noopener"
+                    style={{ display: "inline-block", marginTop: 10, fontFamily: "var(--mono)", fontSize: 12, letterSpacing: ".06em", color: "var(--lamp-deep)", fontWeight: 600 }}
+                  >
+                    Watch the latest read →
+                  </a>
+                </div>
+              ) : null}
               <Link className="btn" href="/show" style={{ borderColor: "var(--navy)", color: "var(--navy)" }}>
                 Watch the Recruiting Breakdown
               </Link>

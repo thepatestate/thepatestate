@@ -183,13 +183,15 @@ const DEMO_PREDICTOR_PCTS = [
   { team: "Texas Tech", pct: 16 },
 ] as const;
 
-// "Read the Room" articles strip — sample teasers only, never linked to a
-// real article route (matches the site's established demo-card pattern);
-// the lead card points at /notebook, where part C will publish Josh's real
-// bracket column (docs/content/josh-playoff-bracket-2026.md). Art categories
-// deliberately avoid "playoffs" a second time — its fallback candidate is
-// matchup-helmets.jpg, and this page must show zero references to that
-// banner image now that the top-of-page banner is gone.
+// "Read the Room" articles strip — the secondary tiles below are still
+// sample teasers, never linked to a real article route (matches the site's
+// established demo-card pattern). The lead card is the exception: it links
+// to Josh's real, published bracket column (see
+// docs/content/josh-playoff-bracket-2026.md, published via
+// scripts/publish-josh-bracket.mts at /notebook/my-2026-playoff-bracket-on-the-record).
+// Art categories deliberately avoid "playoffs" a second time — its fallback
+// candidate is matchup-helmets.jpg, and this page must show zero references
+// to that banner image now that the top-of-page banner is gone.
 const DEMO_READ_ROOM = [
   { title: "Why the AI Predictor Still Has Texas", meta: "THE MACHINE'S CASE · STAFF", art: "media" as const },
   { title: "The Case for Indiana's Cinderella Run", meta: "UPSET WATCH · STAFF", art: "rankings-movement" as const },
@@ -402,7 +404,7 @@ export default function PlayoffsPage() {
           <h2 className="display" style={{ fontSize: 34 }}>More on the Bracket</h2>
           <PreseasonChip />
           <div className="bento" style={{ marginTop: 18 }}>
-            <Link href="/notebook" className="tile tile-lead">
+            <Link href="/notebook/my-2026-playoff-bracket-on-the-record" className="tile tile-lead">
               <div className="tile-media">
                 <Image src={readRoomLead.src} alt={readRoomLead.alt} fill sizes="(max-width: 900px) 100vw, 640px" style={{ objectFit: "cover" }} />
               </div>
@@ -410,7 +412,7 @@ export default function PlayoffsPage() {
               <div className="tile-body">
                 <span className="tile-kicker">Josh Pate · On the Record</span>
                 <h3 className="tile-headline">My 2026 Playoff Bracket, On the Record</h3>
-                <span className="tile-meta">JOSH PATE · READ IN THE NOTEBOOK →</span>
+                <span className="tile-meta">JOSH PATE · READ THE FULL COLUMN →</span>
               </div>
             </Link>
             <div className="bento-stack">

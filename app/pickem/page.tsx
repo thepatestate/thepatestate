@@ -1,8 +1,13 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import PreseasonChip from "@/components/PreseasonChip";
+import VideoGrid from "@/components/VideoGrid";
+import { createArtPicker } from "@/lib/editorial-art";
+import { getVideos, SOCIAL_LINKS } from "@/lib/youtube";
 
 export const metadata: Metadata = { title: "Porch Pick'Em" };
+export const revalidate = 21600;
 
 // --- Preseason-preview sample data ---------------------------------------
 // Stands in for the picks engine (leaderboard) and the pundit-tracker feed.
@@ -51,20 +56,64 @@ const DEMO_PUNDITS = [
   { rk: 18, initials: "TL", name: "Taylor Lewan", aff: "BUSSIN' WITH THE BOYS", josh: false },
   { rk: 19, initials: "WC", name: "Will Compton", aff: "BUSSIN' WITH THE BOYS", josh: false },
   { rk: 20, initials: "DP", name: "Dave Portnoy", aff: "BARSTOOL", josh: false },
+  // Added to bring the leaderboard to an even 24 (12/12 columns) — real
+  // on-air CFB analysts, same as everyone above; no invented records.
+  { rk: 21, initials: "DPo", name: "David Pollack", aff: "ESPN · GAMEDAY", josh: false },
+  { rk: 22, initials: "BM", name: "Booger McFarland", aff: "ESPN · SEC NETWORK", josh: false },
+  { rk: 23, initials: "CD", name: "Charles Davis", aff: "FOX · BIG NOON", josh: false },
+  { rk: 24, initials: "CC", name: "Cole Cubelic", aff: "ESPN · SEC NETWORK", josh: false },
+] as const;
+
+// Team-ish saturated color pairs cycled by rank — gives each monogram
+// avatar a distinctive look without tying any real person to a real team's
+// actual brand colors (these pairs are generic sports-broadcast palette,
+// not any specific school's identity). Josh keeps his own gold/navy
+// treatment via .pundit.josh, so he isn't in this cycle.
+const AVATAR_COLORS = [
+  { bg: "#7A1E2B", fg: "#F4E9D8" },
+  { bg: "#0B3B5C", fg: "#F2C744" },
+  { bg: "#1E4620", fg: "#E8DCC0" },
+  { bg: "#4A2A6B", fg: "#F2B705" },
+  { bg: "#8A3B12", fg: "#F5E6C8" },
+  { bg: "#0F2E4C", fg: "#C5CBD3" },
+  { bg: "#5C1A1A", fg: "#E8B84B" },
+  { bg: "#1B4332", fg: "#D8C99B" },
+  { bg: "#2B2D82", fg: "#FFFFFF" },
+  { bg: "#6B0F1A", fg: "#FFFFFF" },
+  { bg: "#243B53", fg: "#E3A857" },
+  { bg: "#3D1E6D", fg: "#FFFFFF" },
 ] as const;
 
 function Pundit({ p }: { p: (typeof DEMO_PUNDITS)[number] }) {
+  const colors = AVATAR_COLORS[(p.rk - 1) % AVATAR_COLORS.length];
   return (
     <div className={p.josh ? "pundit josh" : "pundit"}>
       <div className="prk">{p.rk}</div>
-      <div className="avatar">{p.initials}</div>
+      <div
+        className="avatar"
+        style={p.josh ? undefined : { background: colors.bg, color: colors.fg, borderColor: colors.bg }}
+      >
+        {p.initials}
+      </div>
       <div className="who"><b>{p.name}</b><span className="aff">{p.aff}</span></div>
       <div className="rec">—</div>
     </div>
   );
 }
 
-export default function PickemPage() {
+// Video strip + article teaser storylines for the new "Picks Desk" band —
+// invented preseason content (PreseasonChip applies), same picks/predictor
+// subject matter as the rest of the page.
+const DEMO_PICKS_ARTICLES = [
+  { headline: "The Model vs. The Gut: Where Josh and the AI Predictor Disagree", dek: "Two different engines, same ten games — the weeks they split are the weeks worth watching.", art: "media" as const },
+  { headline: "Upset Radar: Three Lines That Feel Wrong", dek: "The board's biggest mismatches on paper are exactly the games the citizens are piling onto one side of.", art: "rankings-movement" as const },
+  { headline: "How the Prize Ladder Actually Pays Out", dek: "Weekly merch, a signed annual, tickets at top 10, a seat next to Josh for the champion — the fine print, explained.", art: "state" as const },
+] as const;
+
+export default async function PickemPage() {
+  const art = createArtPicker();
+  const videos = await getVideos();
+
   return (
     <main>
       <header className="page-head">
@@ -91,7 +140,7 @@ export default function PickemPage() {
                 {DEMO_LEADERBOARD.map((row) => (
                   <div className="lb-row" key={row.rank}>
                     <span>{row.rank} {row.name}</span>
-                    <span className="streak">{row.pts}{row.streak ? ` · 🔥 ${row.streak}` : ""}</span>
+                    <span className="streak">{row.pts}{row.streak ? <> · <span style={{ fontSize: 15 }}>🔥</span> {row.streak}</> : ""}</span>
                   </div>
                 ))}
                 <div className="lb-row" style={{ background: "var(--field-lt)", borderRadius: 4, paddingLeft: 10, paddingRight: 10 }}>
@@ -140,24 +189,63 @@ export default function PickemPage() {
           <h2 className="display" style={{ fontSize: 38 }}>Josh vs. The Pros</h2>
           <PreseasonChip />
           <p className="lede">
-            Up top it&apos;s Josh against the citizens. Down here it&apos;s Josh against the pros — twenty of the
+            Up top it&apos;s Josh against the citizens. Down here it&apos;s Josh against the pros — 24 of the
             biggest names on your TV, GameDay to FOX to Barstool to CBS. Season records against the spread will be
             tracked all year, starting Week 1, receipts kept.
           </p>
-          <p style={{ marginTop: 14, fontFamily: "var(--mono)", fontSize: 11, color: "var(--ink-dim)" }}>
+          <p style={{ marginTop: 12, fontFamily: "var(--mono)", fontSize: 11, color: "var(--ink-dim)" }}>
             Records start accruing Week 1 — every pick sourced and receipts kept.
           </p>
-          <div className="duo" style={{ marginTop: 26 }}>
-            <div className="wire" style={{ padding: 22 }}>
-              {DEMO_PUNDITS.slice(0, 7).map((p) => <Pundit p={p} key={p.rk} />)}
+          <div className="pundit-grid" style={{ marginTop: 18 }}>
+            <div className="wire">
+              {DEMO_PUNDITS.slice(0, 12).map((p) => <Pundit p={p} key={p.rk} />)}
             </div>
-            <div className="wire" style={{ padding: 22 }}>
-              {DEMO_PUNDITS.slice(7).map((p) => <Pundit p={p} key={p.rk} />)}
+            <div className="wire">
+              {DEMO_PUNDITS.slice(12, 24).map((p) => <Pundit p={p} key={p.rk} />)}
             </div>
           </div>
-          <p style={{ marginTop: 16, fontFamily: "var(--mono)", fontSize: 11, color: "var(--ink-dim)" }}>
+          <p style={{ marginTop: 14, fontFamily: "var(--mono)", fontSize: 11, color: "var(--ink-dim)" }}>
             SEASON ATS · UPDATED EVERY SUNDAY NIGHT · SHARE GRAPHIC AUTO-GENERATES AFTER WEEK 6
           </p>
+        </div>
+      </section>
+
+      <section>
+        <div className="wrap">
+          <p className="eyebrow">The Picks Desk</p>
+          <h2 className="display" style={{ fontSize: 34 }}>More Board, More Breakdown</h2>
+          <PreseasonChip />
+          {videos.length > 0 && (
+            <>
+              <p className="lede" style={{ marginTop: 4 }}>Straight from the show — no separate feed to maintain.</p>
+              <VideoGrid videos={videos.slice(0, 3)} sizes="(max-width: 760px) 90vw, 360px" />
+            </>
+          )}
+          <div className="tile-grid" style={{ marginTop: 30 }}>
+            {DEMO_PICKS_ARTICLES.map((a) => {
+              const img = art.pick(a.art, a.headline);
+              return (
+                <div className="tile" key={a.headline}>
+                  <div className="tile-media">
+                    <Image src={img.src} alt={img.alt} fill sizes="(max-width: 860px) 100vw, 380px" style={{ objectFit: "cover" }} />
+                  </div>
+                  <div className="tile-scrim" />
+                  <div className="tile-body">
+                    <h4 className="tile-headline" style={{ fontSize: "clamp(16px,1.8vw,20px)" }}>{a.headline}</h4>
+                    <span className="tile-meta">{a.dek}</span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+          <div className="x-card" style={{ marginTop: 30 }}>
+            <div className="x-mark" aria-hidden="true">𝕏</div>
+            <div className="x-body">
+              <span className="x-handle">@JoshPateCFB on X</span>
+              <p className="x-sub">Follow for live pick reactions</p>
+            </div>
+            <a className="btn" href={SOCIAL_LINKS.x} target="_blank" rel="noopener">Follow on X →</a>
+          </div>
         </div>
       </section>
 

@@ -25,6 +25,8 @@ const DEMO_GEAR: readonly GearItem[] = [
   { label: "GAMEDAY HAT — $32", photo: "/img/product-hat.jpg", alt: "The Pate State gameday hat" },
   { label: "CITIZEN HOODIE — $54", photo: null, alt: null },
   { label: "TAILGATE APRON — $38", photo: null, alt: null },
+  { label: "STRENGTH & CONDITIONING TEE — $28", photo: "/img/product-sc-tee.jpg", alt: "The Pate State Strength & Conditioning tee" },
+  { label: "NO OFFSEASON TEE — $28", photo: "/img/product-no-offseason-tee.jpg", alt: "The Pate State No Offseason tee" },
 ];
 
 export default function ShopPage() {
