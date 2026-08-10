@@ -382,8 +382,13 @@ td.rk{color:var(--lamp-deep);font-weight:600;width:44px}td.rating{text-align:rig
 .wk .n{font-family:var(--display);font-weight:800;font-size:30px;color:var(--lamp-deep);width:44px}
 .wk .helms{display:flex;align-items:center;gap:6px;flex:0 0 150px}
 .wk .helms .at{font-family:var(--mono);font-size:10px;color:var(--ink-dim)}
-.wk .helms .helmet-chip{flex:0 0 auto;width:52px;height:52px;border-radius:50%;overflow:hidden;background:var(--paper-2);display:flex;align-items:center;justify-content:center;border:1px solid var(--line-l)}
+.wk .helms .helmet-chip{flex:0 0 auto;width:74px;height:74px;border-radius:50%;overflow:hidden;background:var(--paper-2);display:flex;align-items:center;justify-content:center;border:1px solid var(--line-l)}
 .wk .helms .helmet-chip img{width:100%;height:100%}
+/* Shared team mark (components/TeamMark.tsx) — logo, light tile, or the
+   abbreviation-on-team-color-disc fallback. */
+.teammark{flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;overflow:hidden}
+.teammark-helmet{flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;overflow:hidden;background:var(--paper-2);border:1px solid var(--line-l)}
+.teammark-disc{flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;color:#fff;font-family:var(--mono);font-weight:600;letter-spacing:.02em}
 .wk .who{flex:1}
 .wk .who b{font-size:16px}
 .wk .who .meta{font-family:var(--mono);font-size:11px;color:var(--ink-dim);margin-top:2px}
@@ -813,3 +818,13 @@ footer{background:var(--navy);color:var(--chalk-dim);padding:34px 0 40px;font-fa
 .hero .wrap{position:relative;z-index:2}
 @media (prefers-reduced-motion: reduce){.hero-video{display:none}}
 @media (max-width: 700px){.hero-video{display:none}}
+
+/* --- Empty states (v2 brief §0.1) — production stand-ins for demo data --- */
+.empty-state{border:1px dashed var(--line-l);border-radius:6px;padding:22px 20px;text-align:center;background:var(--paper-2)}
+.empty-state.dark{border-color:var(--line-d);background:rgba(255,255,255,.03)}
+.empty-state .es-kicker{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--lamp-deep)}
+.empty-state.dark .es-kicker{color:var(--lamp)}
+.empty-state .es-title{font-family:var(--display);font-size:22px;margin:6px 0 4px;color:var(--ink)}
+.empty-state.dark .es-title{color:var(--chalk)}
+.empty-state .es-body{font-size:14px;color:var(--ink-dim);max-width:44ch;margin:0 auto}
+.empty-state.dark .es-body{color:var(--chalk-dim)}

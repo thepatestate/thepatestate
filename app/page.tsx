@@ -8,6 +8,8 @@ import { createArtPicker, type ArtCategory } from "@/lib/editorial-art";
 import EpisodeLead from "@/components/EpisodeLead";
 import VideoGrid from "@/components/VideoGrid";
 import PreseasonChip from "@/components/PreseasonChip";
+import EmptyState from "@/components/EmptyState";
+import { DEMO_MODE } from "@/lib/demo";
 import Reveal from "@/components/Reveal";
 import SlateStrip from "@/components/SlateStrip";
 
@@ -276,8 +278,19 @@ export default async function Home() {
                       );
                     })}
                     {/* Demo tiles backfill the stack until enough real articles
-                        exist — an empty column reads as a broken layout. */}
-                    {DEMO_NOTEBOOK_FEATURED.slice(0, Math.max(0, 2 - notebookNext.length)).map((item) => {
+                        exist — an empty column reads as a broken layout. In
+                        production (§0.1) the backfill is an honest coming-soon
+                        tile instead of sample stories. */}
+                    {!DEMO_MODE && notebookNext.length < 2 && (
+                      <div className="tile" style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+                        <EmptyState
+                          kicker="NEW EVERY WEEKDAY"
+                          title="More stories on the way"
+                          body="Every episode gets its written companion within hours of upload."
+                        />
+                      </div>
+                    )}
+                    {(DEMO_MODE ? DEMO_NOTEBOOK_FEATURED.slice(0, Math.max(0, 2 - notebookNext.length)) : []).map((item) => {
                       const img = art.pick(item.art, item.title);
                       return (
                         <Link href="/notebook" className="tile" key={item.title}>
@@ -300,6 +313,13 @@ export default async function Home() {
                     })}
                   </div>
                 </div>
+              ) : !DEMO_MODE ? (
+                <EmptyState
+                  kicker="NEW EVERY WEEKDAY"
+                  title="The Notebook opens with the first companion story"
+                  body="Every episode of the show gets a written companion within hours of upload — takeaways, timestamps, and the quotes that matter."
+                  cta={{ href: "/notebook", label: "Open the Notebook" }}
+                />
               ) : (
                 <div className="bento">
                   <Link href="/notebook" className="tile tile-lead">
@@ -349,7 +369,9 @@ export default async function Home() {
                   </div>
                 </div>
               )}
-              {/* Most Read strip balances the column against the Wire rail. */}
+              {/* Most Read strip balances the column against the Wire rail.
+                  Demo-only until real read counts exist (§0.1). */}
+              {DEMO_MODE && (
               <div style={{ marginTop: 22 }}>
                 <p className="eyebrow" style={{ marginBottom: 8 }}>Most Read This Week <PreseasonChip /></p>
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "10px 22px" }}>
@@ -369,11 +391,20 @@ export default async function Home() {
                   ))}
                 </div>
               </div>
+              )}
               <div style={{ marginTop: 18 }}><Link className="btn" href="/notebook">Open the Notebook</Link></div>
             </div>
 
             <div className="wire">
               <h3><span className="dot" />The Wire</h3>
+              {liveWire.length < 3 && !DEMO_MODE && (
+                <EmptyState
+                  kicker="VERIFIED NEWS ONLY"
+                  title="The Wire is warming up"
+                  body="Sourced, attributed college football news lands here as it breaks — monitored around the clock."
+                  cta={{ href: "/wire", label: "All Wire Coverage →" }}
+                />
+              )}
               {liveWire.length >= 3
                 ? liveWire.map((w) => {
                     const logo = w.teams?.[0] ? teamLogoUrl(w.teams[0]) : null;
@@ -397,7 +428,7 @@ export default async function Home() {
                       inner
                     );
                   })
-                : DEMO_WIRE.map((w) => {
+                : !DEMO_MODE ? null : DEMO_WIRE.map((w) => {
                     const img = art.pick(w.art, `${w.category} — ${w.headline}`);
                     return (
                       <div className="wire-item" key={w.headline}>
@@ -429,9 +460,16 @@ export default async function Home() {
               <span className="fr">🗳 THE JP POLL</span>
               <p className="eyebrow">Vote Sunday · Reveal Tuesday</p>
               <h3>The People&apos;s Power Ranking</h3>
-              <PreseasonChip />
-              <p>One board, voted by those who actually watch, revealed every Tuesday. The top of this week&apos;s:</p>
-              {DEMO_POLL.map((t) => {
+              {DEMO_MODE && <PreseasonChip />}
+              <p>One board, voted by those who actually watch, revealed every Tuesday.{DEMO_MODE ? " The top of this week's:" : ""}</p>
+              {!DEMO_MODE && (
+                <EmptyState
+                  kicker="FIRST BALLOT — WEEK 1"
+                  title="The JP Poll opens with the season"
+                  body="Ballots open Sunday nights, the reveal comes Tuesday on the show. The first board of 2026 lands opening week."
+                />
+              )}
+              {DEMO_MODE && DEMO_POLL.map((t) => {
                 const logoUrl = teamLogoUrl(slugifyTeam(t.team));
                 return (
                 <div className="rankcard" key={t.rank}>
@@ -469,28 +507,38 @@ export default async function Home() {
               <span className="fr fr-field">✓ PORCH PICK&apos;EM</span>
               <p className="eyebrow">Free to Play · Bragging Rights Forever</p>
               <h3>Porch Pick&apos;Em</h3>
-              <PreseasonChip />
+              {DEMO_MODE && <PreseasonChip />}
               <p>Ten games a week against Josh and the whole State. Build a streak. Earn your patches.</p>
-              {DEMO_LEADERBOARD.map((row) => (
-                <div className="lb-row" key={row.rank}>
-                  <span>{row.rank}. {row.name}</span>
-                  <span className="streak">{row.pts}{row.streak ? ` · 🔥 ${row.streak}` : ""}</span>
-                </div>
-              ))}
-              <div
-                style={{
-                  marginTop: 12,
-                  border: "1px dashed var(--line-l)",
-                  borderRadius: 4,
-                  padding: "10px 12px",
-                  fontFamily: "var(--mono)",
-                  fontSize: 12,
-                  color: "var(--ink)",
-                }}
-              >
-                🎯 <b style={{ color: "var(--field)" }}>ONLY 32% OF CITIZENS BEAT JOSH LAST WEEK.</b> Think you can?
-                Picks lock Saturday 11:58 AM ET.
-              </div>
+              {DEMO_MODE ? (
+                <>
+                  {DEMO_LEADERBOARD.map((row) => (
+                    <div className="lb-row" key={row.rank}>
+                      <span>{row.rank}. {row.name}</span>
+                      <span className="streak">{row.pts}{row.streak ? ` · 🔥 ${row.streak}` : ""}</span>
+                    </div>
+                  ))}
+                  <div
+                    style={{
+                      marginTop: 12,
+                      border: "1px dashed var(--line-l)",
+                      borderRadius: 4,
+                      padding: "10px 12px",
+                      fontFamily: "var(--mono)",
+                      fontSize: 12,
+                      color: "var(--ink)",
+                    }}
+                  >
+                    🎯 <b style={{ color: "var(--field)" }}>ONLY 32% OF CITIZENS BEAT JOSH LAST WEEK.</b> Think you can?
+                    Picks lock Saturday 11:58 AM ET.
+                  </div>
+                </>
+              ) : (
+                <EmptyState
+                  kicker="LEADERBOARD OPENS WEEK 1"
+                  title="Standings start with the first slate"
+                  body="Ten games a week, picks lock Saturday 11:58 AM ET. Every citizen starts the season 0–0 — including Josh."
+                />
+              )}
               <div className="badges">
                 <div className="badge">🏆</div>
                 <div className="badge">🎯</div>
@@ -534,12 +582,16 @@ export default async function Home() {
                     </span>
                   </a>
                 )}
-                <p className="pb-label">The three stories that matter:</p>
-                <ul className="pb-wire">
-                  {(liveWire.length >= 3 ? liveWire.slice(0, 3).map((w) => w.headline) : DEMO_WIRE.slice(0, 3).map((w) => w.headline)).map((h) => (
-                    <li key={h}>{h}</li>
-                  ))}
-                </ul>
+                {(liveWire.length >= 3 || DEMO_MODE) && (
+                  <>
+                    <p className="pb-label">The three stories that matter:</p>
+                    <ul className="pb-wire">
+                      {(liveWire.length >= 3 ? liveWire.slice(0, 3).map((w) => w.headline) : DEMO_WIRE.slice(0, 3).map((w) => w.headline)).map((h) => (
+                        <li key={h}>{h}</li>
+                      ))}
+                    </ul>
+                  </>
+                )}
                 <p className="pb-cta">Today&apos;s ritual → make your picks before Saturday 11:58 AM ET.</p>
               </div>
             </div>
@@ -568,7 +620,6 @@ export default async function Home() {
             <div>
               <p className="eyebrow">Wear the Flag</p>
               <h2 className="display" style={{ fontSize: 36 }}>The State Store</h2>
-              <PreseasonChip />
               <div className="shop-items">
                 {DEMO_SHOP.map((item) => (
                   <div key={item.label} className={item.hero ? "item hero-item has-photo" : "item has-photo"}>
@@ -584,7 +635,6 @@ export default async function Home() {
             <div>
               <p className="eyebrow">The Porch Goes On the Road</p>
               <h2 className="display" style={{ fontSize: 36 }}>Live &amp; On Campus</h2>
-              <PreseasonChip />
               <div style={{ position: "relative", aspectRatio: "16/9", borderRadius: 6, overflow: "hidden", marginBottom: 16 }}>
                 <Image
                   src="/img/campus-live.jpg"
@@ -594,12 +644,21 @@ export default async function Home() {
                   style={{ objectFit: "cover" }}
                 />
               </div>
-              {DEMO_TOUR.map((t) => (
-                <div className="tour-row" key={`${t.date}-${t.city}`}>
-                  <span>{t.date} — {t.city}</span>
-                  {t.soldOut ? <span>Sold Out</span> : <Link href="/porch">Tickets →</Link>}
-                </div>
-              ))}
+              {DEMO_MODE ? (
+                DEMO_TOUR.map((t) => (
+                  <div className="tour-row" key={`${t.date}-${t.city}`}>
+                    <span>{t.date} — {t.city}</span>
+                    {t.soldOut ? <span>Sold Out</span> : <Link href="/porch">Tickets →</Link>}
+                  </div>
+                ))
+              ) : (
+                <EmptyState
+                  kicker="THE PORCH TOUR"
+                  title="Tour dates announced soon"
+                  body="Campus stops are being booked now — citizens get first dibs on tickets the moment dates drop."
+                  cta={{ href: "/join", label: "Become a Citizen — Free" }}
+                />
+              )}
             </div>
           </div>
           </Reveal>
@@ -610,7 +669,6 @@ export default async function Home() {
         <div className="wrap">
           <p className="eyebrow">Every Stadium. Every Tradition. Every Tailgate.</p>
           <h2 className="display">Pate Tailgate</h2>
-          <PreseasonChip />
           <p className="lede">
             The field guide to actually living this sport — where to park, where to eat, what time to arrive, which
             traditions you can&apos;t miss.
@@ -666,7 +724,6 @@ export default async function Home() {
               <h2 className="display" style={{ fontSize: "clamp(30px,4vw,44px)" }}>
                 Become a Citizen,<br />Get the Guide.
               </h2>
-              <PreseasonChip />
               <p className="lede">
                 The 2026 JP Preseason Football Guide — the Top 50 ranked, analyzed, and explained, the playoff
                 picture, the X-factors, and the breakout players — yours free (digital edition) the moment you claim

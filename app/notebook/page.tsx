@@ -5,6 +5,8 @@ import { getPublishedArticles, getWireItems } from "@/lib/sanity";
 import { formatDate, relTime } from "@/lib/format";
 import { teamLogoUrl } from "@/lib/teams-meta";
 import { createArtPicker, type ArtCategory } from "@/lib/editorial-art";
+import EmptyState from "@/components/EmptyState";
+import { DEMO_MODE } from "@/lib/demo";
 
 export const metadata: Metadata = { title: "The Notebook" };
 export const revalidate = 300;
@@ -36,7 +38,6 @@ function seriesLabel(series?: string): string {
 // media/coaching→film, poll/state→goalpost, TV/matchups→matchup-helmets,
 // store→train-tee. Adjacent cards never repeat the same photo.
 
-const DEMO_CATNAV = ["Latest", "Josh Pate", "News", "Recruiting & Portal", "Rankings", "Teams", "Columns"] as const;
 
 const DEMO_FEATURED = [
   {
@@ -197,12 +198,8 @@ export default async function NotebookPage() {
         <div className="wrap">
           <div className="duo" style={{ gridTemplateColumns: "2fr 1fr" }}>
             <div>
-              <div className="catnav">
-                {DEMO_CATNAV.map((c, i) => (
-                  <Link key={c} href="/#" className={i === 0 ? "on" : undefined}>{c}</Link>
-                ))}
-              </div>
-
+              {/* Category tabs return when real filtered views exist (§0.3 —
+                  no dead links; the old tabs pointed at "/"). */}
               {lead ? (
                 <Link href={`/notebook/${lead.slug.current}`} className="lead-story" style={{ textDecoration: "none", color: "inherit" }}>
                   <div className="ph">
@@ -226,7 +223,7 @@ export default async function NotebookPage() {
                     </div>
                   </div>
                 </Link>
-              ) : (
+              ) : DEMO_MODE ? (
                 <div className="lead-story">
                   <div className="ph">
                     <Image
@@ -249,6 +246,12 @@ export default async function NotebookPage() {
                     <div className="meta">JOSH PATE · 6 MIN READ · TODAY 7:00 AM</div>
                   </div>
                 </div>
+              ) : (
+                <EmptyState
+                  kicker="NEW EVERY WEEKDAY"
+                  title="The first companion stories are on the way"
+                  body="Every episode of the show gets its written companion within hours of upload."
+                />
               )}
 
               {lead && featured.length > 0 ? (
@@ -272,7 +275,7 @@ export default async function NotebookPage() {
                     );
                   })}
                 </div>
-              ) : !lead ? (
+              ) : !lead && DEMO_MODE ? (
                 <div className="tile-grid">
                   {DEMO_FEATURED.map((f) => {
                     const img = art.pick(f.art, f.title);
@@ -294,11 +297,21 @@ export default async function NotebookPage() {
 
               <div className="sec-head" style={{ marginTop: 38 }}>
                 <p className="eyebrow" style={{ margin: 0 }}>Latest News</p>
-                <Link className="view-all" href="/#">Load More →</Link>
+                <Link className="view-all" href="/wire">All Wire Coverage →</Link>
               </div>
-              {lead && <span className="note">Sample content below — more real stories coming</span>}
+              {DEMO_MODE && lead && <span className="note">Sample content below — more real stories coming</span>}
+              {!DEMO_MODE && articles.length <= 4 && (
+                <div style={{ marginTop: 12 }}>
+                  <EmptyState
+                    kicker="THE ARCHIVE IS BUILDING"
+                    title="More stories land daily"
+                    body="Companion stories, wire coverage, and columns stack up here as the season approaches."
+                    cta={{ href: "/wire", label: "Read the Wire →" }}
+                  />
+                </div>
+              )}
               <div style={{ marginTop: 4 }}>
-                {DEMO_NEWS.map((n) => (
+                {(DEMO_MODE ? DEMO_NEWS : []).map((n) => (
                   <div className={n.locked ? "newsitem locked" : "newsitem"} key={n.headline}>
                     <div className="nx">
                       <div
@@ -328,22 +341,25 @@ export default async function NotebookPage() {
                 ))}
               </div>
 
-              <div className="sec-head" style={{ marginTop: 38 }}>
-                <p className="eyebrow" style={{ margin: 0 }}>Most Popular This Week</p>
-                <Link className="view-all" href="/#">More Popular →</Link>
-              </div>
-              {lead && <span className="note">Sample content below — more real stories coming</span>}
-              <div style={{ marginTop: 8 }}>
-                {DEMO_POPULAR.map((p) => (
-                  <div className="perf" key={p.n}>
-                    <div className="n">{p.n}</div>
-                    <div className="who">
-                      <b>{p.title}</b>
-                      <div className="meta">{p.meta}</div>
-                    </div>
+              {DEMO_MODE && (
+                <>
+                  <div className="sec-head" style={{ marginTop: 38 }}>
+                    <p className="eyebrow" style={{ margin: 0 }}>Most Popular This Week</p>
                   </div>
-                ))}
-              </div>
+                  {lead && <span className="note">Sample content below — more real stories coming</span>}
+                  <div style={{ marginTop: 8 }}>
+                    {DEMO_POPULAR.map((p) => (
+                      <div className="perf" key={p.n}>
+                        <div className="n">{p.n}</div>
+                        <div className="who">
+                          <b>{p.title}</b>
+                          <div className="meta">{p.meta}</div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </>
+              )}
             </div>
 
             <div className="wire">
@@ -371,7 +387,13 @@ export default async function NotebookPage() {
                       inner
                     );
                   })
-                : DEMO_WIRE.map((w) => {
+                : !DEMO_MODE ? (
+                    <EmptyState
+                      kicker="VERIFIED NEWS ONLY"
+                      title="The Wire is warming up"
+                      body="Sourced, attributed news lands here as it breaks."
+                    />
+                  ) : DEMO_WIRE.map((w) => {
                     const img = art.pick(w.art, `${w.category} — ${w.headline}`);
                     return (
                       <div className="wire-item" key={w.headline}>

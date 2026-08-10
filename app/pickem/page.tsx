@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import PreseasonChip from "@/components/PreseasonChip";
+import EmptyState from "@/components/EmptyState";
 import VideoGrid from "@/components/VideoGrid";
+import { DEMO_MODE } from "@/lib/demo";
 import { createArtPicker } from "@/lib/editorial-art";
 import { getVideos, SOCIAL_LINKS } from "@/lib/youtube";
 
@@ -134,35 +136,40 @@ export default async function PickemPage() {
             <div>
               <p className="eyebrow">How It Works</p>
               <h2 className="display" style={{ fontSize: 34 }}>Pick. Streak. Climb.</h2>
-              <PreseasonChip />
+              {DEMO_MODE && <PreseasonChip />}
               <p className="lede">
                 Every Thursday the board drops — ten games, straight up or against the spread. Points for wins,
                 bonuses for streaks and upsets, small-group leagues for your crew, and one big season leaderboard
                 for the whole State.
               </p>
-              <div style={{ marginTop: 22 }}>
-                {DEMO_LEADERBOARD.map((row) => (
-                  <div className="lb-row" key={row.rank}>
-                    <span>{row.rank} {row.name}</span>
-                    <span className="streak">{row.pts}{row.streak ? <> · <span style={{ fontSize: 15 }}>🔥</span> {row.streak}</> : ""}</span>
+              {DEMO_MODE ? (
+                <>
+                  <div style={{ marginTop: 22 }}>
+                    {DEMO_LEADERBOARD.map((row) => (
+                      <div className="lb-row" key={row.rank}>
+                        <span>{row.rank} {row.name}</span>
+                        <span className="streak">{row.pts}{row.streak ? <> · <span style={{ fontSize: 15 }}>🔥</span> {row.streak}</> : ""}</span>
+                      </div>
+                    ))}
+                    <div className="lb-row" style={{ background: "var(--field-lt)", borderRadius: 4, paddingLeft: 10, paddingRight: 10 }}>
+                      <span><b>212. You</b></span>
+                      <span className="streak"><b>1,214 PTS</b></span>
+                    </div>
                   </div>
-                ))}
-                <div className="lb-row" style={{ background: "var(--field-lt)", borderRadius: 4, paddingLeft: 10, paddingRight: 10 }}>
-                  <span><b>212. You</b></span>
-                  <span className="streak"><b>1,214 PTS</b></span>
+                  <div style={{ marginTop: 20, display: "flex", gap: 14, alignItems: "center", flexWrap: "wrap" }}>
+                    <button className="btn solid" disabled>Make This Week&apos;s Picks</button>
+                  </div>
+                </>
+              ) : (
+                <div style={{ marginTop: 22 }}>
+                  <EmptyState
+                    kicker="LEADERBOARD OPENS WEEK 1"
+                    title="Every citizen starts 0–0 — including Josh"
+                    body="The first board drops Thursday of opening week; picks lock Saturday 11:58 AM ET. Join now and you're in from game one."
+                    cta={{ href: "/join", label: "Become a Citizen — Free" }}
+                  />
                 </div>
-              </div>
-              <div style={{ marginTop: 12 }}>
-                <Link href="/#" style={{ fontFamily: "var(--mono)", fontSize: 12, color: "var(--lamp-deep)", letterSpacing: ".06em" }}>
-                  SEE THE FULL RANKINGS →
-                </Link>
-              </div>
-              <div style={{ marginTop: 20, display: "flex", gap: 14, alignItems: "center", flexWrap: "wrap" }}>
-                <button className="btn solid" disabled>Make This Week&apos;s Picks</button>
-                <span style={{ fontFamily: "var(--mono)", fontSize: 12, color: "var(--ink-dim)" }}>
-                  YOUR SEASON: <b style={{ color: "var(--field)" }}>44–28 · 61.1% CORRECT</b>
-                </span>
-              </div>
+              )}
             </div>
             <div>
               <p className="eyebrow">The Prize Ladder</p>
@@ -191,7 +198,6 @@ export default async function PickemPage() {
         <div className="wrap">
           <p className="eyebrow">The Other Leaderboard</p>
           <h2 className="display" style={{ fontSize: 38 }}>Josh vs. The Pros</h2>
-          <PreseasonChip />
           <p className="lede">
             Up top it&apos;s Josh against the citizens. Down here it&apos;s Josh against the pros — 24 of the
             biggest names on your TV, GameDay to FOX to Barstool to CBS. Season records against the spread will be
@@ -218,7 +224,7 @@ export default async function PickemPage() {
         <div className="wrap">
           <p className="eyebrow">The Picks Desk</p>
           <h2 className="display" style={{ fontSize: 34 }}>More Board, More Breakdown</h2>
-          <PreseasonChip />
+          {DEMO_MODE && <PreseasonChip />}
           {videos.length > 0 && (
             <>
               <p className="lede" style={{ marginTop: 4 }}>Straight from the show — no separate feed to maintain.</p>
@@ -226,7 +232,7 @@ export default async function PickemPage() {
             </>
           )}
           <div className="tile-grid" style={{ marginTop: 30 }}>
-            {DEMO_PICKS_ARTICLES.map((a) => {
+            {(DEMO_MODE ? DEMO_PICKS_ARTICLES : []).map((a) => {
               const img = art.pick(a.art, a.headline);
               return (
                 <div className="tile" key={a.headline}>
