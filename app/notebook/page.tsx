@@ -200,7 +200,7 @@ export default async function NotebookPage() {
 
       <section>
         <div className="wrap">
-          <div className="duo" style={{ gridTemplateColumns: "2fr 1fr" }}>
+          <div className="duo wide">
             <div>
               {/* Category tabs return when real filtered views exist (§0.3 —
                   no dead links; the old tabs pointed at "/"). */}

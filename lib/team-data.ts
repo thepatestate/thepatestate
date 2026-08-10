@@ -13,7 +13,7 @@ const YEAR = 2026;
 
 export { LAUNCH_TEAMS } from "@/lib/launch-teams";
 
-async function cfbd<T>(path: string, revalidate = 3600): Promise<T | null> {
+async function cfbd<T>(path: string, revalidate = 21600): Promise<T | null> {
   if (!process.env.CFBD_API_KEY) return null;
   try {
     const res = await fetch(`${BASE}${path}`, {
@@ -120,8 +120,8 @@ interface CfbdRecord {
  * season's final record for context. */
 export async function getRecords(school: string): Promise<{ current: SeasonRecord | null; last: SeasonRecord | null }> {
   const [cur, last] = await Promise.all([
-    cfbd<CfbdRecord[]>(`/records?year=${YEAR}&team=${encodeURIComponent(school)}`),
-    cfbd<CfbdRecord[]>(`/records?year=${YEAR - 1}&team=${encodeURIComponent(school)}`, 86400),
+    cfbd<CfbdRecord[]>(`/records?year=${YEAR}&team=${encodeURIComponent(school)}`, 21600),
+    cfbd<CfbdRecord[]>(`/records?year=${YEAR - 1}&team=${encodeURIComponent(school)}`, 604800),
   ]);
   const shape = (r?: CfbdRecord): SeasonRecord | null =>
     r
@@ -156,7 +156,7 @@ export async function getRoster(school: string): Promise<{ offense: RosterPlayer
     height?: number | null; weight?: number | null; year?: number | null;
     homeCity?: string | null; homeState?: string | null;
   }
-  const players = await cfbd<CfbdPlayer[]>(`/roster?team=${encodeURIComponent(school)}&year=${YEAR}`, 86400);
+  const players = await cfbd<CfbdPlayer[]>(`/roster?team=${encodeURIComponent(school)}&year=${YEAR}`, 604800);
   if (!players) return { offense: [], defense: [], special: [], total: 0 };
   const shaped: RosterPlayer[] = players
     .filter((p) => p.firstName || p.lastName)
@@ -200,7 +200,7 @@ export async function getPortalMoves(school: string): Promise<{ incoming: Portal
     firstName?: string; lastName?: string; position?: string | null; stars?: number | null;
     origin?: string | null; destination?: string | null; transferDate?: string | null;
   }
-  const all = await cfbd<CfbdPortal[]>(`/player/portal?year=${YEAR}`, 21600);
+  const all = await cfbd<CfbdPortal[]>(`/player/portal?year=${YEAR}`, 86400);
   if (!all) return { incoming: [], outgoing: [] };
   const shape = (p: CfbdPortal): PortalMove => ({
     name: [p.firstName, p.lastName].filter(Boolean).join(" "),
@@ -231,7 +231,7 @@ export async function getRecruitingClass(school: string): Promise<RecruitingClas
   for (const year of [YEAR + 1, YEAR]) {
     const rows = await cfbd<{ year: number; rank: number; team: string; points: number }[]>(
       `/recruiting/teams?year=${year}&team=${encodeURIComponent(school)}`,
-      86400,
+      604800,
     );
     const r = rows?.[0];
     if (r) return { year: r.year, rank: r.rank, points: r.points };

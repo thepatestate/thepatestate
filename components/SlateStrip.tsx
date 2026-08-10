@@ -2,6 +2,7 @@ import Link from "next/link";
 import { DEMO_WATCHLIST } from "@/lib/scores-demo";
 import { getSlateGames } from "@/lib/cfbd";
 import { slugifyTeam, teamLogoUrl } from "@/lib/teams-meta";
+import { DEMO_MODE } from "@/lib/demo";
 import TeamMark from "@/components/TeamMark";
 
 // Homepage-only Week 1 strip, directly under the nav and above the hero.
@@ -13,6 +14,9 @@ import TeamMark from "@/components/TeamMark";
 // unconfigured or down.
 export default async function SlateStrip() {
   const real = await getSlateGames(1, 5).catch(() => []);
+  // §0.1: fictional preview games only ever render in demo mode. In
+  // production a dead feed means no strip at all.
+  if (real.length < 3 && !DEMO_MODE) return null;
   const items =
     real.length >= 3
       ? real.map((g, i) => ({

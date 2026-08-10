@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { getVideos, isEpisode, getChannelStats, getShorts, compactCount, CHANNEL_URL, SOCIAL_LINKS } from "@/lib/youtube";
-import { getPublishedArticles, getWireItems, getHeroSlides } from "@/lib/sanity";
+import { getPublishedArticles, getWireItems, getWireStories, getHeroSlides } from "@/lib/sanity";
 import HeroSlider, { type HeroSlideData } from "@/components/HeroSlider";
 import { formatDate } from "@/lib/format";
 import RelTime from "@/components/RelTime";
@@ -172,6 +172,9 @@ export default async function Home() {
   // coverage flowing (v1.2 §3) — demo stays only while the wire warms up.
   // Density per v2 §1.3: 8–10 items on the homepage, every one clickable.
   const liveWire = await getWireItems(10).catch(() => []);
+  // Real full stories: fill the notebook bento + the numbered strip so the
+  // left column carries as much genuine click-through density as the rail.
+  const wireStories = await getWireStories(8).catch(() => []);
   const notebookLead = notebookArticles[0] ?? null;
   const notebookNext = notebookArticles.slice(1, 3);
   // Hero banner (§1.1): the latest episode always leads, then the
@@ -258,7 +261,7 @@ export default async function Home() {
           </div>
           {!notebookLead && <PreseasonChip />}
           <Reveal>
-          <div className="duo" style={{ gridTemplateColumns: "2fr 1fr", marginTop: 26, alignItems: "start" }}>
+          <div className="duo wide" style={{ marginTop: 26, alignItems: "start" }}>
             <div>
               {notebookLead ? (
                 <div className="bento">
@@ -307,11 +310,38 @@ export default async function Home() {
                         </Link>
                       );
                     })}
-                    {/* Demo tiles backfill the stack until enough real articles
-                        exist — an empty column reads as a broken layout. In
-                        production (§0.1) the backfill is an honest coming-soon
-                        tile instead of sample stories. */}
-                    {!DEMO_MODE && notebookNext.length < 2 && (
+                    {/* Real wire stories backfill the stack in production —
+                        genuine click-throughs instead of dead space (§0.1
+                        compliant: every headline is a real published story). */}
+                    {!DEMO_MODE &&
+                      wireStories.slice(0, Math.max(0, 2 - notebookNext.length)).map((w) => {
+                        const img = art.pick(
+                          ["recruiting", "coaching", "media", "playoffs"].includes(w.category ?? "") ? (w.category as ArtCategory) : "generic",
+                          w.headline,
+                        );
+                        const logo = w.teams?.[0] ? teamLogoUrl(w.teams[0]) : null;
+                        return (
+                          <Link href={`/wire/${w.slug.current}`} className="tile" key={w._id}>
+                            <div className="tile-media">
+                              <Image src={img.src} alt={img.alt} fill sizes="(max-width: 860px) 50vw, 280px" style={{ objectFit: "cover" }} />
+                            </div>
+                            <div className="tile-scrim" />
+                            <span className="tile-badge">⚡ The Wire</span>
+                            {logo && (
+                              <span className="tile-team-chip">
+                                <Image src={logo} alt="" width={24} height={24} style={{ objectFit: "contain" }} />
+                              </span>
+                            )}
+                            <div className="tile-body">
+                              <span className="tile-kicker">
+                                {(w.category ?? "news").toUpperCase()} · <RelTime iso={w.publishedAt} />
+                              </span>
+                              <h4 className="tile-headline" style={{ fontSize: "clamp(15px,1.6vw,19px)" }}>{w.headline}</h4>
+                            </div>
+                          </Link>
+                        );
+                      })}
+                    {!DEMO_MODE && notebookNext.length < 2 && wireStories.length === 0 && (
                       <div className="tile" style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
                         <EmptyState
                           kicker="NEW EVERY WEEKDAY"
@@ -399,8 +429,27 @@ export default async function Home() {
                   </div>
                 </div>
               )}
-              {/* Most Read strip balances the column against the Wire rail.
-                  Demo-only until real read counts exist (§0.1). */}
+              {/* Numbered strip balances the column against the Wire rail.
+                  Production: the latest REAL full wire stories with live
+                  timestamps. Demo keeps the Most Read mock (§0.1). */}
+              {!DEMO_MODE && wireStories.length >= 2 && (
+                <div style={{ marginTop: 22 }}>
+                  <p className="eyebrow" style={{ marginBottom: 8 }}>The Latest Full Stories</p>
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "10px 22px" }}>
+                    {wireStories.slice(0, 4).map((w, i) => (
+                      <Link key={w._id} href={`/wire/${w.slug.current}`} style={{ display: "flex", gap: 12, alignItems: "baseline", textDecoration: "none", color: "inherit", borderBottom: "1px solid var(--line-l)", paddingBottom: 8 }}>
+                        <span className="display" style={{ fontSize: 26, color: "transparent", WebkitTextStroke: "1.5px var(--gold, #B8842C)", flexShrink: 0 }}>{String(i + 1).padStart(2, "0")}</span>
+                        <span>
+                          <b style={{ fontSize: 14, lineHeight: 1.3, display: "block" }}>{w.headline}</b>
+                          <span style={{ fontFamily: "var(--mono)", fontSize: 10, letterSpacing: ".06em", color: "var(--ink-dim)" }}>
+                            {(w.category ?? "news").toUpperCase()} · <RelTime iso={w.publishedAt} />
+                          </span>
+                        </span>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
               {DEMO_MODE && (
               <div style={{ marginTop: 22 }}>
                 <p className="eyebrow" style={{ marginBottom: 8 }}>Most Read This Week <PreseasonChip /></p>
@@ -500,11 +549,13 @@ export default async function Home() {
               {DEMO_MODE && <PreseasonChip />}
               <p>One board, voted by those who actually watch, revealed every Tuesday.{DEMO_MODE ? " The top of this week's:" : ""}</p>
               {!DEMO_MODE && (
-                <EmptyState
-                  kicker="FIRST BALLOT — WEEK 1"
-                  title="The JP Poll opens with the season"
-                  body="Ballots open Sunday nights, the reveal comes Tuesday on the show. The first board of 2026 lands opening week."
-                />
+                <div className="how-rows">
+                  <div className="how-row"><b>AUG 24</b><span>First ballots open — every citizen ranks a top 10</span></div>
+                  <div className="how-row"><b>SUN 8PM ET</b><span>Ballots lock, the board tabulates overnight</span></div>
+                  <div className="how-row"><b>TUESDAY</b><span>The reveal airs live on the show, argued out</span></div>
+                  <div className="how-row"><b>ALWAYS</b><span>Full vote distribution goes public — the AP&apos;s never does</span></div>
+                  <div className="how-row"><b>IN GOLD</b><span>Every disagreement vs. the AP, Coaches, and CFP, marked</span></div>
+                </div>
               )}
               {DEMO_MODE && DEMO_POLL.map((t) => {
                 const logoUrl = teamLogoUrl(slugifyTeam(t.team));
@@ -570,11 +621,13 @@ export default async function Home() {
                   </div>
                 </>
               ) : (
-                <EmptyState
-                  kicker="LEADERBOARD OPENS WEEK 1"
-                  title="Standings start with the first slate"
-                  body="Ten games a week, picks lock Saturday 11:58 AM ET. Every citizen starts the season 0–0 — including Josh."
-                />
+                <div className="how-rows">
+                  <div className="how-row"><b>WEEKLY</b><span>Best score wins merch + a shoutout on Monday&apos;s show</span></div>
+                  <div className="how-row"><b>MONTHLY</b><span>Top citizen gets a signed Pate Report + Poll Day spotlight</span></div>
+                  <div className="how-row"><b>TOP 10</b><span>Finish the season top 10, pick a game — tickets covered</span></div>
+                  <div className="how-row"><b>CHAMPION</b><span>Watches a game with Josh · name on the Wall, forever</span></div>
+                  <div className="how-row"><b>WEEK 1</b><span>Everyone starts 0–0 — including Josh. Picks lock Sat 11:58 AM ET</span></div>
+                </div>
               )}
               <div className="badges">
                 <div className="badge">🏆</div>
@@ -689,12 +742,16 @@ export default async function Home() {
                   </div>
                 ))
               ) : (
-                <EmptyState
-                  kicker="THE PORCH TOUR"
-                  title="Tour dates announced soon"
-                  body="Campus stops are being booked now — citizens get first dibs on tickets the moment dates drop."
-                  cta={{ href: "/join", label: "Become a Citizen — Free" }}
-                />
+                <>
+                  <div className="tour-row">
+                    <span>Campus stops are being booked now</span>
+                    <span style={{ fontFamily: "var(--mono)", fontSize: 11 }}>DATES SOON</span>
+                  </div>
+                  <div className="tour-row">
+                    <span>Citizens get first dibs the moment tickets drop</span>
+                    <Link href="/join">Join free →</Link>
+                  </div>
+                </>
               )}
             </div>
           </div>

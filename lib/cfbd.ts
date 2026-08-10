@@ -26,7 +26,7 @@ interface CfbdGame {
   neutralSite?: boolean;
 }
 
-async function cfbd<T>(path: string, revalidate = 3600): Promise<T | null> {
+async function cfbd<T>(path: string, revalidate = 21600): Promise<T | null> {
   if (!isCfbdConfigured) return null;
   try {
     const res = await fetch(`${BASE}${path}`, {
@@ -128,7 +128,7 @@ export interface TeamInfo {
 
 /** Slug → team info for every FBS program; {} on failure. */
 export async function getTeamDirectory(): Promise<Record<string, TeamInfo>> {
-  const teams = await cfbd<CfbdTeam[]>(`/teams/fbs?year=${YEAR}`, 86400);
+  const teams = await cfbd<CfbdTeam[]>(`/teams/fbs?year=${YEAR}`, 604800);
   if (!teams) return {};
   const dir: Record<string, TeamInfo> = {};
   for (const t of teams) {

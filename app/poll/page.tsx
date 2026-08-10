@@ -137,7 +137,7 @@ export default async function PollPage() {
             </div>
           )}
           {DEMO_MODE && (
-          <div className="duo" style={{ gridTemplateColumns: "2fr 1fr", marginTop: 16, alignItems: "start" }}>
+          <div className="duo wide" style={{ marginTop: 16, alignItems: "start" }}>
             <div>
               <p className="eyebrow" style={{ marginBottom: 6 }}>The Top Five</p>
               {DEMO_TOP5.map((t) => {
