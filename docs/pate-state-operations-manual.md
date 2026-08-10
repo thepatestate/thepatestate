@@ -1,6 +1,6 @@
 THE PATE STATE — SITE OPERATIONS MANUAL
 Complete automation specification for build & handoff
-Prepared for: Isaac Meek (implementation lead) Version: 1.1 — August 7, 2026 (autonomy revision) Companion file: the-pate-state-site.zip (18-page approved wireframe — this is the visual/UX source of truth. Build what's in the wireframe; this document explains how it runs itself.)
+Prepared for: Isaac Meek (implementation lead) Version: 1.2 — August 7, 2026 (autonomy + verbatim-quote revision) Companion file: the-pate-state-site.zip (18-page approved wireframe — this is the visual/UX source of truth. Build what's in the wireframe; this document explains how it runs itself.)
 
 
 0. WHAT THIS SITE IS (read first)
@@ -77,10 +77,12 @@ Everything starts with Josh's channel. Source of truth: Josh Pate's College Foot
 	•	Primary: subscribe to YouTube PubSubHubbub push notifications for the channel (instant webhook on publish).
 	•	Fallback: poll search.list?channelId={JP_CHANNEL_ID}&order=date every 10 minutes (belt and suspenders — PuSH leases expire).
 	•	On detection, create an episode record: {yt_id, title, description, published_at, duration, thumbnail_url, series (classified in 2.3), view_count}.
-2.2 Transcript acquisition
-	•	Try YouTube's own caption track via API (captions.list → download if available).
-	•	If unavailable within 30 min, pull audio → Whisper large-v3 transcription (self-hosted or API).
-	•	Store transcript with timestamps in the episode record. Timestamps matter — they power the "starts at 14:22" deep links in articles.
+2.2 Transcript acquisition — EVERY show, video AND audio
+Monitor ALL of Josh's feeds, not just YouTube:
+
+	•	YouTube: caption track via API (captions.list) when available.
+	•	Podcast RSS feeds (Josh Pate's College Football Show on Apple/Spotify; The Locker Room: CFB; any future audio-only or audio-first drops): poll each RSS every 10 minutes; on a new enclosure, download the audio file and transcribe with Whisper large-v3 (word-level timestamps on). Audio-only episodes get articles too — same pipeline, and the episode link falls back to the matching YouTube upload once it appears (reconcile by title + date).
+	•	If YouTube captions are unavailable within 30 min, run the video's audio through the same Whisper path. Store every transcript verbatim, word-timestamped, unedited in the episode record. This raw transcript is a first-class asset: it powers the "starts at 14:22" deep links AND the word-for-word quote extraction in §2.4a. Never paraphrase into storage — clean-up happens at article time, not transcript time.
 2.3 Series classification
 Classify each video into one of the franchises using title + publish day (Claude call, prompt §12.1):
 
@@ -92,8 +94,9 @@ Within 60 minutes of every episode publishing, the system must produce a draft c
 
 Process:
 
-	•	Send transcript + metadata to Claude with the Companion Article prompt (§12.2).
-	•	Output is structured JSON (schema in §12.2): headline, dek, body (with [EMBED:{timestamp}] markers where the relevant clip should appear), pull quote, tags, team references, internal-link candidates, SEO fields.
+	•	Quote extraction pass (§2.4a): a dedicated Claude call reads the raw transcript and returns Josh's 5–10 biggest takes word-for-word — exact transcript text, zero paraphrase — each with {quote, start_timestamp, topic, heat (1-5)}. "Biggest" = the lines he'd want clipped: strong claims, predictions, kicker lines, honest admissions. Filler words may be dropped ONLY with ellipses; never a changed word.
+	•	Send transcript + metadata + the extracted quotes to Claude with the Companion Article prompt (§12.2).
+	•	Output is structured JSON (schema in §12.2): headline, dek, body — with 2–4 of the extracted quotes woven in verbatim, each wrapped in [QUOTE:{timestamp}]…[/QUOTE] markers, and the single strongest rendered as the bolded pull quote — plus [EMBED:{timestamp}] markers, tags, team references, internal links, SEO fields. Quote rendering rules: in-text quotes appear in quotation marks with a natural attribution ("As Josh put it on Monday's show: '…'"); each links to the episode at its timestamp; the pull-quote block renders bold in the gold-bar style from the wireframe's article template.
 	•	System auto-inserts: the episode embed at each [EMBED] marker (YouTube embed with ?start={seconds}), the JP Poll data panel if a top-25 team is tagged, the team-page link card for the primary team, related-articles module.
 	•	Article enters CMS in state ai-drafted. Editor (or Josh) reviews in the Sanity dashboard — expected edit time 5–10 min — clicks Approve → publishes.
 	•	Byline rules: if the article is a faithful writeup of Josh's own words/takes → byline "Josh Pate" (he approved it). If it's aggregation/news → byline "The Wire Desk" with the standing disclosure (see §3.4).
@@ -119,6 +122,8 @@ Each cluster gets an importance score 1–10 from Claude (criteria in prompt §1
 	•	Score ≥ 7 → auto-trigger the Wire Desk full story pipeline: Claude drafts a complete 400–700-word article (prompt §12.4), it passes the automated verification stack (§21), and it publishes immediately with no human approval. The wire item gets its ⚡ "Full Story Ready" badge the moment the article is live. The human monitor is notified after publication and can retract/correct. Target: news → live article in under 10 minutes.
 	•	Score 4–6 → wire item only.
 	•	Score ≤ 3 → hold unless it fits a team page.
+3.35 Story format
+Every Wire Desk story renders the v2.0 product template — verification badge, What Happened, Why It Matters, 3 Numbers, Pate Impact model deltas, Josh's Receipt from the quote archive, Ripple Effect, labeled Read (JOSH'S READ vs THE PATE STATE READ), What's Next, Citizen Pulse, My-Team personalization — per /prompts/wire-desk-manual.md. Developing sagas get one canonical live page, never article spam. Volume target in season: 15–30 meaningful updates/day.
 3.4 Standing disclosure (must render on every Wire Desk article)
 "This story was drafted by The Pate State's Wire Desk AI from the cited sources and reviewed by an editor before publication." This sentence is the trust moat. Never remove it.
 3.5 Corrections
@@ -239,15 +244,15 @@ Preseason Guide production cycle (manual/editorial) + gift-fulfillment link swap
 12. PROMPT LIBRARY (verbatim starting points — keep in repo as /prompts, version them)
 Global system preamble for ALL generation calls:
 
-You write for The Pate State, Josh Pate's college football community. Primary voice: Josh Pate — confident, dry-witted, Southern-porch conversational; short declarative sentences; sets up an argument, pays it off with a kicker line; talks TO fans, never down to them; zero clickbait; never "In the world of college football"; never exclamation points; respects every fanbase while telling the truth. Analytical layer: Kirk Herbstreit's approach — when the piece turns to analysis, think like a former player/film watcher: explain WHY through scheme, matchups, line play, and quarterback comfort; big-picture and fair-minded; credits what the opponent does well before the criticism; "here's what the tape says" energy without jargon walls. The blend: Pate's voice carries the piece, Herbstreit's rigor carries the analysis paragraphs. Never impersonate or quote either man saying things they didn't say. Facts must come from the provided sources only — if a fact isn't in the sources, don't state it. Output valid JSON matching the provided schema, nothing else. (Full voice guide with examples: §23.)
+You write for The Pate State, Josh Pate's college football community. Primary voice: Josh Pate — confident, dry-witted, Southern-porch conversational; short declarative sentences; sets up an argument, pays it off with a kicker line; talks TO fans, never down to them; zero clickbait; never "In the world of college football"; never exclamation points; respects every fanbase while telling the truth. Analytical layer: the Film Room — when the piece turns to analysis, execute the method of the sport's best Saturday-morning former-player analyst (fully specified, name-free, in the Voice Manual §3): one framing line of stakes; isolate the single matchup the game swings on; a 'watch-this' walkthrough (before → trigger → consequence) the reader can verify; critique the task before the player; credit both sidelines before any verdict; translate every scheme term into plain consequence; argue in situations, not season stats; deliver picks with conviction plus a named failure condition. The blend: Pate's voice carries the piece, the Film Room's rigor carries the analysis paragraphs. Never impersonate any real analyst or put words in anyone's mouth. Facts must come from the provided sources only — if a fact isn't in the sources, don't state it. Output valid JSON matching the provided schema, nothing else. (Full voice guide with examples: §23 and the standalone Voice Manual.)
 
 12.1 Series classifier — input: title, description, weekday → output {series, confidence}.
 
 12.2 Companion article — input: transcript w/ timestamps, episode metadata, current JP Poll top 25, this week's schedule. Output schema:
 
-{"headline":"", "dek":"", "body_markdown":"(600-1100 words; [EMBED:HH:MM:SS] markers at 1-3 relevant moments; one [PULLQUOTE] marker)",
+{"headline":"", "dek":"", "body_markdown":"(600-1100 words; [EMBED:HH:MM:SS] markers at 1-3 relevant moments; 2-4 [QUOTE:HH:MM:SS]verbatim words[/QUOTE] blocks woven into the prose; one [PULLQUOTE] marker on the strongest quote)",
 
-"pull_quote":"", "primary_team":"", "teams":[], "tags":[], "series":"",
+"pull_quote":"(MUST be one of the verbatim extracted quotes, word-for-word)", "verbatim_quotes_used":[{"quote":"","timestamp":""}], "primary_team":"", "teams":[], "tags":[], "series":"",
 
 "internal_links":[{"anchor":"","target":"poll|team-{slug}|playoffs|pickem|tailgate-{slug}"}],
 
@@ -279,6 +284,7 @@ Instructions: capture Josh's actual takes faithfully — this publishes under hi
 	•	The JP Poll page publishes a stable weekly permalink (/poll/2026-week-3) + a machine-readable JSON endpoint (/api/poll/current) — this is what AI engines will cite; keep it clean and public.
 	•	llms.txt at root describing the site's canonical data endpoints; XML sitemaps segmented (news sitemap for articles < 48h — required for Google News); RSS feeds per franchise.
 	•	Internal-linking rule (enforced in the article pipeline): every article links ≥ 1 team page + ≥ 1 franchise page. Team pages are the hub of the link graph.
+	•	Universal YouTube rule (hard requirement, validated pre-publish): EVERY article on the site — companions, Wire Desk news, staff analysis, tailgate guides, team blurbs — links to one of Josh's YouTube shows somewhere in the body or the standard end-card. Priority order: (1) the exact episode segment on the topic at its timestamp, (2) the most recent episode discussing the team/topic (search stored transcripts), (3) the latest episode, (4) the channel page. The publish validator rejects any article with zero YouTube links. This is both a growth loop (site → channel) and a GEO signal (article + VideoObject pairing).
 	•	Page targets: LCP < 2.0s, CLS < 0.05; articles statically generated, revalidated on edit.
 15. LICENSING (before public launch — legal must clear)
 	•	Team logos/marks: the wireframe's color-helmet SVG system is the safe default; licensed marks (CLC/Learfield or a licensed data-art provider) drop into the same slots when cleared.
@@ -389,9 +395,9 @@ One person, one dashboard, four duties — none of which block publication:
 23. VOICE GUIDE v2 — HOW EVERY ARTICLE SOUNDS (expanded)
 Primary voice: Josh Pate. Porch-conversational, dry wit, Southern cadence without caricature. Short declaratives that build to a kicker. Second person welcome ("You already know what Tuscaloosa does to pretenders."). Honest about every fanbase including the ones he likes. Signature moves: name the conventional wisdom, inspect it, keep what's true, throw out the furniture line that everyone repeats without checking.
 
-Analytical layer: the Herbstreit school. When the piece analyzes football, it thinks like a film-room former player: explains why through matchup and scheme (protection vs. pressure, leverage, QB comfort on third down), credits the opponent first, stays big-picture fair, never hides behind jargon. No hot-take heel turns; disagreement is respectful and evidence-first.
+Analytical layer: the Film Room. When the piece analyzes football, it executes the Saturday-morning pregame method (Voice Manual §3): stakes in a sentence, one isolated matchup, a watch-this walkthrough the reader can verify (before → trigger → consequence), task-first empathy, credit for both sidelines before any verdict, coach-speak translated into plain consequence, situational-football verdicts, and picks delivered with conviction plus their named failure condition. No hot-take heel turns; disagreement is respectful and evidence-first.
 
-The blend in practice: open and close in Pate voice; the middle third — the "here's what's actually happening on the field" section — carries Herbstreit-style reasoning, still worded plainly.
+The blend in practice: open and close in Pate voice; the middle third — the "here's what's actually happening on the field" section — carries Film Room reasoning, still worded plainly.
 
 Do: "Deep rosters don't win road games in September. Grown-ups do." / "Watch the left guard on early downs — that's where this game lives." Don't: exclamation points, "elite" more than once per article, ALL-CAPS takes, dunking on 18-year-olds, fake insider sourcing, first-person plural claiming to be Josh in Wire Desk pieces (Wire Desk is a desk, not a person). Bylines: Josh-approved companions = "Josh Pate". Autonomous news = "The Wire Desk" + AI disclosure. Analysis features drafted for approval = "Josh Pate" only after his click; otherwise "The Pate State Staff".
 24. SOCIAL MEDIA INTEGRATION (site + automation)
@@ -414,4 +420,9 @@ Outbound automation (grows the channels from the site): on every Wire Desk publi
 	•	About page & press: static; add a /press with logo kit + the AI-editorial-policy page (link the §3.4 disclosure — transparency page builds trust and is itself a GEO asset).
 
 (v1.1 complete. Supersedes: §7.1 manual entry, §13.1, §13.3 as noted inline.)
+26. VERBATIM QUOTE PIPELINE (v1.2 addition — summary of the rules above)
+	•	Every show — video or podcast audio — is transcribed word-for-word with timestamps within 60 minutes of publishing (§2.2).
+	•	A quote-extraction pass pulls Josh's 5–10 biggest takes exactly as spoken (§2.4a). These are stored in a searchable quotes table (quote, episode, timestamp, topic, teams, heat) — over a season this becomes the "Josh said it first" archive that powers receipts content, social graphics, and year-end retrospectives.
+	•	Companion and staff articles weave in 2–4 verbatim quotes, quotation-marked, attributed naturally, each deep-linked to the episode timestamp; the strongest renders as the bolded gold-bar pull quote (§12.2). Never alter his words — trims marked with ellipses only. Wire Desk news articles may include one relevant Josh quote from the archive when one exists on-topic (adds voice to autonomous news without faking it).
+	•	Every article of every type must link his YouTube (§14 universal rule) — validator-enforced.
 
