@@ -828,3 +828,4 @@ footer{background:var(--navy);color:var(--chalk-dim);padding:34px 0 40px;font-fa
 .empty-state.dark .es-title{color:var(--chalk)}
 .empty-state .es-body{font-size:14px;color:var(--ink-dim);max-width:44ch;margin:0 auto}
 .empty-state.dark .es-body{color:var(--chalk-dim)}
+.hero-proof{margin-top:16px;font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--chalk-dim)}

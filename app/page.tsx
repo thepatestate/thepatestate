@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { getVideos, isEpisode, CHANNEL_URL, APPLE_PODCASTS_URL, SPOTIFY_URL, SOCIAL_LINKS } from "@/lib/youtube";
+import { getVideos, isEpisode, getChannelStats, compactCount, CHANNEL_URL, APPLE_PODCASTS_URL, SPOTIFY_URL, SOCIAL_LINKS } from "@/lib/youtube";
 import { getPublishedArticles, getWireItems } from "@/lib/sanity";
 import { formatDate, relTime } from "@/lib/format";
 import { slugifyTeam, teamLogoUrl } from "@/lib/teams-meta";
@@ -152,6 +152,7 @@ const DEMO_GUIDES = [
 
 export default async function Home() {
   const videos = await getVideos();
+  const stats = await getChannelStats();
   const episodes = videos.filter(isEpisode);
   const latest = episodes[0] ?? videos[0];
   const recentEpisodes = episodes.filter((v) => v !== latest).slice(0, 3);
@@ -185,6 +186,14 @@ export default async function Home() {
             <Link className="btn gold" href="/show">Browse the Show</Link>
             <Link className="btn" href="/join" style={{ borderColor: "rgba(243,239,230,.5)", color: "var(--chalk, #F3EFE6)" }}>Become a Citizen — Free</Link>
           </div>
+          {/* Real, verifiable social proof from the YouTube Data API (§0.2) —
+              omitted entirely if the stats call fails, never invented. */}
+          {stats && (
+            <p className="hero-proof">
+              {compactCount(stats.subscribers)} subscribers · {compactCount(stats.videos)} videos ·{" "}
+              {compactCount(stats.views)} views · Every pick logged
+            </p>
+          )}
         </div>
       </section>
 

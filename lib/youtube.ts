@@ -51,6 +51,45 @@ export function videoUrl(id: string): string {
   return `https://www.youtube.com/watch?v=${id}`;
 }
 
+export interface ChannelStats {
+  subscribers: number;
+  videos: number;
+  views: number;
+}
+
+/** Real channel statistics from the YouTube Data API (v2 brief §0.2 — real
+ * social proof only). Refreshes daily; null when the key is missing or the
+ * API is down, so callers can simply omit the proof line. */
+export async function getChannelStats(): Promise<ChannelStats | null> {
+  const key = process.env.YOUTUBE_API_KEY;
+  if (!key) return null;
+  try {
+    const res = await fetch(
+      `https://www.googleapis.com/youtube/v3/channels?part=statistics&id=${CHANNEL_ID}&key=${key}`,
+      { next: { revalidate: 86400 } },
+    );
+    if (!res.ok) return null;
+    const data = (await res.json()) as { items?: { statistics?: Record<string, string> }[] };
+    const stats = data.items?.[0]?.statistics;
+    if (!stats?.subscriberCount) return null;
+    return {
+      subscribers: Number(stats.subscriberCount),
+      videos: Number(stats.videoCount ?? 0),
+      views: Number(stats.viewCount ?? 0),
+    };
+  } catch {
+    return null;
+  }
+}
+
+/** "534000" → "534K+", "189438520" → "189M+" — always rounded DOWN so the
+ * claim is verifiably true. */
+export function compactCount(n: number): string {
+  if (n >= 1_000_000) return `${Math.floor(n / 100_000) / 10}M+`.replace(".0M", "M");
+  if (n >= 1_000) return `${Math.floor(n / 1_000)}K+`;
+  return String(n);
+}
+
 export async function getVideos(): Promise<Video[]> {
   try {
     const res = await fetch(FEED_URL, { next: { revalidate: 21600 } });
