@@ -3,7 +3,12 @@ import type { Metadata } from "next";
 import { getUser, getCitizen } from "@/lib/supabase/server";
 import WelcomeForm from "@/components/WelcomeForm";
 
-export const metadata: Metadata = { title: "Claim Your Handle" };
+export const metadata: Metadata = {
+  title: "Claim Your Handle",
+  description: "Finish setting up your citizenship.",
+  alternates: { canonical: "/welcome" },
+  robots: { index: false },
+};
 
 export default async function WelcomePage({
   searchParams,

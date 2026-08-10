@@ -9,7 +9,11 @@ import { slugifyTeam, teamLogoUrl } from "@/lib/teams-meta";
 import { createArtPicker } from "@/lib/editorial-art";
 import { getVideos, videoUrl } from "@/lib/youtube";
 
-export const metadata: Metadata = { title: "Recruiting — The Next Wave" };
+export const metadata: Metadata = {
+  title: "Recruiting & Transfer Portal — The Next Wave",
+  description: "Recruiting and the portal without the message-board panic: the Pate Index, honest class grades, and Josh's reads.",
+  alternates: { canonical: "/recruiting" },
+};
 export const revalidate = 21600;
 
 // --- Preseason-preview sample data ---------------------------------------

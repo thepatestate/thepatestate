@@ -4,7 +4,11 @@ import EpisodeLead from "@/components/EpisodeLead";
 import VideoGrid from "@/components/VideoGrid";
 import SubscribeCTA from "@/components/SubscribeCTA";
 
-export const metadata: Metadata = { title: "The Show" };
+export const metadata: Metadata = {
+  title: "Josh Pate's College Football Show",
+  description: "Every episode of Josh Pate's College Football Show — the latest drop, the weekly rhythm, and the full archive.",
+  alternates: { canonical: "/show" },
+};
 
 // The show's actual weekly lineup — not to be confused with per-episode
 // "chapters" (there aren't any hosted chapters on the channel, so no such

@@ -6,7 +6,12 @@ import EmptyState from "@/components/EmptyState";
 import { DEMO_MODE } from "@/lib/demo";
 import { createArtPicker } from "@/lib/editorial-art";
 
-export const metadata: Metadata = { title: "Georgia — Team Page" };
+export const metadata: Metadata = {
+  title: "Georgia Bulldogs — Team Page",
+  description: "Georgia in The Pate State: JP Poll placement, Josh's picks record against the Dawgs, recruiting, and how to do Athens right.",
+  alternates: { canonical: "/teams/georgia" },
+  robots: { index: false },
+};
 
 // --- Preseason-preview sample data ---------------------------------------
 // This route is the template the future 136 team pages generalize from —

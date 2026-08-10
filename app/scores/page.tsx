@@ -20,7 +20,11 @@ import {
   type WatchlistGame,
 } from "@/lib/scores-demo";
 
-export const metadata: Metadata = { title: "Scores & Schedule" };
+export const metadata: Metadata = {
+  title: "College Football Scores & Schedule",
+  description: "Live college football scores, the week's full slate by kickoff day, and the best game in every conference — updated from the live data feed.",
+  alternates: { canonical: "/scores" },
+};
 
 // Simple 2026 CFB week date ranges for the week-selector strip below. Week 1
 // spans the full opening slate (Thursday kickoffs through Labor Day); every

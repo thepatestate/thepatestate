@@ -28,6 +28,7 @@ export async function generateMetadata({
   return {
     title,
     description,
+    alternates: { canonical: `/notebook/${slug}` },
     openGraph: {
       title,
       description,
@@ -53,13 +54,38 @@ export default async function ArticlePage({
   if (!article) notFound();
 
   const teamHref = article.primaryTeam === "georgia" ? "/teams/georgia" : "/teams";
+  const authorSlug = /josh pate/i.test(article.byline) ? "josh-pate" : "the-pate-state-staff";
+  const canonicalUrl = `https://thepatestate.com/notebook/${article.slug.current}`;
 
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "NewsArticle",
     headline: article.headline,
+    description: article.dek,
     datePublished: article.publishedAt,
-    author: { "@type": "Person", name: article.byline },
+    dateModified: article.publishedAt,
+    mainEntityOfPage: canonicalUrl,
+    ...(article.heroUrl ? { image: [article.heroUrl] } : {}),
+    author: {
+      "@type": /josh pate/i.test(article.byline) ? "Person" : "Organization",
+      name: article.byline,
+      url: `https://thepatestate.com/authors/${authorSlug}`,
+    },
+    publisher: {
+      "@type": "Organization",
+      name: "The Pate State",
+      url: "https://thepatestate.com",
+    },
+  };
+
+  const breadcrumbLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "The Pate State", item: "https://thepatestate.com" },
+      { "@type": "ListItem", position: 2, name: "The Notebook", item: "https://thepatestate.com/notebook" },
+      { "@type": "ListItem", position: 3, name: article.headline, item: canonicalUrl },
+    ],
   };
 
   const videoJsonLd = article.episode
@@ -79,6 +105,10 @@ export default async function ArticlePage({
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd).replace(/</g, "\\u003c") }}
       />
       {videoJsonLd && (
         <script
@@ -122,8 +152,10 @@ export default async function ArticlePage({
                       <h1>{article.headline}</h1>
                       {article.dek && <p className="dek">{article.dek}</p>}
                       <div style={{ fontFamily: "var(--mono)", fontSize: 11, color: "var(--chalk-dim)", marginTop: 12 }}>
-                        <b style={{ color: "var(--chalk)" }}>{article.byline}</b>
-                        {article.publishedAt ? ` · ${formatDate(article.publishedAt)}` : ""}
+                        <Link href={`/authors/${authorSlug}`} style={{ color: "var(--chalk)", fontWeight: 700, textDecoration: "none" }}>
+                          {article.byline}
+                        </Link>
+                        {article.publishedAt ? ` · Published ${formatDate(article.publishedAt)}` : ""}
                       </div>
                     </div>
                   </div>

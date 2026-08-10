@@ -4,7 +4,11 @@ import PreseasonChip from "@/components/PreseasonChip";
 import EmptyState from "@/components/EmptyState";
 import { DEMO_MODE } from "@/lib/demo";
 
-export const metadata: Metadata = { title: "The Season Ledger" };
+export const metadata: Metadata = {
+  title: "The Season Ledger",
+  description: "Log every game you watch, rate it, pin your stadiums — a lifetime record of your college football Saturdays.",
+  alternates: { canonical: "/ledger" },
+};
 
 // --- Preseason-preview sample data ---------------------------------------
 // Stands in for a citizen's real logged-game history (career totals + the

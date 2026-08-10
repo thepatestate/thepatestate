@@ -8,7 +8,11 @@ import { DEMO_MODE } from "@/lib/demo";
 import { slugifyTeam, teamLogoUrl } from "@/lib/teams-meta";
 import { getVideos } from "@/lib/youtube";
 
-export const metadata: Metadata = { title: "The JP Poll" };
+export const metadata: Metadata = {
+  title: "The JP Poll — The People's Top 25",
+  description: "The power ranking voted by people who actually watch: ballots Sunday, reveal Tuesday, every disagreement with the AP and CFP marked in gold.",
+  alternates: { canonical: "/poll" },
+};
 
 // --- Preseason-preview sample data ---------------------------------------
 // Stands in for the ballot-tabulation engine (Top 5 rankcards, the JP-vs-

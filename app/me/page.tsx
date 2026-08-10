@@ -4,7 +4,12 @@ import { getCitizen, getUser } from "@/lib/supabase/server";
 import { signOut } from "@/app/me/actions";
 import ProfileForm from "@/components/ProfileForm";
 
-export const metadata: Metadata = { title: "Your Seat" };
+export const metadata: Metadata = {
+  title: "Your Seat",
+  description: "Your citizen profile.",
+  alternates: { canonical: "/me" },
+  robots: { index: false },
+};
 
 export default async function MePage() {
   const citizen = await getCitizen();

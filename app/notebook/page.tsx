@@ -8,7 +8,11 @@ import { createArtPicker, type ArtCategory } from "@/lib/editorial-art";
 import EmptyState from "@/components/EmptyState";
 import { DEMO_MODE } from "@/lib/demo";
 
-export const metadata: Metadata = { title: "The Notebook" };
+export const metadata: Metadata = {
+  title: "The Notebook — Articles & Analysis",
+  description: "The written record of the sport: companion stories for every episode, breaking coverage, and columns — new every weekday.",
+  alternates: { canonical: "/notebook" },
+};
 export const revalidate = 300;
 
 // Same duplication pattern as the notebook cards below: a small per-file

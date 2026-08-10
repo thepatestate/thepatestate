@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { getVideos, isEpisode, getChannelStats, compactCount, CHANNEL_URL, APPLE_PODCASTS_URL, SPOTIFY_URL, SOCIAL_LINKS } from "@/lib/youtube";
@@ -12,6 +13,8 @@ import EmptyState from "@/components/EmptyState";
 import { DEMO_MODE } from "@/lib/demo";
 import Reveal from "@/components/Reveal";
 import SlateStrip from "@/components/SlateStrip";
+
+export const metadata: Metadata = { alternates: { canonical: "/" } };
 
 // --- Preseason-preview sample data ---------------------------------------
 // Every array below stands in for a section that isn't wired to a real

@@ -1,7 +1,11 @@
 import type { Metadata } from "next";
 import JoinForm from "@/components/JoinForm";
 
-export const metadata: Metadata = { title: "Become a Citizen" };
+export const metadata: Metadata = {
+  title: "Become a Citizen",
+  description: "Free citizenship in The Pate State: the daily Playbook briefing, pick'em and poll access, first dibs on tour tickets, and the JP Preseason Guide.",
+  alternates: { canonical: "/join" },
+};
 
 export default async function JoinPage({
   searchParams,

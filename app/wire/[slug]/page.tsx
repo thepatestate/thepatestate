@@ -22,6 +22,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   return {
     title: `${story.headline} — The Wire`,
     description: story.whatHappened?.slice(0, 155),
+    alternates: { canonical: `/wire/${slug}` },
   };
 }
 
@@ -36,8 +37,40 @@ export default async function WireStoryPage({ params }: { params: Promise<{ slug
     ? `https://www.youtube.com/watch?v=${story.joshReceipt.ytId}&t=${story.joshReceipt.tsSeconds ?? 0}s`
     : null;
 
+  const storyUrl = `https://thepatestate.com/wire/${story.slug.current}`;
+  const jsonLd = [
+    {
+      "@context": "https://schema.org",
+      "@type": "NewsArticle",
+      headline: story.headline,
+      description: story.whatHappened?.slice(0, 300),
+      datePublished: story.publishedAt,
+      dateModified: story.updatedAt ?? story.publishedAt,
+      mainEntityOfPage: storyUrl,
+      author: {
+        "@type": "Organization",
+        name: "The Pate State Wire Desk",
+        url: "https://thepatestate.com/authors/the-pate-state-staff",
+      },
+      publisher: { "@type": "Organization", name: "The Pate State", url: "https://thepatestate.com" },
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "The Pate State", item: "https://thepatestate.com" },
+        { "@type": "ListItem", position: 2, name: "The Wire", item: "https://thepatestate.com/wire" },
+        { "@type": "ListItem", position: 3, name: story.headline, item: storyUrl },
+      ],
+    },
+  ];
+
   return (
     <main>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}
+      />
       <header className="page-head" style={{ paddingBottom: 18 }}>
         <div className="wrap">
           <p className="crumb">The Pate State / The Wire</p>

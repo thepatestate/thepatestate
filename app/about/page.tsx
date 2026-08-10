@@ -2,7 +2,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import SubscribeCTA from "@/components/SubscribeCTA";
 
-export const metadata: Metadata = { title: "About" };
+export const metadata: Metadata = {
+  title: "About The Pate State",
+  description: "What The Pate State is, who makes it, and why the front porch of college football exists.",
+  alternates: { canonical: "/about" },
+};
 
 // The weekly rhythm — same cadence described on /show, restated here as
 // context for what "the Pate State" actually is day to day.

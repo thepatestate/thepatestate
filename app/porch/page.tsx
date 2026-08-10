@@ -10,7 +10,11 @@ import { getCitizen } from "@/lib/supabase/server";
 import { CHANNEL_URL, SOCIAL_LINKS } from "@/lib/youtube";
 import { createArtPicker } from "@/lib/editorial-art";
 
-export const metadata: Metadata = { title: "Pate's Porch" };
+export const metadata: Metadata = {
+  title: "Pate's Porch — Community",
+  description: "The community room of The Pate State: the mailbag, watch parties, the tour, and where citizens live between Saturdays.",
+  alternates: { canonical: "/porch" },
+};
 
 // --- Preseason-preview sample data ---------------------------------------
 // Stands in for the citizenship/community engine (mailbag submissions, the

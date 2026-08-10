@@ -7,7 +7,11 @@ import { DEMO_MODE } from "@/lib/demo";
 import { slugifyTeam, teamLogoUrl } from "@/lib/teams-meta";
 import { createArtPicker } from "@/lib/editorial-art";
 
-export const metadata: Metadata = { title: "The Playoffs" };
+export const metadata: Metadata = {
+  title: "The College Football Playoff Picture",
+  description: "The 12-team playoff picture: Josh's on-the-record bracket, the AI Predictor, and the Citizens' Bracket Challenge.",
+  alternates: { canonical: "/playoffs" },
+};
 
 // --- Preseason-preview sample data ---------------------------------------
 // Stands in for the bracket-seeding engine (both brackets, current

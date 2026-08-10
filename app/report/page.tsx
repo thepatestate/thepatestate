@@ -3,7 +3,11 @@ import Image from "next/image";
 import Link from "next/link";
 import PreseasonChip from "@/components/PreseasonChip";
 
-export const metadata: Metadata = { title: "The Pate Report" };
+export const metadata: Metadata = {
+  title: "The Pate Report — The Preseason Annual",
+  description: "The annual preseason magazine: the Top 40 ranked and explained, the playoff picture, and the season's X-factors.",
+  alternates: { canonical: "/report" },
+};
 
 // --- Preseason-preview sample data ---------------------------------------
 // Stands in for the annual Pate Report magazine listing (table of contents,

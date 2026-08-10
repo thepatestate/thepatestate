@@ -3,7 +3,11 @@ import Image from "next/image";
 import Link from "next/link";
 import PreseasonChip from "@/components/PreseasonChip";
 
-export const metadata: Metadata = { title: "The State Store" };
+export const metadata: Metadata = {
+  title: "The State Store",
+  description: "Wear the flag — tees, hats, and porch gear from The Pate State.",
+  alternates: { canonical: "/shop" },
+};
 
 // --- Preseason-preview sample data ---------------------------------------
 // Stands in for the real shelf (prices, gear list). The State Store already

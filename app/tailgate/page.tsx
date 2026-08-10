@@ -5,7 +5,11 @@ import PreseasonChip from "@/components/PreseasonChip";
 import { DEMO_MODE } from "@/lib/demo";
 import { teamLogoUrl } from "@/lib/teams-meta";
 
-export const metadata: Metadata = { title: "Pate Tailgate" };
+export const metadata: Metadata = {
+  title: "Pate Tailgate",
+  description: "The field guide to college football Saturdays — stadium guides, tailgate plans, traditions, and the porch cookbook.",
+  alternates: { canonical: "/tailgate" },
+};
 
 // --- Preseason-preview sample data ---------------------------------------
 // Stands in for the 136-stadium guide index (this week's featured matchup +

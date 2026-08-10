@@ -8,7 +8,11 @@ import { DEMO_MODE } from "@/lib/demo";
 import { createArtPicker } from "@/lib/editorial-art";
 import { getVideos, SOCIAL_LINKS } from "@/lib/youtube";
 
-export const metadata: Metadata = { title: "Porch Pick'Em" };
+export const metadata: Metadata = {
+  title: "Porch Pick'Em",
+  description: "Ten games a week against Josh and the whole State — free forever, streaks and patches, real prizes. Season champ watches a game with Josh.",
+  alternates: { canonical: "/pickem" },
+};
 export const revalidate = 21600;
 
 // --- Preseason-preview sample data ---------------------------------------

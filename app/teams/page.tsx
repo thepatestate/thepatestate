@@ -3,7 +3,11 @@ import Link from "next/link";
 import PreseasonChip from "@/components/PreseasonChip";
 import { DEMO_MODE } from "@/lib/demo";
 
-export const metadata: Metadata = { title: "All 136 Teams" };
+export const metadata: Metadata = {
+  title: "All 136 Teams",
+  description: "Every FBS program gets a page — poll history, Josh's picks record, recruiting, and the tailgate guide, one team at a time.",
+  alternates: { canonical: "/teams" },
+};
 
 // --- Preseason-preview sample data ---------------------------------------
 // Stands in for the full 136-team directory. Georgia is the only team page
