@@ -171,7 +171,7 @@ export default async function Home() {
   // Live Wire items take over from the demo rail once the Wire Desk has real
   // coverage flowing (v1.2 §3) — demo stays only while the wire warms up.
   // Density per v2 §1.3: 8–10 items on the homepage, every one clickable.
-  const liveWire = await getWireItems(12).catch(() => []);
+  const liveWire = await getWireItems(16).catch(() => []);
   // Real full stories: fill the notebook bento + the numbered strip so the
   // left column carries as much genuine click-through density as the rail.
   const wireStories = await getWireStories(8).catch(() => []);
@@ -319,7 +319,7 @@ export default async function Home() {
                             key: w._id, headline: w.headline, category: w.category, teams: w.teams,
                             publishedAt: w.publishedAt, href: `/wire/${w.slug.current}`, external: false,
                           }))
-                        : liveWire.slice(10, 12).map((w) => ({
+                        : liveWire.slice(7, 9).map((w) => ({
                             key: w._id, headline: w.headline, category: w.category, teams: w.teams,
                             publishedAt: w.publishedAt,
                             href: w.storySlug ? `/wire/${w.storySlug}` : (w.sourceUrl ?? "/wire"),
@@ -352,7 +352,7 @@ export default async function Home() {
                           </Link>
                         );
                       })}
-                    {!DEMO_MODE && notebookNext.length < 2 && wireStories.length === 0 && liveWire.length <= 10 && (
+                    {!DEMO_MODE && notebookNext.length < 2 && wireStories.length === 0 && liveWire.length <= 7 && (
                       <div className="tile" style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
                         <EmptyState
                           kicker="NEW EVERY WEEKDAY"
@@ -443,24 +443,38 @@ export default async function Home() {
               {/* Numbered strip balances the column against the Wire rail.
                   Production: the latest REAL full wire stories with live
                   timestamps. Demo keeps the Most Read mock (§0.1). */}
-              {!DEMO_MODE && wireStories.length >= 2 && (
-                <div style={{ marginTop: 22 }}>
-                  <p className="eyebrow" style={{ marginBottom: 8 }}>The Latest Full Stories</p>
-                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "10px 22px" }}>
-                    {wireStories.slice(0, 4).map((w, i) => (
-                      <Link key={w._id} href={`/wire/${w.slug.current}`} style={{ display: "flex", gap: 12, alignItems: "baseline", textDecoration: "none", color: "inherit", borderBottom: "1px solid var(--line-l)", paddingBottom: 8 }}>
-                        <span className="display" style={{ fontSize: 26, color: "transparent", WebkitTextStroke: "1.5px var(--gold, #B8842C)", flexShrink: 0 }}>{String(i + 1).padStart(2, "0")}</span>
-                        <span>
-                          <b style={{ fontSize: 14, lineHeight: 1.3, display: "block" }}>{w.headline}</b>
-                          <span style={{ fontFamily: "var(--mono)", fontSize: 10, letterSpacing: ".06em", color: "var(--ink-dim)" }}>
-                            {(w.category ?? "news").toUpperCase()} · <RelTime iso={w.publishedAt} />
+              {!DEMO_MODE && (() => {
+                const strip = wireStories.length >= 2
+                  ? wireStories.slice(0, 4).map((w) => ({
+                      key: w._id, headline: w.headline, category: w.category,
+                      publishedAt: w.publishedAt, href: `/wire/${w.slug.current}`, external: false,
+                    }))
+                  : liveWire.slice(9, 13).map((w) => ({
+                      key: w._id, headline: w.headline, category: w.category,
+                      publishedAt: w.publishedAt,
+                      href: w.storySlug ? `/wire/${w.storySlug}` : (w.sourceUrl ?? "/wire"),
+                      external: !w.storySlug && Boolean(w.sourceUrl),
+                    }));
+                if (strip.length < 2) return null;
+                return (
+                  <div style={{ marginTop: 22 }}>
+                    <p className="eyebrow" style={{ marginBottom: 8 }}>More From the Wire</p>
+                    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "10px 22px" }}>
+                      {strip.map((w, i) => (
+                        <Link key={w.key} href={w.href} {...(w.external ? { target: "_blank", rel: "noopener" } : {})} style={{ display: "flex", gap: 12, alignItems: "baseline", textDecoration: "none", color: "inherit", borderBottom: "1px solid var(--line-l)", paddingBottom: 8 }}>
+                          <span className="display" style={{ fontSize: 26, color: "transparent", WebkitTextStroke: "1.5px var(--gold, #B8842C)", flexShrink: 0 }}>{String(i + 1).padStart(2, "0")}</span>
+                          <span>
+                            <b style={{ fontSize: 14, lineHeight: 1.3, display: "block" }}>{w.headline}</b>
+                            <span style={{ fontFamily: "var(--mono)", fontSize: 10, letterSpacing: ".06em", color: "var(--ink-dim)" }}>
+                              {(w.category ?? "news").toUpperCase()} · <RelTime iso={w.publishedAt} />
+                            </span>
                           </span>
-                        </span>
-                      </Link>
-                    ))}
+                        </Link>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              )}
+                );
+              })()}
               {DEMO_MODE && (
               <div style={{ marginTop: 22 }}>
                 <p className="eyebrow" style={{ marginBottom: 8 }}>Most Read This Week <PreseasonChip /></p>
@@ -496,7 +510,7 @@ export default async function Home() {
                 />
               )}
               {liveWire.length >= 3
-                ? liveWire.slice(0, 10).map((w) => {
+                ? liveWire.slice(0, 7).map((w) => {
                     const logo = w.teams?.[0] ? teamLogoUrl(w.teams[0]) : null;
                     const wireArt: ArtCategory = w.category && ["recruiting", "coaching", "media", "playoffs"].includes(w.category) ? (w.category as ArtCategory) : "generic";
                     const img = logo ?? art.pick(wireArt, w.headline).src;

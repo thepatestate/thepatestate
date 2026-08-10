@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import EpisodeLead from "@/components/EpisodeLead";
 import ShortsRail from "@/components/ShortsRail";
+import MediaRail from "@/components/MediaRail";
 import { videoUrl, CHANNEL_URL, APPLE_PODCASTS_URL, SPOTIFY_URL, type Video, type Short } from "@/lib/youtube";
 import { formatDate } from "@/lib/format";
 
@@ -63,22 +64,17 @@ export default function ShowSection({
         </div>
 
         {more.length > 0 && (
-          <>
-            <div className="sec-head" style={{ marginTop: 26, marginBottom: 10 }}>
-              <p className="eyebrow" style={{ margin: 0 }}>More Episodes</p>
-            </div>
-            <div className="more-eps">
-              {more.map((v) => (
-                <a key={v.id} className="more-ep" href={videoUrl(v.id)} target="_blank" rel="noopener">
-                  <span className="me-thumb">
-                    <Image src={v.thumbnail} alt="" fill sizes="220px" style={{ objectFit: "cover" }} />
-                  </span>
-                  <b>{v.title.replace(/ - Josh Pate's College Football Show/i, "")}</b>
-                  <span className="me-date">{formatDate(v.published).toUpperCase()}</span>
-                </a>
-              ))}
-            </div>
-          </>
+          <MediaRail label="More Episodes">
+            {more.map((v) => (
+              <a key={v.id} className="more-ep" href={videoUrl(v.id)} target="_blank" rel="noopener">
+                <span className="me-thumb">
+                  <Image src={v.thumbnail} alt="" fill sizes="220px" style={{ objectFit: "cover" }} />
+                </span>
+                <b>{v.title.replace(/ - Josh Pate's College Football Show/i, "")}</b>
+                <span className="me-date">{formatDate(v.published).toUpperCase()}</span>
+              </a>
+            ))}
+          </MediaRail>
         )}
 
         <ShortsRail shorts={shorts} />

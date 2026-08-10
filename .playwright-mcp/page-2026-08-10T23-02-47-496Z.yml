@@ -1,0 +1,532 @@
+- generic [active] [ref=f16e1]:
+  - generic [ref=f16e3]:
+    - generic [ref=f16e4]: MON Weekend Truths
+    - generic [ref=f16e5]: TUE Poll Day
+    - generic [ref=f16e6]: WED The Sit-Down
+    - generic [ref=f16e7]: THU Picks Drop
+    - generic [ref=f16e8]: FRI The ESPN Show
+    - generic [ref=f16e9]:
+      - text: SAT
+      - emphasis [ref=f16e10]: We Watch Ball
+    - text: THE FRONT PORCH OF COLLEGE FOOTBALL
+    - generic [ref=f16e11]: MON Weekend Truths
+    - generic [ref=f16e12]: TUE Poll Day
+    - generic [ref=f16e13]: WED The Sit-Down
+    - generic [ref=f16e14]: THU Picks Drop
+    - generic [ref=f16e15]: FRI The ESPN Show
+    - generic [ref=f16e16]:
+      - text: SAT
+      - emphasis [ref=f16e17]: We Watch Ball
+    - text: THE FRONT PORCH OF COLLEGE FOOTBALL
+  - navigation [ref=f16e18]:
+    - generic [ref=f16e19]:
+      - link [ref=f16e20] [cursor=pointer]:
+        - /url: /
+        - text: The Pate
+        - emphasis [ref=f16e21]: State
+      - link "Become a Citizen" [ref=f16e22] [cursor=pointer]:
+        - /url: /join
+      - button "Menu" [ref=f16e23] [cursor=pointer]
+  - main [ref=f16e24]:
+    - generic [ref=f16e27]:
+      - generic [ref=f16e28]:
+        - paragraph [ref=f16e29]: "Est. in Columbus, GA — population: everyone who lives for Saturdays"
+        - heading "The Front Porch of College Football." [level=1] [ref=f16e30]:
+          - text: The Front Porch
+          - generic [ref=f16e31]: of College Football.
+        - paragraph [ref=f16e32]: No debates. No hot takes. Just the sport, all year long — the show, every week, and a seat that's always open. Pull up a chair.
+        - generic [ref=f16e33]:
+          - link "Browse the Show" [ref=f16e34] [cursor=pointer]:
+            - /url: /show
+          - link "Become a Citizen — Free" [ref=f16e35] [cursor=pointer]:
+            - /url: /join
+        - paragraph [ref=f16e36]: 534K+ subscribers · 6K+ videos · 189.4M+ views · Every pick logged
+      - region "Featured on The Pate State" [ref=f16e37]:
+        - link [ref=f16e38] [cursor=pointer]:
+          - /url: https://www.youtube.com/watch?v=I_Gfq7fV_2c
+          - generic [ref=f16e40]:
+            - text: NEW EPISODE
+            - heading "Boldest CFB Predictions For 2026" [level=3] [ref=f16e41]
+        - link:
+          - /url: /notebook
+          - generic:
+            - text: NEW EVERY WEEKDAY
+            - heading [level=3]: "The Notebook: Every Episode, In Writing"
+        - link:
+          - /url: /poll
+          - generic:
+            - text: THE PEOPLE'S TOP 25
+            - heading [level=3]: The JP Poll — Ballots Open Aug 24
+        - link:
+          - /url: /play
+          - generic:
+            - text: PLAY
+            - heading [level=3]: Pick'Em, Brackets & More — Free Forever
+        - link:
+          - /url: /join
+          - generic:
+            - text: THE CITIZEN GIFT
+            - heading [level=3]: Join Free, Get the JP Preseason Guide
+        - tablist "Slides" [ref=f16e42]:
+          - 'tab "Slide 1: Boldest CFB Predictions For 2026" [selected] [ref=f16e43] [cursor=pointer]'
+          - 'tab "Slide 2: The Notebook: Every Episode, In Writing" [ref=f16e44] [cursor=pointer]'
+          - 'tab "Slide 3: The JP Poll — Ballots Open Aug 24" [ref=f16e45] [cursor=pointer]'
+          - 'tab "Slide 4: Pick''Em, Brackets & More — Free Forever" [ref=f16e46] [cursor=pointer]'
+          - 'tab "Slide 5: Join Free, Get the JP Preseason Guide" [ref=f16e47] [cursor=pointer]'
+    - generic [ref=f16e50]:
+      - generic [ref=f16e51]: Make it yours. Choose your teams and personalize The Pate State — your programs' news, games, and threads first.
+      - link "Become a Citizen — Free" [ref=f16e52] [cursor=pointer]:
+        - /url: /join
+    - generic [ref=f16e54]:
+      - generic [ref=f16e55]:
+        - generic [ref=f16e56]:
+          - paragraph [ref=f16e57]: America's College Football Show
+          - heading "The Show" [level=2] [ref=f16e58]
+        - link "MUCH MORE ON YOUTUBE →" [ref=f16e59] [cursor=pointer]:
+          - /url: https://www.youtube.com/@JoshPateCFB
+      - generic [ref=f16e60]:
+        - generic [ref=f16e61]:
+          - generic [ref=f16e62]:
+            - link "Watch Boldest CFB Predictions For 2026 - Josh Pate's College Football Show on YouTube" [ref=f16e63] [cursor=pointer]:
+              - /url: https://www.youtube.com/watch?v=I_Gfq7fV_2c
+              - generic [ref=f16e64]: NEW EPISODE
+              - generic [ref=f16e65]: ▶
+            - heading [level=3] [ref=f16e66]:
+              - link "Boldest CFB Predictions For 2026 - Josh Pate's College Football Show" [ref=f16e67] [cursor=pointer]:
+                - /url: https://www.youtube.com/watch?v=I_Gfq7fV_2c
+            - paragraph [ref=f16e68]:
+              - text: AUG 10, 2026 ·
+              - link "Watch on YouTube →" [ref=f16e69] [cursor=pointer]:
+                - /url: https://www.youtube.com/watch?v=I_Gfq7fV_2c
+          - generic [ref=f16e70]:
+            - link "YouTube" [ref=f16e71] [cursor=pointer]:
+              - /url: https://www.youtube.com/@JoshPateCFB
+            - link "Apple Podcasts" [ref=f16e72] [cursor=pointer]:
+              - /url: https://podcasts.apple.com/us/podcast/josh-pates-college-football-show/id1485905502
+            - link "Spotify" [ref=f16e73] [cursor=pointer]:
+              - /url: https://open.spotify.com/show/553DKKHsBSCOkrZdppJpeB
+        - generic [ref=f16e74]:
+          - link "CFP Expansion To 24 Teams CANNOT Happen ▶ WATCH NOW · AUG 10, 2026" [ref=f16e75] [cursor=pointer]:
+            - /url: https://www.youtube.com/watch?v=tfHD4UojPUY
+            - generic [ref=f16e76]:
+              - generic [ref=f16e77]: CFP Expansion To 24 Teams CANNOT Happen
+              - generic [ref=f16e78]: ▶ WATCH NOW · AUG 10, 2026
+          - link "2026 Big Ten QB Rankings ▶ WATCH NOW · AUG 10, 2026" [ref=f16e80] [cursor=pointer]:
+            - /url: https://www.youtube.com/watch?v=BRljqj8F6fo
+            - generic [ref=f16e81]:
+              - generic [ref=f16e82]: 2026 Big Ten QB Rankings
+              - generic [ref=f16e83]: ▶ WATCH NOW · AUG 10, 2026
+          - link "Next Coach To Win FIRST National Title ▶ WATCH NOW · AUG 10, 2026" [ref=f16e85] [cursor=pointer]:
+            - /url: https://www.youtube.com/watch?v=B7MoNMTqCUY
+            - generic [ref=f16e86]:
+              - generic [ref=f16e87]: Next Coach To Win FIRST National Title
+              - generic [ref=f16e88]: ▶ WATCH NOW · AUG 10, 2026
+      - paragraph [ref=f16e91]: More Episodes
+      - generic [ref=f16e92]:
+        - link "What I'm Hearing From Fall Camps...MONDAY Update AUG 10, 2026" [ref=f16e93] [cursor=pointer]:
+          - /url: https://www.youtube.com/watch?v=XdT_gto9yCw
+          - generic [ref=f16e95]: What I'm Hearing From Fall Camps...MONDAY Update
+          - generic [ref=f16e96]: AUG 10, 2026
+        - link "National Championship Bubble Debut | CFP Expansion Rumors | Camp Whispers & Intel | Bold Predictions AUG 10, 2026" [ref=f16e97] [cursor=pointer]:
+          - /url: https://www.youtube.com/watch?v=zOmdWYzuWjY
+          - generic [ref=f16e99]: National Championship Bubble Debut | CFP Expansion Rumors | Camp Whispers & Intel | Bold Predictions
+          - generic [ref=f16e100]: AUG 10, 2026
+        - link "Transfer Portal ON FIRE...Biggest Impact Players AUG 9, 2026" [ref=f16e101] [cursor=pointer]:
+          - /url: https://www.youtube.com/watch?v=Qc-LhWG9T6c
+          - generic [ref=f16e103]: Transfer Portal ON FIRE...Biggest Impact Players
+          - generic [ref=f16e104]: AUG 9, 2026
+        - link "Circle THESE Sleeper Teams AUG 9, 2026" [ref=f16e105] [cursor=pointer]:
+          - /url: https://www.youtube.com/watch?v=gnPAZmdUvtQ
+          - generic [ref=f16e107]: Circle THESE Sleeper Teams
+          - generic [ref=f16e108]: AUG 9, 2026
+        - link "Hardest College Football Schedules In 2026 AUG 9, 2026" [ref=f16e109] [cursor=pointer]:
+          - /url: https://www.youtube.com/watch?v=-qU6lw0BfPg
+          - generic [ref=f16e111]: Hardest College Football Schedules In 2026
+          - generic [ref=f16e112]: AUG 9, 2026
+        - link "Boldest CFB Predictions For 2026 AUG 8, 2026" [ref=f16e113] [cursor=pointer]:
+          - /url: https://www.youtube.com/watch?v=3m0o37LOODU
+          - generic [ref=f16e115]: Boldest CFB Predictions For 2026
+          - generic [ref=f16e116]: AUG 8, 2026
+      - generic [ref=f16e117]:
+        - generic [ref=f16e118]:
+          - paragraph [ref=f16e119]: Shorts From the Porch
+          - generic [ref=f16e120]:
+            - button "Scroll shorts left" [ref=f16e121] [cursor=pointer]: ←
+            - button "Scroll shorts right" [ref=f16e122] [cursor=pointer]: →
+            - link "More Shorts →" [ref=f16e123] [cursor=pointer]:
+              - /url: https://www.youtube.com/@JoshPateCFB/shorts
+        - generic [ref=f16e124]:
+          - link "Texas Tech and Kansas State got LUCKY 🤔 Texas Tech and Kansas State got LUCKY 🤔" [ref=f16e125] [cursor=pointer]:
+            - /url: https://www.youtube.com/shorts/CYqsoi0JIB4
+            - img "Texas Tech and Kansas State got LUCKY 🤔" [ref=f16e126]
+            - generic [ref=f16e128]: Texas Tech and Kansas State got LUCKY 🤔
+          - link "Why I LOVE preseason rankings 📈 Why I LOVE preseason rankings 📈" [ref=f16e129] [cursor=pointer]:
+            - /url: https://www.youtube.com/shorts/8i-zpLRuGe4
+            - img "Why I LOVE preseason rankings 📈" [ref=f16e130]
+            - generic [ref=f16e132]: Why I LOVE preseason rankings 📈
+          - link "CFP & National Championship Predictions 🏆 CFP & National Championship Predictions 🏆" [ref=f16e133] [cursor=pointer]:
+            - /url: https://www.youtube.com/shorts/DA5BM2YLpzw
+            - img "CFP & National Championship Predictions 🏆" [ref=f16e134]
+            - generic [ref=f16e136]: CFP & National Championship Predictions 🏆
+          - link "Texas is about to GO OFF 📈 Texas is about to GO OFF 📈" [ref=f16e137] [cursor=pointer]:
+            - /url: https://www.youtube.com/shorts/VAw2weXnb9A
+            - img "Texas is about to GO OFF 📈" [ref=f16e138]
+            - generic [ref=f16e140]: Texas is about to GO OFF 📈
+          - link "Steve Sarkisian sees the game DIFFERENT 😤 Steve Sarkisian sees the game DIFFERENT 😤" [ref=f16e141] [cursor=pointer]:
+            - /url: https://www.youtube.com/shorts/zK7__XXTtlY
+            - img "Steve Sarkisian sees the game DIFFERENT 😤" [ref=f16e142]
+            - generic [ref=f16e144]: Steve Sarkisian sees the game DIFFERENT 😤
+          - link "Alabama's QB1 will be....? 🤔 Alabama's QB1 will be....? 🤔" [ref=f16e145] [cursor=pointer]:
+            - /url: https://www.youtube.com/shorts/UmWhaL-q-Es
+            - img "Alabama's QB1 will be....? 🤔" [ref=f16e146]
+            - generic [ref=f16e148]: Alabama's QB1 will be....? 🤔
+          - link "HOW IS CLEMSON RANKED?! 🤯 HOW IS CLEMSON RANKED?! 🤯" [ref=f16e149] [cursor=pointer]:
+            - /url: https://www.youtube.com/shorts/UeESaO2wO9Y
+            - img "HOW IS CLEMSON RANKED?! 🤯" [ref=f16e150]
+            - generic [ref=f16e152]: HOW IS CLEMSON RANKED?! 🤯
+          - link "LSU is LOADED with impact transfers 🔥 LSU is LOADED with impact transfers 🔥" [ref=f16e153] [cursor=pointer]:
+            - /url: https://www.youtube.com/shorts/YNETpAFxUQo
+            - img "LSU is LOADED with impact transfers 🔥" [ref=f16e154]
+            - generic [ref=f16e156]: LSU is LOADED with impact transfers 🔥
+      - paragraph [ref=f16e157]: MON Weekend Truths · TUE Poll Day · WED The Sit-Down · THU Picks Drop · FRI The ESPN Show · SAT We Watch Ball
+      - paragraph [ref=f16e158]:
+        - link "Browse Every Episode" [ref=f16e159] [cursor=pointer]:
+          - /url: /show
+    - generic [ref=f16e162]:
+      - generic [ref=f16e163]:
+        - generic [ref=f16e164]:
+          - paragraph [ref=f16e165]: From the Porch — New Every Weekday
+          - heading "The Notebook" [level=2] [ref=f16e166]
+        - link "View All Stories →" [ref=f16e167] [cursor=pointer]:
+          - /url: /notebook
+      - generic [ref=f16e169]:
+        - generic [ref=f16e170]:
+          - generic [ref=f16e171]:
+            - link "My 2026 Playoff Bracket, On the Record 📝 Picks Drop Josh Pate · AUG 10, 2026 My 2026 Playoff Bracket, On the Record Twelve teams, four byes, and one very public Indiana pick — Josh locks his whole 2026 playoff bracket in writing before the season proves him right or makes him eat it." [ref=f16e172] [cursor=pointer]:
+              - /url: /notebook/my-2026-playoff-bracket-on-the-record
+              - img "My 2026 Playoff Bracket, On the Record" [ref=f16e174]
+              - generic [ref=f16e175]: 📝 Picks Drop
+              - generic [ref=f16e176]:
+                - generic [ref=f16e177]: Josh Pate · AUG 10, 2026
+                - heading "My 2026 Playoff Bracket, On the Record" [level=3] [ref=f16e178]
+                - paragraph [ref=f16e179]: Twelve teams, four byes, and one very public Indiana pick — Josh locks his whole 2026 playoff bracket in writing before the season proves him right or makes him eat it.
+            - generic [ref=f16e180]:
+              - link "Oklahoma frontrunner for 2028 OL prospects Fleming, Zubeck ⚡ The Wire RECRUITING · 42 MIN AGO Oklahoma frontrunner for 2028 OL prospects Fleming, Zubeck" [ref=f16e181] [cursor=pointer]:
+                - /url: https://sports.yahoo.com/articles/sooners-emerge-frontrunners-two-elite-220032265.html
+                - img "Oklahoma frontrunner for 2028 OL prospects Fleming, Zubeck" [ref=f16e183]
+                - generic [ref=f16e184]: ⚡ The Wire
+                - generic [ref=f16e186]:
+                  - generic [ref=f16e187]: RECRUITING · 42 MIN AGO
+                  - heading "Oklahoma frontrunner for 2028 OL prospects Fleming, Zubeck" [level=4] [ref=f16e188]
+              - link "Boise State fits rebuilt Pac-12, per Yahoo Sports ⚡ The Wire GENERAL · 1 HR AGO Boise State fits rebuilt Pac-12, per Yahoo Sports" [ref=f16e189] [cursor=pointer]:
+                - /url: https://sports.yahoo.com/articles/does-boise-state-fit-look-213852544.html
+                - img "Boise State fits rebuilt Pac-12, per Yahoo Sports" [ref=f16e191]
+                - generic [ref=f16e192]: ⚡ The Wire
+                - generic [ref=f16e194]:
+                  - generic [ref=f16e195]: GENERAL · 1 HR AGO
+                  - heading "Boise State fits rebuilt Pac-12, per Yahoo Sports" [level=4] [ref=f16e196]
+          - link "Open the Notebook" [ref=f16e198] [cursor=pointer]:
+            - /url: /notebook
+        - generic [ref=f16e199]:
+          - heading "The Wire" [level=3] [ref=f16e200]
+          - link "3 MIN AGO · COACHING CBS Sports projects 2026 records for new Power Four coaches CBS Sports predicts Lane Kiffin and James Franklin will thrive immediately at their new schools in 2026." [ref=f16e202] [cursor=pointer]:
+            - /url: https://www.cbssports.com/college-football/news/record-prediction-new-power-four-coach-lane-kiffin-james-franklin/
+            - generic [ref=f16e205]:
+              - generic [ref=f16e206]: 3 MIN AGO · COACHING
+              - generic [ref=f16e207]: CBS Sports projects 2026 records for new Power Four coaches
+              - paragraph [ref=f16e208]: CBS Sports predicts Lane Kiffin and James Franklin will thrive immediately at their new schools in 2026.
+          - link "11 MIN AGO · TRANSFER Delaware State lands former Illinois quarterback, per Yahoo Sports DeSean Jackson's program adds a former Illinois QB ahead of the season, Yahoo Sports reports." [ref=f16e209] [cursor=pointer]:
+            - /url: https://sports.yahoo.com/articles/desean-jackson-delaware-stare-lands-214039286.html
+            - generic [ref=f16e212]:
+              - generic [ref=f16e213]: 11 MIN AGO · TRANSFER
+              - generic [ref=f16e214]: Delaware State lands former Illinois quarterback, per Yahoo Sports
+              - paragraph [ref=f16e215]: DeSean Jackson's program adds a former Illinois QB ahead of the season, Yahoo Sports reports.
+          - link "11 MIN AGO · TRANSFER Anonymous Big 12 coordinator doubts Rocco Becht's Big Ten readiness Per Yahoo Sports, an unnamed Big 12 defensive coordinator questioned whether Penn State transfer QB Rocco Becht can handle Big Ten physicality." [ref=f16e216] [cursor=pointer]:
+            - /url: https://sports.yahoo.com/articles/big-12-coach-slams-penn-220730651.html
+            - generic [ref=f16e219]:
+              - generic [ref=f16e220]: 11 MIN AGO · TRANSFER
+              - generic [ref=f16e221]: Anonymous Big 12 coordinator doubts Rocco Becht's Big Ten readiness
+              - paragraph [ref=f16e222]: Per Yahoo Sports, an unnamed Big 12 defensive coordinator questioned whether Penn State transfer QB Rocco Becht can handle Big Ten physicality.
+          - link "11 MIN AGO · GENERAL LSU highlights No. 26 jersey players before season Yahoo Sports profiles a sophomore linebacker and freshman walk-on receiver as LSU's kickoff countdown continues." [ref=f16e223] [cursor=pointer]:
+            - /url: https://sports.yahoo.com/articles/countdown-kickoff-lsu-tigers-sophomore-221138114.html
+            - generic [ref=f16e226]:
+              - generic [ref=f16e227]: 11 MIN AGO · GENERAL
+              - generic [ref=f16e228]: LSU highlights No. 26 jersey players before season
+              - paragraph [ref=f16e229]: Yahoo Sports profiles a sophomore linebacker and freshman walk-on receiver as LSU's kickoff countdown continues.
+          - link "12 MIN AGO · COACHING Lane Kiffin named LSU head coach for 2026, per Yahoo Sports Kiffin left Ole Miss to take over LSU program ahead of 2026 season, report says." [ref=f16e230] [cursor=pointer]:
+            - /url: https://sports.yahoo.com/articles/brian-kelly-predicts-lsu-tigers-221628008.html
+            - generic [ref=f16e233]:
+              - generic [ref=f16e234]: 12 MIN AGO · COACHING
+              - generic [ref=f16e235]: Lane Kiffin named LSU head coach for 2026, per Yahoo Sports
+              - paragraph [ref=f16e236]: Kiffin left Ole Miss to take over LSU program ahead of 2026 season, report says.
+          - link "12 MIN AGO · RECRUITING Mr. Ohio finalist nears commitment, crystal ball favors rival 2027 recruiting standout set to announce; Yahoo Sports reports predictions currently favor a school other than Ohio State." [ref=f16e237] [cursor=pointer]:
+            - /url: https://sports.yahoo.com/articles/mr-ohio-finalist-set-announce-223932528.html
+            - generic [ref=f16e240]:
+              - generic [ref=f16e241]: 12 MIN AGO · RECRUITING
+              - generic [ref=f16e242]: Mr. Ohio finalist nears commitment, crystal ball favors rival
+              - paragraph [ref=f16e243]: 2027 recruiting standout set to announce; Yahoo Sports reports predictions currently favor a school other than Ohio State.
+          - link "22 MIN AGO · GENERAL UCF explores fifth-year eligibility path for LB Kozlowski Scott Frost says Kozlowski remains on campus as UCF weighs new fifth-year rule stemming from Colorado court ruling." [ref=f16e244] [cursor=pointer]:
+            - /url: https://sports.yahoo.com/articles/ucf-hc-scott-frost-shares-221603285.html
+            - generic [ref=f16e247]:
+              - generic [ref=f16e248]: 22 MIN AGO · GENERAL
+              - generic [ref=f16e249]: UCF explores fifth-year eligibility path for LB Kozlowski
+              - paragraph [ref=f16e250]: Scott Frost says Kozlowski remains on campus as UCF weighs new fifth-year rule stemming from Colorado court ruling.
+          - link "32 MIN AGO · MEDIA Anonymous SEC coach mocks Texas A&M QB Marcel Reed, per Yahoo Sports Unnamed SEC coach criticized Reed's decision-making, saying he 'still thinks he's a true QB,' per Yahoo Sports/HEAVY." [ref=f16e251] [cursor=pointer]:
+            - /url: https://sports.yahoo.com/articles/sec-coach-disses-texas-m-213748531.html
+            - generic [ref=f16e254]:
+              - generic [ref=f16e255]: 32 MIN AGO · MEDIA
+              - generic [ref=f16e256]: Anonymous SEC coach mocks Texas A&M QB Marcel Reed, per Yahoo Sports
+              - paragraph [ref=f16e257]: Unnamed SEC coach criticized Reed's decision-making, saying he 'still thinks he's a true QB,' per Yahoo Sports/HEAVY.
+          - link "32 MIN AGO · GENERAL Washington's defensive line has depth entering season, per Yahoo Sports Yahoo Sports reports Huskies have multiple options along defensive front heading into the season." [ref=f16e258] [cursor=pointer]:
+            - /url: https://sports.yahoo.com/articles/washington-huskies-defensive-line-good-215159024.html
+            - generic [ref=f16e261]:
+              - generic [ref=f16e262]: 32 MIN AGO · GENERAL
+              - generic [ref=f16e263]: Washington's defensive line has depth entering season, per Yahoo Sports
+              - paragraph [ref=f16e264]: Yahoo Sports reports Huskies have multiple options along defensive front heading into the season.
+          - link "42 MIN AGO · TRANSFER Michigan coach addresses Hausmann return rumors, per Yahoo Sports Kyle Whittingham responded to speculation linebacker Ernest Hausmann could return to Michigan." [ref=f16e265] [cursor=pointer]:
+            - /url: https://sports.yahoo.com/articles/ernest-hausmann-return-michigan-football-215958940.html
+            - generic [ref=f16e268]:
+              - generic [ref=f16e269]: 42 MIN AGO · TRANSFER
+              - generic [ref=f16e270]: Michigan coach addresses Hausmann return rumors, per Yahoo Sports
+              - paragraph [ref=f16e271]: Kyle Whittingham responded to speculation linebacker Ernest Hausmann could return to Michigan.
+          - link "All Wire Coverage →" [ref=f16e272] [cursor=pointer]:
+            - /url: /wire
+    - generic [ref=f16e276]:
+      - generic [ref=f16e277]:
+        - generic [ref=f16e278]: 🗳 THE JP POLL
+        - paragraph [ref=f16e279]: Vote Sunday · Reveal Tuesday
+        - heading "The People's Power Ranking" [level=3] [ref=f16e280]
+        - paragraph [ref=f16e281]: One board, voted by those who actually watch, revealed every Tuesday.
+        - generic [ref=f16e282]:
+          - generic [ref=f16e283]:
+            - generic [ref=f16e284]: AUG 24
+            - generic [ref=f16e285]: First ballots open — every citizen ranks a top 10
+          - generic [ref=f16e286]:
+            - generic [ref=f16e287]: SUN 8PM ET
+            - generic [ref=f16e288]: Ballots lock, the board tabulates overnight
+          - generic [ref=f16e289]:
+            - generic [ref=f16e290]: TUESDAY
+            - generic [ref=f16e291]: The reveal airs live on the show, argued out
+          - generic [ref=f16e292]:
+            - generic [ref=f16e293]: ALWAYS
+            - generic [ref=f16e294]: Full vote distribution goes public — the AP's never does
+          - generic [ref=f16e295]:
+            - generic [ref=f16e296]: IN GOLD
+            - generic [ref=f16e297]: Every disagreement vs. the AP, Coaches, and CFP, marked
+        - link "VIEW ALL 136 →" [ref=f16e298] [cursor=pointer]:
+          - /url: /poll
+      - generic [ref=f16e299]:
+        - generic [ref=f16e300]: ✓ PORCH PICK'EM
+        - paragraph [ref=f16e301]: Free to Play · Bragging Rights Forever
+        - heading "Porch Pick'Em" [level=3] [ref=f16e302]
+        - paragraph [ref=f16e303]: Ten games a week against Josh and the whole State. Build a streak. Earn your patches.
+        - generic [ref=f16e304]:
+          - generic [ref=f16e305]:
+            - generic [ref=f16e306]: WEEKLY
+            - generic [ref=f16e307]: Best score wins merch + a shoutout on Monday's show
+          - generic [ref=f16e308]:
+            - generic [ref=f16e309]: MONTHLY
+            - generic [ref=f16e310]: Top citizen gets a signed Pate Report + Poll Day spotlight
+          - generic [ref=f16e311]:
+            - generic [ref=f16e312]: TOP 10
+            - generic [ref=f16e313]: Finish the season top 10, pick a game — tickets covered
+          - generic [ref=f16e314]:
+            - generic [ref=f16e315]: CHAMPION
+            - generic [ref=f16e316]: Watches a game with Josh · name on the Wall, forever
+          - generic [ref=f16e317]:
+            - generic [ref=f16e318]: WEEK 1
+            - generic [ref=f16e319]: Everyone starts 0–0 — including Josh. Picks lock Sat 11:58 AM ET
+        - generic [ref=f16e320]:
+          - generic [ref=f16e321]: 🏆
+          - generic [ref=f16e322]: 🎯
+          - generic [ref=f16e323]: 🗳️
+          - generic [ref=f16e324]: 🏟️
+        - paragraph [ref=f16e325]: Season champion watches a game with Josh. Top 10 win game tickets.
+        - link "Play Free — See the Prizes" [ref=f16e326] [cursor=pointer]:
+          - /url: /pickem
+    - generic [ref=f16e328]:
+      - paragraph [ref=f16e329]: Free Citizenship · The Daily Briefing
+      - heading "The Pate Playbook" [level=2] [ref=f16e330]
+      - generic [ref=f16e331]:
+        - generic [ref=f16e332]:
+          - generic [ref=f16e333]: The Playbook · Monday, Aug 10 · 6:00 AM ET
+          - generic [ref=f16e338]:
+            - paragraph [ref=f16e339]: "FROM: The Pate State <porch@thepatestate.com>"
+            - paragraph [ref=f16e340]: Today on the porch
+            - link "Yesterday's show Boldest CFB Predictions For 2026" [ref=f16e341] [cursor=pointer]:
+              - /url: https://www.youtube.com/watch?v=I_Gfq7fV_2c
+              - generic [ref=f16e343]:
+                - generic [ref=f16e344]: Yesterday's show
+                - emphasis [ref=f16e345]: Boldest CFB Predictions For 2026
+            - paragraph [ref=f16e346]: "The three stories that matter:"
+            - list [ref=f16e347]:
+              - listitem [ref=f16e348]: CBS Sports projects 2026 records for new Power Four coaches
+              - listitem [ref=f16e349]: Delaware State lands former Illinois quarterback, per Yahoo Sports
+              - listitem [ref=f16e350]: Anonymous Big 12 coordinator doubts Rocco Becht's Big Ten readiness
+            - paragraph [ref=f16e351]: Today's ritual → make your picks before Saturday 11:58 AM ET.
+        - generic [ref=f16e352]:
+          - text: CITIZEN CARD
+          - heading "Become a Citizen of the Pate State" [level=3] [ref=f16e353]
+          - paragraph [ref=f16e354]: "This exact briefing, in your inbox every weekday morning: what actually happened in the sport, what it means, and what's worth your Saturday. Written like Josh talks. Free forever."
+          - link "Become a Citizen — Free" [ref=f16e356] [cursor=pointer]:
+            - /url: /join
+          - paragraph [ref=f16e357]: Citizens get early poll access, pick'em invites, first dibs on tour tickets — and the digital Pate Report free every July.
+    - generic [ref=f16e361]:
+      - generic [ref=f16e362]:
+        - paragraph [ref=f16e363]: Wear the Flag
+        - heading "The State Store" [level=2] [ref=f16e364]
+        - generic [ref=f16e365]:
+          - generic [ref=f16e366]:
+            - img "The Creed Tee, folded flat" [ref=f16e367]
+            - generic [ref=f16e370]: THE CREED TEE — $28 · TRI-BLEND
+          - generic [ref=f16e371]:
+            - img "The Pate State porch flag" [ref=f16e372]
+            - generic [ref=f16e375]: PORCH FLAG — $34
+          - generic [ref=f16e376]:
+            - img "The Pate State gameday hat" [ref=f16e377]
+            - generic [ref=f16e380]: GAMEDAY HAT — $32
+        - link "Shop Everything" [ref=f16e382] [cursor=pointer]:
+          - /url: /shop
+      - generic [ref=f16e383]:
+        - paragraph [ref=f16e384]: The Porch Goes On the Road
+        - heading "Live & On Campus" [level=2] [ref=f16e385]
+        - img "The Pate State broadcast desk set up live on a college quad" [ref=f16e387]
+        - generic [ref=f16e388]:
+          - generic [ref=f16e389]: Campus stops are being booked now
+          - generic [ref=f16e390]: DATES SOON
+        - generic [ref=f16e391]:
+          - generic [ref=f16e392]: Citizens get first dibs the moment tickets drop
+          - link "Join free →" [ref=f16e393] [cursor=pointer]:
+            - /url: /join
+    - generic [ref=f16e395]:
+      - paragraph [ref=f16e396]: Every Stadium. Every Tradition. Every Tailgate.
+      - heading "Pate Tailgate" [level=2] [ref=f16e397]
+      - paragraph [ref=f16e398]: The field guide to actually living this sport — where to park, where to eat, what time to arrive, which traditions you can't miss.
+      - generic [ref=f16e400]:
+        - link "LSU fans in purple and gold packing Tiger Stadium's night tailgate lot Tiger Stadium team logo Tiger Stadium LSU · NIGHT GAME SURVIVAL" [ref=f16e401] [cursor=pointer]:
+          - /url: /tailgate
+          - generic [ref=f16e402]:
+            - img "LSU fans in purple and gold packing Tiger Stadium's night tailgate lot" [ref=f16e403]
+            - img "Tiger Stadium team logo" [ref=f16e405]
+          - generic [ref=f16e406]:
+            - heading "Tiger Stadium" [level=4] [ref=f16e407]
+            - generic [ref=f16e408]: LSU · NIGHT GAME SURVIVAL
+        - link "Ole Miss fans tailgating under the oaks of The Grove The Grove team logo The Grove OLE MISS · MASTERCLASS" [ref=f16e409] [cursor=pointer]:
+          - /url: /tailgate
+          - generic [ref=f16e410]:
+            - img "Ole Miss fans tailgating under the oaks of The Grove" [ref=f16e411]
+            - img "The Grove team logo" [ref=f16e413]
+          - generic [ref=f16e414]:
+            - heading "The Grove" [level=4] [ref=f16e415]
+            - generic [ref=f16e416]: OLE MISS · MASTERCLASS
+        - link "Ohio State fans packing The Horseshoe for kickoff The Horseshoe team logo The Horseshoe OHIO STATE · FIRST-TIMER" [ref=f16e417] [cursor=pointer]:
+          - /url: /tailgate
+          - generic [ref=f16e418]:
+            - img "Ohio State fans packing The Horseshoe for kickoff" [ref=f16e419]
+            - img "The Horseshoe team logo" [ref=f16e421]
+          - generic [ref=f16e422]:
+            - heading "The Horseshoe" [level=4] [ref=f16e423]
+            - generic [ref=f16e424]: OHIO STATE · FIRST-TIMER
+        - link "Wisconsin fans jumping around at Camp Randall Camp Randall team logo Camp Randall WISCONSIN · JUMP AROUND" [ref=f16e425] [cursor=pointer]:
+          - /url: /tailgate
+          - generic [ref=f16e426]:
+            - img "Wisconsin fans jumping around at Camp Randall" [ref=f16e427]
+            - img "Camp Randall team logo" [ref=f16e429]
+          - generic [ref=f16e430]:
+            - heading "Camp Randall" [level=4] [ref=f16e431]
+            - generic [ref=f16e432]: WISCONSIN · JUMP AROUND
+      - link "Open the Full Guide — 136 Stadiums" [ref=f16e434] [cursor=pointer]:
+        - /url: /tailgate
+    - generic [ref=f16e437]:
+      - img "The 2026 JP Preseason Football Guide cover" [ref=f16e438]
+      - generic [ref=f16e439]:
+        - generic [ref=f16e440]: 🎁 THE CITIZEN GIFT
+        - paragraph [ref=f16e441]: Free the Moment You Join
+        - heading "Become a Citizen, Get the Guide." [level=2] [ref=f16e442]: Become a Citizen,Get the Guide.
+        - paragraph [ref=f16e443]: The 2026 JP Preseason Football Guide — the Top 50 ranked, analyzed, and explained, the playoff picture, the X-factors, and the breakout players — yours free (digital edition) the moment you claim citizenship.
+        - generic [ref=f16e444]:
+          - link "Claim Free Citizenship" [ref=f16e445] [cursor=pointer]:
+            - /url: /join
+          - link "Peek Inside the Guide" [ref=f16e446] [cursor=pointer]:
+            - /url: /report
+    - generic [ref=f16e448]:
+      - paragraph [ref=f16e449]: Follow the Porch Everywhere
+      - generic [ref=f16e450]:
+        - link "YouTube" [ref=f16e451] [cursor=pointer]:
+          - /url: https://www.youtube.com/@JoshPateCFB
+        - link "𝕏 X" [ref=f16e452] [cursor=pointer]:
+          - /url: https://x.com/JoshPateCFB
+        - link "Instagram" [ref=f16e453] [cursor=pointer]:
+          - /url: https://www.instagram.com/joshpatecfb
+        - link "TikTok" [ref=f16e454] [cursor=pointer]:
+          - /url: https://www.tiktok.com/@joshpatecfb
+    - generic [ref=f16e456]:
+      - generic [ref=f16e457]:
+        - heading "Who's In? See the Playoff Picture." [level=3] [ref=f16e458]
+        - paragraph [ref=f16e459]: THE BRACKET, THE RANKINGS, JOSH'S PICKS — AND AN AI TO RUN YOUR OWN
+      - link "Open the Playoffs Page →" [ref=f16e460] [cursor=pointer]:
+        - /url: /playoffs
+  - contentinfo [ref=f16e461]:
+    - generic [ref=f16e462]:
+      - generic [ref=f16e463]:
+        - generic [ref=f16e464]:
+          - text: THE PATE
+          - emphasis [ref=f16e465]: STATE
+        - paragraph [ref=f16e466]: The front porch of college football.© The Pate State. All picks logged. All poll results archived.
+      - generic [ref=f16e467]:
+        - link "▶ YOUTUBE" [ref=f16e468] [cursor=pointer]:
+          - /url: https://www.youtube.com/@JoshPateCFB
+        - link "𝕏 @JOSHPATECFB" [ref=f16e469] [cursor=pointer]:
+          - /url: https://x.com/JoshPateCFB
+        - link "◉ INSTAGRAM" [ref=f16e470] [cursor=pointer]:
+          - /url: https://www.instagram.com/joshpatecfb
+        - link "♪ TIKTOK" [ref=f16e471] [cursor=pointer]:
+          - /url: https://www.tiktok.com/@joshpatecfb
+        - link "🛒 STATE STORE" [ref=f16e472] [cursor=pointer]:
+          - /url: https://patestatematerial.com
+      - generic [ref=f16e473]:
+        - link "The Show" [ref=f16e474] [cursor=pointer]:
+          - /url: /show
+        - link "Scores" [ref=f16e475] [cursor=pointer]:
+          - /url: /scores
+        - link "Play" [ref=f16e476] [cursor=pointer]:
+          - /url: /play
+        - link "Pick'Em" [ref=f16e477] [cursor=pointer]:
+          - /url: /pickem
+        - link "JP Poll" [ref=f16e478] [cursor=pointer]:
+          - /url: /poll
+        - link "Playoffs" [ref=f16e479] [cursor=pointer]:
+          - /url: /playoffs
+        - link "Teams" [ref=f16e480] [cursor=pointer]:
+          - /url: /teams
+        - link "Recruiting" [ref=f16e481] [cursor=pointer]:
+          - /url: /recruiting
+        - link "Notebook" [ref=f16e482] [cursor=pointer]:
+          - /url: /notebook
+        - link "The Wire" [ref=f16e483] [cursor=pointer]:
+          - /url: /wire
+        - link "The Porch" [ref=f16e484] [cursor=pointer]:
+          - /url: /porch
+        - link "Tailgate" [ref=f16e485] [cursor=pointer]:
+          - /url: /tailgate
+        - link "Ledger" [ref=f16e486] [cursor=pointer]:
+          - /url: /ledger
+        - link "Shop" [ref=f16e487] [cursor=pointer]:
+          - /url: /shop
+        - link "The Report" [ref=f16e488] [cursor=pointer]:
+          - /url: /report
+        - link "Search" [ref=f16e489] [cursor=pointer]:
+          - /url: /search
+        - link "About" [ref=f16e490] [cursor=pointer]:
+          - /url: /about
+      - generic [ref=f16e491]:
+        - link "Editorial Standards & Corrections" [ref=f16e492] [cursor=pointer]:
+          - /url: /standards
+        - link "AI Disclosure" [ref=f16e493] [cursor=pointer]:
+          - /url: /standards#ai
+        - link "Privacy Policy" [ref=f16e494] [cursor=pointer]:
+          - /url: /privacy
+        - link "Terms of Service" [ref=f16e495] [cursor=pointer]:
+          - /url: /terms
+        - link "Contact" [ref=f16e496] [cursor=pointer]:
+          - /url: /contact
