@@ -319,7 +319,7 @@ export default async function Home() {
                             key: w._id, headline: w.headline, category: w.category, teams: w.teams,
                             publishedAt: w.publishedAt, href: `/wire/${w.slug.current}`, external: false,
                           }))
-                        : liveWire.slice(7, 9).map((w) => ({
+                        : liveWire.slice(6, 8).map((w) => ({
                             key: w._id, headline: w.headline, category: w.category, teams: w.teams,
                             publishedAt: w.publishedAt,
                             href: w.storySlug ? `/wire/${w.storySlug}` : (w.sourceUrl ?? "/wire"),
@@ -352,7 +352,7 @@ export default async function Home() {
                           </Link>
                         );
                       })}
-                    {!DEMO_MODE && notebookNext.length < 2 && wireStories.length === 0 && liveWire.length <= 7 && (
+                    {!DEMO_MODE && notebookNext.length < 2 && wireStories.length === 0 && liveWire.length <= 6 && (
                       <div className="tile" style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
                         <EmptyState
                           kicker="NEW EVERY WEEKDAY"
@@ -445,11 +445,11 @@ export default async function Home() {
                   timestamps. Demo keeps the Most Read mock (§0.1). */}
               {!DEMO_MODE && (() => {
                 const strip = wireStories.length >= 2
-                  ? wireStories.slice(0, 4).map((w) => ({
+                  ? wireStories.slice(0, 6).map((w) => ({
                       key: w._id, headline: w.headline, category: w.category,
                       publishedAt: w.publishedAt, href: `/wire/${w.slug.current}`, external: false,
                     }))
-                  : liveWire.slice(9, 13).map((w) => ({
+                  : liveWire.slice(8, 14).map((w) => ({
                       key: w._id, headline: w.headline, category: w.category,
                       publishedAt: w.publishedAt,
                       href: w.storySlug ? `/wire/${w.storySlug}` : (w.sourceUrl ?? "/wire"),
@@ -510,7 +510,7 @@ export default async function Home() {
                 />
               )}
               {liveWire.length >= 3
-                ? liveWire.slice(0, 7).map((w) => {
+                ? liveWire.slice(0, 6).map((w) => {
                     const logo = w.teams?.[0] ? teamLogoUrl(w.teams[0]) : null;
                     const wireArt: ArtCategory = w.category && ["recruiting", "coaching", "media", "playoffs"].includes(w.category) ? (w.category as ArtCategory) : "generic";
                     const img = logo ?? art.pick(wireArt, w.headline).src;
