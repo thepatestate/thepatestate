@@ -263,6 +263,51 @@ export async function getEspnSlateGames(week = 1, limit = 5): Promise<SlateGame[
     });
 }
 
+// ---- raw week games (for slate building) ---------------------------------
+
+export interface EspnWeekGame {
+  id: string;
+  away: string;
+  home: string;
+  awayAbbrev: string;
+  homeAbbrev: string;
+  awayLogo: string;
+  homeLogo: string;
+  awaySlug: string;
+  homeSlug: string;
+  awayPower: boolean;
+  homePower: boolean;
+  kickoff: string;
+  net: string;
+}
+
+/** A week's FBS games in slate-building form (power flags + slugs). Used by
+ * the weekly Pick'Em auto-creator. [] on failure. */
+export async function getEspnWeekGames(week: number): Promise<EspnWeekGame[]> {
+  const events = await weekEvents(week, 3600);
+  return events.flatMap((e) => {
+    const comp = e.competitions?.[0];
+    const away = comp?.competitors?.find((c) => c.homeAway === "away")?.team;
+    const home = comp?.competitors?.find((c) => c.homeAway === "home")?.team;
+    if (!comp || !away?.location || !home?.location) return [];
+    return [{
+      id: e.id,
+      away: away.location,
+      home: home.location,
+      awayAbbrev: away.abbreviation ?? away.location.slice(0, 4).toUpperCase(),
+      homeAbbrev: home.abbreviation ?? home.location.slice(0, 4).toUpperCase(),
+      awayLogo: away.logo ?? "",
+      homeLogo: home.logo ?? "",
+      awaySlug: slugifyTeam(away.location),
+      homeSlug: slugifyTeam(home.location),
+      awayPower: POWER_IDS.has(String(away.conferenceId ?? "")),
+      homePower: POWER_IDS.has(String(home.conferenceId ?? "")),
+      kickoff: e.date,
+      net: comp.broadcasts?.[0]?.names?.[0] ?? comp.broadcasts?.[0]?.media?.shortName ?? "",
+    }];
+  });
+}
+
 // ---- team directory ------------------------------------------------------
 
 /** Slug → team info for every FBS program, assembled from the first two

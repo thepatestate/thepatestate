@@ -137,3 +137,38 @@ describe("tiebreakDistance", () => {
     expect(tiebreakDistance(null, 45)).toBe(Number.POSITIVE_INFINITY);
   });
 });
+
+describe("selectMarqueeGames (weekly slate builder)", async () => {
+  const { selectMarqueeGames, slateLockIso } = await import("@/lib/play-week");
+  const mk = (over: Record<string, unknown>) => ({
+    id: "1", away: "A", home: "B", awayAbbrev: "A", homeAbbrev: "B", awayLogo: "", homeLogo: "",
+    awaySlug: "a", homeSlug: "b", awayPower: true, homePower: true,
+    kickoff: "2026-09-12T16:00Z", net: "ESPN", ...over,
+  });
+  const it2 = it;
+  it2("excludes cupcakes: needs both-power or both-ranked", () => {
+    const games = [
+      mk({ id: "p", awayPower: true, homePower: true }),
+      mk({ id: "cupcake", awayPower: false, homePower: true, awaySlug: "fcs" }),
+      mk({ id: "ranked", awayPower: false, homePower: false, awaySlug: "r1", homeSlug: "r2" }),
+    ];
+    const ranks = new Map([["r1", 5], ["r2", 20]]);
+    const ids = selectMarqueeGames(games, ranks, 10).map((g) => g.id);
+    expect(ids).toContain("p");
+    expect(ids).toContain("ranked");
+    expect(ids).not.toContain("cupcake");
+  });
+  it2("prefers ranked matchups and returns kickoff order", () => {
+    const games = [
+      mk({ id: "late-big", awaySlug: "r1", homeSlug: "r2", kickoff: "2026-09-12T23:30Z" }),
+      mk({ id: "early-meh", kickoff: "2026-09-12T16:00Z" }),
+    ];
+    const ranks = new Map([["r1", 1], ["r2", 2]]);
+    const picked = selectMarqueeGames(games, ranks, 1);
+    expect(picked[0].id).toBe("late-big");
+  });
+  it2("locks 2 minutes before the earliest kickoff", () => {
+    const games = [mk({ kickoff: "2026-09-12T20:00:00Z" }), mk({ id: "2", kickoff: "2026-09-12T16:00:00Z" })];
+    expect(slateLockIso(games)).toBe("2026-09-12T15:58:00.000Z");
+  });
+});

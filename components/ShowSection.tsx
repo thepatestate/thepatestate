@@ -3,6 +3,7 @@ import Link from "next/link";
 import EpisodeLead from "@/components/EpisodeLead";
 import ShortsRail from "@/components/ShortsRail";
 import MediaRail from "@/components/MediaRail";
+import PlaysBackground from "@/components/PlaysBackground";
 import { videoUrl, CHANNEL_URL, APPLE_PODCASTS_URL, SPOTIFY_URL, type Video, type Short } from "@/lib/youtube";
 import { formatDate } from "@/lib/format";
 
@@ -31,14 +32,18 @@ export default function ShowSection({
   stacked,
   more,
   shorts,
+  plays = false,
 }: {
   latest: Video;
   stacked: Video[];
   more: Video[];
   shorts: Short[];
+  /** homepage only: gold whiteboard-plays layer behind the band */
+  plays?: boolean;
 }) {
   return (
     <section className="on-dark">
+      {plays && <PlaysBackground variant="dark" />}
       <div className="wrap">
         <div className="sec-head">
           <div>

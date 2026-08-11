@@ -14,6 +14,7 @@ import { DEMO_MODE } from "@/lib/demo";
 import Reveal from "@/components/Reveal";
 import SlateStrip from "@/components/SlateStrip";
 import ShowSection from "@/components/ShowSection";
+import PlaysBackground from "@/components/PlaysBackground";
 import MyTeams from "@/components/MyTeams";
 import TrendingPorch from "@/components/TrendingPorch";
 
@@ -210,9 +211,11 @@ export default async function Home() {
     : art.pick("weekend-truths");
 
   return (
-    <main>
+    <main className="plays-page">
+      <PlaysBackground variant="board" />
       <SlateStrip />
       <section className="hero">
+        <PlaysBackground variant="dark" />
         {/* Ambient hero video (public/video/hero-ambient.mp4) removed for now —
             reintroduce when the client asks for more life up top. */}
         <div className="wrap">
@@ -245,7 +248,7 @@ export default async function Home() {
       <MyTeams />
 
       {latest && (
-        <ShowSection latest={latest} stacked={recentEpisodes} more={moreEpisodes} shorts={shorts} />
+        <ShowSection latest={latest} stacked={recentEpisodes} more={moreEpisodes} shorts={shorts} plays />
       )}
 
       <div className="yardline" />
@@ -822,6 +825,7 @@ export default async function Home() {
       </section>
 
       <section className="on-dark">
+        <PlaysBackground variant="dark" />
         <div className="wrap">
           <div style={{ display: "flex", alignItems: "center", gap: 40, flexWrap: "wrap" }}>
             <Image
