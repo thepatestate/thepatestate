@@ -6,6 +6,7 @@ import EmptyState from "@/components/EmptyState";
 import { DEMO_MODE } from "@/lib/demo";
 import VideoCard from "@/components/VideoCard";
 import { slugifyTeam, teamLogoUrl } from "@/lib/teams-meta";
+import { getRecruitingRankings } from "@/lib/cfbd";
 import { createArtPicker } from "@/lib/editorial-art";
 import { getVideos, videoUrl } from "@/lib/youtube";
 
@@ -126,7 +127,8 @@ const DEMO_ARTICLES = [
 
 export default async function RecruitingPage() {
   const art = createArtPicker();
-  const videos = await getVideos();
+  const [videos, board] = await Promise.all([getVideos(), getRecruitingRankings()]);
+  const boardIsCurrent = board?.year === 2027;
   const recruitingVideo =
     videos.find((v) => /recruit|portal/i.test(v.title)) ?? videos[0] ?? null;
 
@@ -145,16 +147,70 @@ export default async function RecruitingPage() {
 
       <section>
         <div className="wrap">
-          <p className="eyebrow">The Pate Recruiting Index — Class of 2027</p>
-          <h2 className="display" style={{ fontSize: 38 }}>Two Services. One Honest Number.</h2>
-          {DEMO_MODE && <PreseasonChip />}
+          <p className="eyebrow">
+            The Pate Recruiting Index — Class of {board ? board.year : 2027}
+            {board && !boardIsCurrent ? " (Final)" : ""}
+          </p>
+          <h2 className="display" style={{ fontSize: 38 }}>The National Class Rankings</h2>
           <p className="lede">
-            Every outlet ranks classes a little differently. We average the two biggest — 247Sports&apos;
-            Composite and On3/Rivals&apos; Industry ranking — into one index, and show you both, so nobody can
-            accuse the number of wearing team colors.
+            {board && !boardIsCurrent
+              ? "The final board from the last complete cycle — how every class actually finished. The 2027 board takes this spot the day the services publish it."
+              : "Every outlet ranks classes a little differently. We average the two biggest — 247Sports' Composite and On3/Rivals' Industry ranking — into one index, and show you both, so nobody can accuse the number of wearing team colors."}
           </p>
 
-          {!DEMO_MODE && (
+          {/* Real class rankings from the live feed (247Sports Composite via
+              CollegeFootballData) — newest published cycle, never invented. */}
+          {board ? (<>
+          <div style={{ maxWidth: 860, marginTop: 20 }}>
+            {board.ranks.slice(0, 5).map((t) => (
+              <div className="rankcard" key={t.rank}>
+                <div className="rk-num">{String(t.rank).padStart(2, "0")}</div>
+                {t.logo ? (
+                  <Image src={t.logo} alt={`${t.team} logo`} width={60} height={60} className="logo-img" />
+                ) : (
+                  <div className="logo-box">{t.team.slice(0, 3).toUpperCase()}</div>
+                )}
+                <div className="rk-main">
+                  <b>{t.team}</b>
+                  <span className="rk-rec">{board.year} CLASS{t.conference ? ` · ${t.conference.toUpperCase()}` : ""}</span>
+                </div>
+                <div className="rk-score">
+                  <span className="val">{t.points.toFixed(1)}</span>
+                  <span className="lbl">247 PTS</span>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <p className="eyebrow" style={{ marginTop: 30 }}>The Full Top 25</p>
+          <table style={{ marginTop: 14, maxWidth: 720 }}>
+            <thead>
+              <tr>
+                <th>RK</th><th>TEAM</th><th>CONFERENCE</th>
+                <th style={{ textAlign: "right" }}>247 PTS</th>
+              </tr>
+            </thead>
+            <tbody>
+              {board.ranks.map((r) => (
+                <tr key={r.rank}>
+                  <td className="rk">{String(r.rank).padStart(2, "0")}</td>
+                  <td>
+                    <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
+                      {r.logo && <Image src={r.logo} alt="" width={22} height={22} style={{ objectFit: "contain" }} />}
+                      <b>{r.team}</b>
+                    </span>
+                  </td>
+                  <td style={{ fontFamily: "var(--mono)", fontSize: 12 }}>{r.conference || "—"}</td>
+                  <td className="rating" style={{ textAlign: "right" }}>{r.points.toFixed(2)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <p style={{ marginTop: 12, fontFamily: "var(--mono)", fontSize: 11, color: "var(--ink-dim)" }}>
+            Source: 247Sports Composite team rankings via the live data feed · On3/Rivals merge into the index
+            with the 2027 cycle.
+          </p>
+          </>) : !DEMO_MODE ? (
             <div style={{ maxWidth: 860, marginTop: 20 }}>
               <EmptyState
                 kicker="PULLED NIGHTLY IN SEASON"
@@ -162,8 +218,9 @@ export default async function RecruitingPage() {
                 body="Class rankings from the 247Sports Composite and On3/Rivals Industry boards, averaged into one honest number — with both sources always shown."
               />
             </div>
-          )}
-          {DEMO_MODE && (<>
+          ) : null}
+          {!board && DEMO_MODE && (<>
+          <PreseasonChip />
           <div style={{ maxWidth: 860, marginTop: 20 }}>
             {DEMO_TEAM_INDEX.map((t) => {
               const logoUrl = teamLogoUrl(slugifyTeam(t.team));

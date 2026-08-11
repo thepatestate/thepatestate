@@ -152,6 +152,47 @@ export async function getTeamDirectory(): Promise<Record<string, TeamInfo>> {
   return dir;
 }
 
+// --- Recruiting team rankings (paid CFBD tier) ----------------------------
+
+export interface RecruitingRank {
+  rank: number;
+  team: string;
+  slug: string;
+  points: number;
+  logo: string | null;
+  conference: string;
+}
+
+/** National team recruiting rankings (247Sports Composite via CFBD) for the
+ * newest published cycle — tries the current class first, then falls back to
+ * the last complete one. null when no cycle is available. */
+export async function getRecruitingRankings(): Promise<{ year: number; ranks: RecruitingRank[] } | null> {
+  for (const year of [2027, 2026]) {
+    const rows = await cfbd<{ rank: number; team: string; points: number }[]>(
+      `/recruiting/teams?year=${year}`,
+      86400,
+    );
+    if (rows && rows.length >= 25) {
+      const dir = await getTeamDirectory();
+      return {
+        year,
+        ranks: rows.slice(0, 25).map((r) => {
+          const slug = slugifyTeam(r.team);
+          return {
+            rank: r.rank,
+            team: r.team,
+            slug,
+            points: r.points,
+            logo: dir[slug]?.logo ?? null,
+            conference: dir[slug]?.conference ?? "",
+          };
+        }),
+      };
+    }
+  }
+  return null;
+}
+
 export interface SlateGame {
   away: string;
   home: string;
