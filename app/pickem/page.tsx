@@ -161,16 +161,16 @@ export default async function PickemPage() {
                     </div>
                   </div>
                   <div style={{ marginTop: 20, display: "flex", gap: 14, alignItems: "center", flexWrap: "wrap" }}>
-                    <button className="btn solid" disabled>Make This Week&apos;s Picks</button>
+                    <Link className="btn solid" href="/play/pickem-week-1">Make Your Week 1 Picks</Link>
                   </div>
                 </>
               ) : (
                 <div style={{ marginTop: 22 }}>
                   <EmptyState
-                    kicker="LEADERBOARD OPENS WEEK 1"
+                    kicker="WEEK 1 IS OPEN NOW"
                     title="Every citizen starts 0–0 — including Josh"
-                    body="The first board drops Thursday of opening week; picks lock Saturday 11:58 AM ET. Join now and you're in from game one."
-                    cta={{ href: "/join", label: "Become a Citizen — Free" }}
+                    body="The Week 1 slate is live: ten marquee games, confidence points 1–10, picks lock Saturday 11:58 AM ET. Free for every citizen."
+                    cta={{ href: "/play/pickem-week-1", label: "Make Your Week 1 Picks →" }}
                   />
                 </div>
               )}

@@ -328,18 +328,14 @@ export default function PlayoffsPage() {
             </div>
           </div>
           <div className="tool" style={{ marginTop: 26, background: "var(--paper)", borderColor: "var(--line-l)" }}>
-            <p className="eyebrow">Start Now — 30 Seconds</p>
-            <label htmlFor="bkChamp">Your national champion</label>
-            <select id="bkChamp" disabled defaultValue={DEMO_CHAMP_OPTIONS[0]}>
-              {DEMO_CHAMP_OPTIONS.map((t) => <option key={t}>{t}</option>)}
-            </select>
-            <label htmlFor="bkDark">Your dark horse to crash the field</label>
-            <select id="bkDark" disabled defaultValue={DEMO_DARKHORSE_OPTIONS[0]}>
-              {DEMO_DARKHORSE_OPTIONS.map((t) => <option key={t}>{t}</option>)}
-            </select>
-            <div style={{ marginTop: 16 }}>
-              <button className="btn solid" id="bkLock" disabled>Lock My Picks — Start My Bracket</button>
-            </div>
+            <p className="eyebrow">Window 1 Is Open Now</p>
+            <p style={{ fontSize: 15.5, margin: "6px 0 14px" }}>
+              Seed your 12-team field, crown your champion, and call the title-game total — the real entry
+              takes about two minutes, and you can edit until picks lock at Week 1 kickoff.
+            </p>
+            <Link className="btn solid" href="/play/playoff-challenge-2026">
+              Build My Bracket — Free →
+            </Link>
           </div>
         </div>
       </section>

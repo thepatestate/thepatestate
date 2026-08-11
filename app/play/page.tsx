@@ -1,37 +1,27 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { getCompetitions, getEntryCount, compLocked } from "@/lib/play";
 
 export const metadata: Metadata = {
   title: "Play — Games & Competitions",
   description:
-    "The Pate State games hub: Porch Pick'Em, the Citizens' Bracket Challenge, and the competitions arriving through the season.",
+    "The Pate State games hub: Week 1 Pick'Em, the Playoff Challenge, and the competitions arriving through the season. Free forever.",
   alternates: { canonical: "/play" },
-  // Thin hub until the competition engine ships (v2 brief §4.6 indexing
-  // standard applies to incomplete surfaces) — lift this when games are live.
+  // Thin hub until more of the roadmap ships (v2 brief §4.6 indexing
+  // standard) — lift this once several competitions have run.
   robots: { index: false },
 };
 
-// /play — the games hub (v2 brief §5). Every card is honest about its
-// status: two products have real pages today; the rest carry their §5
-// roadmap order, no fake standings anywhere. All competitions share one
-// identity system — citizenship.
+// /play — the games hub (v2 brief §5). Live cards come from the
+// competition engine (competitions are rows, not code); the roadmap block
+// carries the §5 build order honestly — no fake standings anywhere.
 
-const LIVE = [
-  {
-    title: "Porch Pick'Em",
-    href: "/pickem",
-    tag: "OPENS WEEK 1",
-    body: "Ten games a week against Josh and the whole State — straight up or against the spread, streaks and patches, one big season leaderboard. Season champ watches a game with Josh.",
-    cta: "See the prizes →",
-  },
-  {
-    title: "The Citizens' Bracket Challenge",
-    href: "/playoffs",
-    tag: "TWO WINDOWS",
-    body: "Call the 12-team field in August, then prove it again when the real bracket drops in December. Both scores count. The champion watches the title game with Josh.",
-    cta: "How it works →",
-  },
-] as const;
+const TYPE_BLURBS: Record<string, string> = {
+  pickem:
+    "Ten marquee games, straight up, weighted by how sure you are — confidence 1 to 10, each used once. One lock, receipts forever.",
+  bracket:
+    "Call the 12-team field, seed it, crown your champion. +10 for every team that makes the real field, +25 per exact seed, +100 if your champ wins it all.",
+};
 
 const COMING = [
   { title: "Playoff Team Draft", body: "Draft the playoff field with your crew — snake draft, live draft room, AI personas to fill empty seats." },
@@ -40,7 +30,20 @@ const COMING = [
   { title: "Saturday Survivor", body: "One team a week. Must win. No reuse. Last citizen standing." },
 ] as const;
 
-export default function PlayPage() {
+function lockLabel(iso: string): string {
+  const d = new Date(iso);
+  const day = d
+    .toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric", timeZone: "America/New_York" })
+    .replace(/,/g, "")
+    .toUpperCase();
+  const time = d.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", timeZone: "America/New_York" });
+  return `${day} · ${time} ET`;
+}
+
+export default async function PlayPage() {
+  const comps = await getCompetitions();
+  const counts = await Promise.all(comps.map((c) => getEntryCount(c.slug)));
+
   return (
     <main>
       <header className="page-head">
@@ -56,17 +59,30 @@ export default function PlayPage() {
 
       <section>
         <div className="wrap">
-          <p className="eyebrow">Open Now</p>
+          <p className="eyebrow">Open Now — Enter Before Kickoff</p>
           <div className="duo" style={{ marginTop: 12 }}>
-            {LIVE.map((g) => (
-              <div className="panel panel-accent-field" key={g.title}>
-                <span className="fr fr-field">{g.tag}</span>
-                <h3>{g.title}</h3>
-                <p>{g.body}</p>
-                <Link className="btn" href={g.href}>{g.cta}</Link>
-              </div>
-            ))}
+            {comps.map((c, i) => {
+              const locked = compLocked(c);
+              return (
+                <div className="panel panel-accent-field" key={c.slug}>
+                  <span className="fr fr-field">
+                    {locked ? "LOCKED" : `LOCKS ${lockLabel(c.locks_at)}`}
+                  </span>
+                  <h3>{c.name}</h3>
+                  <p>{TYPE_BLURBS[c.type] ?? ""}</p>
+                  <p className="comp-count" style={{ margin: "0 0 14px" }}>
+                    {counts[i]} {counts[i] === 1 ? "ENTRY" : "ENTRIES"} SO FAR
+                  </p>
+                  <Link className="btn" href={`/play/${c.slug}`}>
+                    {locked ? "See the Board →" : "Make Your Picks →"}
+                  </Link>
+                </div>
+              );
+            })}
           </div>
+          {comps.length === 0 && (
+            <p className="note">Between competitions — the next one opens with the coming week.</p>
+          )}
         </div>
       </section>
 

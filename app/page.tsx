@@ -663,7 +663,7 @@ export default async function Home() {
               <p style={{ marginTop: 14, fontSize: 13 }}>
                 Season champion watches a game with Josh. Top 10 win game tickets.
               </p>
-              <Link className="btn" href="/pickem">Play Free — See the Prizes</Link>
+              <Link className="btn" href="/play/pickem-week-1">Play Free — Make Your Week 1 Picks</Link>
             </div>
           </div>
           </Reveal>
