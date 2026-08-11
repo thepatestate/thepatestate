@@ -578,7 +578,7 @@ export default async function Home() {
               <p>One board, voted by those who actually watch, revealed every Tuesday.{DEMO_MODE ? " The top of this week's:" : ""}</p>
               {!DEMO_MODE && (
                 <div className="how-rows">
-                  <div className="how-row"><b>AUG 24</b><span>First ballots open — every citizen ranks a top 10</span></div>
+                  <div className="how-row"><b>OPEN NOW</b><span>Week 1 ballots are live — every citizen ranks a top 10</span></div>
                   <div className="how-row"><b>SUN 8PM ET</b><span>Ballots lock, the board tabulates overnight</span></div>
                   <div className="how-row"><b>TUESDAY</b><span>The reveal airs live on the show, argued out</span></div>
                   <div className="how-row"><b>ALWAYS</b><span>Full vote distribution goes public — the AP&apos;s never does</span></div>

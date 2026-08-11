@@ -454,8 +454,8 @@ export default async function PollPage() {
             <p className="eyebrow">The National Boards — {nationalPolls[0].season}</p>
             <h2 className="display" style={{ fontSize: 34 }}>Where the Country Has It</h2>
             <p className="lede">
-              The official national polls, live from the wire — the consensus the citizens get to argue with once
-              JP Poll ballots open Aug 24.
+              The official national polls, live from the wire — the consensus the citizens get to argue with.
+              JP Poll ballots are open now.
             </p>
             <div className={nationalPolls.length > 1 ? "duo" : undefined} style={{ marginTop: 18, maxWidth: nationalPolls.length > 1 ? undefined : 720 }}>
               {nationalPolls.map((poll) => (
@@ -515,19 +515,14 @@ export default async function PollPage() {
               <div style={{ marginTop: 14 }}><Link className="btn gold" href="/notebook">Read the Column</Link></div>
             </div>
             <div>
-              <p className="eyebrow" style={{ marginBottom: 10 }}>The Reveal · Watch</p>
-              <div className="video-slot">
-                <span
-                  className="tag"
-                  style={{ position: "absolute", top: 14, left: 14, fontFamily: "var(--mono)", fontSize: 11, letterSpacing: ".12em", background: "var(--lamp)", color: "var(--navy)", padding: "4px 10px", borderRadius: 2 }}
-                >
-                  POLL DAY SHOW
-                </span>
-                <button className="playbtn" aria-label="Play the poll reveal" disabled>▶</button>
-                <span style={{ position: "absolute", bottom: 14, right: 14, fontFamily: "var(--mono)", fontSize: 12, color: "var(--chalk-dim)" }}>39:12</span>
-              </div>
+              <p className="eyebrow" style={{ marginBottom: 10 }}>The Show · Watch</p>
+              {latestVideo ? (
+                <EpisodeLead video={latestVideo} tag="LATEST EPISODE" />
+              ) : (
+                <p className="play-note">New episodes land here straight from the channel.</p>
+              )}
               <p style={{ marginTop: 10, fontFamily: "var(--mono)", fontSize: 11, color: "var(--ink-dim)" }}>
-                EVERY TUESDAY — THE FULL TOP 25 REVEAL, ARGUED OUT
+                FIRST TOP 25 REVEAL AIRS TUESDAY SEP 1 — THEN EVERY TUESDAY, ARGUED OUT
               </p>
             </div>
           </div>

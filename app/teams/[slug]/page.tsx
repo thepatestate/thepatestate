@@ -384,7 +384,7 @@ export default async function TeamHubPage({ params }: { params: Promise<{ slug: 
                   <EmptyState
                     kicker="FIRST BOARD — WEEK 1"
                     title="Poll placement starts with the first JP Poll"
-                    body="Where the citizens rank this team — tracked weekly against the AP and CFP once ballots open Aug 24."
+                    body="Where the citizens rank this team — ballots are open now, tracked weekly against the AP and CFP once the first board reveals."
                     cta={{ href: "/poll", label: "How the JP Poll works →" }}
                   />
                 ) : (
@@ -410,9 +410,9 @@ export default async function TeamHubPage({ params }: { params: Promise<{ slug: 
                     <p style={{ fontSize: 14, color: "var(--ink-dim)", marginTop: 10 }}>
                       {jpRank
                         ? "The JP Poll re-tabulates weekly — every citizen's ballot counts the same."
-                        : "The citizens' own board — the JP Poll — opens for ballots Aug 24."}{" "}
+                        : "The citizens' own board — the JP Poll — is open for ballots now; the first Top 25 reveals Tuesday Sep 1."}{" "}
                       <Link href="/poll" style={{ color: "var(--lamp-deep)" }}>
-                        {jpRank ? "See the full board →" : "See every national board →"}
+                        {jpRank ? "See the full board →" : "Cast your ballot →"}
                       </Link>
                     </p>
                   </>
