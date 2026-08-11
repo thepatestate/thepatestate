@@ -10,6 +10,7 @@ import {
 import { getBoards, getThreads, publicClient } from "@/lib/community";
 import { getTeamDirectory } from "@/lib/cfbd";
 import { getTeamPollRanks } from "@/lib/espn";
+import { getTeamJpRank } from "@/lib/jp-poll";
 import { createClient, getCitizen } from "@/lib/supabase/server";
 import { followTeam, unfollowTeam } from "@/app/teams/actions";
 import { getVideos } from "@/lib/youtube";
@@ -60,7 +61,7 @@ export default async function TeamHubPage({ params }: { params: Promise<{ slug: 
   const info = await getTeamInfo(slug);
   if (!info) notFound();
 
-  const [schedule, records, roster, portal, quotes, articles, wire, recruiting, boards, citizen, videos, dir, pollRanks] =
+  const [schedule, records, roster, portal, quotes, articles, wire, recruiting, boards, citizen, videos, dir, pollRanks, jpRank] =
     await Promise.all([
       getTeamSchedule(info.school),
       getRecords(info.school),
@@ -75,6 +76,7 @@ export default async function TeamHubPage({ params }: { params: Promise<{ slug: 
       getVideos(),
       getTeamDirectory(),
       getTeamPollRanks(slug),
+      getTeamJpRank(slug),
     ]);
 
   const board = boards.find((b) => b.kind === "team" && b.team_slug === slug);
@@ -387,6 +389,12 @@ export default async function TeamHubPage({ params }: { params: Promise<{ slug: 
                   />
                 ) : (
                   <>
+                    {jpRank && (
+                      <p style={{ fontSize: 15.5, margin: "0 0 6px" }}>
+                        <b style={{ color: accent }}>No. {jpRank.rank}</b> — The JP Poll ({jpRank.label},{" "}
+                        {jpRank.ballots} {jpRank.ballots === 1 ? "ballot" : "ballots"})
+                      </p>
+                    )}
                     {pollRanks.length > 0 ? (
                       pollRanks.map((p) => (
                         <p key={p.poll} style={{ fontSize: 15.5, margin: "0 0 6px" }}>
@@ -400,8 +408,12 @@ export default async function TeamHubPage({ params }: { params: Promise<{ slug: 
                       </p>
                     )}
                     <p style={{ fontSize: 14, color: "var(--ink-dim)", marginTop: 10 }}>
-                      The citizens&apos; own board — the JP Poll — opens for ballots Aug 24.{" "}
-                      <Link href="/poll" style={{ color: "var(--lamp-deep)" }}>See every national board →</Link>
+                      {jpRank
+                        ? "The JP Poll re-tabulates weekly — every citizen's ballot counts the same."
+                        : "The citizens' own board — the JP Poll — opens for ballots Aug 24."}{" "}
+                      <Link href="/poll" style={{ color: "var(--lamp-deep)" }}>
+                        {jpRank ? "See the full board →" : "See every national board →"}
+                      </Link>
                     </p>
                   </>
                 )}

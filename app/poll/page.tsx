@@ -7,6 +7,17 @@ import EmptyState from "@/components/EmptyState";
 import { DEMO_MODE } from "@/lib/demo";
 import { slugifyTeam, teamLogoUrl } from "@/lib/teams-meta";
 import { getNationalRankings } from "@/lib/espn";
+import { getTeamDirectory } from "@/lib/cfbd";
+import {
+  getBoards,
+  getBoardResults,
+  getBallotCount,
+  getMyBallot,
+  boardOpenForVoting,
+  type JpBoard,
+} from "@/lib/jp-poll";
+import { createClient as createServerClient, getCitizen } from "@/lib/supabase/server";
+import BallotBuilder, { type BallotTeamOption } from "@/components/poll/BallotBuilder";
 import { getVideos } from "@/lib/youtube";
 
 export const metadata: Metadata = {
@@ -105,9 +116,58 @@ function TeamMark({ team }: { team: string }) {
   return <Image src={logoUrl} alt="" width={22} height={22} style={{ objectFit: "contain", verticalAlign: "middle" }} />;
 }
 
+function etLabel(iso: string): string {
+  const d = new Date(iso);
+  const day = d
+    .toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric", timeZone: "America/New_York" })
+    .replace(/,/g, "")
+    .toUpperCase();
+  const time = d.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", timeZone: "America/New_York" });
+  return `${day} · ${time} ET`;
+}
+
 export default async function PollPage() {
-  const [videos, nationalPolls] = await Promise.all([getVideos(), getNationalRankings()]);
+  const [videos, nationalPolls, boards, dir, citizen] = await Promise.all([
+    getVideos(),
+    getNationalRankings(),
+    getBoards(),
+    getTeamDirectory(),
+    getCitizen(),
+  ]);
   const latestVideo = videos[0] ?? null;
+
+  const now = Date.now();
+  const currentBoard: JpBoard | null =
+    boards.find((b) => now < new Date(b.locks_at).getTime()) ?? boards[boards.length - 1] ?? null;
+  const publishedBoards = boards.filter((b) => b.status === "published");
+  const latestBoard = publishedBoards[publishedBoards.length - 1] ?? null;
+  const prevBoard = publishedBoards[publishedBoards.length - 2] ?? null;
+
+  const [results, prevResults, ballotCount, myBallot] = await Promise.all([
+    latestBoard ? getBoardResults(latestBoard.id) : [],
+    prevBoard ? getBoardResults(prevBoard.id) : [],
+    currentBoard ? getBallotCount(currentBoard.id) : 0,
+    citizen && currentBoard
+      ? getMyBallot(await createServerClient(), currentBoard.id, citizen.id)
+      : null,
+  ]);
+
+  const teams: BallotTeamOption[] = Object.values(dir)
+    .map((t) => ({ slug: t.slug, school: t.school, conference: t.conference, logo: t.logo }))
+    .sort((a, b) => a.school.localeCompare(b.school));
+  const quickPicks = (nationalPolls[0]?.ranks ?? []).map((r) => r.slug);
+  const prevRankBySlug = new Map(prevResults.map((r) => [r.team_slug, r.rank]));
+  const nationalBySlug = nationalPolls.map((p) => ({
+    name: p.name.replace(/AFCA\s+/, "").replace(/\s+Poll$/, "").toUpperCase(),
+    map: new Map(p.ranks.map((r) => [r.slug, r.rank])),
+  }));
+
+  const voting = currentBoard ? boardOpenForVoting(currentBoard) : false;
+  const preOpen = currentBoard ? now < new Date(currentBoard.opens_at).getTime() : false;
+  const tabulating = currentBoard
+    ? now >= new Date(currentBoard.locks_at).getTime() && currentBoard.status !== "published"
+    : false;
+
   return (
     <main>
       <header className="page-head">
@@ -121,22 +181,124 @@ export default async function PollPage() {
         </div>
       </header>
 
+      {/* --- LIVE: the published board (real citizen votes, real math) --- */}
+      {latestBoard && results.length > 0 && (
+        <section className="on-soft">
+          <div className="wrap">
+            <span className="fr">🗳 THE JP POLL</span>
+            <p className="eyebrow">
+              {latestBoard.label} · From {results[0]?.ballots ?? 0}{" "}
+              {(results[0]?.ballots ?? 0) === 1 ? "Ballot" : "Ballots"} · Full Distribution Public
+            </p>
+            <h2 className="display" style={{ fontSize: 38 }}>The People&apos;s Top 25</h2>
+            <table style={{ marginTop: 16 }}>
+              <thead>
+                <tr>
+                  <th>JP</th><th>TEAM</th><th>PTS</th><th>1ST</th><th>MOVE</th>
+                  {nationalBySlug.map((p) => <th key={p.name}>VS {p.name}</th>)}
+                </tr>
+              </thead>
+              <tbody>
+                {results.map((r) => {
+                  const info = dir[r.team_slug];
+                  const logoUrl = info?.logo ?? teamLogoUrl(r.team_slug);
+                  const prev = prevRankBySlug.get(r.team_slug);
+                  return (
+                    <tr key={r.rank}>
+                      <td className="rk">{String(r.rank).padStart(2, "0")}</td>
+                      <td>
+                        <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
+                          {logoUrl && (
+                            <Image src={logoUrl} alt="" width={22} height={22} style={{ objectFit: "contain" }} />
+                          )}
+                          <b>{info?.school ?? r.team_slug}</b>
+                        </span>
+                      </td>
+                      <td style={{ fontFamily: "var(--mono)", fontSize: 12 }}>{r.points}</td>
+                      <td style={{ fontFamily: "var(--mono)", fontSize: 12 }}>{r.first_place || ""}</td>
+                      <td>
+                        {prev == null
+                          ? (prevBoard ? <span style={{ color: "var(--lamp-deep)" }}>NEW</span> : "")
+                          : prev === r.rank
+                            ? "↔"
+                            : prev > r.rank
+                              ? <span className="up">▲{prev - r.rank}</span>
+                              : <span className="dn">▼{r.rank - prev}</span>}
+                      </td>
+                      {nationalBySlug.map((p) => {
+                        const nat = p.map.get(r.team_slug);
+                        return (
+                          <td key={p.name} style={{ fontFamily: "var(--mono)", fontSize: 12 }}>
+                            {nat == null ? (
+                              <span style={{ color: "var(--lamp-deep)", fontWeight: 700 }}>NR</span>
+                            ) : nat === r.rank ? (
+                              "↔"
+                            ) : (
+                              <span style={{ color: "var(--lamp-deep)", fontWeight: 700 }}>
+                                {nat > r.rank ? `▲${nat - r.rank}` : `▼${r.rank - nat}`}
+                              </span>
+                            )}
+                          </td>
+                        );
+                      })}
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+            <p style={{ marginTop: 12, fontFamily: "var(--mono)", fontSize: 11, color: "var(--ink-dim)" }}>
+              GOLD = WHERE THE CITIZENS DISAGREE WITH THE NATIONAL BOARDS · POINTS: 10 FOR A 1ST-PLACE VOTE
+              DOWN TO 1 FOR 10TH · TIES BROKEN BY FIRST-PLACE VOTES
+            </p>
+          </div>
+        </section>
+      )}
+
+      {/* --- LIVE: this week's ballot --- */}
+      {currentBoard && (
+        <section id="ballot">
+          <div className="wrap" style={{ maxWidth: 860 }}>
+            <p className="eyebrow">
+              {preOpen
+                ? `Ballots Open ${etLabel(currentBoard.opens_at)}`
+                : voting
+                  ? `${currentBoard.label} Ballots Open — Lock ${etLabel(currentBoard.locks_at)}`
+                  : tabulating
+                    ? "Ballots Locked — Tabulating"
+                    : `${currentBoard.label}`}
+            </p>
+            <h2 className="display" style={{ fontSize: 34 }}>
+              {preOpen ? "Your Ballot Awaits" : voting ? "Cast This Week's Ballot" : "This Week's Ballot"}
+            </h2>
+            <p className="lede" style={{ fontSize: 15.5 }}>
+              {preOpen &&
+                "Rank your top 10 the moment ballots open. Every citizen votes, every ballot counts the same, and the full distribution goes public with the board."}
+              {voting &&
+                `Rank your top 10 — ${ballotCount} ${ballotCount === 1 ? "ballot is" : "ballots are"} in so far. Edit yours any time before the Sunday lock; the reveal airs Tuesday on the show.`}
+              {tabulating &&
+                "Ballots are locked and the board is tabulating. The reveal airs Tuesday on the show — then every ballot and the full point distribution go public."}
+              {!preOpen && !voting && !tabulating && "The next board's ballots open Monday morning."}
+            </p>
+            <div style={{ marginTop: 16 }}>
+              <BallotBuilder
+                teams={teams}
+                quickPicks={quickPicks}
+                initial={myBallot ?? []}
+                editable={voting}
+                signedIn={Boolean(citizen)}
+              />
+            </div>
+          </div>
+        </section>
+      )}
+
+      {DEMO_MODE && (
       <section className="on-soft">
         <div className="wrap">
           <span className="fr">🗳 THE JP POLL</span>
-          <p className="eyebrow">This Week&apos;s Board</p>
+          <p className="eyebrow">This Week&apos;s Board — Midseason Preview</p>
           <h2 className="display" style={{ fontSize: 38 }}>The Top 25</h2>
-          {DEMO_MODE && <PreseasonChip />}
-          {!DEMO_MODE && (
-            <div style={{ marginTop: 16, maxWidth: 720 }}>
-              <EmptyState
-                kicker="FIRST BALLOTS OPEN AUG 24"
-                title="The first board of 2026 lands opening week"
-                body="Every citizen ranks a top 10; ballots lock Sunday 8PM ET and the reveal airs Tuesday on the show. No editorial panel, no anonymous ballots — and the full vote distribution goes public with the board."
-                cta={{ href: "/join", label: "Become a Citizen — Free" }}
-              />
-            </div>
-          )}
+          <PreseasonChip />
           {DEMO_MODE && (
           <div className="duo wide" style={{ marginTop: 16, alignItems: "start" }}>
             <div>
@@ -280,6 +442,7 @@ export default async function PollPage() {
           )}
         </div>
       </section>
+      )}
 
       {/* Real national polls from the live wire (no key, no quota) — the
           boards the JP Poll gets measured against. Renders the moment a
@@ -374,15 +537,19 @@ export default async function PollPage() {
       <section className="on-dark tight">
         <div className="wrap">
           <div className="panel panel-dark" style={{ maxWidth: 640, margin: "0 auto" }}>
-            <p className="eyebrow">Poll voting opens Aug 24 · then every Sunday 8PM ET</p>
+            <p className="eyebrow">
+              {voting ? "Ballots are open right now" : "Ballots open Aug 24 · then every Monday"}
+            </p>
             <h3>Cast This Week&apos;s Ballot</h3>
-            <p>Rank your top 10. See where the State disagrees with the AP — and with Josh.</p>
-            {DEMO_BALLOT_ITEMS.map((label) => (
-              <div className="vote-row" key={label}>
-                <span>{label}</span>
-                <button disabled>Vote</button>
-              </div>
-            ))}
+            <p>
+              Rank your top 10. Ballots lock Sunday 8PM ET, the reveal airs Tuesday, and every vote goes
+              public with the board.
+            </p>
+            <div style={{ marginTop: 14 }}>
+              <a className="btn gold" href="#ballot">
+                {voting ? "Rank Your Top 10 →" : "See This Week's Ballot →"}
+              </a>
+            </div>
           </div>
         </div>
       </section>

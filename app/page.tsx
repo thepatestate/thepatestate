@@ -613,7 +613,9 @@ export default async function Home() {
                 </div>
                 );
               })}
-              <Link className="btn" href="/poll" style={{ width: "100%", textAlign: "center" }}>VIEW ALL 136 →</Link>
+              <Link className="btn" href="/poll#ballot" style={{ width: "100%", textAlign: "center" }}>
+                CAST YOUR BALLOT →
+              </Link>
             </div>
 
             <div className="panel panel-accent-field">
