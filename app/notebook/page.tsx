@@ -393,9 +393,9 @@ export default async function NotebookPage() {
                   })
                 : !DEMO_MODE ? (
                     <EmptyState
-                      kicker="VERIFIED NEWS ONLY"
+                      kicker="AROUND THE CLOCK"
                       title="The Wire is warming up"
-                      body="Sourced, attributed news lands here as it breaks."
+                      body="Every move in the sport lands here the minute it breaks."
                     />
                   ) : DEMO_WIRE.map((w) => {
                     const img = art.pick(w.art, `${w.category} — ${w.headline}`);

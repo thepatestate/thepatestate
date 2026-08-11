@@ -506,9 +506,9 @@ export default async function Home() {
               <h3><span className="dot" />The Wire</h3>
               {liveWire.length < 3 && !DEMO_MODE && (
                 <EmptyState
-                  kicker="VERIFIED NEWS ONLY"
+                  kicker="AROUND THE CLOCK"
                   title="The Wire is warming up"
-                  body="Sourced, attributed college football news lands here as it breaks — monitored around the clock."
+                  body="Every move in the sport lands here the minute it breaks — know it before the group chat does."
                   cta={{ href: "/wire", label: "All Wire Coverage →" }}
                 />
               )}

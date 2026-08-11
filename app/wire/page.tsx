@@ -9,7 +9,8 @@ export const revalidate = 120;
 
 export const metadata: Metadata = {
   title: "The Wire — Breaking College Football News",
-  description: "What just happened in the sport, with the football consequences — verified, attributed, and fast.",
+  description:
+    "Every move in the sport, the minute it breaks — and what it actually means for your team. The feed the porch runs on.",
 };
 
 export default async function WirePage() {
@@ -25,8 +26,9 @@ export default async function WirePage() {
           <p className="crumb">The Pate State / The Wire</p>
           <h1>The Wire</h1>
           <p className="lede" style={{ maxWidth: 640 }}>
-            Don&apos;t just read what happened — read what changed because it happened. Drafted by the Wire
-            Desk from cited sources, verified before publish, receipts from Josh&apos;s own archive.
+            Know it before the group chat does. Every move in the sport lands here the minute it breaks —
+            coaching dominoes, portal bombs, recruiting flips — with what it actually means for your
+            Saturday. This is the feed the porch runs on.
           </p>
         </div>
       </header>
@@ -69,15 +71,20 @@ export default async function WirePage() {
                       <span style={{ fontFamily: "var(--mono)", fontSize: 10, letterSpacing: ".08em", color: "var(--gold, #B8842C)" }}>
                         {it.category?.toUpperCase() ?? "NEWS"}
                         {it.publishedAt ? ` · ${formatDate(it.publishedAt)}` : ""}
-                        {it.storySlug ? " · ⚡ FULL STORY" : ""}
+                        {it.storySlug ? " · ⚡ FULL STORY" : it.sourceUrl ? " · READ IT →" : ""}
                       </span>
                       <b style={{ fontSize: 16, lineHeight: 1.3 }}>{it.headline}</b>
                       {it.sub && <span style={{ fontSize: 14, color: "var(--ink-dim)" }}>{it.sub}</span>}
                     </div>
                   </div>
                 );
+                // Every item opens somewhere: our full story when one exists,
+                // otherwise straight to the source coverage (same rule as the
+                // homepage rail — v2 §1.3, every item clickable).
                 return it.storySlug ? (
                   <Link key={it._id} href={`/wire/${it.storySlug}`} style={{ textDecoration: "none", color: "inherit" }}>{inner}</Link>
+                ) : it.sourceUrl ? (
+                  <a key={it._id} href={it.sourceUrl} target="_blank" rel="noopener" style={{ textDecoration: "none", color: "inherit" }}>{inner}</a>
                 ) : (
                   <div key={it._id}>{inner}</div>
                 );
