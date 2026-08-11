@@ -22,7 +22,7 @@ Mechanics (deterministic, documented):
 
 ## Tasks
 
-- [ ] 1. Migration 0012_jp_poll.sql — jp_boards (season/week/label/opens_at/locks_at/
+- [x] 1. Migration 0012_jp_poll.sql — jp_boards (season/week/label/opens_at/locks_at/
   reveals_at/status), jp_ballots (unique board×user), jp_ballot_ranks (pk ballot×rank,
   unique ballot×team), jp_results (board×rank → team/points/first_place/ballots).
   RLS: boards+results-when-published public; ballots own-rows pre-publish,
@@ -30,25 +30,25 @@ Mechanics (deterministic, documented):
   lock-guard trigger + audit into play_audit). Definer fns: jp_ballot_count(board),
   ballot visibility helpers. Seed 15 boards. Extend cron allow-list +
   schedule /api/poll/tabulate hourly.
-- [ ] 2. lib/jp-poll.ts — types + reads (getBoards/getCurrentBoard/getLatestPublished/
+- [x] 2. lib/jp-poll.ts — types + reads (getBoards/getCurrentBoard/getLatestPublished/
   getMyBallot/getBoardResults/getBallotCount/getPreviousResults for movement) +
   pure tabulateBallots() and validateBallot() (unit-tested).
-- [ ] 3. app/poll/actions.ts — saveBallot (citizen-gated, validates 10 unique known
+- [x] 3. app/poll/actions.ts — saveBallot (citizen-gated, validates 10 unique known
   teams, rejects after lock at every layer).
-- [ ] 4. components/poll/BallotBuilder.tsx — 10 rank slots over the 136-team
+- [x] 4. components/poll/BallotBuilder.tsx — 10 rank slots over the 136-team
   directory (native selects, top-25 shortcut via current national poll), save state,
   states for: before opens_at (countdown copy) / open / locked-tabulating /
   published (my ballot vs the board).
-- [ ] 5. /api/poll/tabulate route — cron-guarded; lock→tabulate (deterministic
+- [x] 5. /api/poll/tabulate route — cron-guarded; lock→tabulate (deterministic
   tally → jp_results), reveal-time→publish; run-summary logging.
-- [ ] 6. /poll page wiring — real ballot module replaces the prod EmptyState;
+- [x] 6. /poll page wiring — real ballot module replaces the prod EmptyState;
   published board renders the real JP Top 25 (points, first-place votes, ballot
   count, movement vs previous board) with gold disagreement columns vs the live
   AP/Coaches/CFP boards; National Boards section stays; demo arrays only where no
   real data exists yet.
-- [ ] 7. Surfaces — team hub rankings card adds JP Poll placement once a board is
+- [x] 7. Surfaces — team hub rankings card adds JP Poll placement once a board is
   published; homepage poll panel links to the live ballot when one is open.
-- [ ] 8. Tests (tabulation math, tie-breaks, ballot validation), build, deploy,
+- [x] 8. Tests (tabulation math, tie-breaks, ballot validation), build, deploy,
   prod verification (ballot save + RLS denial + board states), demo sync, memory.
 
 ## Decisions
