@@ -1089,9 +1089,15 @@ footer{background:var(--navy);color:var(--chalk-dim);padding:34px 0 40px;font-fa
    translucent so the plays tie sections together; navy bands carry their
    own gold-marker layer. Scoped to main.plays-page — other routes keep
    their solid section grounds. */
-.plays-board{position:fixed;inset:0;z-index:0;width:100vw;height:100vh;background:var(--paper-2);pointer-events:none}
-.plays-dark{position:absolute;inset:0;z-index:0;width:100%;height:100%;pointer-events:none}
+/* z:-1 keeps both canvases under ALL in-flow content: the board sits in
+   main's stacking context (main is positioned w/ z-index:1); each navy band
+   gets isolation:isolate so its gold layer paints above the band's own
+   background but below its content. A positive z here painted the opaque
+   cream board OVER static sections (the poll band vanished) — don't raise it. */
+.plays-board{position:fixed;inset:0;z-index:-1;width:100vw;height:100vh;background:var(--paper-2);pointer-events:none}
+.plays-dark{position:absolute;inset:0;z-index:-1;width:100%;height:100%;pointer-events:none}
 main.plays-page{position:relative;z-index:1}
+main.plays-page .hero,main.plays-page .on-dark{isolation:isolate}
 main.plays-page section:not(.on-dark):not(.on-field):not(.hero):not(.poll-band){background:transparent}
 main.plays-page section.on-soft{background:rgba(24,34,52,.035)}
 main.plays-page .poll-band{background-color:transparent;
