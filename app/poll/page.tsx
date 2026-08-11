@@ -6,6 +6,7 @@ import EpisodeLead from "@/components/EpisodeLead";
 import EmptyState from "@/components/EmptyState";
 import { DEMO_MODE } from "@/lib/demo";
 import { slugifyTeam, teamLogoUrl } from "@/lib/teams-meta";
+import { getNationalRankings } from "@/lib/espn";
 import { getVideos } from "@/lib/youtube";
 
 export const metadata: Metadata = {
@@ -105,7 +106,7 @@ function TeamMark({ team }: { team: string }) {
 }
 
 export default async function PollPage() {
-  const videos = await getVideos();
+  const [videos, nationalPolls] = await Promise.all([getVideos(), getNationalRankings()]);
   const latestVideo = videos[0] ?? null;
   return (
     <main>
@@ -279,6 +280,63 @@ export default async function PollPage() {
           )}
         </div>
       </section>
+
+      {/* Real national polls from the live wire (no key, no quota) — the
+          boards the JP Poll gets measured against. Renders the moment a
+          poll publishes: Coaches in August, AP days later, CFP from
+          late October. Never invented; hidden entirely if no poll is out. */}
+      {nationalPolls.length > 0 && (
+        <section>
+          <div className="wrap">
+            <p className="eyebrow">The National Boards — {nationalPolls[0].season}</p>
+            <h2 className="display" style={{ fontSize: 34 }}>Where the Country Has It</h2>
+            <p className="lede">
+              The official national polls, live from the wire — the consensus the citizens get to argue with once
+              JP Poll ballots open Aug 24.
+            </p>
+            <div className={nationalPolls.length > 1 ? "duo" : undefined} style={{ marginTop: 18, maxWidth: nationalPolls.length > 1 ? undefined : 720 }}>
+              {nationalPolls.map((poll) => (
+                <div key={poll.name}>
+                  <p className="eyebrow" style={{ marginBottom: 6 }}>
+                    {poll.name}
+                    {poll.week ? ` · ${poll.week}` : ""}
+                  </p>
+                  <table>
+                    <thead>
+                      <tr><th>RK</th><th>TEAM</th><th>REC</th><th style={{ textAlign: "right" }}>PTS</th></tr>
+                    </thead>
+                    <tbody>
+                      {poll.ranks.map((r) => (
+                        <tr key={r.rank}>
+                          <td className="rk">{String(r.rank).padStart(2, "0")}</td>
+                          <td>
+                            <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
+                              {r.logo && (
+                                <Image src={r.logo} alt="" width={22} height={22} style={{ objectFit: "contain" }} />
+                              )}
+                              <b>{r.school}</b>
+                              {r.firstPlace ? (
+                                <span style={{ fontFamily: "var(--mono)", fontSize: 11, color: "var(--ink-dim)" }}>
+                                  {r.firstPlace} × 1ST
+                                </span>
+                              ) : null}
+                            </span>
+                          </td>
+                          <td style={{ fontFamily: "var(--mono)", fontSize: 12 }}>{r.record}</td>
+                          <td style={{ textAlign: "right", fontFamily: "var(--mono)", fontSize: 12 }}>{r.points ?? "—"}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              ))}
+            </div>
+            <p style={{ marginTop: 12, fontFamily: "var(--mono)", fontSize: 11, color: "var(--ink-dim)" }}>
+              LIVE FROM THE NATIONAL WIRE · NEW BOARDS APPEAR HERE THE DAY THEY DROP
+            </p>
+          </div>
+        </section>
+      )}
 
       <section className="on-soft tight">
         <div className="wrap">

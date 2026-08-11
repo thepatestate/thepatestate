@@ -62,7 +62,13 @@ interface CfbdGame {
 
 export async function getTeamSchedule(school: string): Promise<TeamGame[]> {
   const games = await cfbd<CfbdGame[]>(`/games?year=${YEAR}&team=${encodeURIComponent(school)}&seasonType=regular`);
-  if (!games) return [];
+  if (!games) {
+    // CFBD down (e.g. quota) — pull the same schedule from ESPN's free feed.
+    const { getEspnTeamSchedule } = await import("@/lib/espn");
+    const dir = await getTeamDirectory();
+    const espnId = dir[slugifyTeam(school)]?.espnId;
+    return espnId ? getEspnTeamSchedule(espnId, school) : [];
+  }
   return games
     .slice()
     .sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime())

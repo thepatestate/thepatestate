@@ -2,6 +2,7 @@
 // and, on gamedays, real scores. Server-only; fail-soft everywhere: every
 // helper returns [] / null on any failure so pages fall back to demo data.
 import type { Conference, ScoreCardData } from "@/lib/scores-demo";
+import { getEspnScoreboard, getEspnSlateGames, getEspnTeamDirectory } from "@/lib/espn";
 import { slugifyTeam } from "@/lib/teams-meta";
 
 const BASE = "https://api.collegefootballdata.com";
@@ -63,13 +64,15 @@ function kickoffLabel(iso: string, tbd?: boolean): string {
   return `${day} ${time} ET`;
 }
 
-/** Real games for a week as scoreboard cards, kickoff-sorted. [] on failure. */
+/** Real games for a week as scoreboard cards, kickoff-sorted. Falls back to
+ * ESPN's free feed when CFBD is unavailable (e.g. quota); [] only when both
+ * feeds fail. */
 export async function getWeekScoreboard(week = 1): Promise<ScoreCardData[]> {
   const [games, dir] = await Promise.all([
     cfbd<CfbdGame[]>(`/games?year=${YEAR}&week=${week}&seasonType=regular&classification=fbs`),
     getTeamDirectory(),
   ]);
-  if (!games) return [];
+  if (!games) return getEspnScoreboard(week);
   return games
     .slice()
     .sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime())
@@ -124,12 +127,15 @@ export interface TeamInfo {
   conference: string;
   color: string | null;
   logo: string;
+  /** ESPN team id (CFBD's ids are the same ids) — for ESPN-side lookups. */
+  espnId?: number;
 }
 
-/** Slug → team info for every FBS program; {} on failure. */
+/** Slug → team info for every FBS program. Falls back to ESPN's free feed
+ * when CFBD is unavailable (quota); {} only when both feeds fail. */
 export async function getTeamDirectory(): Promise<Record<string, TeamInfo>> {
   const teams = await cfbd<CfbdTeam[]>(`/teams/fbs?year=${YEAR}`, 604800);
-  if (!teams) return {};
+  if (!teams) return getEspnTeamDirectory();
   const dir: Record<string, TeamInfo> = {};
   for (const t of teams) {
     const slug = slugifyTeam(t.school);
@@ -140,6 +146,7 @@ export async function getTeamDirectory(): Promise<Record<string, TeamInfo>> {
       conference: t.conference ?? "",
       color: t.color ?? null,
       logo: `https://a.espncdn.com/i/teamlogos/ncaa/500/${t.id}.png`,
+      espnId: t.id,
     };
   }
   return dir;
@@ -157,13 +164,14 @@ export interface SlateGame {
 }
 
 /** Marquee real games for the homepage slate strip: both teams from a known
- * power set, earliest first. [] on failure (strip falls back to demo). */
+ * power set, earliest first. Falls back to ESPN's free feed when CFBD is
+ * unavailable; [] only when both feeds fail. */
 export async function getSlateGames(week = 1, limit = 5): Promise<SlateGame[]> {
   const [games, dir] = await Promise.all([
     cfbd<CfbdGame[]>(`/games?year=${YEAR}&week=${week}&seasonType=regular&classification=fbs`),
     getTeamDirectory(),
   ]);
-  if (!games) return [];
+  if (!games) return getEspnSlateGames(week, limit);
   const power = new Set(["SEC", "Big Ten", "Big 12", "ACC"]);
   const info = (name: string): TeamInfo | undefined => dir[slugifyTeam(name)];
   return games

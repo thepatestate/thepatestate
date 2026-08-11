@@ -9,6 +9,7 @@ import {
 } from "@/lib/team-data";
 import { getBoards, getThreads, publicClient } from "@/lib/community";
 import { getTeamDirectory } from "@/lib/cfbd";
+import { getTeamPollRanks } from "@/lib/espn";
 import { createClient, getCitizen } from "@/lib/supabase/server";
 import { followTeam, unfollowTeam } from "@/app/teams/actions";
 import { getVideos } from "@/lib/youtube";
@@ -59,7 +60,7 @@ export default async function TeamHubPage({ params }: { params: Promise<{ slug: 
   const info = await getTeamInfo(slug);
   if (!info) notFound();
 
-  const [schedule, records, roster, portal, quotes, articles, wire, recruiting, boards, citizen, videos, dir] =
+  const [schedule, records, roster, portal, quotes, articles, wire, recruiting, boards, citizen, videos, dir, pollRanks] =
     await Promise.all([
       getTeamSchedule(info.school),
       getRecords(info.school),
@@ -73,6 +74,7 @@ export default async function TeamHubPage({ params }: { params: Promise<{ slug: 
       getCitizen(),
       getVideos(),
       getTeamDirectory(),
+      getTeamPollRanks(slug),
     ]);
 
   const board = boards.find((b) => b.kind === "team" && b.team_slug === slug);
@@ -370,15 +372,40 @@ export default async function TeamHubPage({ params }: { params: Promise<{ slug: 
                 <p className="hub-src">Class ranks via 247Sports Composite (through CollegeFootballData)</p>
               </div>
 
-              {/* Rankings (§4.4) — no invented poll placements */}
+              {/* Rankings (§4.4) — real national placements only; the JP
+                  Poll line stays a promise (ballots open Aug 24), never an
+                  invented number. pollRanks === null means no national poll
+                  is published at all; [] means published-but-unranked. */}
               <div className="hub-card" id="rankings">
                 <p className="eyebrow">In the Rankings</p>
-                <EmptyState
-                  kicker="FIRST BOARD — WEEK 1"
-                  title="Poll placement starts with the first JP Poll"
-                  body="Where the citizens rank this team — tracked weekly against the AP and CFP once ballots open Aug 24."
-                  cta={{ href: "/poll", label: "How the JP Poll works →" }}
-                />
+                {pollRanks === null ? (
+                  <EmptyState
+                    kicker="FIRST BOARD — WEEK 1"
+                    title="Poll placement starts with the first JP Poll"
+                    body="Where the citizens rank this team — tracked weekly against the AP and CFP once ballots open Aug 24."
+                    cta={{ href: "/poll", label: "How the JP Poll works →" }}
+                  />
+                ) : (
+                  <>
+                    {pollRanks.length > 0 ? (
+                      pollRanks.map((p) => (
+                        <p key={p.poll} style={{ fontSize: 15.5, margin: "0 0 6px" }}>
+                          <b style={{ color: accent }}>No. {p.rank}</b> — {p.poll}
+                          {p.week ? ` (${p.week})` : ""}
+                        </p>
+                      ))
+                    ) : (
+                      <p style={{ fontSize: 15.5, margin: 0 }}>
+                        Outside the national top 25 on every published board — for now.
+                      </p>
+                    )}
+                    <p style={{ fontSize: 14, color: "var(--ink-dim)", marginTop: 10 }}>
+                      The citizens&apos; own board — the JP Poll — opens for ballots Aug 24.{" "}
+                      <Link href="/poll" style={{ color: "var(--lamp-deep)" }}>See every national board →</Link>
+                    </p>
+                  </>
+                )}
+                <p className="hub-src">National polls via the live wire</p>
               </div>
             </div>
 
