@@ -27,9 +27,9 @@ const SECTIONS = [
     id: "ai",
     title: "AI Disclosure",
     body: [
-      "Pate State AI is built from Josh Pate's owned content archive: show transcripts, rankings philosophy, prediction history, football terminology, and these editorial guidelines. It helps The Pate State organize, draft, and personalize content. Published news and analysis are reviewed by The Pate State editorial team.",
+      "Pate State AI is built from Josh Pate's owned content archive: show transcripts, rankings philosophy, prediction history, football terminology, and these editorial guidelines. It helps The Pate State organize, draft, and personalize content. Published news and analysis are produced under these standards and monitored by The Pate State editorial team, which can correct or unpublish any piece at any time; drafts that fail the automated checks are held for human review instead of publishing.",
       "Hard rules the system enforces: it never invents an opinion attributed to Josh — every Josh opinion traces to a clip, transcript, article, or explicit approval, and every direct quote is machine-checked verbatim against the transcript, with a timestamp link to the moment it was said.",
-      "Wire stories drafted by AI pass an automated verification stack before publishing: attribution checks (the first sentence must credit the reporting outlet), banned-inference patterns, and a second-model fact check against the source material. Sensitive subjects — injuries, transfers, coaching changes, eligibility, legal or disciplinary matters — require human editorial review before publication.",
+      "Wire stories drafted by AI pass an automated verification stack before publishing: attribution checks (the first sentence must credit the reporting outlet), banned-inference patterns, and a second-model fact check against the source material. Every published story stays under editorial monitoring, and sensitive subjects — injuries, eligibility, legal or disciplinary matters — carry their sourcing in the first sentence so readers always know whose reporting they're reading.",
     ],
   },
   {

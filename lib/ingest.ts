@@ -87,7 +87,14 @@ export async function ingestEpisode(v: IngestVideo): Promise<IngestResult> {
       pullQuote: draft.pullQuote,
       episode: { _type: "reference", _ref: episodeId },
       byline: BYLINE_STAFF,
-      workflowState: "ai-drafted",
+      // Auto-publish (owner call, 08-11): clean drafts go live immediately;
+      // Josh's team can unpublish or correct any piece in Studio. Drafts
+      // with no transcript grounding or self-flagged low confidence still
+      // hold in ai-drafted for human eyes — never auto-published.
+      workflowState: !transcriptText || draft.lowConfidence === true ? "ai-drafted" : "published",
+      ...(!transcriptText || draft.lowConfidence === true
+        ? {}
+        : { publishedAt: new Date().toISOString() }),
       lowConfidence: !transcriptText || draft.lowConfidence === true,
       primaryTeam: draft.primaryTeam,
       teams: draft.teams,

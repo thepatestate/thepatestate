@@ -237,7 +237,8 @@ export default async function ArticlePage({
               )}
 
               <p style={{ marginTop: 20, opacity: 0.55, fontSize: 12.5, lineHeight: 1.5 }}>
-                Articles are drafted from Josh Pate&apos;s College Football Show and reviewed before publishing.
+                Articles are drafted from Josh Pate&apos;s College Football Show under the site&apos;s editorial
+                standards and monitored by the editorial team — corrections are timestamped, never silent.
               </p>
 
               {rollNext && (
