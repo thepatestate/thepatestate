@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getArticleBySlug } from "@/lib/sanity";
+import { getArticleBySlug, getPublishedArticles } from "@/lib/sanity";
+import UpNextRoll from "@/components/UpNextRoll";
 import { getBoards } from "@/lib/community";
 import { teamHubHref, LAUNCH_TEAMS } from "@/lib/launch-teams";
 import ArticleBody from "@/components/ArticleBody";
@@ -56,6 +57,18 @@ export default async function ArticlePage({
   const article = await getArticleBySlug(slug);
   if (!article) notFound();
   const boards = await getBoards().catch(() => []);
+
+  // ESPN-style roll: server-render the next article (hidden) so reading
+  // continues in place when the reader scrolls past the end; the one after
+  // that gets a normal link, starting the next chain.
+  const all = await getPublishedArticles(30).catch(() => []);
+  const idx = all.findIndex((a) => a.slug.current === slug);
+  const nextArticle = idx >= 0 ? (all[idx + 1] ?? all[0]) : null;
+  const rollNext =
+    nextArticle && nextArticle.slug.current !== slug ? nextArticle : null;
+  const afterNext = rollNext
+    ? (all[all.findIndex((a) => a.slug.current === rollNext.slug.current) + 1] ?? null)
+    : null;
 
   const teamHref = teamHubHref(article.primaryTeam);
   const authorSlug = /josh pate/i.test(article.byline) ? "josh-pate" : "the-pate-state-staff";
@@ -226,6 +239,43 @@ export default async function ArticlePage({
               <p style={{ marginTop: 20, opacity: 0.55, fontSize: 12.5, lineHeight: 1.5 }}>
                 Articles are drafted from Josh Pate&apos;s College Football Show and reviewed before publishing.
               </p>
+
+              {rollNext && (
+                <>
+                  <UpNextRoll
+                    contentId={`upnext-${rollNext.slug.current}`}
+                    nextPath={`/notebook/${rollNext.slug.current}`}
+                    nextTitle={`${rollNext.headline} — The Pate State`}
+                    nextHeadline={rollNext.headline}
+                    nextDek={rollNext.dek}
+                  />
+                  <div id={`upnext-${rollNext.slug.current}`} hidden className="upnext-body">
+                    <div className="upnext-divider">CONTINUED FROM THE NOTEBOOK</div>
+                    <h1 className="display" style={{ fontSize: "clamp(26px,3.4vw,40px)", lineHeight: 1.08 }}>
+                      {rollNext.headline}
+                    </h1>
+                    {rollNext.dek && (
+                      <p className="lede" style={{ marginTop: 10, fontSize: 17 }}>{rollNext.dek}</p>
+                    )}
+                    <EditorialLabel
+                      contentType={rollNext.contentType}
+                      productionMethod={rollNext.productionMethod}
+                      byline={rollNext.byline}
+                      reviewedBy={rollNext.reviewedBy}
+                    />
+                    <ArticleBody article={rollNext} />
+                    <div style={{ marginTop: 26 }}>
+                      <Link
+                        className="btn"
+                        href={afterNext ? `/notebook/${afterNext.slug.current}` : "/notebook"}
+                        style={{ borderColor: "var(--navy)", color: "var(--navy)" }}
+                      >
+                        {afterNext ? `Keep Reading: ${afterNext.headline} →` : "Back to the Notebook →"}
+                      </Link>
+                    </div>
+                  </div>
+                </>
+              )}
             </article>
 
             <aside className="aside-sticky">

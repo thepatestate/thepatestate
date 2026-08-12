@@ -190,6 +190,24 @@ export default async function WireStoryPage({ params }: { params: Promise<{ slug
             <p style={{ fontSize: 14 }}>
               <Link href="/wire" style={{ color: "var(--gold, #E8A33D)" }}>← All wire coverage</Link>
             </p>
+
+            {/* Reading never dead-ends: chain to the next stories on the
+                wire (the notebook's scroll-roll pattern lands here once
+                story volume supports it). */}
+            {(await getWireStories(6).catch(() => []))
+              .filter((s) => s.slug.current !== story.slug.current)
+              .slice(0, 3)
+              .map((s, i) => (
+                <Link
+                  key={s._id}
+                  href={`/wire/${s.slug.current}`}
+                  className="upnext-teaser"
+                  style={{ textDecoration: "none", color: "inherit", marginTop: i === 0 ? 30 : 18 }}
+                >
+                  <span className="upnext-kicker">{i === 0 ? "Up Next on the Wire" : "Then"}</span>
+                  <b className="upnext-headline" style={{ fontSize: 20 }}>{s.headline}</b>
+                </Link>
+              ))}
           </div>
         </div>
       </section>

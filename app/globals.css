@@ -1105,3 +1105,12 @@ main.plays-page .poll-band{background-color:transparent;
 /* content above the in-band canvases */
 main.plays-page .hero > .wrap,
 main.plays-page .on-dark > .wrap{position:relative;z-index:1}
+
+/* --- Up Next article roll (ESPN-style continuous reading) --- */
+.upnext-teaser{margin-top:34px;border-top:3px solid var(--navy);padding-top:16px;display:grid;gap:6px}
+.upnext-kicker{font-family:var(--mono);font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--lamp-deep)}
+.upnext-headline{font-family:var(--display);font-size:24px;line-height:1.15}
+.upnext-dek{font-size:15px;color:var(--ink-dim)}
+.upnext-body{margin-top:10px}
+.upnext-body .upnext-divider{margin:26px 0 22px;display:flex;align-items:center;gap:12px;font-family:var(--mono);font-size:10.5px;letter-spacing:.18em;color:var(--ink-dim)}
+.upnext-body .upnext-divider::before,.upnext-body .upnext-divider::after{content:"";flex:1;border-top:1px solid var(--line-l)}

@@ -88,6 +88,16 @@ export async function fetchFeeds(): Promise<FeedEntry[]> {
   return out;
 }
 
+// National CFB feeds carry other sports (Yahoo's especially: wrestling
+// schedules, hoops recruiting, high-school previews). The Wire is college
+// football only — kill off-topic entries before they cost a scoring call.
+const OFF_TOPIC = /\b(wrestl\w*|basketball|hoops|baseball|softball|volleyball|gymnastics|hockey|lacrosse|soccer|golf|tennis|track and field|swimming|wnba|nba|nfl|mlb|nhl|high school)\b/i;
+
+/** True when an entry clearly isn't college football. Exported for tests. */
+export function isOffTopic(title: string, description = ""): boolean {
+  return OFF_TOPIC.test(title) || OFF_TOPIC.test(description.slice(0, 160));
+}
+
 const STOPWORDS = new Set([
   "the", "a", "an", "and", "or", "of", "in", "on", "for", "to", "with", "at", "by", "as",
   "is", "are", "was", "be", "has", "have", "his", "her", "its", "their", "after", "before",
@@ -211,6 +221,10 @@ export async function runWireMonitor(): Promise<{
   // Group THIS batch's entries into new clusters (or attach to existing ones).
   const fresh: { title: string; entries: FeedEntry[] }[] = [];
   for (const entry of entries) {
+    if (isOffTopic(entry.title, entry.description)) {
+      summary.skipped.push(`offtopic:${entry.title.slice(0, 40)}`);
+      continue;
+    }
     const kw = titleKeywords(entry.title);
     const existing = recentKeywords.find((c) => keywordOverlap(kw, c.kw) >= 0.6);
     if (existing) {
@@ -229,6 +243,18 @@ export async function runWireMonitor(): Promise<{
     else fresh.push({ title: entry.title, entries: [entry] });
   }
   summary.clusters = fresh.length;
+
+  // Outlet balance: Yahoo publishes ~3x the volume of ESPN/CBS and was 85%
+  // of the wire. Process the quieter outlets' clusters first, and cap how
+  // many items any single outlet can land per run (big news still breaks
+  // through the cap on importance).
+  const OUTLET_PRIORITY: Record<string, number> = { ESPN: 0, "CBS Sports": 1, "Yahoo Sports": 2 };
+  const ITEMS_PER_OUTLET_PER_RUN = 4;
+  const outletItemCount: Record<string, number> = {};
+  fresh.sort(
+    (a, b) =>
+      (OUTLET_PRIORITY[a.entries[0].outlet] ?? 9) - (OUTLET_PRIORITY[b.entries[0].outlet] ?? 9),
+  );
 
   for (const cluster of fresh.slice(0, MAX_ITEMS_PER_RUN)) {
     try {
@@ -270,6 +296,18 @@ export async function runWireMonitor(): Promise<{
         continue;
       }
 
+      // Quality floor + outlet cap: fluff (importance ≤ 2) never becomes an
+      // item, and an outlet that already landed its per-run share only
+      // breaks through with genuinely big news. The cluster row above still
+      // exists either way, so the story is deduped and never re-scored.
+      const primaryOutlet = cluster.entries[0].outlet;
+      const outletCapped = (outletItemCount[primaryOutlet] ?? 0) >= ITEMS_PER_OUTLET_PER_RUN;
+      if (item.importance <= 2 || (outletCapped && item.importance < 6)) {
+        summary.skipped.push(`${item.importance <= 2 ? "low" : "capped"}:${clusterKey}`);
+        continue;
+      }
+      outletItemCount[primaryOutlet] = (outletItemCount[primaryOutlet] ?? 0) + 1;
+
       const itemId = `wireItem-${clusterKey}`;
       await writeClient.createIfNotExists({
         _id: itemId,
@@ -286,8 +324,10 @@ export async function runWireMonitor(): Promise<{
       await db.from("wire_clusters").update({ item_id: itemId }).eq("id", inserted.id);
       summary.items++;
 
-      // Full story for importance >= 7 (§3.3), capped per run.
-      if (item.importance >= 7 && summary.stories < MAX_STORIES_PER_RUN) {
+      // Full on-site story for importance >= 6, capped per run. (§3.3 said 7;
+      // 172 items never cleared it — the scorer runs conservative, so 6 is
+      // the working big-news line. Client wants readers staying on-site.)
+      if (item.importance >= 6 && summary.stories < MAX_STORIES_PER_RUN) {
         const receipt = await findReceipt(item.teams, [...titleKeywords(cluster.title)]);
         const storyRes = await anthropic.messages.create({
           model: MODEL,
