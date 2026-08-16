@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import { getVideos, isEpisode, getShorts, getChannelStats } from "@/lib/youtube";
-import { getPublishedArticles, getWireItems, getWireStories } from "@/lib/sanity";
+import { getVideos, isEpisode, getShorts, getChannelStats, compactCount } from "@/lib/youtube";
+import { getPublishedArticles, getWireItems } from "@/lib/sanity";
 import { getSlateGames } from "@/lib/cfbd";
 import { getThreads, publicClient } from "@/lib/community";
 import { teamLogoUrl } from "@/lib/teams-meta";
@@ -14,6 +14,7 @@ import NotebookWire from "@/components/home/NotebookWire";
 import PeoplesGames from "@/components/home/PeoplesGames";
 import PorchSection from "@/components/home/PorchSection";
 import PlaybookSection from "@/components/home/PlaybookSection";
+import { StoreSection, CampusSection, TailgateSection, GiftSection, FollowSection, PlayoffsRibbon } from "@/components/home/StaticBands";
 
 export const metadata: Metadata = { alternates: { canonical: "/" } };
 
@@ -21,12 +22,11 @@ export const metadata: Metadata = { alternates: { canonical: "/" } };
 // 2026-08-16-homepage-v5-design.md). Every section degrades honestly: dead
 // feed → EmptyState or nothing; fictional content only under DEMO_MODE.
 export default async function Home() {
-  const [videos, shorts, articles, wire, wireStories, slate, stats, threads] = await Promise.all([
+  const [videos, shorts, articles, wire, slate, stats, threads] = await Promise.all([
     getVideos().catch(() => []),
     getShorts(6).catch(() => []),
     getPublishedArticles(8).catch(() => []),
     getWireItems(12).catch(() => []),
-    getWireStories(8).catch(() => []),
     getSlateGames(1, 6).catch(() => []),
     getChannelStats().catch(() => null),
     // publicClient() itself throws when Supabase env is absent — wrap the
@@ -63,10 +63,6 @@ export default async function Home() {
     }),
   ];
 
-  // Consumed by sections landing in follow-up tasks (show, notebook, porch,
-  // playbook, follow band).
-  void wireStories; void stats;
-
   return (
     <main className="v5 v5-page">
       <ScoresTicker games={slate} />
@@ -84,6 +80,12 @@ export default async function Home() {
       <PeoplesGames />
       <PorchSection threads={threads} />
       <PlaybookSection latest={featured} wireHeads={wire.slice(0, 3).map((w) => w.headline)} />
+      <StoreSection />
+      <CampusSection />
+      <TailgateSection />
+      <GiftSection />
+      <FollowSection subs={stats ? compactCount(stats.subscribers) : undefined} />
+      <PlayoffsRibbon />
     </main>
   );
 }
