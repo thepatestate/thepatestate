@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { Big_Shoulders, Newsreader, IBM_Plex_Mono, Barlow_Condensed, Public_Sans } from "next/font/google";
 import "./globals.css";
 import "./v5.css";
-import Nav from "@/components/Nav";
-import Ticker from "@/components/Ticker";
+import RhythmBar from "@/components/chrome/RhythmBar";
+import Masthead from "@/components/chrome/Masthead";
 import Footer from "@/components/Footer";
 import { Analytics } from "@vercel/analytics/next";
 import { SITE_URL } from "@/lib/site";
@@ -89,8 +89,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(SITE_JSON_LD).replace(/</g, "\\u003c") }}
         />
-        <Ticker />
-        <Nav />
+        <RhythmBar />
+        <Masthead />
         {children}
         <Footer />
         <Analytics />
