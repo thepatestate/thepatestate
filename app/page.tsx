@@ -7,6 +7,7 @@ import { createArtPicker } from "@/lib/editorial-art";
 import ScoresTicker from "@/components/home/ScoresTicker";
 import TopEditorial, { type LatestItem } from "@/components/home/TopEditorial";
 import ActionStrip from "@/components/home/ActionStrip";
+import YourTeamsBand from "@/components/home/YourTeamsBand";
 
 export const metadata: Metadata = { alternates: { canonical: "/" } };
 
@@ -62,6 +63,7 @@ export default async function Home() {
       <ScoresTicker games={slate} />
       <TopEditorial featured={featured} trending={articles.slice(0, 4)} latest={latest} />
       <ActionStrip />
+      <YourTeamsBand />
     </main>
   );
 }
