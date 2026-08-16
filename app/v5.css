@@ -41,7 +41,9 @@
 .v5-header .logo .name{font:800 25px/1 var(--cond);letter-spacing:.03em;text-transform:uppercase;color:#F4F6F9}
 .v5-header .logo .name em{font-style:italic;color:var(--gold)}
 .v5-header .logo .kicker{font:600 8.5px/1 var(--cond);letter-spacing:.28em;text-transform:uppercase;color:#7C8797}
-.v5-header nav.main{display:flex;gap:1px}
+/* globals.css styles the bare nav element (sticky paper bar) for the old
+   chalk chrome — neutralize it inside the masthead. */
+.v5-header nav.main{display:flex;gap:1px;position:static;background:none;backdrop-filter:none;border-bottom:none;z-index:auto}
 .v5-header nav.main a{font:700 13.5px/1 var(--cond);letter-spacing:.11em;text-transform:uppercase;color:#96A0AE;padding:26px 12px;transition:color .15s;position:relative}
 .v5-header nav.main a:hover{color:#fff}
 .v5-header nav.main a.active{color:#fff}
@@ -74,7 +76,7 @@
 }
 
 /* ═══ FOOTER ═══ */
-.v5-footer{background:var(--mast);color:#8FA0B8;padding:44px 0 30px}
+.v5-footer{background:var(--mast);color:#8FA0B8;padding:44px 0 30px;font-family:var(--body);font-size:inherit}
 .v5-footer .ft-top{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:32px;padding-bottom:30px;border-bottom:1px solid rgba(255,255,255,.08)}
 .v5-footer .ft-brand .name{font:800 23px/1 var(--cond);letter-spacing:.03em;text-transform:uppercase;color:#F4F6F9}
 .v5-footer .ft-brand .name em{font-style:italic;color:var(--gold)}
@@ -97,7 +99,7 @@
 .v5 .scores .wrap{display:flex;align-items:center;gap:4px;height:44px;overflow-x:auto;scrollbar-width:none}
 .v5 .scores .wrap::-webkit-scrollbar{display:none}
 .v5 .scores .lbl{font:800 11px/1 var(--cond);letter-spacing:.16em;color:var(--red);white-space:nowrap;margin-right:8px}
-.v5 .game{display:flex;align-items:center;gap:6px;padding:6px 12px;border-right:1px solid var(--hair);white-space:nowrap;font:600 12.5px/1 var(--body)}
+.v5 .game{display:flex;align-items:center;gap:6px;padding:6px 12px;border:none;border-right:1px solid var(--hair);border-radius:0;box-shadow:none;background:none;white-space:nowrap;font:600 12.5px/1 var(--body)}
 .v5 .game img{width:18px;height:18px}
 .v5 .game .at{color:#AAB2BD;font-size:10px}
 .v5 .game .time{color:var(--mut);font-size:10.5px;font-weight:500;margin-left:2px}
@@ -112,7 +114,7 @@
 .v5 .trend h4{font:600 17px/1.32 var(--slab);letter-spacing:-.01em}
 .v5 .trend .by{font:500 12.5px/1 var(--body);color:var(--mut);margin-top:6px;display:block}
 .v5 .trend:hover h4{color:var(--navy);text-decoration:underline;text-decoration-color:#C9CFD8;text-underline-offset:3px}
-.v5 .feat{display:block}
+.v5 .feat{display:block;border:none;background:none;border-radius:0;overflow:visible}
 .v5 .feat h1{font:800 40px/1.07 var(--slab);color:var(--ink);letter-spacing:-.02em;margin:16px 0 10px}
 .v5 .feat .thumb{position:relative;border-radius:6px;overflow:hidden;box-shadow:var(--sh-lg);aspect-ratio:16/8.9} /* fill anchor */
 .v5 .feat .thumb img{width:100%;object-fit:cover;transition:transform .5s}
@@ -180,7 +182,7 @@
 
 /* ═══ THE SHOW ═══ */
 .v5 .show{background:var(--white);padding:40px 0 44px}
-.v5 .show-grid{display:grid;grid-template-columns:1.45fr 1fr;gap:34px}
+.v5 .show-grid{display:grid;grid-template-columns:1.45fr 1fr;gap:34px;margin-top:0}
 .v5 .sh-feat{display:block}
 .v5 .sh-feat .thumb{position:relative;border-radius:6px;overflow:hidden;box-shadow:var(--sh-lg);aspect-ratio:16/9} /* fill anchor */
 .v5 .sh-feat .thumb img{width:100%;object-fit:cover;transition:transform .5s}
@@ -247,7 +249,7 @@
 .v5 .nb-sm .t{font:800 10px/1 var(--cond);letter-spacing:.14em;text-transform:uppercase;color:var(--gold-dk);margin-bottom:8px;display:block}
 .v5 .nb-sm h4{font:700 17px/1.3 var(--slab)}
 .v5 .nb-sm:hover h4{color:var(--navy)}
-.v5 .wire{background:var(--white);border:1px solid var(--hair);border-radius:10px;box-shadow:var(--sh-md);overflow:hidden;display:flex;flex-direction:column}
+.v5 .wire{background:var(--white);border:1px solid var(--hair);border-radius:10px;box-shadow:var(--sh-md);overflow:hidden;display:flex;flex-direction:column;padding:0}
 .v5 .wire .wh{display:flex;align-items:center;justify-content:space-between;background:var(--navy);color:#fff;padding:15px 18px}
 .v5 .wire .wh h3{font:800 13px/1 var(--cond);letter-spacing:.22em;text-transform:uppercase}
 .v5 .wire .wh .lv{font:700 10px/1 var(--cond);letter-spacing:.12em;text-transform:uppercase;color:#FF8A70;display:flex;align-items:center;gap:6px}
@@ -316,7 +318,7 @@
 .v5 .porch-side .on::before{content:"";width:7px;height:7px;border-radius:50%;background:#8CE99A;animation:v5pulse 1.6s infinite}
 .v5 .porch-side h3{font:700 24px/1.15 var(--slab);margin-bottom:9px}
 .v5 .porch-side p{font:400 13.5px/1.55 var(--body);color:#B9C6D8;margin-bottom:18px}
-.v5 .porch-side .btn{display:inline-block;font:800 12.5px/1 var(--cond);letter-spacing:.12em;text-transform:uppercase;background:var(--gold);color:var(--mast);padding:13px 20px;border-radius:5px;box-shadow:var(--sh-sm)}
+.v5 .porch-side .btn{display:inline-block;font:800 12.5px/1 var(--cond);letter-spacing:.12em;text-transform:uppercase;background:var(--gold);color:var(--mast);padding:13px 20px;border:none;border-radius:5px;box-shadow:var(--sh-sm)}
 .v5 .porch-side .btn:hover{background:#DCB43A}
 .v5 .porch-side .rules{font:500 11px/1.6 var(--body);color:#8FA0B8;margin-top:14px}
 @media(max-width:1080px){
@@ -409,7 +411,7 @@
 .v5 .playoffs .tro{font-size:28px}
 .v5 .playoffs h3{font:700 20px/1.2 var(--slab);color:var(--navy)}
 .v5 .playoffs p{font:600 10.5px/1.4 var(--cond);letter-spacing:.14em;text-transform:uppercase;color:var(--mut);margin-top:4px}
-.v5 .playoffs a.btn{margin-left:auto;font:800 12.5px/1 var(--cond);letter-spacing:.12em;text-transform:uppercase;background:var(--navy);color:#fff;padding:13px 19px;border-radius:5px;white-space:nowrap;box-shadow:var(--sh-sm)}
+.v5 .playoffs a.btn{margin-left:auto;font:800 12.5px/1 var(--cond);letter-spacing:.12em;text-transform:uppercase;background:var(--navy);color:#fff;padding:13px 19px;border:none;border-radius:5px;white-space:nowrap;box-shadow:var(--sh-sm)}
 .v5 .playoffs a.btn:hover{background:var(--navy-deep)}
 @media(max-width:760px){
   .v5 .store-grid,.v5 .campus .wrap,.v5 .gift .wrap{grid-template-columns:1fr}

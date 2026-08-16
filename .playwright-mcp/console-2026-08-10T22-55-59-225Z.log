@@ -1,9 +1,0 @@
-[     901ms] Error: Minified React error #418; visit https://react.dev/errors/418?args[]=text&args[]= for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
-    at rJ (https://thepatestate.com/_next/static/immutable/chunks/2_jgjlpxq7oly.js:1:62532)
-    at https://thepatestate.com/_next/static/immutable/chunks/2_jgjlpxq7oly.js:1:159851
-    at sy (https://thepatestate.com/_next/static/immutable/chunks/2_jgjlpxq7oly.js:1:163418)
-    at sh (https://thepatestate.com/_next/static/immutable/chunks/2_jgjlpxq7oly.js:1:154670)
-    at https://thepatestate.com/_next/static/immutable/chunks/2_jgjlpxq7oly.js:1:149488
-    at sr (https://thepatestate.com/_next/static/immutable/chunks/2_jgjlpxq7oly.js:1:149589)
-    at sq (https://thepatestate.com/_next/static/immutable/chunks/2_jgjlpxq7oly.js:1:176170)
-    at MessagePort.O (https://thepatestate.com/_next/static/immutable/chunks/2_jgjlpxq7oly.js:1:3356)
