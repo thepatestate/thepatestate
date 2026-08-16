@@ -10,6 +10,7 @@ import ActionStrip from "@/components/home/ActionStrip";
 import YourTeamsBand from "@/components/home/YourTeamsBand";
 import ShowSectionV5 from "@/components/home/ShowSectionV5";
 import NotebookWire from "@/components/home/NotebookWire";
+import PeoplesGames from "@/components/home/PeoplesGames";
 
 export const metadata: Metadata = { alternates: { canonical: "/" } };
 
@@ -74,6 +75,7 @@ export default async function Home() {
         />
       )}
       <NotebookWire lead={articles[0] ?? null} small={articles.slice(1, 3)} wire={wire.slice(0, 6)} />
+      <PeoplesGames />
     </main>
   );
 }

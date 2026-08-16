@@ -262,3 +262,36 @@
 @media(max-width:1080px){
   .v5 .nb-grid{grid-template-columns:1fr}
 }
+
+/* ═══ JP POLL + PICK'EM ═══ */
+.v5 .games-band{background:var(--white);padding:40px 0 44px}
+.v5 .duo{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.v5 .card-poll,.v5 .card-pick{border-radius:12px;padding:26px 26px;position:relative;overflow:hidden;transition:transform .15s,box-shadow .2s}
+.v5 .card-poll:hover,.v5 .card-pick:hover{transform:translateY(-3px)}
+.v5 .card-poll{background:linear-gradient(150deg,var(--navy) 0%,var(--navy-deep) 100%);color:#EDF1F7;box-shadow:var(--sh-lg)}
+.v5 .card-poll::after{content:"🗳";position:absolute;right:-14px;bottom:-22px;font-size:130px;opacity:.08}
+.v5 .card-pick{background:var(--white);border:1.5px solid var(--navy);box-shadow:var(--sh-md)}
+.v5 .card-pick:hover{box-shadow:var(--sh-lg)}
+.v5 .card-pick::after{content:"✓";position:absolute;right:-8px;bottom:-40px;font-size:170px;opacity:.05;color:var(--navy);font-family:var(--cond);font-weight:800}
+.v5 .gc-k{font:800 11px/1 var(--cond);letter-spacing:.2em;text-transform:uppercase;margin-bottom:9px}
+.v5 .card-poll .gc-k{color:var(--gold)}
+.v5 .card-pick .gc-k{color:var(--red)}
+.v5 .gc-title{font:700 24px/1.1 var(--slab);margin-bottom:5px}
+.v5 .card-pick .gc-title{color:var(--navy)}
+.v5 .gc-sub{font:500 13px/1.5 var(--body);margin-bottom:14px}
+.v5 .card-poll .gc-sub{color:#B9C6D8}
+.v5 .card-pick .gc-sub{color:var(--mut)}
+.v5 .gc-row{display:flex;gap:13px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.12);font:500 12.5px/1.4 var(--body)}
+.v5 .card-pick .gc-row{border-color:var(--hair);color:#3D4654}
+.v5 .card-poll .gc-row{color:#D5DCE7}
+.v5 .gc-row b{font:800 10.5px/1.55 var(--cond);letter-spacing:.1em;text-transform:uppercase;min-width:84px}
+.v5 .card-poll .gc-row b{color:var(--gold)}
+.v5 .card-pick .gc-row b{color:var(--navy)}
+.v5 .gc-btn{display:inline-block;font:800 12.5px/1 var(--cond);letter-spacing:.12em;text-transform:uppercase;padding:13px 20px;border-radius:5px;margin-top:16px;box-shadow:var(--sh-sm)}
+.v5 .card-poll .gc-btn{background:var(--gold);color:var(--mast)}
+.v5 .card-poll .gc-btn:hover{background:#DCB43A}
+.v5 .card-pick .gc-btn{background:var(--navy);color:#fff}
+.v5 .card-pick .gc-btn:hover{background:var(--navy-deep)}
+@media(max-width:760px){
+  .v5 .duo{grid-template-columns:1fr}
+}
