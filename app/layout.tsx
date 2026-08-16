@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
-import { Big_Shoulders, Newsreader, IBM_Plex_Mono } from "next/font/google";
+import { Big_Shoulders, Newsreader, IBM_Plex_Mono, Barlow_Condensed, Public_Sans } from "next/font/google";
 import "./globals.css";
+import "./v5.css";
 import Nav from "@/components/Nav";
 import Ticker from "@/components/Ticker";
 import Footer from "@/components/Footer";
@@ -18,6 +19,13 @@ const display = Big_Shoulders({
 });
 const body = Newsreader({ subsets: ["latin"], style: ["normal", "italic"], variable: "--body" });
 const mono = IBM_Plex_Mono({ subsets: ["latin"], weight: ["400", "500", "600"], variable: "--mono" });
+// v5 design-layer fonts (chrome + homepage); interior pages keep the trio above.
+const v5cond = Barlow_Condensed({
+  subsets: ["latin"],
+  weight: ["500", "600", "700", "800"],
+  variable: "--v5-cond-f",
+});
+const v5sans = Public_Sans({ subsets: ["latin"], weight: "variable", variable: "--v5-sans-f" });
 
 export const metadata: Metadata = {
   title: { default: "The Pate State — The Front Porch of College Football", template: "%s — The Pate State" },
@@ -75,7 +83,7 @@ const SITE_JSON_LD = [
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${display.variable} ${body.variable} ${mono.variable}`}>
+    <html lang="en" className={`${display.variable} ${body.variable} ${mono.variable} ${v5cond.variable} ${v5sans.variable}`}>
       <body>
         <script
           type="application/ld+json"
