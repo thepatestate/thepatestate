@@ -1,24 +1,27 @@
-import type { CSSProperties } from "react";
 import Link from "next/link";
 import { CHANNEL_URL, SOCIAL_LINKS } from "@/lib/youtube";
 
-const LINKS = [
+// v5 four-column footer (wireframes/homepage-v5.html). Rendered site-wide.
+const WATCH_READ = [
   { href: "/show", label: "The Show" },
-  { href: "/scores", label: "Scores" },
-  { href: "/play", label: "Play" },
-  { href: "/pickem", label: "Pick'Em" },
-  { href: "/poll", label: "JP Poll" },
-  { href: "/playoffs", label: "Playoffs" },
-  { href: "/teams", label: "Teams" },
-  { href: "/recruiting", label: "Recruiting" },
-  { href: "/notebook", label: "Notebook" },
+  { href: "/notebook", label: "The Notebook" },
   { href: "/wire", label: "The Wire" },
-  { href: "/porch", label: "The Porch" },
-  { href: "/tailgate", label: "Tailgate" },
-  { href: "/ledger", label: "Ledger" },
-  { href: "/shop", label: "Shop" },
   { href: "/report", label: "The Report" },
-  { href: "/search", label: "Search" },
+];
+
+const PLAY_VOTE = [
+  { href: "/poll", label: "JP Poll" },
+  { href: "/pickem", label: "Pick'Em" },
+  { href: "/playoffs", label: "Playoffs" },
+  { href: "/community", label: "The Porch" },
+];
+
+const THE_STATE = [
+  { href: "/teams", label: "Teams" },
+  { href: "/scores", label: "Scores" },
+  { href: "/recruiting", label: "Recruiting" },
+  { href: "/tailgate", label: "Tailgate" },
+  { href: "/shop", label: "Shop" },
   { href: "/about", label: "About" },
 ];
 
@@ -27,59 +30,49 @@ const LINKS = [
 const TRUST_LINKS = [
   { href: "/standards", label: "Editorial Standards & Corrections" },
   { href: "/standards#ai", label: "AI Disclosure" },
-  { href: "/privacy", label: "Privacy Policy" },
-  { href: "/terms", label: "Terms of Service" },
+  { href: "/privacy", label: "Privacy" },
+  { href: "/terms", label: "Terms" },
   { href: "/contact", label: "Contact" },
 ];
 
 const SOCIAL = [
-  { href: CHANNEL_URL, label: "▶ YOUTUBE" },
-  { href: SOCIAL_LINKS.x, label: "𝕏 @JOSHPATECFB" },
-  { href: SOCIAL_LINKS.instagram, label: "◉ INSTAGRAM" },
-  { href: SOCIAL_LINKS.tiktok, label: "♪ TIKTOK" },
-  { href: SOCIAL_LINKS.merch, label: "🛒 STATE STORE" },
+  { href: CHANNEL_URL, label: "▶ YouTube" },
+  { href: SOCIAL_LINKS.x, label: "𝕏" },
+  { href: SOCIAL_LINKS.instagram, label: "Instagram" },
+  { href: SOCIAL_LINKS.tiktok, label: "TikTok" },
 ];
 
-const pillStyle: CSSProperties = {
-  display: "inline-flex",
-  alignItems: "center",
-  gap: 8,
-  border: "1px solid var(--line-d)",
-  borderRadius: 20,
-  padding: "8px 16px",
-  color: "var(--chalk)",
-  fontFamily: "var(--mono)",
-  fontSize: 11,
-  letterSpacing: ".06em",
-};
+function Col({ title, links }: { title: string; links: { href: string; label: string }[] }) {
+  return (
+    <div className="ft-col">
+      <h5>{title}</h5>
+      {links.map((l) => (
+        <Link key={l.href} href={l.href}>{l.label}</Link>
+      ))}
+    </div>
+  );
+}
 
 export default function Footer() {
   return (
-    <footer>
-      <div className="wrap foot-row">
-        <div>
-          <div className="wordmark" style={{ fontSize: 20, color: "var(--chalk)" }}>
-            THE PATE <em style={{ color: "var(--lamp)" }}>STATE</em>
+    <footer className="v5 v5-footer">
+      <div className="wrap">
+        <div className="ft-top">
+          <div className="ft-brand">
+            <div className="name">The Pate <em>State</em></div>
+            <p>The front porch of college football. All picks logged. All poll results archived.</p>
+            <div className="ft-social">
+              {SOCIAL.map((s) => (
+                <a key={s.label} href={s.href} target="_blank" rel="noopener">{s.label}</a>
+              ))}
+            </div>
           </div>
-          <p style={{ marginTop: 8 }}>
-            The front porch of college football.
-            <br />
-            &copy; The Pate State. All picks logged. All poll results archived.
-          </p>
+          <Col title="Watch & Read" links={WATCH_READ} />
+          <Col title="Play & Vote" links={PLAY_VOTE} />
+          <Col title="The State" links={THE_STATE} />
         </div>
-        <div style={{ display: "flex", gap: 10, justifyContent: "center", flexWrap: "wrap", marginBottom: 22 }}>
-          {SOCIAL.map((s) => (
-            <a key={s.label} href={s.href} target="_blank" rel="noopener" style={pillStyle}>
-              {s.label}
-            </a>
-          ))}
-        </div>
-        <div className="foot-links">
-          {LINKS.map((l) => (
-            <Link key={l.href} href={l.href}>{l.label}</Link>
-          ))}
-        </div>
-        <div className="foot-links" style={{ marginTop: 14, opacity: 0.85 }}>
+        <div className="ft-bottom">
+          <span className="cr">© The Pate State</span>
           {TRUST_LINKS.map((l) => (
             <Link key={l.href} href={l.href}>{l.label}</Link>
           ))}

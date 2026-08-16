@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Pate State — Homepage v5 · Final Direction</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Zilla+Slab:ital,wght@0,500;0,600;0,700;1,600&family=Public+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --white:#FFFFFF;
+    --off:#F4F6F9;
+    --mast:#0D1321;
+    --navy:#0E2240;
+    --navy-deep:#0A1730;
+    --ink:#14181F;
+    --mut:#5B6472;
+    --hair:#E4E8EE;
+    --gold:#C9A227;
+    --gold-dk:#A8861B;
+    --red:#C8102E;
+    --cond:'Barlow Condensed',sans-serif;
+    --slab:'Public Sans',sans-serif;
+    --body:'Public Sans',sans-serif;
+    --sh-sm:0 2px 10px rgba(14,24,42,.08);
+    --sh-md:0 10px 28px rgba(14,24,42,.14);
+    --sh-lg:0 22px 55px rgba(14,24,42,.22);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--body);background:var(--white);color:var(--ink);-webkit-font-smoothing:antialiased}
+  a{color:inherit;text-decoration:none}
+  img{display:block;max-width:100%}
+  .wrap{max-width:1260px;margin:0 auto;padding:0 22px}
+  .col-title{font:800 32px/1 var(--slab);color:var(--ink);letter-spacing:-.01em;margin-bottom:18px}
+  .kick{font:800 11px/1 var(--cond);letter-spacing:.18em;text-transform:uppercase;color:var(--red)}
+  .sect-head{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;margin-bottom:20px}
+  .sect-head .eyebrow{font:700 10.5px/1 var(--cond);letter-spacing:.24em;text-transform:uppercase;color:var(--gold-dk);margin-bottom:6px}
+  .sect-head h2{font:700 32px/1 var(--slab);color:var(--navy);letter-spacing:-.01em}
+  .sect-head .more{font:700 12.5px/1 var(--cond);letter-spacing:.14em;text-transform:uppercase;color:var(--gold-dk);white-space:nowrap;padding-bottom:5px}
+  .sect-head .more:hover{color:var(--navy)}
+
+  /* ═══ RHYTHM BAR ═══ */
+  .rhythm{background:var(--navy-deep);color:#8FA0B8;font:600 10.5px/1 var(--cond);letter-spacing:.14em;text-transform:uppercase}
+  .rhythm .wrap{display:flex;align-items:center;height:29px;gap:18px;overflow-x:auto;scrollbar-width:none}
+  .rhythm .wrap::-webkit-scrollbar{display:none}
+  .rhythm span{white-space:nowrap}
+  .rhythm b{color:#C6D1E0;font-weight:700;margin-right:4px}
+  .rhythm .today{background:var(--gold);color:var(--navy-deep);padding:4px 10px;border-radius:3px;font-weight:800}
+  .rhythm .today b{color:var(--navy-deep)}
+  .rhythm .social-mini{margin-left:auto;display:flex;gap:14px}
+  .rhythm .social-mini a{color:#8FA0B8}
+  .rhythm .social-mini a:hover{color:var(--gold)}
+
+  /* ═══ MASTHEAD ═══ */
+  header{background:var(--mast);position:sticky;top:0;z-index:60;border-bottom:1px solid rgba(255,255,255,.07);box-shadow:0 6px 24px rgba(0,0,0,.35)}
+  .mast{display:flex;align-items:center;height:68px;gap:30px}
+  .logo{display:flex;flex-direction:column;gap:4px}
+  .logo .name{font:800 25px/1 var(--cond);letter-spacing:.03em;text-transform:uppercase;color:#F4F6F9}
+  .logo .name em{font-style:italic;color:var(--gold)}
+  .logo .kicker{font:600 8.5px/1 var(--cond);letter-spacing:.28em;text-transform:uppercase;color:#7C8797}
+  nav.main{display:flex;gap:1px}
+  nav.main a{font:700 13.5px/1 var(--cond);letter-spacing:.11em;text-transform:uppercase;color:#96A0AE;padding:26px 12px;transition:color .15s;position:relative}
+  nav.main a:hover{color:#fff}
+  nav.main a.active{color:#fff}
+  nav.main a.active::after{content:"";position:absolute;left:12px;right:12px;bottom:17px;height:2px;background:var(--gold)}
+  .mast .right{margin-left:auto;display:flex;align-items:center;gap:15px}
+  .myteams{font:600 12px/1 var(--cond);letter-spacing:.08em;text-transform:uppercase;color:#96A0AE;white-space:nowrap}
+  .myteams:hover{color:#fff}
+  .search{color:#96A0AE;font-size:16px}
+  .search:hover{color:#fff}
+  .join{font:800 12.5px/1 var(--cond);letter-spacing:.12em;text-transform:uppercase;color:var(--mast);background:var(--gold);padding:11px 17px;border-radius:4px;white-space:nowrap;box-shadow:0 4px 14px rgba(201,162,39,.35)}
+  .join:hover{background:#DCB43A}
+
+  /* ═══ SCORES TICKER ═══ */
+  .scores{background:var(--white);border-bottom:1px solid var(--hair);box-shadow:0 2px 8px rgba(14,24,42,.04)}
+  .scores .wrap{display:flex;align-items:center;gap:4px;height:44px;overflow-x:auto;scrollbar-width:none}
+  .scores .wrap::-webkit-scrollbar{display:none}
+  .scores .lbl{font:800 11px/1 var(--cond);letter-spacing:.16em;color:var(--red);white-space:nowrap;margin-right:8px}
+  .game{display:flex;align-items:center;gap:6px;padding:6px 12px;border-right:1px solid var(--hair);white-space:nowrap;font:600 12.5px/1 var(--body)}
+  .game img{width:18px;height:18px}
+  .game .at{color:#AAB2BD;font-size:10px}
+  .game .time{color:var(--mut);font-size:10.5px;font-weight:500;margin-left:2px}
+  .game:hover{background:var(--off)}
+
+  /* ═══ TOP EDITORIAL AREA — CFN style ═══ */
+  .top-ed{padding:30px 0 34px;background:var(--white)}
+  .top-grid{display:grid;grid-template-columns:.82fr 1.6fr .95fr;gap:34px}
+  /* trending */
+  .trend{display:flex;gap:14px;padding:15px 0;border-bottom:1px solid var(--hair);align-items:flex-start}
+  .trend:first-of-type{padding-top:2px}
+  .trend .n{width:34px;height:34px;min-width:34px;border-radius:50%;background:var(--ink);color:#fff;font:700 13px/34px var(--body);text-align:center;box-shadow:var(--sh-sm)}
+  .trend h4{font:600 17px/1.32 var(--slab);letter-spacing:-.01em}
+  .trend .by{font:500 12.5px/1 var(--body);color:var(--mut);margin-top:6px;display:block}
+  .trend:hover h4{color:var(--navy);text-decoration:underline;text-decoration-color:#C9CFD8;text-underline-offset:3px}
+  /* featured center */
+  .feat{display:block}
+  .feat h1{font:800 40px/1.07 var(--slab);color:var(--ink);letter-spacing:-.02em;margin:16px 0 10px}
+  .feat .thumb{position:relative;border-radius:6px;overflow:hidden;box-shadow:var(--sh-lg)}
+  .feat .thumb img{width:100%;aspect-ratio:16/8.9;object-fit:cover;transition:transform .5s}
+  .feat:hover .thumb img{transform:scale(1.02)}
+  .feat .thumb .tag{position:absolute;top:14px;left:14px;font:800 10.5px/1 var(--cond);letter-spacing:.16em;text-transform:uppercase;background:var(--gold);color:var(--mast);padding:7px 11px;border-radius:3px;box-shadow:var(--sh-sm)}
+  .feat .thumb .playbtn{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+  .feat .thumb .playbtn span{width:60px;height:60px;border-radius:50%;background:rgba(13,19,33,.84);color:var(--gold);display:flex;align-items:center;justify-content:center;font-size:20px;border:2px solid rgba(255,255,255,.65);transition:transform .2s;box-shadow:var(--sh-md)}
+  .feat:hover .thumb .playbtn span{transform:scale(1.08)}
+  .feat .under{margin-top:14px}
+  .feat .under .kick{margin-bottom:8px;display:block}
+  .feat .under h3{font:700 25px/1.2 var(--slab);color:var(--red)}
+  .feat:hover .under h3{color:#A00D25}
+  .feat .under p{font:400 15.5px/1.55 var(--body);color:var(--mut);margin-top:8px}
+  .feat .under .by{font:600 12px/1 var(--body);color:var(--mut);margin-top:9px;display:block}
+  /* latest right */
+  .latest-item{display:flex;gap:13px;padding:13px 0;border-bottom:1px solid var(--hair);align-items:flex-start}
+  .latest-item:first-of-type{padding-top:2px}
+  .latest-item .th{width:88px;min-width:88px;height:64px;border-radius:6px;overflow:hidden;box-shadow:var(--sh-sm);background:var(--off)}
+  .latest-item .th img{width:100%;height:100%;object-fit:cover}
+  .latest-item .th.logo img{object-fit:contain;padding:8px}
+  .latest-item h4{font:600 16px/1.32 var(--slab)}
+  .latest-item .t{font:600 10.5px/1 var(--cond);letter-spacing:.12em;text-transform:uppercase;color:var(--mut);margin-top:6px;display:block}
+  .latest-item .t b{color:var(--red)}
+  .latest-item:hover h4{color:var(--navy);text-decoration:underline;text-decoration-color:#C9CFD8;text-underline-offset:3px}
+
+  /* action strip under top area */
+  .action-strip{margin-top:26px;background:var(--mast);border-radius:10px;display:flex;align-items:stretch;overflow:hidden;box-shadow:var(--sh-md)}
+  .as-item{flex:1;display:flex;align-items:center;gap:13px;padding:16px 20px;border-right:1px solid rgba(255,255,255,.1);transition:background .15s}
+  .as-item:hover{background:rgba(255,255,255,.05)}
+  .as-item:last-child{border-right:none}
+  .as-item .ico{font-size:20px}
+  .as-item .k{font:800 10px/1 var(--cond);letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin-bottom:5px}
+  .as-item .k.live{color:#E4572E;display:flex;align-items:center;gap:6px}
+  .as-item .k.live::before{content:"";width:6px;height:6px;border-radius:50%;background:#E4572E;animation:pulse 1.6s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+  .as-item h4{font:700 13.5px/1.25 var(--body);color:#EDEFF3}
+  .as-cta{display:flex;align-items:center;padding:0 20px;background:var(--gold)}
+  .as-cta a{font:800 13px/1.2 var(--cond);letter-spacing:.1em;text-transform:uppercase;color:var(--mast);white-space:nowrap}
+
+  /* ═══ YOUR TEAMS (tight band) ═══ */
+  .yours{background:var(--off);border-top:1px solid var(--hair);border-bottom:1px solid var(--hair);padding:22px 0}
+  .yours .wrap{display:flex;align-items:center;gap:14px}
+  .yours .lbl{font:800 12px/1.3 var(--cond);letter-spacing:.2em;text-transform:uppercase;color:var(--navy);white-space:nowrap;margin-right:6px}
+  .yours .lbl a{display:block;font:700 10px/1 var(--cond);letter-spacing:.12em;color:var(--gold-dk);margin-top:4px}
+  .team{flex:1;display:flex;align-items:center;gap:12px;background:var(--white);border:1px solid var(--hair);border-radius:8px;padding:12px 14px;transition:transform .15s,box-shadow .15s,border-color .15s;box-shadow:var(--sh-sm)}
+  .team:hover{transform:translateY(-2px);box-shadow:var(--sh-md);border-color:var(--navy)}
+  .team img{width:36px;height:36px}
+  .team .nm{font:700 14px/1 var(--body)}
+  .team .nx{font:500 11px/1.35 var(--body);color:var(--mut);margin-top:3px}
+  .team .new{margin-left:auto;font:700 9.5px/1 var(--body);background:rgba(200,16,46,.08);color:var(--red);padding:5px 8px;border-radius:20px;white-space:nowrap}
+
+  /* ═══ THE SHOW — SI style ═══ */
+  .show{background:var(--white);padding:40px 0 44px}
+  .show-grid{display:grid;grid-template-columns:1.45fr 1fr;gap:34px}
+  .sh-feat{display:block}
+  .sh-feat .thumb{position:relative;border-radius:6px;overflow:hidden;box-shadow:var(--sh-lg)}
+  .sh-feat .thumb img{width:100%;aspect-ratio:16/9;object-fit:cover;transition:transform .5s}
+  .sh-feat:hover .thumb img{transform:scale(1.02)}
+  .sh-feat .thumb .tag{position:absolute;top:14px;left:14px;font:800 10.5px/1 var(--cond);letter-spacing:.16em;text-transform:uppercase;background:var(--red);color:#fff;padding:7px 11px;border-radius:3px;box-shadow:var(--sh-sm)}
+  .sh-feat .thumb .playbtn{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+  .sh-feat .thumb .playbtn span{width:62px;height:62px;border-radius:50%;background:rgba(200,16,46,.92);color:#fff;display:flex;align-items:center;justify-content:center;font-size:21px;transition:transform .2s;box-shadow:var(--sh-md)}
+  .sh-feat:hover .thumb .playbtn span{transform:scale(1.08)}
+  .sh-feat h3{font:700 31px/1.14 var(--slab);color:var(--red);margin-top:16px}
+  .sh-feat:hover h3{color:#A00D25}
+  .sh-feat p{font:400 15px/1.55 var(--body);color:var(--mut);margin-top:9px}
+  .sh-feat .by{font:600 12px/1.4 var(--cond);letter-spacing:.1em;text-transform:uppercase;color:#9AA1AB;margin-top:10px;display:block}
+  .sh-list{display:flex;flex-direction:column}
+  .sh-row{display:flex;gap:16px;padding:14px 0;border-bottom:1px solid var(--hair);align-items:flex-start}
+  .sh-row:first-child{padding-top:0}
+  .sh-row .th{position:relative;width:158px;min-width:158px;border-radius:6px;overflow:hidden;box-shadow:var(--sh-sm)}
+  .sh-row .th img{width:100%;aspect-ratio:16/9;object-fit:cover;transition:transform .4s}
+  .sh-row:hover .th img{transform:scale(1.04)}
+  .sh-row .th .pl{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+  .sh-row .th .pl span{width:32px;height:32px;border-radius:50%;background:rgba(13,19,33,.78);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px}
+  .sh-row h4{font:700 18px/1.28 var(--slab)}
+  .sh-row:hover h4{color:var(--red)}
+  .sh-row .by{font:600 11px/1.4 var(--cond);letter-spacing:.1em;text-transform:uppercase;color:#9AA1AB;margin-top:7px;display:block}
+  /* shorts */
+  .shorts-band{background:var(--mast);border-radius:12px;padding:22px;margin-top:30px;box-shadow:var(--sh-md)}
+  .shorts-h{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:14px}
+  .shorts-h h3{font:800 13px/1 var(--cond);letter-spacing:.22em;text-transform:uppercase;color:#F4F6F9}
+  .shorts-h a{font:700 11px/1 var(--cond);letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+  .shorts{display:grid;grid-template-columns:repeat(6,1fr);gap:12px}
+  .short{position:relative;border-radius:8px;overflow:hidden;aspect-ratio:9/15;background:#000;box-shadow:var(--sh-sm);transition:transform .2s}
+  .short:hover{transform:translateY(-3px)}
+  .short img{width:100%;height:100%;object-fit:cover;opacity:.9;transition:opacity .2s}
+  .short:hover img{opacity:1}
+  .short .cap{position:absolute;left:9px;right:9px;bottom:9px;font:600 11px/1.3 var(--body);color:#fff;text-shadow:0 1px 8px rgba(0,0,0,.85)}
+  .show .platforms{display:flex;gap:10px;margin-top:20px;align-items:center}
+  .show .platforms .plbl{font:800 10.5px/1 var(--cond);letter-spacing:.18em;text-transform:uppercase;color:var(--mut);margin-right:4px}
+  .show .platforms a{font:700 11px/1 var(--cond);letter-spacing:.12em;text-transform:uppercase;color:var(--navy);border:1px solid var(--hair);padding:9px 13px;border-radius:20px;box-shadow:var(--sh-sm);transition:transform .15s}
+  .show .platforms a:hover{transform:translateY(-1px);border-color:var(--gold);color:var(--gold-dk)}
+
+  /* ═══ NOTEBOOK + WIRE (mirrors live site, elevated) ═══ */
+  .notebook{background:var(--off);border-top:1px solid var(--hair);padding:40px 0 44px}
+  .nb-grid{display:grid;grid-template-columns:1.65fr 1fr;gap:30px}
+  .nb-feat{background:var(--white);border:1px solid var(--hair);border-radius:10px;overflow:hidden;box-shadow:var(--sh-md);display:block;transition:transform .15s,box-shadow .2s}
+  .nb-feat:hover{transform:translateY(-3px);box-shadow:var(--sh-lg)}
+  .nb-feat img{width:100%;aspect-ratio:16/7.4;object-fit:cover}
+  .nb-feat .pad{padding:20px 22px}
+  .nb-feat h3{font:700 26px/1.2 var(--slab);color:var(--navy);margin-top:8px}
+  .nb-feat p{font:400 14px/1.55 var(--body);color:var(--mut);margin-top:8px}
+  .nb-feat .by{font:600 11.5px/1 var(--body);color:var(--mut);margin-top:10px;display:block}
+  .nb-two{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+  .nb-sm{background:var(--white);border:1px solid var(--hair);border-radius:10px;padding:16px 18px;box-shadow:var(--sh-sm);transition:transform .15s,box-shadow .2s;display:block}
+  .nb-sm:hover{transform:translateY(-2px);box-shadow:var(--sh-md)}
+  .nb-sm .t{font:800 10px/1 var(--cond);letter-spacing:.14em;text-transform:uppercase;color:var(--gold-dk);margin-bottom:8px;display:block}
+  .nb-sm h4{font:700 17px/1.3 var(--slab)}
+  .nb-sm:hover h4{color:var(--navy)}
+  /* wire */
+  .wire{background:var(--white);border:1px solid var(--hair);border-radius:10px;box-shadow:var(--sh-md);overflow:hidden;display:flex;flex-direction:column}
+  .wire .wh{display:flex;align-items:center;justify-content:space-between;background:var(--navy);color:#fff;padding:15px 18px}
+  .wire .wh h3{font:800 13px/1 var(--cond);letter-spacing:.22em;text-transform:uppercase}
+  .wire .wh .lv{font:700 10px/1 var(--cond);letter-spacing:.12em;text-transform:uppercase;color:#FF8A70;display:flex;align-items:center;gap:6px}
+  .wire .wh .lv::before{content:"";width:6px;height:6px;border-radius:50%;background:#FF8A70;animation:pulse 1.6s infinite}
+  .wi{display:block;padding:13px 18px;border-bottom:1px solid var(--hair)}
+  .wi:hover{background:var(--off)}
+  .wi .t{font:600 10px/1 var(--cond);letter-spacing:.12em;text-transform:uppercase;color:var(--mut);margin-bottom:5px}
+  .wi .t b{color:var(--red)}
+  .wi h4{font:600 14.5px/1.35 var(--body)}
+  .wire .all{padding:14px 18px;font:700 12px/1 var(--cond);letter-spacing:.14em;text-transform:uppercase;color:var(--gold-dk);text-align:center}
+  .wire .all:hover{color:var(--navy)}
+
+  /* ═══ JP POLL + PICK'EM ═══ */
+  .games-band{background:var(--white);padding:40px 0 44px}
+  .duo{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+  .card-poll,.card-pick{border-radius:12px;padding:26px 26px;position:relative;overflow:hidden;transition:transform .15s,box-shadow .2s}
+  .card-poll:hover,.card-pick:hover{transform:translateY(-3px)}
+  .card-poll{background:linear-gradient(150deg,var(--navy) 0%,var(--navy-deep) 100%);color:#EDF1F7;box-shadow:var(--sh-lg)}
+  .card-poll::after{content:"🗳";position:absolute;right:-14px;bottom:-22px;font-size:130px;opacity:.08}
+  .card-pick{background:var(--white);border:1.5px solid var(--navy);box-shadow:var(--sh-md)}
+  .card-pick:hover{box-shadow:var(--sh-lg)}
+  .card-pick::after{content:"✓";position:absolute;right:-8px;bottom:-40px;font-size:170px;opacity:.05;color:var(--navy);font-family:var(--cond);font-weight:800}
+  .gc-k{font:800 11px/1 var(--cond);letter-spacing:.2em;text-transform:uppercase;margin-bottom:9px}
+  .card-poll .gc-k{color:var(--gold)}
+  .card-pick .gc-k{color:var(--red)}
+  .gc-title{font:700 24px/1.1 var(--slab);margin-bottom:5px}
+  .card-pick .gc-title{color:var(--navy)}
+  .gc-sub{font:500 13px/1.5 var(--body);margin-bottom:14px}
+  .card-poll .gc-sub{color:#B9C6D8}
+  .card-pick .gc-sub{color:var(--mut)}
+  .gc-row{display:flex;gap:13px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.12);font:500 12.5px/1.4 var(--body)}
+  .card-pick .gc-row{border-color:var(--hair);color:#3D4654}
+  .card-poll .gc-row{color:#D5DCE7}
+  .gc-row b{font:800 10.5px/1.55 var(--cond);letter-spacing:.1em;text-transform:uppercase;min-width:84px}
+  .card-poll .gc-row b{color:var(--gold)}
+  .card-pick .gc-row b{color:var(--navy)}
+  .gc-btn{display:inline-block;font:800 12.5px/1 var(--cond);letter-spacing:.12em;text-transform:uppercase;padding:13px 20px;border-radius:5px;margin-top:16px;box-shadow:var(--sh-sm)}
+  .card-poll .gc-btn{background:var(--gold);color:var(--mast)}
+  .card-poll .gc-btn:hover{background:#DCB43A}
+  .card-pick .gc-btn{background:var(--navy);color:#fff}
+  .card-pick .gc-btn:hover{background:var(--navy-deep)}
+
+  /* ═══ THE PORCH — FORUM ═══ */
+  .porch{background:var(--off);border-top:1px solid var(--hair);padding:40px 0 44px}
+  .porch-grid{display:grid;grid-template-columns:1.65fr 1fr;gap:30px;align-items:start}
+  .thread{display:flex;gap:15px;background:var(--white);border:1px solid var(--hair);border-radius:10px;padding:16px 18px;margin-bottom:12px;box-shadow:var(--sh-sm);transition:transform .15s,box-shadow .2s;align-items:flex-start}
+  .thread:hover{transform:translateY(-2px);box-shadow:var(--sh-md)}
+  .thread .av{width:38px;height:38px;min-width:38px;border-radius:50%;font:800 13px/38px var(--cond);text-align:center;color:#fff;box-shadow:var(--sh-sm)}
+  .av.a1{background:var(--navy)}.av.a2{background:#7A1F2B}.av.a3{background:#3E5C3A}.av.a4{background:var(--gold-dk)}
+  .thread .cat{font:800 9.5px/1 var(--cond);letter-spacing:.14em;text-transform:uppercase;color:var(--gold-dk);margin-bottom:5px;display:flex;gap:8px;align-items:center}
+  .thread .cat .hot{color:var(--red)}
+  .thread h4{font:700 17.5px/1.3 var(--slab)}
+  .thread:hover h4{color:var(--navy)}
+  .thread .meta{font:500 11.5px/1 var(--body);color:var(--mut);margin-top:7px}
+  .thread .replies{margin-left:auto;text-align:center;min-width:56px;background:var(--off);border-radius:8px;padding:9px 8px}
+  .thread .replies b{display:block;font:700 17px/1 var(--slab);color:var(--navy)}
+  .thread .replies span{font:600 9px/1 var(--cond);letter-spacing:.12em;text-transform:uppercase;color:var(--mut)}
+  .porch-side{background:linear-gradient(150deg,var(--navy) 0%,var(--navy-deep) 100%);border-radius:12px;padding:26px;color:#EDF1F7;box-shadow:var(--sh-lg);position:sticky;top:88px}
+  .porch-side .on{display:flex;align-items:center;gap:9px;font:700 11px/1 var(--cond);letter-spacing:.14em;text-transform:uppercase;color:#8CE99A;margin-bottom:12px}
+  .porch-side .on::before{content:"";width:7px;height:7px;border-radius:50%;background:#8CE99A;animation:pulse 1.6s infinite}
+  .porch-side h3{font:700 24px/1.15 var(--slab);margin-bottom:9px}
+  .porch-side p{font:400 13.5px/1.55 var(--body);color:#B9C6D8;margin-bottom:18px}
+  .porch-side .btn{display:inline-block;font:800 12.5px/1 var(--cond);letter-spacing:.12em;text-transform:uppercase;background:var(--gold);color:var(--mast);padding:13px 20px;border-radius:5px;box-shadow:var(--sh-sm)}
+  .porch-side .btn:hover{background:#DCB43A}
+  .porch-side .rules{font:500 11px/1.6 var(--body);color:#8FA0B8;margin-top:14px}
+
+  /* ═══ PLAYBOOK ═══ */
+  .playbook{background:var(--white);padding:40px 0 44px}
+  .pb-grid{display:grid;grid-template-columns:1fr 1.1fr;gap:40px;align-items:center}
+  .pb-copy h2{font:700 32px/1.1 var(--slab);color:var(--navy);margin:9px 0 12px}
+  .pb-copy p{font:400 14.5px/1.6 var(--body);color:var(--mut);margin-bottom:16px}
+  .pb-form{display:flex;gap:10px}
+  .pb-form input{flex:1;font:500 14px var(--body);padding:13px 15px;border:1.5px solid var(--hair);border-radius:5px;outline:none;box-shadow:var(--sh-sm) inset}
+  .pb-form input:focus{border-color:var(--navy)}
+  .pb-form button{font:800 12.5px/1 var(--cond);letter-spacing:.12em;text-transform:uppercase;background:var(--navy);color:#fff;border:none;padding:13px 19px;border-radius:5px;cursor:pointer;box-shadow:var(--sh-sm)}
+  .pb-form button:hover{background:var(--navy-deep)}
+  .pb-copy .perks{font:500 12px/1.7 var(--body);color:var(--mut);margin-top:13px}
+  .pb-copy .perks b{color:var(--ink)}
+  .inbox{background:var(--white);border:1px solid var(--hair);border-radius:12px;padding:20px;box-shadow:var(--sh-lg);transform:rotate(.5deg)}
+  .inbox .from{font:600 11px/1 var(--body);color:var(--mut);padding-bottom:12px;border-bottom:1px solid var(--hair);margin-bottom:12px}
+  .inbox .from b{color:var(--ink)}
+  .inbox .subj{font:700 16.5px/1.3 var(--slab);color:var(--navy);margin-bottom:12px}
+  .inbox ul{list-style:none}
+  .inbox li{font:500 12.5px/1.45 var(--body);color:#3D4654;padding:8px 0 8px 19px;border-bottom:1px solid var(--hair);position:relative}
+  .inbox li::before{content:"";position:absolute;left:2px;top:14px;width:7px;height:7px;border-radius:50%;background:var(--gold)}
+  .inbox .ritual{font:600 12px/1.5 var(--body);color:var(--navy);margin-top:12px}
+
+  /* ═══ STORE ═══ */
+  .store{background:var(--off);border-top:1px solid var(--hair);padding:40px 0 44px}
+  .store-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  .prod{background:var(--white);border:1px solid var(--hair);border-radius:10px;overflow:hidden;box-shadow:var(--sh-sm);transition:transform .18s,box-shadow .2s}
+  .prod:hover{transform:translateY(-5px);box-shadow:var(--sh-lg)}
+  .prod img{width:100%;aspect-ratio:1/.8;object-fit:cover;background:var(--off)}
+  .prod .info{padding:14px 17px;display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+  .prod h4{font:700 12.5px/1.3 var(--cond);letter-spacing:.1em;text-transform:uppercase}
+  .prod .pr{font:700 15px/1 var(--slab);color:var(--navy);white-space:nowrap}
+
+  /* ═══ ON CAMPUS ═══ */
+  .campus{background:linear-gradient(150deg,var(--navy) 0%,var(--navy-deep) 100%);color:#EDF1F7;padding:44px 0}
+  .campus .wrap{display:grid;grid-template-columns:1.05fr 1fr;gap:40px;align-items:center}
+  .campus .eyebrow{font:700 10.5px/1 var(--cond);letter-spacing:.24em;text-transform:uppercase;color:var(--gold)}
+  .campus h2{font:700 32px/1.1 var(--slab);color:#fff;margin:9px 0 12px}
+  .campus p{font:400 14.5px/1.6 var(--body);color:#B9C6D8;margin-bottom:16px}
+  .campus .badge{display:inline-block;font:800 10.5px/1 var(--cond);letter-spacing:.16em;text-transform:uppercase;background:rgba(201,162,39,.16);border:1px solid rgba(201,162,39,.45);color:var(--gold);padding:8px 13px;border-radius:20px;margin-bottom:14px}
+  .campus .primary{display:inline-block;font:800 12.5px/1 var(--cond);letter-spacing:.12em;text-transform:uppercase;background:var(--gold);color:var(--mast);padding:13px 19px;border-radius:5px;box-shadow:var(--sh-sm)}
+  .campus .primary:hover{background:#DCB43A}
+  .campus .photo{border-radius:12px;overflow:hidden;box-shadow:var(--sh-lg);transform:rotate(-.6deg)}
+  .campus .photo img{width:100%;aspect-ratio:16/9.6;object-fit:cover}
+
+  /* ═══ TAILGATE ═══ */
+  .tailgate{background:var(--white);padding:40px 0 44px}
+  .tg-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+  .tg{position:relative;border-radius:10px;overflow:hidden;aspect-ratio:3/3.5;background:linear-gradient(168deg,var(--navy) 0%,var(--navy-deep) 100%);padding:18px;display:flex;flex-direction:column;transition:transform .18s,box-shadow .2s;box-shadow:var(--sh-md)}
+  .tg:hover{transform:translateY(-5px);box-shadow:var(--sh-lg)}
+  .tg::before{content:"";position:absolute;inset:0;background:radial-gradient(400px 300px at 85% -10%,rgba(201,162,39,.24),transparent 60%)}
+  .tg img{width:60px;height:60px;position:relative;filter:drop-shadow(0 6px 14px rgba(0,0,0,.45))}
+  .tg .venue{font:700 20px/1.1 var(--slab);color:#fff;margin-top:auto;position:relative}
+  .tg .k{font:700 9.5px/1.5 var(--cond);letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin-top:7px;position:relative}
+
+  /* ═══ CITIZEN GIFT ═══ */
+  .gift{background:linear-gradient(135deg,var(--navy-deep) 0%,var(--navy) 100%);color:#EDF1F7;padding:44px 0}
+  .gift .wrap{display:grid;grid-template-columns:.72fr 1.4fr;gap:46px;align-items:center}
+  .gift .cover{border-radius:10px;overflow:hidden;box-shadow:0 30px 70px rgba(0,0,0,.5);transform:rotate(-2.5deg);transition:transform .25s}
+  .gift .cover:hover{transform:rotate(-1deg) scale(1.02)}
+  .gift .eyebrow{font:700 10.5px/1 var(--cond);letter-spacing:.24em;text-transform:uppercase;color:var(--gold)}
+  .gift h2{font:700 33px/1.12 var(--slab);color:#fff;margin:11px 0 12px}
+  .gift p{font:400 14.5px/1.6 var(--body);color:#B9C6D8;margin-bottom:20px;max-width:560px}
+  .gift .primary{font:800 12.5px/1 var(--cond);letter-spacing:.12em;text-transform:uppercase;background:var(--gold);color:var(--mast);padding:14px 21px;border-radius:5px;box-shadow:var(--sh-sm)}
+  .gift .primary:hover{background:#DCB43A}
+  .gift .ghost{font:800 12.5px/1 var(--cond);letter-spacing:.12em;text-transform:uppercase;border:1px solid rgba(255,255,255,.3);color:#EDF1F7;padding:14px 21px;border-radius:5px;margin-left:10px}
+  .gift .ghost:hover{border-color:var(--gold);color:var(--gold)}
+
+  /* ═══ FOLLOW / SOCIAL ═══ */
+  .follow{background:var(--white);padding:36px 0}
+  .follow .wrap{text-align:center}
+  .follow .eyebrow{font:700 10.5px/1 var(--cond);letter-spacing:.24em;text-transform:uppercase;color:var(--gold-dk)}
+  .follow h2{font:700 27px/1.1 var(--slab);color:var(--navy);margin:9px 0 20px}
+  .socials{display:flex;justify-content:center;gap:14px;flex-wrap:wrap}
+  .soc{display:flex;align-items:center;gap:10px;font:800 13px/1 var(--cond);letter-spacing:.1em;text-transform:uppercase;padding:15px 22px;border-radius:8px;box-shadow:var(--sh-md);transition:transform .18s,box-shadow .2s;color:#fff}
+  .soc:hover{transform:translateY(-3px);box-shadow:var(--sh-lg)}
+  .soc.yt{background:#B3261E}
+  .soc.x{background:var(--ink)}
+  .soc.ig{background:linear-gradient(45deg,#5B2C8D,#B02A6E)}
+  .soc.tt{background:var(--navy)}
+
+  /* ═══ PLAYOFFS RIBBON ═══ */
+  .playoffs{background:var(--off);border-top:1px solid var(--hair);padding:30px 0}
+  .playoffs .band{padding:22px 26px;border:1.5px solid var(--navy);border-radius:12px;display:flex;align-items:center;gap:20px;background:var(--white);box-shadow:var(--sh-md)}
+  .playoffs .tro{font-size:28px}
+  .playoffs h3{font:700 20px/1.2 var(--slab);color:var(--navy)}
+  .playoffs p{font:600 10.5px/1.4 var(--cond);letter-spacing:.14em;text-transform:uppercase;color:var(--mut);margin-top:4px}
+  .playoffs a.btn{margin-left:auto;font:800 12.5px/1 var(--cond);letter-spacing:.12em;text-transform:uppercase;background:var(--navy);color:#fff;padding:13px 19px;border-radius:5px;white-space:nowrap;box-shadow:var(--sh-sm)}
+  .playoffs a.btn:hover{background:var(--navy-deep)}
+
+  /* ═══ FOOTER ═══ */
+  footer{background:var(--mast);color:#8FA0B8;padding:44px 0 30px}
+  .ft-top{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:32px;padding-bottom:30px;border-bottom:1px solid rgba(255,255,255,.08)}
+  .ft-brand .name{font:800 23px/1 var(--cond);letter-spacing:.03em;text-transform:uppercase;color:#F4F6F9}
+  .ft-brand .name em{font-style:italic;color:var(--gold)}
+  .ft-brand p{font:500 12.5px/1.7 var(--body);margin-top:11px;max-width:280px}
+  .ft-social{display:flex;gap:9px;margin-top:16px}
+  .ft-social a{font:700 10px/1 var(--cond);letter-spacing:.1em;text-transform:uppercase;border:1px solid rgba(255,255,255,.14);padding:8px 12px;border-radius:20px}
+  .ft-social a:hover{border-color:var(--gold);color:var(--gold)}
+  .ft-col h5{font:800 10.5px/1 var(--cond);letter-spacing:.22em;text-transform:uppercase;color:#C6D1E0;margin-bottom:14px}
+  .ft-col a{display:block;font:500 12.5px/1 var(--body);padding:6px 0}
+  .ft-col a:hover{color:#fff}
+  .ft-bottom{display:flex;flex-wrap:wrap;gap:10px 22px;padding-top:20px;font:500 11px/1.6 var(--body)}
+  .ft-bottom a:hover{color:#fff}
+  .ft-bottom .cr{margin-right:auto}
+
+  /* ═══ RESPONSIVE ═══ */
+  @media(max-width:1080px){
+    .top-grid{grid-template-columns:1fr 1fr}
+    .top-col-latest{grid-column:1/-1}
+    .show-grid,.nb-grid,.porch-grid{grid-template-columns:1fr}
+    .shorts{grid-template-columns:repeat(4,1fr)}
+    .shorts .short:nth-child(n+5){display:none}
+    nav.main{display:none}
+    .ft-top{grid-template-columns:1fr 1fr}
+    .yours .wrap{flex-wrap:wrap}
+    .team{min-width:46%}
+    .porch-side{position:static}
+  }
+  @media(max-width:760px){
+    .top-grid,.duo,.pb-grid,.store-grid,.campus .wrap,.gift .wrap{grid-template-columns:1fr}
+    .tg-grid{grid-template-columns:1fr 1fr}
+    .shorts{grid-template-columns:repeat(2,1fr)}
+    .feat h1{font-size:29px}
+    .sh-feat h3{font-size:24px}
+    .sect-head h2{font-size:26px}
+    .action-strip{flex-direction:column}
+    .as-item{border-right:none;border-bottom:1px solid rgba(255,255,255,.1)}
+    .as-cta{padding:16px 20px;justify-content:center}
+    .yours .lbl{width:100%}
+    .team{min-width:100%}
+    .playoffs .band{flex-wrap:wrap}
+    .playoffs a.btn{margin-left:0}
+    .gift .cover{max-width:250px;margin:0 auto}
+    .mast{height:62px}
+    .sh-row .th{width:120px;min-width:120px}
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══ RHYTHM BAR + mini social ═══ -->
+<div class="rhythm">
+  <div class="wrap">
+    <span><b>MON</b> Weekend Truths</span>
+    <span><b>TUE</b> Poll Day</span>
+    <span class="today"><b>WED</b> The Sit-Down</span>
+    <span><b>THU</b> Picks Drop</span>
+    <span><b>FRI</b> The ESPN Show</span>
+    <span><b>SAT</b> We Watch Ball</span>
+    <span class="social-mini">
+      <a href="#" aria-label="YouTube">▶</a>
+      <a href="#" aria-label="X">𝕏</a>
+      <a href="#" aria-label="Instagram">◉</a>
+      <a href="#" aria-label="TikTok">♪</a>
+    </span>
+  </div>
+</div>
+
+<!-- ═══ MASTHEAD ═══ -->
+<header>
+  <div class="wrap mast">
+    <a class="logo" href="#">
+      <span class="name">The Pate <em>State</em></span>
+      <span class="kicker">The Front Porch of College Football</span>
+    </a>
+    <nav class="main">
+      <a class="active" href="#">Latest</a>
+      <a href="#show">Show</a>
+      <a href="#">Scores</a>
+      <a href="#poll">Rankings</a>
+      <a href="#">Recruiting</a>
+      <a href="#poll">Play</a>
+      <a href="#porch">Community</a>
+      <a href="#">More ▾</a>
+    </nav>
+    <div class="right">
+      <a class="myteams" href="#yourteams">♡ My Teams</a>
+      <a class="search" href="#" aria-label="Search">⌕</a>
+      <a class="join" href="#">Join Free</a>
+    </div>
+  </div>
+</header>
+
+<!-- ═══ SCORES TICKER ═══ -->
+<div class="scores">
+  <div class="wrap">
+    <span class="lbl">WK 1 SLATE</span>
+    <a class="game" href="#"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/153.png" alt="">UNC <span class="at">@</span> <img src="https://a.espncdn.com/i/teamlogos/ncaa/500/2628.png" alt="">TCU <span class="time">SAT 12:00</span></a>
+    <a class="game" href="#"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/152.png" alt="">NCSU <span class="at">@</span> <img src="https://a.espncdn.com/i/teamlogos/ncaa/500/258.png" alt="">UVA <span class="time">SAT 3:30</span></a>
+    <a class="game" href="#"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/38.png" alt="">COLO <span class="at">@</span> <img src="https://a.espncdn.com/i/teamlogos/ncaa/500/59.png" alt="">GT <span class="time">THU 8:00</span></a>
+    <a class="game" href="#"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/2390.png" alt="">MIA <span class="at">@</span> <img src="https://a.espncdn.com/i/teamlogos/ncaa/500/24.png" alt="">STAN <span class="time">FRI 9:00</span></a>
+    <a class="game" href="#"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/103.png" alt="">BC <span class="at">@</span> <img src="https://a.espncdn.com/i/teamlogos/ncaa/500/2132.png" alt="">CIN <span class="time">SAT 3:30</span></a>
+    <a class="game" href="#"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/228.png" alt="">CLEM <span class="at">@</span> <img src="https://a.espncdn.com/i/teamlogos/ncaa/500/99.png" alt="">LSU <span class="time">SAT 7:30</span></a>
+  </div>
+</div>
+
+<!-- ═══ TOP EDITORIAL — Trending | Featured | Latest ═══ -->
+<section class="top-ed">
+  <div class="wrap">
+    <div class="top-grid">
+
+      <div>
+        <div class="col-title">Trending</div>
+        <a class="trend" href="#"><span class="n">01</span><div><h4>Pate's Boldest Bet: Texas A&amp;M Runs the Table Through the SEC's Meanest Stretch</h4><span class="by">The Pate State Staff</span></div></a>
+        <a class="trend" href="#"><span class="n">02</span><div><h4>John Matier at No. 3 Means Oklahoma Makes the Playoff</h4><span class="by">The Pate State Staff</span></div></a>
+        <a class="trend" href="#"><span class="n">03</span><div><h4>Pate's Read on LSU: Highest Ceiling, Lowest Floor Certainty in the Country</h4><span class="by">The Pate State Staff</span></div></a>
+        <a class="trend" href="#"><span class="n">04</span><div><h4>The Week 1 Watch Order: Six Windows, Zero Wasted Saturdays</h4><span class="by">The Pate State Staff</span></div></a>
+      </div>
+
+      <a class="feat" href="#">
+        <div class="thumb">
+          <img src="https://i2.ytimg.com/vi/EHB4bQ6TwV4/hqdefault.jpg" alt="Today's episode">
+          <span class="tag">Today's Show · Sit-Down Wednesday</span>
+          <div class="playbtn"><span>▶</span></div>
+        </div>
+        <div class="under">
+          <h1>SEC Preseason QB Rankings</h1>
+          <p>Sixteen starters, one board, every pick logged. Josh makes the case for the top three — and the one name everyone has too low.</p>
+          <span class="by">Josh Pate · Aug 12, 2026 · ▶ 18:42</span>
+        </div>
+      </a>
+
+      <div class="top-col-latest">
+        <div class="col-title">Latest</div>
+        <a class="latest-item" href="#"><span class="th"><img src="https://i3.ytimg.com/vi/ftT_RmzipRM/hqdefault.jpg" alt=""></span><div><h4>Fall Camp Intel: Ohio State WRs, FSU Outlook &amp; Oregon's Offense</h4><span class="t"><b>New</b> · The Show</span></div></a>
+        <a class="latest-item" href="#"><span class="th logo"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/87.png" alt=""></span><div><h4>Notre Dame among teams to fall short of 2026 win projections</h4><span class="t"><b>3 min</b> · Media</span></div></a>
+        <a class="latest-item" href="#"><span class="th logo"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/2483.png" alt=""></span><div><h4>Oregon emerging as early contender for 2028 four-star OT</h4><span class="t"><b>3 min</b> · Recruiting</span></div></a>
+        <a class="latest-item" href="#"><span class="th logo"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/99.png" alt=""></span><div><h4>Clemson–LSU Week 1 matchup set for College GameDay</h4><span class="t"><b>23 min</b> · Breaking</span></div></a>
+      </div>
+
+    </div>
+
+    <!-- Action strip: poll, picks, porch, ballot CTA -->
+    <div class="action-strip">
+      <a class="as-item" href="#poll"><span class="ico">🗳</span><div><div class="k live">Live · Poll Open</div><h4>Week 1 JP Poll ballots are live for every citizen</h4></div></a>
+      <a class="as-item" href="#poll"><span class="ico">✓</span><div><div class="k">Pick'Em</div><h4>Make your Week 1 picks — lock Sat 11:58 AM ET</h4></div></a>
+      <a class="as-item" href="#porch"><span class="ico">🪑</span><div><div class="k">The Porch</div><h4>1,204 citizens talking ball right now</h4></div></a>
+      <div class="as-cta"><a href="#">Cast Your Ballot →</a></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ YOUR TEAMS (tight) ═══ -->
+<div class="yours" id="yourteams">
+  <div class="wrap">
+    <div class="lbl">♡ Your Teams<a href="#">Edit</a></div>
+    <a class="team" href="#"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/61.png" alt="Georgia"><div><div class="nm">Georgia</div><div class="nx">vs Clemson · SAT 7:30</div></div><span class="new">3 new</span></a>
+    <a class="team" href="#"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/2633.png" alt="Tennessee"><div><div class="nm">Tennessee</div><div class="nx">vs NC State · SAT 3:30</div></div><span class="new">2 new</span></a>
+    <a class="team" href="#"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/194.png" alt="Ohio State"><div><div class="nm">Ohio State</div><div class="nx">vs Texas · SAT 12:00</div></div><span class="new">4 new</span></a>
+  </div>
+</div>
+
+<!-- ═══ THE SHOW — SI-style ═══ -->
+<section class="show" id="show">
+  <div class="wrap">
+    <div class="sect-head">
+      <div>
+        <div class="eyebrow">America's College Football Show</div>
+        <h2>The Show</h2>
+      </div>
+      <a class="more" href="#">Much More on YouTube →</a>
+    </div>
+
+    <div class="show-grid">
+      <a class="sh-feat" href="#">
+        <div class="thumb">
+          <img src="https://i2.ytimg.com/vi/qRxwPrj2L30/hqdefault.jpg" alt="">
+          <span class="tag">Full Show</span>
+          <div class="playbtn"><span>▶</span></div>
+        </div>
+        <h3>CFB 2026 Schedule Draft | SEC QB Rankings | Camp Whispers &amp; Intel | Bold Predictions</h3>
+        <p>The full Wednesday sit-down: the schedule draft nobody wins, the QB board argued out, and what Josh is hearing from fall camps across the country.</p>
+        <span class="by">Josh Pate · Aug 12, 2026</span>
+      </a>
+
+      <div class="sh-list">
+        <a class="sh-row" href="#">
+          <span class="th"><img src="https://i4.ytimg.com/vi/kflR4gDAjEs/hqdefault.jpg" alt=""><span class="pl"><span>▶</span></span></span>
+          <div><h4>Easiest College Football Schedules In 2026</h4><span class="by">The Show · Aug 11, 2026</span></div>
+        </a>
+        <a class="sh-row" href="#">
+          <span class="th"><img src="https://i2.ytimg.com/vi/I_Gfq7fV_2c/hqdefault.jpg" alt=""><span class="pl"><span>▶</span></span></span>
+          <div><h4>Boldest CFB Predictions For 2026</h4><span class="by">The Show · Aug 10, 2026</span></div>
+        </a>
+        <a class="sh-row" href="#">
+          <span class="th"><img src="https://i1.ytimg.com/vi/tfHD4UojPUY/hqdefault.jpg" alt=""><span class="pl"><span>▶</span></span></span>
+          <div><h4>CFP Expansion To 24 Teams CANNOT Happen</h4><span class="by">The Show · Aug 10, 2026</span></div>
+        </a>
+        <a class="sh-row" href="#">
+          <span class="th"><img src="https://i3.ytimg.com/vi/BRljqj8F6fo/hqdefault.jpg" alt=""><span class="pl"><span>▶</span></span></span>
+          <div><h4>Big Ten Quarterback Rankings</h4><span class="by">The Show · Aug 10, 2026</span></div>
+        </a>
+        <a class="sh-row" href="#">
+          <span class="th"><img src="https://i1.ytimg.com/vi/XdT_gto9yCw/hqdefault.jpg" alt=""><span class="pl"><span>▶</span></span></span>
+          <div><h4>What I'm Hearing From Fall Camps… Monday Update</h4><span class="by">The Show · Aug 10, 2026</span></div>
+        </a>
+      </div>
+    </div>
+
+    <div class="shorts-band">
+      <div class="shorts-h"><h3>Shorts From the Porch</h3><a href="#">More Shorts →</a></div>
+      <div class="shorts">
+        <a class="short" href="#"><img src="https://i.ytimg.com/vi/tVB6ahhyF4A/oardefault.jpg" alt=""><span class="cap">Julian Sayin… best QB in the Big Ten ✍️</span></a>
+        <a class="short" href="#"><img src="https://i.ytimg.com/vi/AII4icM3Z1c/oardefault.jpg" alt=""><span class="cap">Penn State's schedule is SOFT 👀</span></a>
+        <a class="short" href="#"><img src="https://i.ytimg.com/vi/CYqsoi0JIB4/oardefault.jpg" alt=""><span class="cap">Texas Tech and K-State got LUCKY</span></a>
+        <a class="short" href="#"><img src="https://i.ytimg.com/vi/8i-zpLRuGe4/oardefault.jpg" alt=""><span class="cap">Why I LOVE preseason rankings 📈</span></a>
+        <a class="short" href="#"><img src="https://i.ytimg.com/vi/DA5BM2YLpzw/oardefault.jpg" alt=""><span class="cap">CFP &amp; National Title predictions 🏆</span></a>
+        <a class="short" href="#"><img src="https://i.ytimg.com/vi/VAw2weXnb9A/oardefault.jpg" alt=""><span class="cap">Texas is about to GO OFF 📈</span></a>
+      </div>
+    </div>
+
+    <div class="platforms">
+      <span class="plbl">Listen &amp; Watch:</span>
+      <a href="#">▶ YouTube</a><a href="#">Apple Podcasts</a><a href="#">Spotify</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ NOTEBOOK + WIRE ═══ -->
+<section class="notebook">
+  <div class="wrap">
+    <div class="sect-head">
+      <div>
+        <div class="eyebrow">From the Porch · New Every Weekday</div>
+        <h2>The Notebook</h2>
+      </div>
+      <a class="more" href="#">All Stories →</a>
+    </div>
+
+    <div class="nb-grid">
+      <div>
+        <a class="nb-feat" href="#">
+          <img src="https://i2.ytimg.com/vi/zOmdWYzuWjY/hqdefault.jpg" alt="">
+          <div class="pad">
+            <span class="kick">📝 The Sit-Down</span>
+            <h3>Pate's Boldest Bet: Texas A&amp;M Runs the Table Through the SEC's Meanest Stretch</h3>
+            <p>A viewer's parlay has the Aggies beating Alabama, LSU, Tennessee and Texas in the same season. Pate rated it a 9.75 out of 10 — and his math on why is the interesting part.</p>
+            <span class="by">The Pate State Staff · Aug 12, 2026</span>
+          </div>
+        </a>
+        <div class="nb-two">
+          <a class="nb-sm" href="#"><span class="t">SEC</span><h4>John Matier at No. 3 Means Oklahoma Makes the Playoff</h4></a>
+          <a class="nb-sm" href="#"><span class="t">LSU</span><h4>Highest Ceiling, Lowest Floor Certainty in the Country</h4></a>
+        </div>
+      </div>
+
+      <div class="wire">
+        <div class="wh"><h3>The Wire</h3><span class="lv">Live</span></div>
+        <a class="wi" href="#"><div class="t"><b>3 min</b> · Media</div><h4>Yahoo: Notre Dame among teams to fall short of win projections</h4></a>
+        <a class="wi" href="#"><div class="t"><b>3 min</b> · Recruiting</div><h4>Oregon emerging as early contender for 2028 four-star OT</h4></a>
+        <a class="wi" href="#"><div class="t"><b>13 min</b> · Transfer</div><h4>Colandrea aims to boost Nebraska offense in Big Ten play</h4></a>
+        <a class="wi" href="#"><div class="t"><b>23 min</b> · Breaking</div><h4>Clemson–LSU Week 1 set for College GameDay</h4></a>
+        <a class="wi" href="#"><div class="t"><b>43 min</b> · General</div><h4>Sitake voices frustration over BYU roster budget</h4></a>
+        <a class="wi" href="#"><div class="t"><b>53 min</b> · General</div><h4>Swinney says Clemson roster lacks star power</h4></a>
+        <a class="all" href="#">All Wire Coverage →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ JP POLL + PICK'EM ═══ -->
+<section class="games-band" id="poll">
+  <div class="wrap">
+    <div class="sect-head">
+      <div>
+        <div class="eyebrow">Vote · Play · Argue It Out</div>
+        <h2>The People's Games</h2>
+      </div>
+      <a class="more" href="#">Everything in Play →</a>
+    </div>
+    <div class="duo">
+      <div class="card-poll">
+        <div class="gc-k">🗳 The JP Poll · Ballots Open</div>
+        <div class="gc-title">The People's Power Ranking</div>
+        <div class="gc-sub">One board, voted by those who actually watch, revealed every Tuesday.</div>
+        <div class="gc-row"><b>Open Now</b> Week 1 ballots are live — every citizen ranks a top 10</div>
+        <div class="gc-row"><b>Sun 8 PM</b> Ballots lock, the board tabulates overnight</div>
+        <div class="gc-row"><b>Tuesday</b> The reveal airs live on the show, argued out</div>
+        <div class="gc-row"><b>In Gold</b> Every disagreement vs. the AP, Coaches, and CFP — marked</div>
+        <a class="gc-btn" href="#">Cast Your Ballot →</a>
+      </div>
+      <div class="card-pick">
+        <div class="gc-k">✓ Porch Pick'Em · Free to Play</div>
+        <div class="gc-title">Ten Games a Week vs. Josh</div>
+        <div class="gc-sub">Pick against Josh and the whole State. Build a streak. Earn your patches.</div>
+        <div class="gc-row"><b>Weekly</b> Best score wins merch + a shoutout on Monday's show</div>
+        <div class="gc-row"><b>Monthly</b> Top citizen gets a signed Pate Report + Poll Day spotlight</div>
+        <div class="gc-row"><b>Top 10</b> Finish the season top 10 — game tickets covered</div>
+        <div class="gc-row"><b>Champion</b> Watches a game with Josh · name on the Wall, forever</div>
+        <a class="gc-btn" href="#">Make Your Week 1 Picks →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ THE PORCH — FORUM ═══ -->
+<section class="porch" id="porch">
+  <div class="wrap">
+    <div class="sect-head">
+      <div>
+        <div class="eyebrow">Pull Up a Chair</div>
+        <h2>Live on the Porch</h2>
+      </div>
+      <a class="more" href="#">All Threads →</a>
+    </div>
+    <div class="porch-grid">
+      <div>
+        <a class="thread" href="#">
+          <span class="av a1">TX</span>
+          <div>
+            <div class="cat"><span class="hot">🔥 Hot</span> SEC</div>
+            <h4>Is A&amp;M's stretch actually the hardest four-game run in modern SEC history?</h4>
+            <div class="meta">Started by TexAgs_Brent · last reply 2 min ago</div>
+          </div>
+          <div class="replies"><b>247</b><span>Replies</span></div>
+        </a>
+        <a class="thread" href="#">
+          <span class="av a2">OU</span>
+          <div>
+            <div class="cat">Poll Day</div>
+            <h4>Show your Week 1 ballot — defend your No. 1 or don't post</h4>
+            <div class="meta">Started by SoonerMagic · last reply 6 min ago</div>
+          </div>
+          <div class="replies"><b>512</b><span>Replies</span></div>
+        </a>
+        <a class="thread" href="#">
+          <span class="av a3">OR</span>
+          <div>
+            <div class="cat">Recruiting</div>
+            <h4>Oregon's 2028 board is quietly terrifying — the Owolabi news is just the start</h4>
+            <div class="meta">Started by DuckDynasty22 · last reply 11 min ago</div>
+          </div>
+          <div class="replies"><b>89</b><span>Replies</span></div>
+        </a>
+        <a class="thread" href="#">
+          <span class="av a4">GA</span>
+          <div>
+            <div class="cat">Week 1</div>
+            <h4>Clemson–LSU or Georgia–Clemson week: which opener are you planted in front of?</h4>
+            <div class="meta">Started by DawgOnThePorch · last reply 14 min ago</div>
+          </div>
+          <div class="replies"><b>163</b><span>Replies</span></div>
+        </a>
+      </div>
+      <div class="porch-side">
+        <div class="on">1,204 citizens on the porch now</div>
+        <h3>The comment section, if the comment section had manners.</h3>
+        <p>Team threads, poll arguments, gameday chats — moderated like a front porch, not a mosh pit. Citizens only.</p>
+        <a class="btn" href="#">Join the Conversation</a>
+        <div class="rules">Free with citizenship · House rules apply · Every take signed</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PLAYBOOK ═══ -->
+<section class="playbook">
+  <div class="wrap pb-grid">
+    <div class="pb-copy">
+      <div class="sect-head" style="margin-bottom:0"><div><div class="eyebrow">Free Citizenship · The Daily Briefing</div></div></div>
+      <h2>The Pate Playbook</h2>
+      <p>This exact briefing, in your inbox every weekday at 6 AM: what actually happened in the sport, what it means, and what's worth your Saturday. Written like Josh talks. Free forever.</p>
+      <div class="pb-form">
+        <input type="email" placeholder="you@email.com" aria-label="Email address">
+        <button type="button">Become a Citizen</button>
+      </div>
+      <p class="perks"><b>Citizens get:</b> early poll access · pick'em invites · first dibs on tour tickets · the digital Pate Report free every July</p>
+    </div>
+    <div class="inbox">
+      <div class="from">FROM: <b>The Pate State</b> &lt;porch@thepatestate.com&gt; · Wed, Aug 12 · 6:00 AM</div>
+      <div class="subj">Today on the porch: QB rankings, a Notre Dame reality check &amp; your Week 1 ritual</div>
+      <ul>
+        <li>Notre Dame win projections are slipping — here's the number that matters</li>
+        <li>Oregon is emerging for a major 2028 recruit</li>
+        <li>Nebraska's new QB is the one to watch in camp</li>
+      </ul>
+      <div class="ritual">Today's ritual → make your picks before Saturday 11:58 AM ET.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ STATE STORE ═══ -->
+<section class="store">
+  <div class="wrap">
+    <div class="sect-head">
+      <div>
+        <div class="eyebrow">Wear the Flag</div>
+        <h2>The State Store</h2>
+      </div>
+      <a class="more" href="#">Shop Everything →</a>
+    </div>
+    <div class="store-grid">
+      <a class="prod" href="#"><img src="https://thepatestate.com/_next/image?url=%2Fimg%2Fproduct-tee.jpg&w=3840&q=75" alt="The Creed Tee"><div class="info"><h4>The Creed Tee · Tri-Blend</h4><span class="pr">$28</span></div></a>
+      <a class="prod" href="#"><img src="https://thepatestate.com/_next/image?url=%2Fimg%2Fproduct-flag.jpg&w=3840&q=75" alt="Porch Flag"><div class="info"><h4>Porch Flag</h4><span class="pr">$34</span></div></a>
+      <a class="prod" href="#"><img src="https://thepatestate.com/_next/image?url=%2Fimg%2Fproduct-hat.jpg&w=3840&q=75" alt="Gameday Hat"><div class="info"><h4>Gameday Hat</h4><span class="pr">$32</span></div></a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ LIVE & ON CAMPUS ═══ -->
+<section class="campus">
+  <div class="wrap">
+    <div>
+      <div class="eyebrow">The Porch Goes On the Road</div>
+      <h2>Live &amp; On Campus</h2>
+      <span class="badge">Campus stops being booked now · Dates soon</span>
+      <p>The broadcast desk, on a quad near you. Citizens get first dibs the moment tickets drop.</p>
+      <a class="primary" href="#">Join Free for First Access →</a>
+    </div>
+    <div class="photo">
+      <img src="https://thepatestate.com/_next/image?url=%2Fimg%2Fcampus-live.jpg&w=3840&q=75" alt="The Pate State broadcast desk live on a college quad">
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PATE TAILGATE ═══ -->
+<section class="tailgate">
+  <div class="wrap">
+    <div class="sect-head">
+      <div>
+        <div class="eyebrow">Every Stadium · Every Tradition · Every Tailgate</div>
+        <h2>Pate Tailgate</h2>
+      </div>
+      <a class="more" href="#">Full Guide — 136 Stadiums →</a>
+    </div>
+    <div class="tg-grid">
+      <a class="tg" href="#"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/99.png" alt="LSU"><div class="venue">Tiger Stadium</div><div class="k">LSU · Night Game Survival</div></a>
+      <a class="tg" href="#"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/145.png" alt="Ole Miss"><div class="venue">The Grove</div><div class="k">Ole Miss · Masterclass</div></a>
+      <a class="tg" href="#"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/194.png" alt="Ohio State"><div class="venue">The Horseshoe</div><div class="k">Ohio State · First-Timer</div></a>
+      <a class="tg" href="#"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/275.png" alt="Wisconsin"><div class="venue">Camp Randall</div><div class="k">Wisconsin · Jump Around</div></a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CITIZEN GIFT ═══ -->
+<section class="gift">
+  <div class="wrap">
+    <div class="cover">
+      <img src="https://thepatestate.com/_next/image?url=%2Fcitizen-gift-cover.png&w=640&q=75" alt="The 2026 JP Preseason Football Guide">
+    </div>
+    <div>
+      <div class="eyebrow">🎁 The Citizen Gift · Free the Moment You Join</div>
+      <h2>Become a Citizen, Get the Guide.</h2>
+      <p>The 2026 JP Preseason Football Guide — the Top 50 ranked, analyzed, and explained, the playoff picture, the X-factors, and the breakout players — yours free (digital edition) the moment you claim citizenship.</p>
+      <a class="primary" href="#">Claim Free Citizenship</a>
+      <a class="ghost" href="#">Peek Inside the Guide</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FOLLOW THE PORCH EVERYWHERE ═══ -->
+<section class="follow">
+  <div class="wrap">
+    <div class="eyebrow">Follow the Porch Everywhere</div>
+    <h2>Wherever You Watch, We're There.</h2>
+    <div class="socials">
+      <a class="soc yt" href="https://www.youtube.com/@JoshPateCFB">▶ YouTube · 535K</a>
+      <a class="soc x" href="https://x.com/JoshPateCFB">𝕏 @JoshPateCFB</a>
+      <a class="soc ig" href="https://www.instagram.com/joshpatecfb">◉ Instagram</a>
+      <a class="soc tt" href="https://www.tiktok.com/@joshpatecfb">♪ TikTok</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PLAYOFFS RIBBON ═══ -->
+<div class="playoffs">
+  <div class="wrap">
+    <div class="band">
+      <span class="tro">🏆</span>
+      <div>
+        <h3>Who's In? See the Playoff Picture.</h3>
+        <p>The bracket, the rankings, Josh's picks — and an AI to run your own</p>
+      </div>
+      <a class="btn" href="#">Open the Playoffs Page →</a>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ FOOTER ═══ -->
+<footer>
+  <div class="wrap">
+    <div class="ft-top">
+      <div class="ft-brand">
+        <div class="name">The Pate <em>State</em></div>
+        <p>The front porch of college football. All picks logged. All poll results archived.</p>
+        <div class="ft-social">
+          <a href="#">▶ YouTube</a><a href="#">𝕏</a><a href="#">Instagram</a><a href="#">TikTok</a>
+        </div>
+      </div>
+      <div class="ft-col">
+        <h5>Watch &amp; Read</h5>
+        <a href="#">The Show</a><a href="#">The Notebook</a><a href="#">The Wire</a><a href="#">The Report</a>
+      </div>
+      <div class="ft-col">
+        <h5>Play &amp; Vote</h5>
+        <a href="#">JP Poll</a><a href="#">Pick'Em</a><a href="#">Playoffs</a><a href="#">The Porch</a>
+      </div>
+      <div class="ft-col">
+        <h5>The State</h5>
+        <a href="#">Teams</a><a href="#">Scores</a><a href="#">Recruiting</a><a href="#">Tailgate</a><a href="#">Shop</a><a href="#">About</a>
+      </div>
+    </div>
+    <div class="ft-bottom">
+      <span class="cr">© The Pate State</span>
+      <a href="#">Editorial Standards &amp; Corrections</a>
+      <a href="#">AI Disclosure</a>
+      <a href="#">Privacy</a>
+      <a href="#">Terms</a>
+      <a href="#">Contact</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
