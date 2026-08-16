@@ -13,6 +13,7 @@ import ShowSectionV5 from "@/components/home/ShowSectionV5";
 import NotebookWire from "@/components/home/NotebookWire";
 import PeoplesGames from "@/components/home/PeoplesGames";
 import PorchSection from "@/components/home/PorchSection";
+import PlaybookSection from "@/components/home/PlaybookSection";
 
 export const metadata: Metadata = { alternates: { canonical: "/" } };
 
@@ -82,6 +83,7 @@ export default async function Home() {
       <NotebookWire lead={articles[0] ?? null} small={articles.slice(1, 3)} wire={wire.slice(0, 6)} />
       <PeoplesGames />
       <PorchSection threads={threads} />
+      <PlaybookSection latest={featured} wireHeads={wire.slice(0, 3).map((w) => w.headline)} />
     </main>
   );
 }
