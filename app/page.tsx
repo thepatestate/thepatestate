@@ -8,6 +8,7 @@ import ScoresTicker from "@/components/home/ScoresTicker";
 import TopEditorial, { type LatestItem } from "@/components/home/TopEditorial";
 import ActionStrip from "@/components/home/ActionStrip";
 import YourTeamsBand from "@/components/home/YourTeamsBand";
+import ShowSectionV5 from "@/components/home/ShowSectionV5";
 
 export const metadata: Metadata = { alternates: { canonical: "/" } };
 
@@ -56,7 +57,7 @@ export default async function Home() {
 
   // Consumed by sections landing in follow-up tasks (show, notebook, porch,
   // playbook, follow band).
-  void shorts; void wireStories; void stats;
+  void wireStories; void stats;
 
   return (
     <main className="v5 v5-page">
@@ -64,6 +65,13 @@ export default async function Home() {
       <TopEditorial featured={featured} trending={articles.slice(0, 4)} latest={latest} />
       <ActionStrip />
       <YourTeamsBand />
+      {featured && (
+        <ShowSectionV5
+          featured={featured}
+          rows={episodes.filter((v) => v.id !== featured.id).slice(0, 5)}
+          shorts={shorts}
+        />
+      )}
     </main>
   );
 }
