@@ -72,3 +72,22 @@
   .v5-header .mast{height:62px}
   .v5-header .myteams{display:none}
 }
+
+/* ═══ FOOTER ═══ */
+.v5-footer{background:var(--mast);color:#8FA0B8;padding:44px 0 30px}
+.v5-footer .ft-top{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:32px;padding-bottom:30px;border-bottom:1px solid rgba(255,255,255,.08)}
+.v5-footer .ft-brand .name{font:800 23px/1 var(--cond);letter-spacing:.03em;text-transform:uppercase;color:#F4F6F9}
+.v5-footer .ft-brand .name em{font-style:italic;color:var(--gold)}
+.v5-footer .ft-brand p{font:500 12.5px/1.7 var(--body);margin-top:11px;max-width:280px}
+.v5-footer .ft-social{display:flex;gap:9px;margin-top:16px}
+.v5-footer .ft-social a{font:700 10px/1 var(--cond);letter-spacing:.1em;text-transform:uppercase;border:1px solid rgba(255,255,255,.14);padding:8px 12px;border-radius:20px}
+.v5-footer .ft-social a:hover{border-color:var(--gold);color:var(--gold)}
+.v5-footer .ft-col h5{font:800 10.5px/1 var(--cond);letter-spacing:.22em;text-transform:uppercase;color:#C6D1E0;margin-bottom:14px}
+.v5-footer .ft-col a{display:block;font:500 12.5px/1 var(--body);padding:6px 0}
+.v5-footer .ft-col a:hover{color:#fff}
+.v5-footer .ft-bottom{display:flex;flex-wrap:wrap;gap:10px 22px;padding-top:20px;font:500 11px/1.6 var(--body)}
+.v5-footer .ft-bottom a:hover{color:#fff}
+.v5-footer .ft-bottom .cr{margin-right:auto}
+@media(max-width:1080px){
+  .v5-footer .ft-top{grid-template-columns:1fr 1fr}
+}
