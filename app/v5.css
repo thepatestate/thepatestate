@@ -40,7 +40,14 @@
 .v5-header .logo{display:flex;flex-direction:column;gap:4px}
 .v5-header .logo .name{font:800 25px/1 var(--cond);letter-spacing:.03em;text-transform:uppercase;color:#F4F6F9}
 .v5-header .logo .name em{font-style:italic;color:var(--gold)}
-.v5-header .logo .kicker{font:600 8.5px/1 var(--cond);letter-spacing:.28em;text-transform:uppercase;color:#7C8797}
+.v5-header .logo .name{white-space:nowrap}
+.v5-header .logo .kicker{font:600 8.5px/1 var(--cond);letter-spacing:.28em;text-transform:uppercase;color:#7C8797;white-space:nowrap}
+/* Below 860px the wrapped tagline overflows the fixed-height bar onto the
+   page below — drop it and keep the wordmark on one line. */
+@media(max-width:860px){
+  .v5-header .logo .kicker{display:none}
+  .v5-header .logo .name{font-size:21px}
+}
 /* globals.css styles the bare nav element (sticky paper bar) for the old
    chalk chrome — neutralize it inside the masthead. */
 .v5-header nav.main{display:flex;gap:1px;position:static;background:none;backdrop-filter:none;border-bottom:none;z-index:auto}
