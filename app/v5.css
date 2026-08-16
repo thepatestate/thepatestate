@@ -295,3 +295,31 @@
 @media(max-width:760px){
   .v5 .duo{grid-template-columns:1fr}
 }
+
+/* ═══ THE PORCH — FORUM ═══ */
+.v5 .porch{background:var(--off);border-top:1px solid var(--hair);padding:40px 0 44px}
+.v5 .porch-grid{display:grid;grid-template-columns:1.65fr 1fr;gap:30px;align-items:start}
+.v5 .thread{display:flex;gap:15px;background:var(--white);border:1px solid var(--hair);border-radius:10px;padding:16px 18px;margin-bottom:12px;box-shadow:var(--sh-sm);transition:transform .15s,box-shadow .2s;align-items:flex-start}
+.v5 .thread:hover{transform:translateY(-2px);box-shadow:var(--sh-md)}
+.v5 .thread .av{width:38px;height:38px;min-width:38px;border-radius:50%;font:800 13px/38px var(--cond);text-align:center;color:#fff;box-shadow:var(--sh-sm)}
+.v5 .av.a1{background:var(--navy)}.v5 .av.a2{background:#7A1F2B}.v5 .av.a3{background:#3E5C3A}.v5 .av.a4{background:var(--gold-dk)}
+.v5 .thread .cat{font:800 9.5px/1 var(--cond);letter-spacing:.14em;text-transform:uppercase;color:var(--gold-dk);margin-bottom:5px;display:flex;gap:8px;align-items:center}
+.v5 .thread .cat .hot{color:var(--red)}
+.v5 .thread h4{font:700 17.5px/1.3 var(--slab)}
+.v5 .thread:hover h4{color:var(--navy)}
+.v5 .thread .meta{font:500 11.5px/1 var(--body);color:var(--mut);margin-top:7px}
+.v5 .thread .replies{margin-left:auto;text-align:center;min-width:56px;background:var(--off);border-radius:8px;padding:9px 8px}
+.v5 .thread .replies b{display:block;font:700 17px/1 var(--slab);color:var(--navy)}
+.v5 .thread .replies span{font:600 9px/1 var(--cond);letter-spacing:.12em;text-transform:uppercase;color:var(--mut)}
+.v5 .porch-side{background:linear-gradient(150deg,var(--navy) 0%,var(--navy-deep) 100%);border-radius:12px;padding:26px;color:#EDF1F7;box-shadow:var(--sh-lg);position:sticky;top:88px}
+.v5 .porch-side .on{display:flex;align-items:center;gap:9px;font:700 11px/1 var(--cond);letter-spacing:.14em;text-transform:uppercase;color:#8CE99A;margin-bottom:12px}
+.v5 .porch-side .on::before{content:"";width:7px;height:7px;border-radius:50%;background:#8CE99A;animation:v5pulse 1.6s infinite}
+.v5 .porch-side h3{font:700 24px/1.15 var(--slab);margin-bottom:9px}
+.v5 .porch-side p{font:400 13.5px/1.55 var(--body);color:#B9C6D8;margin-bottom:18px}
+.v5 .porch-side .btn{display:inline-block;font:800 12.5px/1 var(--cond);letter-spacing:.12em;text-transform:uppercase;background:var(--gold);color:var(--mast);padding:13px 20px;border-radius:5px;box-shadow:var(--sh-sm)}
+.v5 .porch-side .btn:hover{background:#DCB43A}
+.v5 .porch-side .rules{font:500 11px/1.6 var(--body);color:#8FA0B8;margin-top:14px}
+@media(max-width:1080px){
+  .v5 .porch-grid{grid-template-columns:1fr}
+  .v5 .porch-side{position:static}
+}

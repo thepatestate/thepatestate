@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { getVideos, isEpisode, getShorts, getChannelStats } from "@/lib/youtube";
 import { getPublishedArticles, getWireItems, getWireStories } from "@/lib/sanity";
 import { getSlateGames } from "@/lib/cfbd";
+import { getThreads, publicClient } from "@/lib/community";
 import { teamLogoUrl } from "@/lib/teams-meta";
 import { createArtPicker } from "@/lib/editorial-art";
 import ScoresTicker from "@/components/home/ScoresTicker";
@@ -11,6 +12,7 @@ import YourTeamsBand from "@/components/home/YourTeamsBand";
 import ShowSectionV5 from "@/components/home/ShowSectionV5";
 import NotebookWire from "@/components/home/NotebookWire";
 import PeoplesGames from "@/components/home/PeoplesGames";
+import PorchSection from "@/components/home/PorchSection";
 
 export const metadata: Metadata = { alternates: { canonical: "/" } };
 
@@ -18,7 +20,7 @@ export const metadata: Metadata = { alternates: { canonical: "/" } };
 // 2026-08-16-homepage-v5-design.md). Every section degrades honestly: dead
 // feed → EmptyState or nothing; fictional content only under DEMO_MODE.
 export default async function Home() {
-  const [videos, shorts, articles, wire, wireStories, slate, stats] = await Promise.all([
+  const [videos, shorts, articles, wire, wireStories, slate, stats, threads] = await Promise.all([
     getVideos().catch(() => []),
     getShorts(6).catch(() => []),
     getPublishedArticles(8).catch(() => []),
@@ -26,6 +28,9 @@ export default async function Home() {
     getWireStories(8).catch(() => []),
     getSlateGames(1, 6).catch(() => []),
     getChannelStats().catch(() => null),
+    // publicClient() itself throws when Supabase env is absent — wrap the
+    // whole expression so a bare env still renders the porch join panel.
+    (async () => getThreads(publicClient(), { limit: 4 }))().catch(() => []),
   ]);
   const episodes = videos.filter(isEpisode);
   const featured = episodes[0] ?? videos[0] ?? null;
@@ -76,6 +81,7 @@ export default async function Home() {
       )}
       <NotebookWire lead={articles[0] ?? null} small={articles.slice(1, 3)} wire={wire.slice(0, 6)} />
       <PeoplesGames />
+      <PorchSection threads={threads} />
     </main>
   );
 }
