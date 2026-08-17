@@ -6,6 +6,18 @@ export function formatDate(iso: string): string {
 }
 
 /** "2 HRS AGO" style relative time for wire rails. */
+/** Compact relative time for tight chips: "6m", "3h", "2d". */
+export function relTimeShort(iso?: string): string {
+  if (!iso) return "";
+  const ms = Date.now() - new Date(iso).getTime();
+  if (!Number.isFinite(ms) || ms < 0) return "";
+  const mins = Math.floor(ms / 60000);
+  if (mins < 60) return `${Math.max(1, mins)}m`;
+  const hrs = Math.floor(mins / 60);
+  if (hrs < 24) return `${hrs}h`;
+  return `${Math.floor(hrs / 24)}d`;
+}
+
 export function relTime(iso?: string): string {
   if (!iso) return "";
   const ms = Date.now() - new Date(iso).getTime();

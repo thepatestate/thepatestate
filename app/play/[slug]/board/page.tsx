@@ -50,7 +50,7 @@ export default async function BoardPage({ params }: { params: Promise<{ slug: st
   const scored = board.some((e) => e.points != null);
 
   return (
-    <main>
+    <main className="v5-lite">
       <header className="page-head">
         <div className="wrap">
           <p className="crumb">

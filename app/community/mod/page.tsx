@@ -63,7 +63,7 @@ export default async function ModPage() {
   }
 
   return (
-    <main>
+    <main className="v5-lite">
       <div className="board-bar">
         <div className="wrap">
           <p className="kicker">Staff Only · The Porch</p>

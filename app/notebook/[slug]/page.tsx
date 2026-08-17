@@ -118,7 +118,7 @@ export default async function ArticlePage({
     : null;
 
   return (
-    <main>
+    <main className="v5-lite">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}

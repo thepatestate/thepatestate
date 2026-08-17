@@ -23,7 +23,7 @@ export default async function TeamsPage() {
   const rest = all.filter((t) => !LAUNCH_TEAMS.includes(t.slug));
 
   return (
-    <main>
+    <main className="v5-lite">
       <header className="page-head">
         <div className="wrap">
           <p className="crumb">The Pate State / Every Team</p>

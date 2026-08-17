@@ -21,7 +21,7 @@ const SCHEDULE = [
 
 export default function AboutPage() {
   return (
-    <main>
+    <main className="v5-lite">
       <header className="page-head">
         <div className="wrap">
           <p className="crumb">The Pate State / About</p>

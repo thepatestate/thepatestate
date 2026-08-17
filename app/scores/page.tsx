@@ -143,7 +143,7 @@ export default async function ScoresPage() {
   const filmTeaser = art.pick("schedule", "A stadium lit up at night, seen from above");
 
   return (
-    <main>
+    <main className="v5-lite">
       <header className="page-head">
         <div className="wrap">
           <p className="crumb">The Pate State / Scores &amp; Schedule</p>

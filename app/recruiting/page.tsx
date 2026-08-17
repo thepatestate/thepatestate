@@ -1,457 +1,409 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import PreseasonChip from "@/components/PreseasonChip";
 import EmptyState from "@/components/EmptyState";
+import PreseasonChip from "@/components/PreseasonChip";
+import RelTime from "@/components/RelTime";
 import { DEMO_MODE } from "@/lib/demo";
-import VideoCard from "@/components/VideoCard";
-import { slugifyTeam, teamLogoUrl } from "@/lib/teams-meta";
 import { getRecruitingRankings } from "@/lib/cfbd";
-import { createArtPicker } from "@/lib/editorial-art";
-import { getVideos, videoUrl } from "@/lib/youtube";
+import { getWireItems, getWireStories, type SanityWireItem, type SanityWireStory } from "@/lib/sanity";
+import { teamLogoUrl } from "@/lib/teams-meta";
 
 export const metadata: Metadata = {
   title: "Recruiting & Transfer Portal — The Next Wave",
   description: "Recruiting and the portal without the message-board panic: the Pate Index, honest class grades, and Josh's reads.",
   alternates: { canonical: "/recruiting" },
 };
-export const revalidate = 21600;
+// Wire coverage feeds this page now (Sanity fetches revalidate at 120s);
+// regenerate every 10 minutes so breaking commitments don't sit stale.
+export const revalidate = 600;
 
-// --- Preseason-preview sample data ---------------------------------------
-// Stands in for the Pate Recruiting Index (247Sports Composite + On3/Rivals
-// Industry, averaged nightly) and the recruiting wire. Swap for live
-// queries/API calls when the engine ships; the JSX below only touches
-// these arrays.
+// --- Feed assembly ---------------------------------------------------------
+// Lead package + feed rows come from the live Wire engine, filtered to the
+// recruiting category. Stories (our own written coverage) outrank raw wire
+// items; a wire item that already has a full story is deduped in favor of it.
 
-const DEMO_TEAM_INDEX = [
-  { rk: "01", code: "A&M", team: "Texas A&M", commits: "26 COMMITS", stars: "6 FIVE★", chip: "19 BLUE-CHIP", val: "315.5" },
-  { rk: "02", code: "ND", team: "Notre Dame", commits: "23 COMMITS", stars: "4 FIVE★", chip: null, val: "302.5" },
-  { rk: "03", code: "MIA", team: "Miami", commits: "21 COMMITS", stars: "5 FIVE★", chip: null, val: "298.0" },
-  { rk: "04", code: "ORE", team: "Oregon", commits: "24 COMMITS", stars: "2 FIVE★", chip: null, val: "295.6" },
-  { rk: "05", code: "OSU", team: "Ohio State", commits: "19 COMMITS", stars: "3 FIVE★", chip: null, val: "282.4" },
+interface FeedEntry {
+  id: string;
+  kind: "story" | "wire";
+  headline: string;
+  dek?: string;
+  href: string;
+  external: boolean;
+  publishedAt?: string;
+  team?: string;
+}
+
+function storyEntry(s: SanityWireStory): FeedEntry {
+  return {
+    id: s._id,
+    kind: "story",
+    headline: s.headline,
+    dek: s.whatHappened,
+    href: `/wire/${s.slug.current}`,
+    external: false,
+    publishedAt: s.publishedAt,
+    team: s.teams?.[0],
+  };
+}
+
+function itemEntry(it: SanityWireItem): FeedEntry {
+  return {
+    id: it._id,
+    kind: "wire",
+    headline: it.headline,
+    dek: it.sub,
+    href: it.storySlug ? `/wire/${it.storySlug}` : it.sourceUrl ?? "/wire",
+    external: !it.storySlug && Boolean(it.sourceUrl),
+    publishedAt: it.publishedAt,
+    team: it.teams?.[0],
+  };
+}
+
+function EntryLink({ entry, className, children }: { entry: FeedEntry; className: string; children: React.ReactNode }) {
+  return entry.external ? (
+    <a className={className} href={entry.href} target="_blank" rel="noopener">{children}</a>
+  ) : (
+    <Link className={className} href={entry.href}>{children}</Link>
+  );
+}
+
+// --- DEMO_MODE placeholders (§0.1: never render in production) -------------
+// Invented names/teams from the mockup comp, shown only when DEMO_MODE is on
+// and the matching live feed is dry, so the full layout stays reviewable.
+
+const DEMO_TICKER = [
+  { st: "4★", who: "QB J. Caldwell", to: "georgia", tm: "2h" },
+  { st: "5★", who: "EDGE M. Okafor", to: "ohio-state", tm: "5h" },
+  { st: "4★", who: "WR T. Brooks", from: "tennessee", to: "ole-miss", tm: "Flip · 1d" },
+  { st: "4★", who: "OT D. Reyes", to: "texas", tm: "1d" },
+  { st: "3★", who: "CB K. Whitfield", to: "lsu", tm: "2d" },
 ] as const;
 
-const DEMO_FULL_INDEX = [
-  { rk: "01", team: "Texas A&M", c247: "1", on3: "1", commits: "26", stars: "6", rating: "315.48 / 94.17" },
-  { rk: "02", team: "Notre Dame", c247: "2", on3: "2", commits: "23", stars: "4", rating: "302.50 / 93.17" },
-  { rk: "03", team: "Miami", c247: "3", on3: "3", commits: "21", stars: "5", rating: "298.03 / 93.06" },
-  { rk: "04", team: "Oregon", c247: "4", on3: "4", commits: "24", stars: "2", rating: "295.59 / 92.51" },
-  { rk: "05", team: "Ohio State", c247: "7", on3: "5", commits: "19", stars: "3", rating: "282.41 / 92.19" },
-  { rk: "06", team: "Texas", c247: "6", on3: "6", commits: "22", stars: "3", rating: "288.01 / 92.04" },
-  { rk: "07", team: "Oklahoma", c247: "5", on3: "7", commits: "27", stars: "3", rating: "289.68 / 92.03" },
-  { rk: "08", team: "Florida", c247: "8", on3: "8", commits: "25", stars: "1", rating: "280.97 / 91.72" },
-  { rk: "09", team: "Texas Tech", c247: "9", on3: "9", commits: "19", stars: "2", rating: "279.90 / 91.41" },
-  { rk: "10", team: "Michigan", c247: "11", on3: "11", commits: "21", stars: "0", rating: "266.16 / 90.88" },
-  { rk: "11", team: "Auburn", c247: "10", on3: "12", commits: "25", stars: "0", rating: "270.07 / 90.86" },
-  { rk: "12", team: "LSU", c247: "15", on3: "10", commits: "16", stars: "1", rating: "257.92 / 90.91" },
-  { rk: "13", team: "Georgia", c247: "12", on3: "14", commits: "20", stars: "2", rating: "262.42 / 90.68" },
-  { rk: "14", team: "Ole Miss", c247: "14", on3: "15", commits: "22", stars: "0", rating: "258.88 / 90.55" },
-  { rk: "15", team: "Clemson", c247: "13", on3: "16", commits: "25", stars: "0", rating: "258.89 / 90.54" },
+const DEMO_CLASS_BOARD = [
+  { rk: 1, slug: "georgia", team: "Georgia", n: "19 commits · 3 × 5★" },
+  { rk: 2, slug: "texas", team: "Texas", n: "17 commits · 2 × 5★" },
+  { rk: 3, slug: "ohio-state", team: "Ohio State", n: "15 commits · 2 × 5★" },
+  { rk: 4, slug: "alabama", team: "Alabama", n: "18 commits · 1 × 5★" },
+  { rk: 5, slug: "oregon", team: "Oregon", n: "14 commits · 2 × 5★" },
+  { rk: 6, slug: "lsu", team: "LSU", n: "16 commits" },
+  { rk: 7, slug: "miami", team: "Miami", n: "15 commits" },
+  { rk: 8, slug: "notre-dame", team: "Notre Dame", n: "13 commits" },
+  { rk: 9, slug: "tennessee", team: "Tennessee", n: "14 commits" },
+  { rk: 10, slug: "texas-am", team: "Texas A&M", n: "12 commits" },
 ] as const;
 
-const DEMO_PLAYERS = [
-  { rk: "01", name: "Five-Star EDGE", pos: "EDGE", size: "6-5 / 240", hometown: "Southeast", team: "Committed — Big Ten" },
-  { rk: "02", name: "Five-Star IOL", pos: "IOL", size: "6-5 / 300", hometown: "Northeast", team: "Committed — SEC" },
-  { rk: "03", name: "Five-Star OT", pos: "OT", size: "6-5.5 / 300", hometown: "Southeast", team: "Committed — SEC" },
-  { rk: "04", name: "Four-Star DL", pos: "DL", size: "6-3 / 302", hometown: "Texas", team: "Committed — Big 12" },
-  { rk: "05", name: "Five-Star EDGE", pos: "EDGE", size: "6-4 / 230", hometown: "Southeast", team: "Committed — SEC" },
-  { rk: "06", name: "Four-Star CB", pos: "CB", size: "6-1 / 170", hometown: "West Coast", team: "Committed — ACC" },
-  { rk: "07", name: "Four-Star QB", pos: "QB", size: "6-3 / 203", hometown: "Midwest", team: "Committed — Big Ten" },
-  { rk: "08", name: "Four-Star QB", pos: "QB", size: "6-4 / 187", hometown: "Midwest", team: "Committed — ACC" },
-  { rk: "09", name: "Five-Star QB", pos: "QB", size: "6-5 / 235", hometown: "Southeast", team: "Committed — SEC" },
-  { rk: "10", name: "Four-Star RB", pos: "RB", size: "5-9 / 205", hometown: "Northeast", team: "Committed — SEC" },
-  { rk: "11", name: "Four-Star RB", pos: "RB", size: "6-0 / 210", hometown: "Southeast", team: "Committed — SEC" },
-  { rk: "12", name: "Four-Star WR", pos: "WR", size: "6-5 / 195", hometown: "Midwest", team: "Committed — Big Ten" },
+// Mockup-marked "FLIP WATCH — PLACEHOLDER names": DEMO_MODE only, omitted
+// entirely in production.
+const DEMO_FLIP_WATCH = [
+  { who: "4★ QB T. Brooks", note: "Official visit · Aug 22", from: "tennessee", to: "ole-miss" },
+  { who: "4★ WR C. Dunbar", note: "Trending · two visits set", from: "florida-state", to: "georgia" },
+  { who: "5★ OT R. Maddox", note: "Recommitted · watch anyway", from: "texas", to: "oklahoma" },
 ] as const;
 
-const DEMO_RECRUITING_NEWS = [
-  {
-    headline: "The last 2027 five-stars are off the board",
-    body: "The final two uncommitted five-stars made their calls: a five-star WR chose Indiana and a five-star RB stayed home with Tennessee — pivotal in-state wins that moved both classes up the rankings.",
-    src: "SAMPLE — RECRUITING WIRE",
-    teams: ["indiana", "tennessee"],
-    art: "recruiting" as const,
-  },
-  {
-    headline: "A&M is building a monster",
-    body: "Texas A&M sits No. 1 on both major services with 26 commits — six five-stars and 19 blue-chips — putting the coaching staff in position for a second top-five class in three cycles.",
-    src: "SAMPLE — RECRUITING WIRE",
-    teams: ["texas-am"],
-    art: "state" as const,
-  },
-  {
-    headline: "Blue bloods lurking, not leading",
-    body: "Georgia (13th on the Pate Index), Alabama (outside the top 30 on both services), and Texas (6th) are unusually quiet this cycle — which historically means a December surge is coming.",
-    src: "THE PATE READ · AUG 6",
-    teams: ["georgia", "alabama", "texas"],
-    art: "rankings-movement" as const,
-  },
-] as const;
-
-// Expanded storylines for the new articles grid — same voice/subjects as
-// DEMO_RECRUITING_NEWS and DEMO_TEAM_INDEX above, just told as full-tile
-// article teasers instead of wire blurbs. All invented preseason content,
-// hence the PreseasonChip sitting over the section.
-const DEMO_ARTICLES = [
-  {
-    headline: "Why the Aggies' Class Is Built to Last, Not Just Rank High",
-    dek: "26 commits, six five-stars, and — more importantly — almost no overlap at any one position. Roster-fit grading on the No. 1 class in the country.",
-    art: "recruiting" as const,
-  },
-  {
-    headline: "The December Surge Nobody's Pricing In",
-    dek: "Georgia, Alabama, and Texas are all outside the top six on at least one service. History says that's exactly when the blue bloods make their move.",
-    art: "rankings-movement" as const,
-  },
-  {
-    headline: "Indiana's Recruiting Class Is Starting to Look Like Its Roster",
-    dek: "A five-star WR closes the board, and the Hoosiers' 2027 class is quietly following the same undervalued-but-detail-obsessed blueprint as the current team.",
-    art: "state" as const,
-  },
-  {
-    headline: "The Portal's August Ripple, Explained",
-    dek: "Two projected Week 1 starters entered the portal this week and three contenders are already circling. Who actually needs the help.",
-    art: "coaching" as const,
-  },
-  {
-    headline: "Five-Star QBs Are Landing in Different Places Than Usual",
-    dek: "Three of the four best quarterback prospects in the 2027 class picked programs outside the traditional QB factories. What changed.",
-    art: "season-preview" as const,
-  },
-  {
-    headline: "247 vs. On3: Where the Two Big Boards Actually Disagree",
-    dek: "The Pate Index averages them, but the gaps are the story — four teams are ranked ten spots apart or more between the two services.",
-    art: "media" as const,
-  },
-] as const;
+const FEED_ART = ["p1", "p4", "p3", "p2", "p5", "p6"] as const;
 
 export default async function RecruitingPage() {
-  const art = createArtPicker();
-  const [videos, board] = await Promise.all([getVideos(), getRecruitingRankings()]);
-  const boardIsCurrent = board?.year === 2027;
-  const recruitingVideo =
-    videos.find((v) => /recruit|portal/i.test(v.title)) ?? videos[0] ?? null;
+  const [board, allStories, allItems] = await Promise.all([
+    getRecruitingRankings().catch(() => null),
+    getWireStories(24).catch(() => [] as SanityWireStory[]),
+    getWireItems(40).catch(() => [] as SanityWireItem[]),
+  ]);
+
+  const stories = allStories.filter((s) => s.category === "recruiting");
+  const items = allItems.filter((it) => it.category === "recruiting");
+  const storySlugs = new Set(stories.map((s) => s.slug.current));
+  const entries: FeedEntry[] = [
+    ...stories.map(storyEntry),
+    ...items.filter((it) => !it.storySlug || !storySlugs.has(it.storySlug)).map(itemEntry),
+  ].sort((a, b) => (b.publishedAt ?? "").localeCompare(a.publishedAt ?? ""));
+
+  const lead = entries[0] ?? null;
+  const side = entries.slice(1, 5);
+  const feedRows = entries.slice(1 + side.length, 13);
+  const leadLogo = lead?.team ? teamLogoUrl(lead.team) : null;
 
   return (
-    <main>
-      <header className="page-head">
-        <div className="wrap">
-          <p className="crumb">The Pate State / Recruiting</p>
-          <h1>The Next Wave</h1>
-          <p className="lede">
-            Recruiting and the portal without the message-board panic. The Pate Index below will average the
-            247Sports Composite and On3 Industry rankings, pulled nightly once the season engine is live.
-          </p>
+    <main className="v5 pg-recruiting">
+      {/* Commit ticker — live recruiting wire items; demo chips only in DEMO_MODE. */}
+      {items.length > 0 ? (
+        <div className="ctick"><div className="wrap">
+          <span className="lbl">Commit Wire</span>
+          {items.slice(0, 6).map((it) => {
+            const e = itemEntry(it);
+            const logo = e.team ? teamLogoUrl(e.team) : null;
+            return (
+              <EntryLink key={it._id} entry={e} className="cmt">
+                {logo && <Image src={logo} alt="" width={19} height={19} />}
+                <span className="who">{it.headline}</span>
+                {it.publishedAt && <span className="tm"><RelTime iso={it.publishedAt} short /></span>}
+              </EntryLink>
+            );
+          })}
+        </div></div>
+      ) : DEMO_MODE ? (
+        <div className="ctick"><div className="wrap">
+          <span className="lbl">Commit Wire</span>
+          {DEMO_TICKER.map((c) => {
+            const from = "from" in c && c.from ? teamLogoUrl(c.from) : null;
+            const to = teamLogoUrl(c.to);
+            return (
+              <span className="cmt" key={c.who}>
+                <span className="st">{c.st}</span>
+                <span className="who">{c.who}</span>
+                {from && <Image src={from} alt="" width={19} height={19} />}
+                <span className="arr">→</span>
+                {to && <Image src={to} alt="" width={19} height={19} />}
+                <span className="tm">{c.tm}</span>
+              </span>
+            );
+          })}
+        </div></div>
+      ) : null}
+
+      {/* Page head */}
+      <div className="phead"><div className="wrap">
+        <p className="crumb">The Pate State / <b>Recruiting</b></p>
+        <h1>Recruiting</h1>
+        <p className="sub">
+          The commits, the flips, and the portal — with Josh&apos;s read on which classes are actually
+          being built to win, not just ranked.
+        </p>
+        <div className="cats">
+          <a className="cat on" href="#feed">Latest</a>
+          <a className="cat" href="#class-board">The Class Board</a>
+          {board && <a className="cat" href="#full-top-25">Full Top 25</a>}
+          <a className="cat" href="#portal">The Portal</a>
+          <Link className="cat" href="/wire">The Wire</Link>
+          <Link className="cat" href="/teams">Teams</Link>
         </div>
-      </header>
+      </div></div>
 
-      <section>
-        <div className="wrap">
-          <p className="eyebrow">
-            The Pate Recruiting Index — Class of {board ? board.year : 2027}
-            {board && !boardIsCurrent ? " (Final)" : ""}
-          </p>
-          <h2 className="display" style={{ fontSize: 38 }}>The National Class Rankings</h2>
-          <p className="lede">
-            {board && !boardIsCurrent
-              ? "The final board from the last complete cycle — how every class actually finished. The 2027 board takes this spot the day the services publish it."
-              : "Every outlet ranks classes a little differently. We average the two biggest — 247Sports' Composite and On3/Rivals' Industry ranking — into one index, and show you both, so nobody can accuse the number of wearing team colors."}
-          </p>
-
-          {/* Real class rankings from the live feed (247Sports Composite via
-              CollegeFootballData) — newest published cycle, never invented. */}
-          {board ? (<>
-          <div style={{ maxWidth: 860, marginTop: 20 }}>
-            {board.ranks.slice(0, 5).map((t) => (
-              <div className="rankcard" key={t.rank}>
-                <div className="rk-num">{String(t.rank).padStart(2, "0")}</div>
-                {t.logo ? (
-                  <Image src={t.logo} alt={`${t.team} logo`} width={60} height={60} className="logo-img" />
-                ) : (
-                  <div className="logo-box">{t.team.slice(0, 3).toUpperCase()}</div>
-                )}
-                <div className="rk-main">
-                  <b>{t.team}</b>
-                  <span className="rk-rec">{board.year} CLASS{t.conference ? ` · ${t.conference.toUpperCase()}` : ""}</span>
-                </div>
-                <div className="rk-score">
-                  <span className="val">{t.points.toFixed(1)}</span>
-                  <span className="lbl">247 PTS</span>
-                </div>
+      {/* Lead package — top recruiting stories from the live Wire */}
+      {lead && (
+        <section className="leadsec"><div className="wrap">
+          <div className="lead-grid">
+            <EntryLink entry={lead} className="feat">
+              <div className="f-art">
+                <span className="tag">Recruiting</span>
+                {leadLogo && <Image src={leadLogo} alt="" width={84} height={84} />}
+                <div className="rule" />
               </div>
-            ))}
+              <div className="tx">
+                <span className="k">Recruiting · {lead.kind === "story" ? "Full Story" : "The Wire"}</span>
+                <h2>{lead.headline}</h2>
+                {lead.dek && <p className="dek">{lead.dek}</p>}
+                <span className="by">The Wire Desk{lead.publishedAt && <> · <RelTime iso={lead.publishedAt} short /></>}</span>
+              </div>
+            </EntryLink>
+            {side.length > 0 && (
+              <div className="side">
+                <span className="sh">Also New</span>
+                {side.map((e) => {
+                  const logo = e.team ? teamLogoUrl(e.team) : null;
+                  return (
+                    <EntryLink key={e.id} entry={e} className="srow">
+                      <span className="im">{logo && <Image src={logo} alt="" width={32} height={32} />}</span>
+                      <div>
+                        <span className="t">{e.kind === "story" ? "Recruiting · Full Story" : "Recruiting · The Wire"}</span>
+                        <h4>{e.headline}</h4>
+                        <span className="by">The Wire Desk{e.publishedAt && <> · <RelTime iso={e.publishedAt} short /></>}</span>
+                      </div>
+                    </EntryLink>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        </div></section>
+      )}
+
+      {/* Feed + rail */}
+      <section className="feedsec" id="feed"><div className="wrap">
+        <div className="feed-grid">
+          <div>
+            <div className="fh">
+              <h3>Latest</h3>
+              {lead?.publishedAt && <span className="live">Live · Updated <RelTime iso={lead.publishedAt} /></span>}
+              <div className="ln" />
+            </div>
+            {entries.length === 0 ? (
+              <EmptyState
+                kicker="VERIFIED NEWS ONLY"
+                title="Recruiting news flows in from the Wire"
+                body="Commitments, decommitments, flips, and portal moves — sourced and attributed, never message-board rumors. Coverage stacks up here as the cycle heats up."
+                cta={{ href: "/wire", label: "Read the Wire →" }}
+              />
+            ) : (
+              <div className="nb-stack">
+                {(feedRows.length > 0 ? feedRows : entries.slice(0, 8)).map((e, i) => {
+                  const logo = e.team ? teamLogoUrl(e.team) : null;
+                  return (
+                    <EntryLink key={e.id} entry={e} className="nb-row">
+                      <span className={`im ${FEED_ART[i % FEED_ART.length]}`}>
+                        {logo && <Image className="chip" src={logo} alt="" width={22} height={22} />}
+                      </span>
+                      <div>
+                        <span className={e.kind === "wire" ? "t is-wire" : "t"}>
+                          {e.kind === "story" ? "Recruiting · Full Story" : "⚡ The Wire · Recruiting"}
+                          {e.publishedAt && <> · <RelTime iso={e.publishedAt} short /></>}
+                        </span>
+                        <h4>{e.headline}</h4>
+                        {e.dek && <p className="dek">{e.dek}</p>}
+                        <span className="by">The Wire Desk</span>
+                      </div>
+                    </EntryLink>
+                  );
+                })}
+              </div>
+            )}
+            <Link className="more" href="/wire">More on the Wire →</Link>
           </div>
 
-          <p className="eyebrow" style={{ marginTop: 30 }}>The Full Top 25</p>
-          <table style={{ marginTop: 14, maxWidth: 720 }}>
+          <div className="rail">
+            {/* Class board — real 247Sports Composite via CFBD, never invented. */}
+            <div className="rc" id="class-board">
+              <div className="rh">
+                <div>
+                  <span className="k">{board ? `${board.year} Class Rankings` : "Class Rankings"}</span>
+                  <h4>The Class Board</h4>
+                </div>
+                {board && <span className="yr">{board.year}</span>}
+              </div>
+              {board ? (<>
+                {board.ranks.slice(0, 10).map((t) => (
+                  <div className={t.rank <= 5 ? "crow top" : "crow"} key={t.rank}>
+                    <span className="rk">{t.rank}</span>
+                    {t.logo && <Image src={t.logo} alt="" width={20} height={20} />}
+                    <span className="tn">{t.team}</span>
+                    <span className="n"><b>{t.points.toFixed(1)}</b> 247 pts</span>
+                  </div>
+                ))}
+                <a className="rf" href="#full-top-25">Full Top 25 ↓</a>
+              </>) : DEMO_MODE ? (<>
+                <div className="empty-pad" style={{ paddingBottom: 0 }}><PreseasonChip /></div>
+                {DEMO_CLASS_BOARD.map((t) => {
+                  const logo = teamLogoUrl(t.slug);
+                  return (
+                    <div className={t.rk <= 5 ? "crow top" : "crow"} key={t.rk}>
+                      <span className="rk">{t.rk}</span>
+                      {logo && <Image src={logo} alt="" width={20} height={20} />}
+                      <span className="tn">{t.team}</span>
+                      <span className="n">{t.n}</span>
+                    </div>
+                  );
+                })}
+              </>) : (
+                <div className="empty-pad">
+                  <EmptyState
+                    kicker="PULLED NIGHTLY IN SEASON"
+                    title="The class board goes live with the data feed"
+                    body="Class rankings from the 247Sports Composite, pulled from the live data feed — never invented."
+                  />
+                </div>
+              )}
+            </div>
+
+            {/* FLIP WATCH — mockup-marked PLACEHOLDER names: DEMO_MODE only,
+                omitted entirely in production. */}
+            {DEMO_MODE && (
+              <div className="flip">
+                <span className="k">🔄 Flip Watch</span>
+                <h4>Names to Know This Month</h4>
+                <PreseasonChip />
+                {DEMO_FLIP_WATCH.map((f) => {
+                  const from = teamLogoUrl(f.from);
+                  const to = teamLogoUrl(f.to);
+                  return (
+                    <div className="fr" key={f.who}>
+                      <div className="who">{f.who}<span>{f.note}</span></div>
+                      <div className="sw">
+                        {from && <Image src={from} alt="" width={20} height={20} />}
+                        <i>→</i>
+                        {to && <Image src={to} alt="" width={20} height={20} />}
+                      </div>
+                    </div>
+                  );
+                })}
+                <Link className="go" href="/wire">Every Flip, Tracked →</Link>
+              </div>
+            )}
+          </div>
+        </div>
+      </div></section>
+
+      {/* Full top 25 — the complete real board the rail links to */}
+      {board && (
+        <section className="fullrank" id="full-top-25"><div className="wrap">
+          <p className="fh2">The Full Top 25 — Class of {board.year}</p>
+          <table className="rank-table">
             <thead>
-              <tr>
-                <th>RK</th><th>TEAM</th><th>CONFERENCE</th>
-                <th style={{ textAlign: "right" }}>247 PTS</th>
-              </tr>
+              <tr><th>RK</th><th>Team</th><th>Conference</th><th style={{ textAlign: "right" }}>247 PTS</th></tr>
             </thead>
             <tbody>
               {board.ranks.map((r) => (
                 <tr key={r.rank}>
                   <td className="rk">{String(r.rank).padStart(2, "0")}</td>
                   <td>
-                    <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
+                    <span className="tcell">
                       {r.logo && <Image src={r.logo} alt="" width={22} height={22} style={{ objectFit: "contain" }} />}
-                      <b>{r.team}</b>
+                      {r.team}
                     </span>
                   </td>
-                  <td style={{ fontFamily: "var(--mono)", fontSize: 12 }}>{r.conference || "—"}</td>
-                  <td className="rating" style={{ textAlign: "right" }}>{r.points.toFixed(2)}</td>
+                  <td className="conf">{r.conference || "—"}</td>
+                  <td className="pts">{r.points.toFixed(2)}</td>
                 </tr>
               ))}
             </tbody>
           </table>
-          <p style={{ marginTop: 12, fontFamily: "var(--mono)", fontSize: 11, color: "var(--ink-dim)" }}>
-            Source: 247Sports Composite team rankings via the live data feed · On3/Rivals merge into the index
-            with the 2027 cycle.
+          <p className="srcline">
+            Source: 247Sports Composite team rankings via the live data feed · On3/Rivals merge into the
+            index with the 2027 cycle.
           </p>
-          </>) : !DEMO_MODE ? (
-            <div style={{ maxWidth: 860, marginTop: 20 }}>
-              <EmptyState
-                kicker="PULLED NIGHTLY IN SEASON"
-                title="The Pate Recruiting Index goes live with the data feed"
-                body="Class rankings from the 247Sports Composite and On3/Rivals Industry boards, averaged into one honest number — with both sources always shown."
-              />
-            </div>
-          ) : null}
-          {!board && DEMO_MODE && (<>
-          <PreseasonChip />
-          <div style={{ maxWidth: 860, marginTop: 20 }}>
-            {DEMO_TEAM_INDEX.map((t) => {
-              const logoUrl = teamLogoUrl(slugifyTeam(t.team));
-              return (
-              <div className="rankcard" key={t.rk}>
-                <div className="rk-num">{t.rk}</div>
-                {logoUrl ? (
-                  <Image src={logoUrl} alt={`${t.team} logo`} width={60} height={60} className="logo-img" />
-                ) : (
-                  <div className="logo-box">{t.code}</div>
-                )}
-                <div className="rk-main">
-                  <b>{t.team}</b>
-                  <span className="rk-rec">2027 CLASS</span>
-                  <div className="pills">
-                    <span className="pill">{t.commits}</span>
-                    <span className="pill">{t.stars}</span>
-                    {t.chip && <span className="pill">{t.chip}</span>}
-                  </div>
-                </div>
-                <div className="rk-score">
-                  <span className="val">{t.val}</span>
-                  <span className="lbl">247 PTS</span>
-                </div>
-              </div>
-              );
-            })}
-          </div>
+        </div></section>
+      )}
 
-          <p className="eyebrow" style={{ marginTop: 30 }}>The Full Index</p>
-          <table style={{ marginTop: 20 }}>
-            <thead>
-              <tr>
-                <th>PATE IDX</th><th>TEAM</th><th>247 COMP</th><th>ON3/RIVALS</th><th>COMMITS</th><th>5★</th>
-                <th style={{ textAlign: "right" }}>247 PTS / ON3 SCORE</th>
-              </tr>
-            </thead>
-            <tbody>
-              {DEMO_FULL_INDEX.map((r) => (
-                <tr key={r.rk}>
-                  <td className="rk">{r.rk}</td>
-                  <td><b>{r.team}</b></td>
-                  <td>{r.c247}</td>
-                  <td>{r.on3}</td>
-                  <td>{r.commits}</td>
-                  <td>{r.stars}</td>
-                  <td className="rating">{r.rating}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <p style={{ marginTop: 12, fontFamily: "var(--mono)", fontSize: 11, color: "var(--ink-dim)" }}>
-            Pate Index = average of the two service ranks; ties broken by scores. Sources: 247Sports Composite &amp;
-            On3/Rivals Industry team rankings.
-          </p>
-          </>)}
-
-          <div style={{ marginTop: 44 }}>
-            <p className="eyebrow">The Pate Player Index — Class of 2027</p>
-            <h2 className="display" style={{ fontSize: 34 }}>The Top Players in America</h2>
-            {DEMO_MODE && <PreseasonChip />}
-            <p className="lede">
-              The nation&apos;s best, per 247Sports&apos; Top247 — will be pulled nightly once the season engine is
-              live. On production, On3/Rivals industry player ranks merge in nightly to complete the index.
-            </p>
-            {!DEMO_MODE && (
-              <div style={{ marginTop: 18, maxWidth: 720 }}>
-                <EmptyState
-                  kicker="PULLED NIGHTLY IN SEASON"
-                  title="The player index arrives with the data feed"
-                  body="The nation's top prospects per 247Sports' Top247, merged nightly with On3/Rivals industry ranks."
-                />
-              </div>
-            )}
-            {DEMO_MODE && (
-            <table style={{ marginTop: 18 }}>
-              <thead>
-                <tr><th>RK</th><th>PLAYER</th><th>POS</th><th>HT/WT</th><th>HOMETOWN</th><th>COMMITTED</th></tr>
-              </thead>
-              <tbody>
-                {DEMO_PLAYERS.map((p) => (
-                  <tr key={p.rk}>
-                    <td className="rk">{p.rk}</td>
-                    <td><b>{p.name}</b></td>
-                    <td>{p.pos}</td>
-                    <td>{p.size}</td>
-                    <td>{p.hometown}</td>
-                    <td>{p.team}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            )}
-            {DEMO_MODE && (
-            <div style={{ marginTop: 14, fontFamily: "var(--mono)", fontSize: 12, color: "var(--ink-dim)" }}>
-              Showing 1–12 — the Top 100, position, and state boards ship with the season engine
-            </div>
-            )}
-          </div>
+      {/* The Portal — honest structural copy + links only; no invented names. */}
+      <section className="portal" id="portal"><div className="wrap">
+        <div className="p-head">
+          <span className="eb">Transfers</span>
+          <h3>The Portal Never Really Closes</h3>
+          <Link href="/wire">All Portal Moves →</Link>
         </div>
-      </section>
-
-      <section className="on-soft">
-        <div className="wrap">
-          <p className="eyebrow">More From the Next Wave</p>
-          <h2 className="display" style={{ fontSize: 34 }}>Recruiting &amp; Portal Coverage</h2>
-          {DEMO_MODE && <PreseasonChip />}
-          {!DEMO_MODE && (
-            <div style={{ marginTop: 14, maxWidth: 720 }}>
-              <EmptyState
-                kicker="COVERAGE BUILDS DAILY"
-                title="Recruiting stories land here as they break"
-                body="Class grades, portal tracking, and Josh's reads — written coverage stacks up as the cycle heats up."
-                cta={{ href: "/wire", label: "Read the Wire →" }}
-              />
-            </div>
-          )}
-          <div className="tile-grid">
-            {(DEMO_MODE ? DEMO_ARTICLES : []).map((a) => {
-              const img = art.pick(a.art, a.headline);
-              return (
-                <div className="tile" key={a.headline}>
-                  <div className="tile-media">
-                    <Image src={img.src} alt={img.alt} fill sizes="(max-width: 860px) 100vw, 380px" style={{ objectFit: "cover" }} />
-                  </div>
-                  <div className="tile-scrim" />
-                  <div className="tile-body">
-                    <h4 className="tile-headline" style={{ fontSize: "clamp(16px,1.8vw,20px)" }}>{a.headline}</h4>
-                    <span className="tile-meta">{a.dek}</span>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      <section>
-        <div className="wrap">
-          <div className="duo">
-            <div>
-              <p className="eyebrow">The Wire — What Just Happened</p>
-              <h2 className="display" style={{ fontSize: 34 }}>Recruiting News</h2>
-              <div style={{ marginTop: 18 }}>
-                {!DEMO_MODE && (
-                  <EmptyState
-                    kicker="VERIFIED NEWS ONLY"
-                    title="Recruiting news flows in from the Wire"
-                    body="Commitments, decommitments, and portal moves — sourced and attributed, never message-board rumors."
-                  />
-                )}
-                {(DEMO_MODE ? DEMO_RECRUITING_NEWS : []).map((n) => {
-                  const img = art.pick(n.art, n.headline);
-                  return (
-                    <div className="news-item" style={{ borderColor: "var(--lamp-deep)", display: "flex", gap: 16 }} key={n.headline}>
-                      <div style={{ flex: 1 }}>
-                        <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
-                          <b style={{ color: "var(--ink)" }}>{n.headline}</b>
-                          <span style={{ display: "flex", gap: 4 }}>
-                            {n.teams.map((slug) => {
-                              const logoUrl = teamLogoUrl(slug);
-                              return logoUrl ? (
-                                <Image
-                                  key={slug}
-                                  src={logoUrl}
-                                  alt={`${slug} team logo`}
-                                  width={22}
-                                  height={22}
-                                  style={{
-                                    borderRadius: "50%",
-                                    background: "#fff",
-                                    border: "1px solid var(--line-l)",
-                                    objectFit: "contain",
-                                    padding: 2,
-                                  }}
-                                />
-                              ) : null;
-                            })}
-                          </span>
-                        </div>
-                        <p>{n.body}</p>
-                        <div className="src">{n.src}</div>
-                      </div>
-                      <div className="bleed-thumb" style={{ position: "relative", flex: "0 0 96px", height: 72 }}>
-                        <Image src={img.src} alt={img.alt} fill sizes="96px" style={{ objectFit: "cover" }} />
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-            <div className="panel">
-              <p className="eyebrow">The Pate Read</p>
-              <h3>What It Means, Not Just Who Signed</h3>
-              <p>
-                Every class graded not by stars alone but by roster fit: what the team needed, what they got, and
-                the one signing nobody&apos;s talking about that matters most. Weekly portal tracker in season, with
-                Josh&apos;s &quot;keep an eye on this&quot; flags.
-              </p>
-              {recruitingVideo ? (
-                <div style={{ marginTop: 4, marginBottom: 18 }}>
-                  <VideoCard video={recruitingVideo} sizes="(max-width: 700px) 90vw, 380px" />
-                  <a
-                    href={videoUrl(recruitingVideo.id)}
-                    target="_blank"
-                    rel="noopener"
-                    style={{ display: "inline-block", marginTop: 10, fontFamily: "var(--mono)", fontSize: 12, letterSpacing: ".06em", color: "var(--lamp-deep)", fontWeight: 600 }}
-                  >
-                    Watch the latest read →
-                  </a>
-                </div>
-              ) : null}
-              <Link className="btn" href="/show" style={{ borderColor: "var(--navy)", color: "var(--navy)" }}>
-                Watch the Recruiting Breakdown
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <div className="cta-band">
-        <div className="wrap row">
-          <div>
-            <h3>Who&apos;s In? See the Playoff Picture.</h3>
-            <p>THE BRACKET, THE RANKINGS, JOSH&apos;S PICKS — AND AN AI TO RUN YOUR OWN</p>
-          </div>
-          <Link className="btn" href="/playoffs" style={{ borderColor: "var(--lamp)", color: "var(--lamp)" }}>
-            Open the Playoffs Page →
+        <div className="pgrid">
+          <Link className="pitem" href="/wire">
+            <span className="tm">The Wire</span>
+            <h5>Portal entries and commitments land on the Wire the minute they&apos;re confirmed — sourced and attributed, never message-board rumors.</h5>
+            <span className="pgo">Open the Wire →</span>
+          </Link>
+          <Link className="pitem" href="/teams">
+            <span className="tm">Team Pages</span>
+            <h5>Every departure and arrival is logged on your team&apos;s page, next to the schedule and the class it changes.</h5>
+            <span className="pgo">Find Your Team →</span>
+          </Link>
+          <Link className="pitem" href="/show">
+            <span className="tm">The Show</span>
+            <h5>Josh&apos;s portal reads run all cycle long — who actually needed the help, and which fits he doesn&apos;t buy.</h5>
+            <span className="pgo">Watch the Show →</span>
+          </Link>
+          <Link className="pitem" href="/community">
+            <span className="tm">The Porch</span>
+            <h5>Argue the fits with the rest of the porch — the portal conversation never sleeps in the community boards.</h5>
+            <span className="pgo">Pull Up a Chair →</span>
           </Link>
         </div>
-      </div>
+      </div></section>
+
+      {/* Citizens line */}
+      <section className="cit"><div className="wrap">
+        <div className="row">
+          <div>
+            <div className="k">More for Citizens</div>
+            <p>Recruiting intel lands in <b>the Playbook every weekday morning</b> — what changed overnight, in Josh&apos;s voice, by 6 AM.</p>
+          </div>
+          <Link className="go" href="/join">Send Me the Playbook →</Link>
+        </div>
+      </div></section>
     </main>
   );
 }

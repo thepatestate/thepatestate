@@ -80,7 +80,7 @@ export default async function PorchPage() {
   const art = createArtPicker();
 
   return (
-    <main>
+    <main className="v5-lite">
       <header className="page-head">
         <div className="wrap">
           <p className="crumb">The Pate State / Pate&apos;s Porch</p>

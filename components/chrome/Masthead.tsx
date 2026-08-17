@@ -3,6 +3,27 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import NavSession from "@/components/NavSession";
+import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
+
+// Live followed-team count for the My Teams pill — real number or nothing.
+function useMyTeamsCount(): number | null {
+  const [count, setCount] = useState<number | null>(null);
+  useEffect(() => {
+    if (!isSupabaseConfigured) return;
+    const supabase = createClient();
+    let cancelled = false;
+    (async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (cancelled || !user) return;
+      const { count: n } = await supabase
+        .from("team_follows")
+        .select("*", { count: "exact", head: true });
+      if (!cancelled && typeof n === "number" && n > 0) setCount(n);
+    })();
+    return () => { cancelled = true; };
+  }, []);
+  return count;
+}
 
 // v5 masthead. Wayfinding labels stay plain (v2 brief §2.1): "Latest" → the
 // Notebook, "Rankings" → the JP Poll, "Community" → the Porch.
@@ -32,6 +53,7 @@ export default function Masthead() {
   const [moreOpen, setMoreOpen] = useState(false);
   const moreRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
+  const teamCount = useMyTeamsCount();
 
   useEffect(() => {
     if (!moreOpen) return;
@@ -71,7 +93,9 @@ export default function Masthead() {
           </div>
         </nav>
         <div className="right">
-          <Link className="myteams" href="/me">♡ My Teams</Link>
+          <Link className="myteams" href="/me">
+            ♡ My Teams{teamCount ? <> · <b>{teamCount}</b></> : null}
+          </Link>
           <Link className="search" href="/search" aria-label="Search">⌕</Link>
           <NavSession fallback={<Link className="join" href="/join">Join Free</Link>} />
           <button className="menu-btn" aria-expanded={open} onClick={() => setOpen(!open)}>Menu</button>

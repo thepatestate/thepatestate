@@ -69,7 +69,7 @@ export default async function AuthorPage({ params }: { params: Promise<{ slug: s
   };
 
   return (
-    <main>
+    <main className="v5-lite">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}

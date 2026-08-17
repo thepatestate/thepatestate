@@ -14,7 +14,7 @@ export default async function JoinPage({
 }) {
   const { next = "/", error } = await searchParams;
   return (
-    <main>
+    <main className="v5-lite">
       <header className="page-head">
         <div className="wrap">
           <p className="crumb">The Pate State / Citizenship</p>

@@ -1,6 +1,4 @@
-import { SOCIAL_LINKS, CHANNEL_URL } from "@/lib/youtube";
-
-// v5 rhythm bar: the weekly programming schedule with today highlighted.
+// v25 rhythm bar: the weekly programming schedule with today highlighted.
 // Server component — "today" is computed in ET at request/build time.
 const SCHEDULE = [
   { day: 1, label: "MON", show: "Weekend Truths" },
@@ -23,12 +21,6 @@ export default function RhythmBar() {
             <b>{s.label}</b> {s.show}
           </span>
         ))}
-        <span className="social-mini">
-          <a href={CHANNEL_URL} target="_blank" rel="noopener" aria-label="YouTube">▶</a>
-          <a href={SOCIAL_LINKS.x} target="_blank" rel="noopener" aria-label="X">𝕏</a>
-          <a href={SOCIAL_LINKS.instagram} target="_blank" rel="noopener" aria-label="Instagram">◉</a>
-          <a href={SOCIAL_LINKS.tiktok} target="_blank" rel="noopener" aria-label="TikTok">♪</a>
-        </span>
       </div>
     </div>
   );

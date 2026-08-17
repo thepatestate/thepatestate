@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Pate State — The JP Poll · Page Comp v2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Public+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --white:#FFFFFF; --off:#F4F6F9; --mast:#0D1321; --navy:#0E2240; --navy-deep:#0A1730;
+    --gold:#C9A227; --gold-dk:#A8861B; --red:#C8102E;
+    --ink:#151A22; --mut:#5F6B7A; --hair:#E5E9EF;
+    --cond:'Barlow Condensed',sans-serif; --body:'Public Sans',sans-serif; --slab:'Public Sans',sans-serif;
+    --sh-sm:0 2px 8px rgba(14,24,42,.08);
+    --sh-md:0 10px 26px rgba(14,24,42,.14);
+    --sh-lg:0 22px 55px rgba(14,24,42,.22);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:var(--body);background:var(--white);color:var(--ink)}
+  a{text-decoration:none;color:inherit}
+  img{display:block}
+  .wrap{max-width:1200px;margin:0 auto;padding:0 24px}
+
+  .rhythm{background:var(--navy-deep);color:#8FA0B8;font:600 10px/1 var(--cond);letter-spacing:.1em;text-transform:uppercase}
+  .rhythm .wrap{display:flex;align-items:center;height:24px;gap:16px;overflow-x:auto;scrollbar-width:none}
+  .rhythm b{color:#C8D2E0;font-weight:700}
+  .rhythm .today b{color:var(--gold)}
+
+  .mast{background:var(--mast);position:sticky;top:0;z-index:50;box-shadow:0 2px 14px rgba(0,0,0,.35)}
+  .mast .wrap{display:flex;align-items:center;height:64px;gap:26px}
+  .logo{color:#fff;font:800 24px/1 var(--cond);letter-spacing:.04em;text-transform:uppercase}
+  .logo em{font-style:italic;color:var(--gold)}
+  .logo span{display:block;font:600 8.5px/1 var(--cond);letter-spacing:.3em;color:#8FA0B8;margin-top:3px}
+  nav.main{display:flex;gap:20px;margin-left:8px}
+  nav.main a{color:#C8D2E0;font:700 13px/1 var(--cond);letter-spacing:.1em;text-transform:uppercase;padding:8px 2px;border-bottom:2px solid transparent}
+  nav.main a:hover{color:#fff}
+  nav.main a.on{color:var(--gold);border-bottom-color:var(--gold)}
+  .mast .right{margin-left:auto;display:flex;align-items:center;gap:16px}
+  .myteams{color:#C8D2E0;font:700 12px/1 var(--cond);letter-spacing:.08em}
+  .join{background:var(--gold);color:var(--mast);font:800 12.5px/1 var(--cond);letter-spacing:.12em;text-transform:uppercase;padding:11px 17px;border-radius:5px;box-shadow:var(--sh-sm)}
+  .join:hover{background:#DCB43A}
+
+  /* page head */
+  .phead{border-bottom:1px solid var(--hair);background:linear-gradient(180deg,#FBFCFE 0%,#FFFFFF 100%)}
+  .phead .wrap{padding:24px 24px 20px}
+  .crumb{font:700 10.5px/1 var(--cond);letter-spacing:.16em;text-transform:uppercase;color:var(--mut)}
+  .crumb b{color:var(--gold-dk)}
+  .phead h1{font:800 38px/1.05 var(--slab);letter-spacing:-.02em;color:var(--navy);margin:11px 0 8px}
+  .phead .sub{font:400 15px/1.55 var(--body);color:var(--mut);max-width:700px}
+  .status{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
+  .st{font:800 11px/1 var(--cond);letter-spacing:.12em;text-transform:uppercase;padding:10px 14px;border-radius:20px}
+  .st.open{background:rgba(46,158,79,.12);color:#1F7A3C;display:flex;align-items:center;gap:8px}
+  .st.open::before{content:"";width:7px;height:7px;border-radius:50%;background:#2E9E4F;animation:pulse 1.6s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+  .st.rev{background:var(--off);color:var(--mut);border:1px solid var(--hair)}
+
+  /* hero board */
+  .hero{padding:28px 0 10px}
+  .hero-grid{display:grid;grid-template-columns:1.6fr 1fr;gap:26px;align-items:stretch}
+  .board{background:var(--white);border:1px solid var(--hair);border-radius:14px;box-shadow:var(--sh-md);overflow:hidden}
+  .board .bh{display:flex;align-items:center;gap:12px;padding:18px 22px;background:linear-gradient(150deg,var(--navy) 0%,var(--navy-deep) 100%);color:#fff}
+  .board .bh .k{font:800 10px/1 var(--cond);letter-spacing:.18em;text-transform:uppercase;color:var(--gold)}
+  .board .bh h2{font:800 21px/1.1 var(--slab)}
+  .board .bh .n{margin-left:auto;font:600 11px/1.4 var(--body);color:#8FA0B8;text-align:right}
+  .brow{display:flex;align-items:center;gap:13px;padding:11px 22px;border-bottom:1px solid var(--hair);transition:background .12s}
+  .brow:hover{background:var(--off)}
+  .brow .rk{font:800 17px/1 var(--cond);color:#B9C1CC;min-width:26px}
+  .brow:nth-child(-n+5) .rk{color:var(--navy)}
+  .brow img{width:26px;height:26px}
+  .brow .tn{font:800 15px/1 var(--cond);letter-spacing:.03em}
+  .brow .fp{font:700 9.5px/1 var(--cond);letter-spacing:.1em;color:var(--gold-dk);margin-left:4px}
+  .brow .pts{margin-left:auto;font:700 11.5px/1 var(--cond);letter-spacing:.06em;color:var(--mut)}
+  .brow .ap{font:800 9.5px/1 var(--cond);letter-spacing:.08em;padding:5px 8px;border-radius:20px;min-width:52px;text-align:center}
+  .brow .ap.diff{background:rgba(201,162,39,.15);color:var(--gold-dk);border:1px solid rgba(201,162,39,.4)}
+  .brow .ap.same{background:var(--off);color:#AAB2BD;border:1px solid var(--hair)}
+  .board .bf{display:flex;align-items:center;padding:14px 22px}
+  .board .bf a{font:800 11.5px/1 var(--cond);letter-spacing:.12em;text-transform:uppercase;color:var(--gold-dk)}
+  .board .bf a:hover{color:var(--navy)}
+  .board .bf .leg{margin-left:auto;font:600 10.5px/1 var(--cond);letter-spacing:.08em;text-transform:uppercase;color:var(--mut)}
+  .board .bf .leg b{color:var(--gold-dk)}
+
+  .how{background:linear-gradient(150deg,var(--navy) 0%,var(--navy-deep) 100%);border-radius:14px;box-shadow:var(--sh-md);color:#EDF1F7;padding:24px;display:flex;flex-direction:column}
+  .how .k{font:800 10px/1 var(--cond);letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+  .how h3{font:800 22px/1.2 var(--slab);color:#fff;margin:10px 0 4px}
+  .how .step{display:flex;gap:12px;padding:11px 0;border-bottom:1px solid rgba(255,255,255,.12);align-items:flex-start}
+  .how .step b{font:800 10px/1.6 var(--cond);letter-spacing:.1em;text-transform:uppercase;color:var(--gold);min-width:74px}
+  .how .step span{font:500 12.5px/1.5 var(--body);color:#C8D2E0}
+  .how .go{display:block;text-align:center;font:800 13px/1 var(--cond);letter-spacing:.12em;text-transform:uppercase;background:var(--gold);color:var(--mast);padding:15px;border-radius:6px;margin-top:auto;box-shadow:0 8px 20px rgba(201,162,39,.35)}
+  .how .go:hover{background:#DCB43A}
+  .how .note{font:600 10.5px/1.5 var(--body);color:#8FA0B8;margin-top:10px;text-align:center}
+
+  /* ballot band */
+  .ballot{background:var(--off);border-top:1px solid var(--hair);padding:36px 0;margin-top:28px}
+  .bal-grid{display:grid;grid-template-columns:1fr 1.25fr;gap:40px;align-items:center}
+  .bal .k{font:800 10.5px/1 var(--cond);letter-spacing:.2em;text-transform:uppercase;color:var(--gold-dk)}
+  .bal h3{font:800 27px/1.15 var(--slab);letter-spacing:-.015em;color:var(--navy);margin:10px 0 10px}
+  .bal p{font:400 14px/1.6 var(--body);color:var(--mut);max-width:460px}
+  .bal p b{color:var(--ink)}
+  .balcard{background:var(--white);border:1px solid var(--hair);border-radius:14px;box-shadow:var(--sh-md);padding:20px 22px}
+  .balcard .bt{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+  .balcard .bt h4{font:800 15px/1 var(--slab);color:var(--navy)}
+  .balcard .bt .pr{margin-left:auto;font:800 11px/1 var(--cond);letter-spacing:.1em;color:var(--mut)}
+  .balcard .search{display:flex;align-items:center;gap:10px;border:1.5px solid var(--hair);border-radius:8px;padding:12px 14px;font:500 13.5px/1 var(--body);color:#AAB2BD;margin-bottom:12px}
+  /* BUILD: replace the live page's ten full-FBS <select>s with this type-ahead + quick-pick pattern */
+  .qp{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}
+  .qp span{display:flex;align-items:center;gap:6px;font:800 10.5px/1 var(--cond);letter-spacing:.06em;border:1.5px solid var(--hair);padding:7px 10px;border-radius:20px;cursor:pointer;transition:all .12s}
+  .qp span:hover{border-color:var(--gold);color:var(--gold-dk);background:#FCF8EC}
+  .qp img{width:16px;height:16px}
+  .slots{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .slot{display:flex;align-items:center;gap:9px;border:1.5px dashed var(--hair);border-radius:8px;padding:9px 12px;font:700 12px/1 var(--cond);letter-spacing:.06em;color:#AAB2BD}
+  .slot b{font:800 13px/1 var(--cond);color:#C4CBD6;min-width:16px}
+  .slot.f{border-style:solid;color:var(--ink);background:var(--off)}
+  .slot.f b{color:var(--navy)}
+  .slot img{width:18px;height:18px}
+  .balcard .lock{display:block;text-align:center;font:800 12.5px/1 var(--cond);letter-spacing:.12em;text-transform:uppercase;background:var(--navy);color:#fff;padding:14px;border-radius:6px;margin-top:14px;box-shadow:var(--sh-sm)}
+  .balcard .lock:hover{background:var(--navy-deep)}
+  .balcard .gate{font:600 11px/1.5 var(--body);color:var(--mut);text-align:center;margin-top:10px}
+  .balcard .gate a{color:var(--gold-dk);font-weight:700}
+
+  /* national boards */
+  .nat{padding:34px 0 8px}
+  .sect-head{display:flex;align-items:baseline;gap:16px;margin-bottom:6px}
+  .sect-head .eb{font:800 10.5px/1 var(--cond);letter-spacing:.2em;text-transform:uppercase;color:var(--gold-dk)}
+  .sect-head h3{font:800 24px/1 var(--slab);letter-spacing:-.015em;color:var(--navy)}
+  .sect-head .live{margin-left:auto;font:700 10px/1 var(--cond);letter-spacing:.12em;text-transform:uppercase;color:var(--mut)}
+  .tabs{display:flex;gap:8px;margin:14px 0 16px}
+  .tab{font:700 11.5px/1 var(--cond);letter-spacing:.1em;text-transform:uppercase;color:var(--mut);border:1.5px solid var(--hair);padding:9px 15px;border-radius:20px;cursor:pointer;transition:all .15s}
+  .tab:hover{border-color:var(--navy);color:var(--navy)}
+  .tab.on{background:var(--navy);border-color:var(--navy);color:#fff}
+  .tab.soon{opacity:.55;cursor:default}
+  .nat-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;background:var(--white);border:1px solid var(--hair);border-radius:14px;box-shadow:var(--sh-sm);overflow:hidden}
+  .ncol+.ncol{border-left:1px solid var(--hair)}
+  .nrow{display:flex;align-items:center;gap:11px;padding:9px 20px;border-bottom:1px solid var(--hair);font:700 13px/1 var(--body)}
+  .nrow:hover{background:var(--off)}
+  .nrow .rk{font:800 14px/1 var(--cond);color:#B9C1CC;min-width:24px}
+  .nrow img{width:21px;height:21px}
+  .nrow .tn{font:800 13.5px/1 var(--cond);letter-spacing:.03em}
+  .nrow .fp{font:700 9px/1 var(--cond);color:var(--gold-dk);margin-left:2px}
+  .nrow .pts{margin-left:auto;font:700 10.5px/1 var(--cond);color:var(--mut)}
+  .nat .src{font:600 10px/1.6 var(--cond);letter-spacing:.14em;text-transform:uppercase;color:var(--mut);margin-top:12px}
+
+  /* poll day duo */
+  .pd{padding:32px 0}
+  .pd-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  .pdc{background:var(--white);border:1px solid var(--hair);border-radius:12px;overflow:hidden;box-shadow:var(--sh-sm);transition:transform .15s,box-shadow .2s;display:flex;flex-direction:column}
+  .pdc:hover{transform:translateY(-3px);box-shadow:var(--sh-md)}
+  .pdc .th{position:relative}
+  .pdc .th img{width:100%;aspect-ratio:16/8.2;object-fit:cover}
+  .pdc .art{aspect-ratio:16/8.2;background:radial-gradient(480px 260px at 60% 15%,rgba(255,214,120,.35),transparent 58%),linear-gradient(140deg,#1A2C55 0%,var(--navy-deep) 60%,#122A52 100%);position:relative}
+  .pdc .art .ph{position:absolute;right:12px;bottom:10px;font:700 9px/1 var(--cond);letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.5)}
+  .pdc .th .play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+  .pdc .th .play i{width:58px;height:58px;border-radius:50%;background:rgba(13,19,33,.82);border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;font-style:normal;color:var(--gold);font-size:19px;padding-left:4px}
+  .pdc .tx{padding:16px 20px 18px}
+  .pdc .t{font:800 10px/1 var(--cond);letter-spacing:.14em;text-transform:uppercase;color:var(--gold-dk);display:block;margin-bottom:7px}
+  .pdc h4{font:800 18.5px/1.28 var(--slab);letter-spacing:-.01em}
+  .pdc:hover h4{color:var(--navy)}
+  .pdc .by{font:500 11.5px/1 var(--body);color:var(--mut);margin-top:8px;display:block}
+
+  /* citizens line */
+  .cit{background:var(--off);border-top:1px solid var(--hair);padding:26px 0}
+  .cit .row{display:flex;align-items:center;gap:22px;flex-wrap:wrap}
+  .cit .k{font:800 10.5px/1 var(--cond);letter-spacing:.2em;text-transform:uppercase;color:var(--gold-dk)}
+  .cit p{font:500 14px/1.5 var(--body);color:var(--ink);flex:1;min-width:280px}
+  .cit p b{color:var(--navy)}
+  .cit .go{font:800 12.5px/1 var(--cond);letter-spacing:.12em;text-transform:uppercase;background:var(--navy);color:#fff;padding:14px 20px;border-radius:5px;box-shadow:var(--sh-sm);white-space:nowrap}
+  .cit .go:hover{background:var(--navy-deep)}
+
+  footer{background:var(--mast);color:#8FA0B8;padding:40px 0 26px}
+  .f-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:30px}
+  .f-logo{color:#fff;font:800 22px/1 var(--cond);letter-spacing:.04em;text-transform:uppercase}
+  .f-logo em{font-style:italic;color:var(--gold)}
+  footer p{font:400 12.5px/1.6 var(--body);margin-top:10px;max-width:280px}
+  footer h5{font:800 11px/1 var(--cond);letter-spacing:.2em;text-transform:uppercase;color:#C8D2E0;margin-bottom:12px}
+  footer ul{list-style:none}
+  footer li{margin-bottom:9px}
+  footer li a{font:500 13px/1 var(--body);color:#8FA0B8}
+  footer li a:hover{color:#fff}
+  .f-base{border-top:1px solid rgba(255,255,255,.1);margin-top:30px;padding-top:18px;font:500 11.5px/1 var(--body);display:flex;gap:18px;flex-wrap:wrap}
+  .f-base a:hover{color:#fff}
+
+  @media(max-width:1080px){
+    .hero-grid,.bal-grid,.pd-grid{grid-template-columns:1fr}
+    .nat-grid{grid-template-columns:1fr}
+    .ncol+.ncol{border-left:none;border-top:1px solid var(--hair)}
+    nav.main{display:none}
+  }
+  @media(max-width:760px){
+    .phead h1{font-size:29px}
+    .slots{grid-template-columns:1fr}
+    .brow{padding:10px 16px}
+    .brow .pts{display:none}
+    .f-grid{grid-template-columns:1fr 1fr}
+  }
+</style>
+</head>
+<body>
+
+<div class="rhythm"><div class="wrap">
+  <span><b>MON</b> Weekend Truths</span><span class="today"><b>TUE</b> Poll Day</span><span><b>WED</b> The Sit-Down</span>
+  <span><b>THU</b> Picks Drop</span><span><b>FRI</b> The ESPN Show</span><span><b>SAT</b> We Watch Ball</span>
+</div></div>
+
+<header class="mast"><div class="wrap">
+  <a class="logo" href="/">The Pate <em>State</em><span>The Front Porch of College Football</span></a>
+  <nav class="main">
+    <a href="/notebook">Read</a><a href="/show">Show</a><a href="/scores">Scores</a>
+    <a class="on" href="/poll">Rankings</a><a href="/recruiting">Recruiting</a><a href="/play">Play</a><a href="/community">Community</a>
+  </nav>
+  <div class="right"><a class="myteams" href="/me">♡ My Teams</a><a class="join" href="/join">Join Free</a></div>
+</div></header>
+
+<!-- PAGE HEAD -->
+<div class="phead"><div class="wrap">
+  <div class="crumb">The Pate State / <b>The JP Poll</b></div>
+  <h1>The JP Poll</h1>
+  <p class="sub">The power ranking of the Pate State — the Top 25 voted by the people who actually watch, with every disagreement against the AP, Coaches, and CFP marked in gold.</p>
+  <div class="status">
+    <span class="st open">Week 1 Ballots Open · Lock Sun Aug 30, 8 PM ET</span>
+    <span class="st rev">First In-Season Reveal · Tue Sep 1 on the Show</span>
+  </div>
+</div></div>
+
+<!-- HERO: THE JP BOARD -->
+<section class="hero"><div class="wrap">
+  <div class="hero-grid">
+    <div class="board">
+      <div class="bh">
+        <div><span class="k">🗳 The People's Top 25</span><h2>JP Poll · Preseason Edition</h2></div>
+        <!-- BUILD: ballot count + reveal date from Supabase; never show a zero state — preseason board holds until Week 1 tabulates -->
+        <span class="n">Revealed Aug 14 on the show<br>Full ballot data public</span>
+      </div>
+      <div class="brow"><span class="rk">1</span><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/194.png" alt=""><span class="tn">Ohio State</span><span class="fp">▲ 61% of 1st-place votes</span><span class="pts">—</span><span class="ap same">AP #1</span></div>
+      <div class="brow"><span class="rk">2</span><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/61.png" alt=""><span class="tn">Georgia</span><span class="pts">—</span><span class="ap diff">AP #3</span></div>
+      <div class="brow"><span class="rk">3</span><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/251.png" alt=""><span class="tn">Texas</span><span class="pts">—</span><span class="ap diff">AP #5</span></div>
+      <div class="brow"><span class="rk">4</span><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/2483.png" alt=""><span class="tn">Oregon</span><span class="pts">—</span><span class="ap diff">AP #2</span></div>
+      <div class="brow"><span class="rk">5</span><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/245.png" alt=""><span class="tn">Texas A&amp;M</span><span class="pts">—</span><span class="ap diff">AP #8</span></div>
+      <div class="brow"><span class="rk">6</span><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/2390.png" alt=""><span class="tn">Miami</span><span class="pts">—</span><span class="ap diff">AP #7</span></div>
+      <div class="brow"><span class="rk">7</span><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/99.png" alt=""><span class="tn">LSU</span><span class="pts">—</span><span class="ap diff">AP #11</span></div>
+      <div class="brow"><span class="rk">8</span><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/87.png" alt=""><span class="tn">Notre Dame</span><span class="pts">—</span><span class="ap diff">AP #4</span></div>
+      <div class="brow"><span class="rk">9</span><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/201.png" alt=""><span class="tn">Oklahoma</span><span class="pts">—</span><span class="ap diff">AP #10</span></div>
+      <div class="brow"><span class="rk">10</span><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/84.png" alt=""><span class="tn">Indiana</span><span class="pts">—</span><span class="ap diff">AP #6</span></div>
+      <div class="bf"><a href="#">Full Top 25 + Every Ballot ↓</a><span class="leg"><b>Gold</b> = the State disagrees with the AP</span></div>
+    </div>
+
+    <div class="how">
+      <span class="k">How the Board Gets Made</span>
+      <h3>One Board. Voted by People Who Watch.</h3>
+      <div class="step"><b>Open Now</b><span>Week 1 ballots are live — every citizen ranks a top 10</span></div>
+      <div class="step"><b>Sun 8 PM</b><span>Ballots lock, the board tabulates overnight</span></div>
+      <div class="step"><b>Tuesday</b><span>The reveal airs live on the show, argued out</span></div>
+      <div class="step"><b>In Gold</b><span>Every disagreement vs. the AP, Coaches, and CFP — marked</span></div>
+      <a class="go" href="#ballot">Cast Your Ballot →</a>
+      <div class="note">Free with citizenship · every ballot goes public with the board</div>
+    </div>
+  </div>
+</div></section>
+
+<!-- BALLOT -->
+<section class="ballot" id="ballot"><div class="wrap">
+  <div class="bal-grid">
+    <div class="bal">
+      <span class="k">🗳 Week 1 · Ballots Open</span>
+      <h3>Cast This Week's Ballot</h3>
+      <p>Rank your top 10 — search any FBS team or tap the quick picks. Edit any time before the Sunday lock. <b>Every ballot goes public with the Tuesday board</b> — no anonymous votes, full distribution shown. That's the whole point.</p>
+    </div>
+    <div class="balcard">
+      <div class="bt"><h4>Your Week 1 Ballot</h4><span class="pr">0 of 10 ranked</span></div>
+      <div class="search">⌕ Search any FBS team…</div>
+      <div class="qp">
+        <span><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/194.png" alt="">Ohio St</span>
+        <span><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/61.png" alt="">Georgia</span>
+        <span><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/251.png" alt="">Texas</span>
+        <span><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/2483.png" alt="">Oregon</span>
+        <span><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/245.png" alt="">Texas A&amp;M</span>
+        <span><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/87.png" alt="">Notre Dame</span>
+        <span><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/2390.png" alt="">Miami</span>
+        <span>+ 128 more</span>
+      </div>
+      <div class="slots">
+        <div class="slot f"><b>1</b><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/194.png" alt="">Ohio State</div>
+        <div class="slot"><b>2</b>＋ Add a team</div>
+        <div class="slot"><b>3</b>＋ Add a team</div>
+        <div class="slot"><b>4</b>＋ Add a team</div>
+        <div class="slot"><b>5</b>＋ Add a team</div>
+        <div class="slot"><b>6</b>＋ Add a team</div>
+        <div class="slot"><b>7</b>＋ Add a team</div>
+        <div class="slot"><b>8</b>＋ Add a team</div>
+        <div class="slot"><b>9</b>＋ Add a team</div>
+        <div class="slot"><b>10</b>＋ Add a team</div>
+      </div>
+      <a class="lock" href="#">Lock My Ballot →</a>
+      <div class="gate">Only complete 10-team ballots count · <a href="/join?next=/poll">Join free to cast yours</a></div>
+    </div>
+  </div>
+</div></section>
+
+<!-- NATIONAL BOARDS -->
+<section class="nat"><div class="wrap">
+  <div class="sect-head"><span class="eb">The Consensus to Argue With</span><h3>The National Boards</h3><span class="live">Live from the national wire</span></div>
+  <div class="tabs">
+    <span class="tab on">AP Top 25</span>
+    <span class="tab">Coaches Poll</span>
+    <span class="tab soon">CFP Rankings · Nov</span>
+    <span class="tab">FCS Top 25</span>
+  </div>
+  <div class="nat-grid">
+    <div class="ncol">
+      <div class="nrow"><span class="rk">1</span><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/194.png" alt=""><span class="tn">Ohio State</span><span class="fp">40 × 1st</span><span class="pts">1672</span></div>
+      <div class="nrow"><span class="rk">2</span><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/2483.png" alt=""><span class="tn">Oregon</span><span class="fp">14 × 1st</span><span class="pts">1597</span></div>
+      <div class="nrow"><span class="rk">3</span><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/61.png" alt=""><span class="tn">Georgia</span><span class="pts">1513</span></div>
+      <div class="nrow"><span class="rk">4</span><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/87.png" alt=""><span class="tn">Notre Dame</span><span class="fp">6 × 1st</span><span class="pts">1510</span></div>
+      <div class="nrow"><span class="rk">5</span><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/251.png" alt=""><span class="tn">Texas</span><span class="pts">1483</span></div>
+      <div class="nrow"><span class="rk">6</span><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/84.png" alt=""><span class="tn">Indiana</span><span class="fp">8 × 1st</span><span class="pts">1440</span></div>
+      <div class="nrow"><span class="rk">7</span><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/2390.png" alt=""><span class="tn">Miami</span><span class="fp">1 × 1st</span><span class="pts">1379</span></div>
+      <div class="nrow"><span class="rk">8</span><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/245.png" alt=""><span class="tn">Texas A&amp;M</span><span class="pts">1131</span></div>
+      <div class="nrow"><span class="rk">9</span><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/145.png" alt=""><span class="tn">Ole Miss</span><span class="pts">1102</span></div>
+      <div class="nrow"><span class="rk">10</span><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/201.png" alt=""><span class="tn">Oklahoma</span><span class="pts">1047</span></div>
+      <div class="nrow"><span class="rk">11</span><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/99.png" alt=""><span class="tn">LSU</span><span class="pts">988</span></div>
+      <div class="nrow"><span class="rk">12</span><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/2641.png" alt=""><span class="tn">Texas Tech</span><span class="pts">983</span></div>
+      <div class="nrow"><span class="rk">13</span><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/333.png" alt=""><span class="tn">Alabama</span><span class="pts">904</span></div>
+    </div>
+    <div class="ncol">
+      <div class="nrow"><span class="rk">14</span><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/30.png" alt=""><span class="tn">USC</span><span class="pts">839</span></div>
+      <div class="nrow"><span class="rk">14</span><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/252.png" alt=""><span class="tn">BYU</span><span class="pts">839</span></div>
+      <div class="nrow"><span class="rk">16</span><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/130.png" alt=""><span class="tn">Michigan</span><span class="pts">718</span></div>
+      <div class="nrow"><span class="rk">17</span><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/264.png" alt=""><span class="tn">Washington</span><span class="pts">501</span></div>
+      <div class="nrow"><span class="rk">18</span><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/213.png" alt=""><span class="tn">Penn State</span><span class="pts">482</span></div>
+      <div class="nrow"><span class="rk">19</span><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/2567.png" alt=""><span class="tn">SMU</span><span class="pts">434</span></div>
+      <div class="nrow"><span class="rk">20</span><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/2633.png" alt=""><span class="tn">Tennessee</span><span class="pts">394</span></div>
+      <div class="nrow"><span class="rk">21</span><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/254.png" alt=""><span class="tn">Utah</span><span class="pts">304</span></div>
+      <div class="nrow"><span class="rk">22</span><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/2294.png" alt=""><span class="tn">Iowa</span><span class="pts">260</span></div>
+      <div class="nrow"><span class="rk">23</span><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/248.png" alt=""><span class="tn">Houston</span><span class="pts">252</span></div>
+      <div class="nrow"><span class="rk">24</span><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/97.png" alt=""><span class="tn">Louisville</span><span class="pts">194</span></div>
+      <div class="nrow"><span class="rk">25</span><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/142.png" alt=""><span class="tn">Missouri</span><span class="pts">117</span></div>
+      <div class="nrow" style="border-bottom:none"><span class="rk">·</span><span class="tn" style="color:var(--mut)">Also receiving votes: Clemson, Illinois, Arizona St</span></div>
+    </div>
+  </div>
+  <p class="src">Source: National wire · Boards update the day they drop · Tabs switch AP / Coaches / CFP / FCS</p>
+</div></section>
+
+<!-- POLL DAY: THE COLUMN + THE EPISODE -->
+<section class="pd"><div class="wrap">
+  <div class="sect-head"><span class="eb">Every Tuesday</span><h3>Poll Day, Argued Out</h3></div>
+  <div class="pd-grid">
+    <a class="pdc" href="/notebook">
+      <span class="art"><span class="ph">Photo Slot — Poll Board Art</span></span>
+      <span class="tx"><span class="t">📝 The Column · Tuesdays</span><h4>Poll Day, Explained: Every Move on the Board, in Writing</h4><span class="by">Josh Pate · 7 min read</span></span>
+    </a>
+    <a class="pdc" href="https://www.youtube.com/watch?v=zEUiP_MC4-c">
+      <span class="th"><img src="https://i.ytimg.com/vi/zEUiP_MC4-c/hqdefault.jpg" alt=""><span class="play"><i>▶</i></span></span>
+      <span class="tx"><span class="t">▶ The Show · Latest Poll Episode</span><h4>AP Poll Preseason — Most Overrated &amp; Underrated Teams</h4><span class="by">Aug 17, 2026 · Watch on YouTube</span></span>
+    </a>
+  </div>
+</div></section>
+
+<!-- CITIZENS LINE -->
+<section class="cit"><div class="wrap">
+  <div class="row">
+    <div>
+      <div class="k">More for Citizens</div>
+      <p>Citizens see the board first — <b>early access Tuesday mornings</b>, plus the full ballot data and every voter's public ballot.</p>
+    </div>
+    <a class="go" href="/join?next=/poll">Join the State →</a>
+  </div>
+</div></section>
+
+<footer><div class="wrap">
+  <div class="f-grid">
+    <div>
+      <div class="f-logo">The Pate <em>State</em></div>
+      <p>The front porch of college football. All picks logged. All poll results archived.</p>
+    </div>
+    <div><h5>Watch &amp; Read</h5><ul><li><a href="/show">The Show</a></li><li><a href="/notebook">The Notebook</a></li><li><a href="/wire">The Wire</a></li><li><a href="/report">The Report</a></li></ul></div>
+    <div><h5>Play &amp; Vote</h5><ul><li><a href="/poll">JP Poll</a></li><li><a href="/play#pickem">Pick'Em</a></li><li><a href="/play#bracket">Playoffs</a></li><li><a href="/community">The Porch</a></li></ul></div>
+    <div><h5>The State</h5><ul><li><a href="/teams">Teams</a></li><li><a href="/scores">Scores</a></li><li><a href="/recruiting">Recruiting</a></li><li><a href="/shop">Shop</a></li></ul></div>
+  </div>
+  <div class="f-base"><span>© The Pate State</span><a href="/standards">Editorial Standards &amp; Corrections</a><a href="/standards#ai">AI Disclosure</a><a href="/privacy">Privacy</a><a href="/terms">Terms</a></div>
+</div></footer>
+
+</body>
+</html>

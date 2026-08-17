@@ -35,7 +35,7 @@ const DEMO_GEAR: readonly GearItem[] = [
 
 export default function ShopPage() {
   return (
-    <main>
+    <main className="v5-lite">
       <header className="page-head">
         <div className="wrap">
           <p className="crumb">The Pate State / The State Store</p>

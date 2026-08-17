@@ -48,7 +48,7 @@ export default async function ThreadPage({ params }: { params: Promise<{ id: str
   const authorStaff = thread.citizens?.role === "staff" || !thread.citizens;
 
   return (
-    <main>
+    <main className="v5-lite">
       <div className={board?.kind === "team" ? "board-bar team" : "board-bar"}>
         <div className="wrap">
           <p className="kicker">

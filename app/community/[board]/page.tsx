@@ -33,7 +33,7 @@ export default async function BoardPage({ params }: { params: Promise<{ board: s
   const logo = b.team_slug ? teamLogoUrl(b.team_slug) : null;
 
   return (
-    <main>
+    <main className="v5-lite">
       <div className={b.kind === "team" ? "board-bar team" : "board-bar"}>
         <div className="wrap">
           <p className="kicker">The Front Porch · The Pate State</p>

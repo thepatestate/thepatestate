@@ -1,120 +1,30 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import PreseasonChip from "@/components/PreseasonChip";
-import EpisodeLead from "@/components/EpisodeLead";
 import EmptyState from "@/components/EmptyState";
-import { DEMO_MODE } from "@/lib/demo";
-import { slugifyTeam, teamLogoUrl } from "@/lib/teams-meta";
-import { getNationalRankings } from "@/lib/espn";
+import BallotBuilder, { type BallotTeamOption } from "@/components/poll/BallotBuilder";
+import { getNationalRankings, type NationalPoll } from "@/lib/espn";
 import { getTeamDirectory } from "@/lib/cfbd";
+import { teamLogoUrl } from "@/lib/teams-meta";
+import { formatDate } from "@/lib/format";
 import {
-  getBoards,
+  getLatestPublished,
+  getCurrentBoard,
   getBoardResults,
   getBallotCount,
   getMyBallot,
   boardOpenForVoting,
-  type JpBoard,
+  type JpResultRow,
 } from "@/lib/jp-poll";
 import { createClient as createServerClient, getCitizen } from "@/lib/supabase/server";
-import BallotBuilder, { type BallotTeamOption } from "@/components/poll/BallotBuilder";
-import { getVideos } from "@/lib/youtube";
+import { getPublishedArticles, type SanityArticle } from "@/lib/sanity";
+import { getVideos, isEpisode, videoUrl } from "@/lib/youtube";
 
 export const metadata: Metadata = {
   title: "The JP Poll — The People's Top 25",
   description: "The power ranking voted by people who actually watch: ballots Sunday, reveal Tuesday, every disagreement with the AP and CFP marked in gold.",
   alternates: { canonical: "/poll" },
 };
-
-// --- Preseason-preview sample data ---------------------------------------
-// Stands in for the ballot-tabulation engine (Top 5 rankcards, the JP-vs-
-// consensus comparison tables). Swap for live queries when the engine
-// ships; the JSX below only touches these arrays.
-
-const DEMO_TOP5 = [
-  { rank: "01", code: "UGA", team: "Georgia", rec: "PRESEASON · SEC", off: 95, def: 97, sos: 8, rating: "96.4", delta: "up", deltaVal: "1" },
-  { rank: "02", code: "OSU", team: "Ohio State", rec: "PRESEASON · B1G", off: 98, def: 94, sos: 12, rating: "95.8", delta: "dn", deltaVal: "1" },
-  { rank: "03", code: "TEX", team: "Texas", rec: "PRESEASON · SEC", off: 96, def: 92, sos: 5, rating: "94.1", delta: null, deltaVal: null },
-  { rank: "04", code: "ORE", team: "Oregon", rec: "PRESEASON · B1G", off: 94, def: 90, sos: 14, rating: "92.7", delta: "up", deltaVal: "2" },
-  { rank: "05", code: "PSU", team: "Penn State", rec: "PRESEASON · B1G", off: 91, def: 93, sos: 18, rating: "91.9", delta: null, deltaVal: null },
-] as const;
-
-type Delta = { sym: string; cls: "up" | "dn" | null };
-const UP = (n: number): Delta => ({ sym: `▲${n}`, cls: "up" });
-const DN = (n: number): Delta => ({ sym: `▼${n}`, cls: "dn" });
-const SAME: Delta = { sym: "↔", cls: null };
-
-// Full JP Top 25, all 25 rows (was previously truncated at 12 with a dead
-// "See 13-25" link) — every team here is already mapped in
-// lib/teams-meta's TEAM_LOGOS, so the full board can show a real logo
-// instead of a letter tile.
-const DEMO_DISAGREE = [
-  { rk: "01", team: "Georgia", ap: SAME, coaches: SAME, cfp: SAME, star: false },
-  { rk: "02", team: "Ohio State", ap: SAME, coaches: DN(1), cfp: SAME, star: false },
-  { rk: "03", team: "Texas", ap: UP(2), coaches: UP(1), cfp: UP(2), star: true },
-  { rk: "04", team: "Oregon", ap: DN(1), coaches: SAME, cfp: DN(1), star: false },
-  { rk: "05", team: "Penn State", ap: UP(1), coaches: UP(2), cfp: UP(3), star: true },
-  { rk: "06", team: "LSU", ap: UP(3), coaches: UP(2), cfp: UP(4), star: true },
-  { rk: "07", team: "Clemson", ap: DN(2), coaches: DN(1), cfp: DN(2), star: false },
-  { rk: "08", team: "Notre Dame", ap: SAME, coaches: SAME, cfp: UP(1), star: false },
-  { rk: "09", team: "Alabama", ap: DN(3), coaches: DN(4), cfp: DN(2), star: true },
-  { rk: "10", team: "Miami", ap: UP(2), coaches: UP(1), cfp: SAME, star: false },
-  { rk: "11", team: "Indiana", ap: UP(4), coaches: UP(5), cfp: UP(3), star: true },
-  { rk: "12", team: "Michigan", ap: DN(1), coaches: SAME, cfp: DN(1), star: false },
-  { rk: "13", team: "Nebraska", ap: DN(2), coaches: SAME, cfp: DN(1), star: false },
-  { rk: "14", team: "Ole Miss", ap: UP(3), coaches: UP(2), cfp: UP(4), star: true },
-  { rk: "15", team: "Wisconsin", ap: SAME, coaches: DN(1), cfp: SAME, star: false },
-  { rk: "16", team: "USC", ap: UP(1), coaches: SAME, cfp: UP(2), star: false },
-  { rk: "17", team: "Oklahoma", ap: DN(4), coaches: DN(3), cfp: DN(2), star: true },
-  { rk: "18", team: "Tennessee", ap: UP(2), coaches: UP(1), cfp: SAME, star: false },
-  { rk: "19", team: "Florida", ap: SAME, coaches: SAME, cfp: UP(1), star: false },
-  { rk: "20", team: "Missouri", ap: UP(5), coaches: UP(4), cfp: UP(6), star: true },
-  { rk: "21", team: "Iowa", ap: DN(1), coaches: SAME, cfp: DN(2), star: false },
-  { rk: "22", team: "Washington", ap: SAME, coaches: UP(1), cfp: SAME, star: false },
-  { rk: "23", team: "Utah", ap: UP(2), coaches: UP(3), cfp: UP(1), star: false },
-  { rk: "24", team: "Colorado", ap: DN(3), coaches: DN(2), cfp: DN(4), star: false },
-  { rk: "25", team: "BYU", ap: UP(1), coaches: SAME, cfp: UP(2), star: false },
-] as const;
-
-// Poll Movement rail widget — the JP Poll's own week-over-week risers and
-// fallers (not a comparison against another poll, unlike the table above).
-const DEMO_POLL_MOVEMENT = [
-  { team: "LSU", dir: "up" as const, delta: 3 },
-  { team: "Missouri", dir: "up" as const, delta: 5 },
-  { team: "Indiana", dir: "up" as const, delta: 4 },
-  { team: "Alabama", dir: "dn" as const, delta: 3 },
-  { team: "Oklahoma", dir: "dn" as const, delta: 4 },
-  { team: "Colorado", dir: "dn" as const, delta: 3 },
-] as const;
-
-const DEMO_FOUR_BOARDS = [
-  { rk: "01", jp: "Georgia", jpGold: false, cfp: "Georgia", coaches: "Georgia", ap: "Georgia" },
-  { rk: "02", jp: "Ohio State", jpGold: false, cfp: "Ohio State", coaches: "Ohio State", ap: "Ohio State" },
-  { rk: "03", jp: "Texas", jpGold: true, cfp: "Oregon", coaches: "Oregon", ap: "Oregon" },
-  { rk: "04", jp: "Oregon", jpGold: true, cfp: "Texas", coaches: "Texas", ap: "Texas" },
-  { rk: "05", jp: "Penn State", jpGold: false, cfp: "Penn State", coaches: "Penn State", ap: "Penn State" },
-  { rk: "06", jp: "LSU", jpGold: true, cfp: "Clemson", coaches: "Clemson", ap: "Notre Dame" },
-  { rk: "07", jp: "Clemson", jpGold: true, cfp: "Notre Dame", coaches: "LSU", ap: "Clemson" },
-  { rk: "08", jp: "Notre Dame", jpGold: false, cfp: "LSU", coaches: "Notre Dame", ap: "LSU" },
-  { rk: "09", jp: "Alabama", jpGold: true, cfp: "Miami", coaches: "Alabama", ap: "Miami" },
-  { rk: "10", jp: "Miami", jpGold: true, cfp: "Alabama", coaches: "Indiana", ap: "Alabama" },
-] as const;
-
-const DEMO_BALLOT_ITEMS = [
-  "Your No. 1 team",
-  "Most overrated in the AP",
-  "Best win of the week",
-  "Best atmosphere you attended",
-] as const;
-
-// Small inline team mark for table rows — letter tiles die per the client's
-// note; every team on this page already has a logo mapped in
-// lib/teams-meta, so this never needs a fallback.
-function TeamMark({ team }: { team: string }) {
-  const logoUrl = teamLogoUrl(slugifyTeam(team));
-  if (!logoUrl) return null;
-  return <Image src={logoUrl} alt="" width={22} height={22} style={{ objectFit: "contain", verticalAlign: "middle" }} />;
-}
 
 function etLabel(iso: string): string {
   const d = new Date(iso);
@@ -126,440 +36,397 @@ function etLabel(iso: string): string {
   return `${day} · ${time} ET`;
 }
 
+/** Short pill label for the national poll the JP board is compared against. */
+function pollShortName(name: string): string {
+  if (/\bAP\b/i.test(name)) return "AP";
+  if (/coach/i.test(name)) return "COACHES";
+  if (/playoff|\bCFP\b/i.test(name)) return "CFP";
+  return name.replace(/\s*(top\s*25|poll)\s*$/i, "").toUpperCase() || "NATL";
+}
+
+/** One row of a national-poll column (also reused for the full JP board). */
+function NatRow({ rank, logo, school, firstPlace, pts }: {
+  rank: number;
+  logo: string | null;
+  school: string;
+  firstPlace: number | null;
+  pts: string | number | null;
+}) {
+  return (
+    <div className="nrow">
+      <span className="rk">{rank}</span>
+      {logo && <Image src={logo} alt="" width={21} height={21} />}
+      <span className="tn">{school}</span>
+      {firstPlace ? <span className="fp">{firstPlace} × 1st</span> : null}
+      <span className="pts">{pts ?? "—"}</span>
+    </div>
+  );
+}
+
 export default async function PollPage() {
-  const [videos, nationalPolls, boards, dir, citizen] = await Promise.all([
-    getVideos(),
-    getNationalRankings(),
-    getBoards(),
-    getTeamDirectory(),
-    getCitizen(),
+  // Every fetch guarded — a dead feed degrades a section, never the page.
+  const [videos, nationalPolls, latestBoard, currentBoard, dir, citizen, articles] = await Promise.all([
+    getVideos().catch(() => []),
+    getNationalRankings().catch<NationalPoll[]>(() => []),
+    getLatestPublished().catch(() => null),
+    getCurrentBoard().catch(() => null),
+    getTeamDirectory().catch((): Awaited<ReturnType<typeof getTeamDirectory>> => ({})),
+    getCitizen().catch(() => null),
+    getPublishedArticles(24).catch<SanityArticle[]>(() => []),
   ]);
-  const latestVideo = videos[0] ?? null;
 
-  const now = Date.now();
-  const currentBoard: JpBoard | null =
-    boards.find((b) => now < new Date(b.locks_at).getTime()) ?? boards[boards.length - 1] ?? null;
-  const publishedBoards = boards.filter((b) => b.status === "published");
-  const latestBoard = publishedBoards[publishedBoards.length - 1] ?? null;
-  const prevBoard = publishedBoards[publishedBoards.length - 2] ?? null;
-
-  const [results, prevResults, ballotCount, myBallot] = await Promise.all([
-    latestBoard ? getBoardResults(latestBoard.id) : [],
-    prevBoard ? getBoardResults(prevBoard.id) : [],
-    currentBoard ? getBallotCount(currentBoard.id) : 0,
+  // Live JP board results + ballot state. getBallotCount only runs when a
+  // board actually exists — the count is never invented.
+  const [results, ballotCount, myBallot] = await Promise.all([
+    latestBoard ? getBoardResults(latestBoard.id).catch<JpResultRow[]>(() => []) : [],
+    currentBoard ? getBallotCount(currentBoard.id).catch(() => 0) : 0,
     citizen && currentBoard
-      ? getMyBallot(await createServerClient(), currentBoard.id, citizen.id)
+      ? getMyBallot(await createServerClient(), currentBoard.id, citizen.id).catch(() => null)
       : null,
   ]);
 
-  const teams: BallotTeamOption[] = Object.values(dir)
-    .map((t) => ({ slug: t.slug, school: t.school, conference: t.conference, logo: t.logo }))
-    .sort((a, b) => a.school.localeCompare(b.school));
-  const quickPicks = (nationalPolls[0]?.ranks ?? []).map((r) => r.slug);
-  const prevRankBySlug = new Map(prevResults.map((r) => [r.team_slug, r.rank]));
-  const nationalBySlug = nationalPolls.map((p) => ({
-    name: p.name.replace(/AFCA\s+/, "").replace(/\s+Poll$/, "").toUpperCase(),
-    map: new Map(p.ranks.map((r) => [r.slug, r.rank])),
-  }));
-
+  const now = Date.now();
   const voting = currentBoard ? boardOpenForVoting(currentBoard) : false;
   const preOpen = currentBoard ? now < new Date(currentBoard.opens_at).getTime() : false;
   const tabulating = currentBoard
     ? now >= new Date(currentBoard.locks_at).getTime() && currentBoard.status !== "published"
     : false;
 
+  // Ballot component inputs (existing BallotBuilder, re-mounted as-is).
+  const teams: BallotTeamOption[] = Object.values(dir)
+    .map((t) => ({ slug: t.slug, school: t.school, conference: t.conference, logo: t.logo }))
+    .sort((a, b) => a.school.localeCompare(b.school));
+  const quickPicks = (nationalPolls[0]?.ranks ?? []).map((r) => r.slug);
+
+  // Comparison poll for the hero board's gold pills (AP if published, else
+  // the first live national poll). No poll out → no pills.
+  const cmpPoll = nationalPolls.find((p) => /\bAP\b/i.test(p.name)) ?? nationalPolls[0] ?? null;
+  const cmpLabel = cmpPoll ? pollShortName(cmpPoll.name) : null;
+  const cmpMap = new Map<string, number>(cmpPoll ? cmpPoll.ranks.map((r) => [r.slug, r.rank]) : []);
+
+  const heroRows = results.slice(0, 10);
+  const totalBallots = results[0]?.ballots ?? 0;
+  const teamName = (slug: string) => dir[slug]?.school ?? slug.replace(/-/g, " ");
+  const teamLogo = (slug: string) => dir[slug]?.logo ?? teamLogoUrl(slug);
+
+  // Poll Day duo: the live poll-day column + the latest episode.
+  const pollDayArticle =
+    articles.find((a) => a.episode?.series === "poll-day") ?? null;
+  const latestEpisode = videos.find(isEpisode) ?? videos[0] ?? null;
+
   return (
-    <main>
-      <header className="page-head">
+    <main className="v5 pg-poll">
+      {/* ── PAGE HEAD ── */}
+      <div className="phead">
         <div className="wrap">
-          <p className="crumb">The Pate State / The JP Poll</p>
+          <div className="crumb">The Pate State / <b>The JP Poll</b></div>
           <h1>The JP Poll</h1>
-          <p className="lede">
-            The power ranking of the Pate State — the top 25 voted by the people who actually watch, with every
-            disagreement against the AP, Coaches, and CFP polls marked in gold.
+          <p className="sub">
+            The power ranking of the Pate State — the Top 25 voted by the people who actually watch, with
+            every disagreement against the AP, Coaches, and CFP marked in gold.
           </p>
-        </div>
-      </header>
-
-      {/* --- LIVE: the published board (real citizen votes, real math) --- */}
-      {latestBoard && results.length > 0 && (
-        <section className="on-soft">
-          <div className="wrap">
-            <span className="fr">🗳 THE JP POLL</span>
-            <p className="eyebrow">
-              {latestBoard.label} · From {results[0]?.ballots ?? 0}{" "}
-              {(results[0]?.ballots ?? 0) === 1 ? "Ballot" : "Ballots"} · Full Distribution Public
-            </p>
-            <h2 className="display" style={{ fontSize: 38 }}>The People&apos;s Top 25</h2>
-            <table style={{ marginTop: 16 }}>
-              <thead>
-                <tr>
-                  <th>JP</th><th>TEAM</th><th>PTS</th><th>1ST</th><th>MOVE</th>
-                  {nationalBySlug.map((p) => <th key={p.name}>VS {p.name}</th>)}
-                </tr>
-              </thead>
-              <tbody>
-                {results.map((r) => {
-                  const info = dir[r.team_slug];
-                  const logoUrl = info?.logo ?? teamLogoUrl(r.team_slug);
-                  const prev = prevRankBySlug.get(r.team_slug);
-                  return (
-                    <tr key={r.rank}>
-                      <td className="rk">{String(r.rank).padStart(2, "0")}</td>
-                      <td>
-                        <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
-                          {logoUrl && (
-                            <Image src={logoUrl} alt="" width={22} height={22} style={{ objectFit: "contain" }} />
-                          )}
-                          <b>{info?.school ?? r.team_slug}</b>
-                        </span>
-                      </td>
-                      <td style={{ fontFamily: "var(--mono)", fontSize: 12 }}>{r.points}</td>
-                      <td style={{ fontFamily: "var(--mono)", fontSize: 12 }}>{r.first_place || ""}</td>
-                      <td>
-                        {prev == null
-                          ? (prevBoard ? <span style={{ color: "var(--lamp-deep)" }}>NEW</span> : "")
-                          : prev === r.rank
-                            ? "↔"
-                            : prev > r.rank
-                              ? <span className="up">▲{prev - r.rank}</span>
-                              : <span className="dn">▼{r.rank - prev}</span>}
-                      </td>
-                      {nationalBySlug.map((p) => {
-                        const nat = p.map.get(r.team_slug);
-                        return (
-                          <td key={p.name} style={{ fontFamily: "var(--mono)", fontSize: 12 }}>
-                            {nat == null ? (
-                              <span style={{ color: "var(--lamp-deep)", fontWeight: 700 }}>NR</span>
-                            ) : nat === r.rank ? (
-                              "↔"
-                            ) : (
-                              <span style={{ color: "var(--lamp-deep)", fontWeight: 700 }}>
-                                {nat > r.rank ? `▲${nat - r.rank}` : `▼${r.rank - nat}`}
-                              </span>
-                            )}
-                          </td>
-                        );
-                      })}
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-            <p style={{ marginTop: 12, fontFamily: "var(--mono)", fontSize: 11, color: "var(--ink-dim)" }}>
-              GOLD = WHERE THE CITIZENS DISAGREE WITH THE NATIONAL BOARDS · POINTS: 10 FOR A 1ST-PLACE VOTE
-              DOWN TO 1 FOR 10TH · TIES BROKEN BY FIRST-PLACE VOTES
-            </p>
-          </div>
-        </section>
-      )}
-
-      {/* --- LIVE: this week's ballot --- */}
-      {currentBoard && (
-        <section id="ballot">
-          <div className="wrap" style={{ maxWidth: 860 }}>
-            <p className="eyebrow">
-              {preOpen
-                ? `Ballots Open ${etLabel(currentBoard.opens_at)}`
-                : voting
-                  ? `${currentBoard.label} Ballots Open — Lock ${etLabel(currentBoard.locks_at)}`
-                  : tabulating
-                    ? "Ballots Locked — Tabulating"
-                    : `${currentBoard.label}`}
-            </p>
-            <h2 className="display" style={{ fontSize: 34 }}>
-              {preOpen ? "Your Ballot Awaits" : voting ? "Cast This Week's Ballot" : "This Week's Ballot"}
-            </h2>
-            <p className="lede" style={{ fontSize: 15.5 }}>
-              {preOpen &&
-                "Rank your top 10 the moment ballots open. Every citizen votes, every ballot counts the same, and the full distribution goes public with the board."}
-              {voting &&
-                `Rank your top 10 — ${ballotCount} ${ballotCount === 1 ? "ballot is" : "ballots are"} in so far. Edit yours any time before the Sunday lock; the reveal airs Tuesday on the show.`}
-              {tabulating &&
-                "Ballots are locked and the board is tabulating. The reveal airs Tuesday on the show — then every ballot and the full point distribution go public."}
-              {!preOpen && !voting && !tabulating && "The next board's ballots open Monday morning."}
-            </p>
-            <div style={{ marginTop: 16 }}>
-              <BallotBuilder
-                teams={teams}
-                quickPicks={quickPicks}
-                initial={myBallot ?? []}
-                editable={voting}
-                signedIn={Boolean(citizen)}
-              />
+          {currentBoard && (
+            <div className="status">
+              {voting && (
+                <span className="st open">{currentBoard.label} Ballots Open · Lock {etLabel(currentBoard.locks_at)}</span>
+              )}
+              {preOpen && (
+                <span className="st rev">{currentBoard.label} Ballots Open {etLabel(currentBoard.opens_at)}</span>
+              )}
+              {tabulating && <span className="st rev">Ballots Locked · Board Tabulating</span>}
+              <span className="st rev">Reveal · {etLabel(currentBoard.reveals_at)} on the Show</span>
             </div>
-          </div>
-        </section>
-      )}
-
-      {DEMO_MODE && (
-      <section className="on-soft">
-        <div className="wrap">
-          <span className="fr">🗳 THE JP POLL</span>
-          <p className="eyebrow">This Week&apos;s Board — Midseason Preview</p>
-          <h2 className="display" style={{ fontSize: 38 }}>The Top 25</h2>
-          <PreseasonChip />
-          {DEMO_MODE && (
-          <div className="duo wide" style={{ marginTop: 16, alignItems: "start" }}>
-            <div>
-              <p className="eyebrow" style={{ marginBottom: 6 }}>The Top Five</p>
-              {DEMO_TOP5.map((t) => {
-                const logoUrl = teamLogoUrl(slugifyTeam(t.team));
-                return (
-                <div className="rankcard" key={t.rank}>
-                  <div className="rk-num">{t.rank}</div>
-                  {logoUrl ? (
-                    <Image src={logoUrl} alt={`${t.team} logo`} width={60} height={60} className="logo-img" />
-                  ) : (
-                    <div className="logo-box">{t.code}</div>
-                  )}
-                  <div className="rk-main">
-                    <b>{t.team}</b>
-                    <span className="rk-rec">{t.rec}</span>
-                    <div className="pills">
-                      <span className="pill">OFF {t.off}</span>
-                      <span className="pill">DEF {t.def}</span>
-                      <span className="pill">SOS {t.sos}</span>
-                    </div>
-                  </div>
-                  <div className="rk-score">
-                    <span className="val">{t.rating}</span>
-                    {t.delta && (
-                      <span className={`dl ${t.delta}`}>{t.delta === "up" ? "▲" : "▼"} {t.deltaVal}</span>
-                    )}
-                    <span className="lbl">JP RATING</span>
-                  </div>
-                </div>
-                );
-              })}
-              <div style={{ marginTop: 8 }}><Link className="btn" href="/teams">VIEW ALL 136 →</Link></div>
-
-              <div style={{ marginTop: 34 }}>
-                <p className="eyebrow">Week 1 — The Full Board</p>
-                <h2 className="display" style={{ fontSize: 30 }}>Where the Porch Disagrees</h2>
-                <PreseasonChip />
-                <table style={{ marginTop: 14 }}>
-                  <thead>
-                    <tr><th>JP</th><th>TEAM</th><th>VS. AP</th><th>VS. COACHES</th><th>VS. CFP</th><th></th></tr>
-                  </thead>
-                  <tbody>
-                    {DEMO_DISAGREE.map((r) => (
-                      <tr key={r.rk}>
-                        <td className="rk">{r.rk}</td>
-                        <td>
-                          <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
-                            <TeamMark team={r.team} /> <b>{r.team}</b>
-                          </span>
-                        </td>
-                        <td className={r.ap.cls ?? undefined}>{r.ap.sym}</td>
-                        <td className={r.coaches.cls ?? undefined}>{r.coaches.sym}</td>
-                        <td className={r.cfp.cls ?? undefined}>{r.cfp.sym}</td>
-                        <td className={r.star ? "star" : undefined}>{r.star ? "★" : ""}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-                <div className="legend">
-                  <span><b>▲▼</b> spots higher / lower than that poll</span>
-                  <span><b>↔</b> same spot</span>
-                  <span><b>★</b> biggest disagreement of the week</span>
-                </div>
-                <div style={{ marginTop: 12, fontFamily: "var(--mono)", fontSize: 12, color: "var(--ink-dim)" }}>
-                  All 25, full ballot data — the 136-team board and poll archive ship with the season
-                </div>
-              </div>
-
-              <div style={{ marginTop: 34 }}>
-                <p className="eyebrow">Four Boards, Side by Side</p>
-                <h2 className="display" style={{ fontSize: 30 }}>JP Poll vs. CFP vs. Coaches vs. AP</h2>
-                <PreseasonChip />
-                <p className="lede">
-                  Same week, four top tens. The gold cells are where the citizens see it differently than everyone
-                  else.
-                </p>
-                <table style={{ marginTop: 14 }}>
-                  <thead>
-                    <tr><th>RK</th><th>THE JP POLL</th><th>CFP</th><th>COACHES</th><th>AP</th></tr>
-                  </thead>
-                  <tbody>
-                    {DEMO_FOUR_BOARDS.map((r) => (
-                      <tr key={r.rk}>
-                        <td className="rk">{r.rk}</td>
-                        <td>
-                          <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
-                            <TeamMark team={r.jp} />{" "}
-                            <b style={r.jpGold ? { color: "var(--lamp-deep)" } : undefined}>{r.jp}</b>
-                          </span>
-                        </td>
-                        <td><span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}><TeamMark team={r.cfp} /> {r.cfp}</span></td>
-                        <td><span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}><TeamMark team={r.coaches} /> {r.coaches}</span></td>
-                        <td><span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}><TeamMark team={r.ap} /> {r.ap}</span></td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-                <p style={{ marginTop: 12, fontFamily: "var(--mono)", fontSize: 11, color: "var(--ink-dim)" }}>
-                  GOLD = JP POLL DISAGREES WITH THE CONSENSUS AT THAT SPOT · UPDATED EVERY TUESDAY AFTER THE REVEAL
-                </p>
-              </div>
-            </div>
-
-            <aside>
-              <div className="rail-card">
-                <h4>Poll Movement</h4>
-                {DEMO_POLL_MOVEMENT.map((m) => (
-                  <div className="rail-row" key={m.team}>
-                    <span className="rr-hel">
-                      <TeamMark team={m.team} />
-                    </span>
-                    <span className="rr-name">{m.team}</span>
-                    <span className={m.dir}>{m.dir === "up" ? "▲" : "▼"} {m.delta}</span>
-                  </div>
-                ))}
-              </div>
-              <div className="rail-card">
-                <h4>How the Poll Works</h4>
-                <p>
-                  Every citizen ranks a top 10 each week. Ballots lock Sunday 8PM ET and the board tabulates
-                  Monday night — no editorial panel, no anonymous ballots. The full vote distribution is public;
-                  the AP&apos;s isn&apos;t.
-                </p>
-                <p style={{ marginTop: 10 }}>
-                  Reveal airs live every Tuesday, with every disagreement against the AP, Coaches, and CFP polls
-                  marked in gold below.
-                </p>
-              </div>
-              <div className="rail-card">
-                <h4>Latest From the Show</h4>
-                {latestVideo ? (
-                  <EpisodeLead video={latestVideo} tag="NEW EPISODE" />
-                ) : (
-                  <p>Video loads live from the channel — check back once the feed is connected.</p>
-                )}
-              </div>
-            </aside>
-          </div>
           )}
         </div>
-      </section>
-      )}
+      </div>
 
-      {/* Real national polls from the live wire (no key, no quota) — the
-          boards the JP Poll gets measured against. Renders the moment a
-          poll publishes: Coaches in August, AP days later, CFP from
-          late October. Never invented; hidden entirely if no poll is out. */}
-      {nationalPolls.length > 0 && (
-        <section>
-          <div className="wrap">
-            <p className="eyebrow">The National Boards — {nationalPolls[0].season}</p>
-            <h2 className="display" style={{ fontSize: 34 }}>Where the Country Has It</h2>
-            <p className="lede">
-              The official national polls, live from the wire — the consensus the citizens get to argue with.
-              JP Poll ballots are open now.
-            </p>
-            <div className={nationalPolls.length > 1 ? "duo" : undefined} style={{ marginTop: 18, maxWidth: nationalPolls.length > 1 ? undefined : 720 }}>
-              {nationalPolls.map((poll) => (
-                <div key={poll.name}>
-                  <p className="eyebrow" style={{ marginBottom: 6 }}>
-                    {poll.name}
-                    {poll.week ? ` · ${poll.week}` : ""}
-                  </p>
-                  <table>
-                    <thead>
-                      <tr><th>RK</th><th>TEAM</th><th>REC</th><th style={{ textAlign: "right" }}>PTS</th></tr>
-                    </thead>
-                    <tbody>
-                      {poll.ranks.map((r) => (
-                        <tr key={r.rank}>
-                          <td className="rk">{String(r.rank).padStart(2, "0")}</td>
-                          <td>
-                            <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
-                              {r.logo && (
-                                <Image src={r.logo} alt="" width={22} height={22} style={{ objectFit: "contain" }} />
-                              )}
-                              <b>{r.school}</b>
-                              {r.firstPlace ? (
-                                <span style={{ fontFamily: "var(--mono)", fontSize: 11, color: "var(--ink-dim)" }}>
-                                  {r.firstPlace} × 1ST
-                                </span>
-                              ) : null}
-                            </span>
-                          </td>
-                          <td style={{ fontFamily: "var(--mono)", fontSize: 12 }}>{r.record}</td>
-                          <td style={{ textAlign: "right", fontFamily: "var(--mono)", fontSize: 12 }}>{r.points ?? "—"}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              ))}
+      {/* ── HERO: THE JP BOARD (live citizen votes, real math) ── */}
+      <section className="hero">
+        <div className="wrap">
+          <div className="hero-grid">
+            <div className="board">
+              {latestBoard && heroRows.length > 0 ? (
+                <>
+                  <div className="bh">
+                    <div>
+                      <span className="k">🗳 The People&apos;s Top 25</span>
+                      <h2>JP Poll · {latestBoard.label}</h2>
+                    </div>
+                    <span className="n">
+                      Revealed {formatDate(latestBoard.reveals_at)}
+                      <br />
+                      From {totalBallots} {totalBallots === 1 ? "ballot" : "ballots"} · full data public
+                    </span>
+                  </div>
+                  {heroRows.map((r) => {
+                    const logo = teamLogo(r.team_slug);
+                    const natRank = cmpMap.get(r.team_slug);
+                    return (
+                      <div className={r.rank <= 5 ? "brow top5" : "brow"} key={r.rank}>
+                        <span className="rk">{r.rank}</span>
+                        {logo && <Image src={logo} alt="" width={26} height={26} />}
+                        <span className="tn">{teamName(r.team_slug)}</span>
+                        {r.rank === 1 && r.first_place > 0 && r.ballots > 0 && (
+                          <span className="fp">▲ {Math.round((r.first_place / r.ballots) * 100)}% of 1st-place votes</span>
+                        )}
+                        <span className="pts">{r.points}</span>
+                        {cmpLabel && (
+                          <span className={natRank === r.rank ? "ap same" : "ap diff"}>
+                            {cmpLabel} {natRank == null ? "NR" : `#${natRank}`}
+                          </span>
+                        )}
+                      </div>
+                    );
+                  })}
+                  <div className="bf">
+                    {results.length > heroRows.length ? (
+                      <a href="#full-board">Full Top 25 + Every Ballot ↓</a>
+                    ) : (
+                      <a href="#ballot">Cast Your Ballot ↓</a>
+                    )}
+                    {cmpLabel && (
+                      <span className="leg"><b>Gold</b> = the State disagrees with the {cmpLabel}</span>
+                    )}
+                  </div>
+                </>
+              ) : (
+                <EmptyState
+                  kicker="🗳 THE PEOPLE'S TOP 25"
+                  title="The First Board Tabulates With the Season"
+                  body="Every citizen ranks a top 10. Ballots lock Sunday 8 PM ET, the board tabulates overnight, and the People's Top 25 publishes with the Tuesday reveal — full ballot data public."
+                  cta={{ href: "#ballot", label: "Cast Your Ballot" }}
+                />
+              )}
             </div>
-            <p style={{ marginTop: 12, fontFamily: "var(--mono)", fontSize: 11, color: "var(--ink-dim)" }}>
-              LIVE FROM THE NATIONAL WIRE · NEW BOARDS APPEAR HERE THE DAY THEY DROP
-            </p>
+
+            <div className="how">
+              <span className="k">How the Board Gets Made</span>
+              <h3>One Board. Voted by People Who Watch.</h3>
+              {voting && currentBoard ? (
+                <div className="step"><b>Open Now</b><span>{currentBoard.label} ballots are live — every citizen ranks a top 10</span></div>
+              ) : (
+                <div className="step"><b>Ballots</b><span>Every citizen ranks a top 10 when the week&apos;s ballots open</span></div>
+              )}
+              <div className="step"><b>Sun 8 PM</b><span>Ballots lock, the board tabulates overnight</span></div>
+              <div className="step"><b>Tuesday</b><span>The reveal airs live on the show, argued out</span></div>
+              <div className="step"><b>In Gold</b><span>Every disagreement vs. the AP, Coaches, and CFP — marked</span></div>
+              <a className="go" href="#ballot">Cast Your Ballot →</a>
+              <div className="note">Free with citizenship · every ballot goes public with the board</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── BALLOT (anchor contract: the homepage links to /poll#ballot) ── */}
+      <section className="ballot" id="ballot">
+        <div className="wrap">
+          <div className="bal-grid">
+            <div className="bal">
+              <span className="k">
+                {voting && currentBoard
+                  ? `🗳 ${currentBoard.label} · Ballots Open`
+                  : preOpen && currentBoard
+                    ? `🗳 Ballots Open ${etLabel(currentBoard.opens_at)}`
+                    : tabulating
+                      ? "🗳 Ballots Locked — Tabulating"
+                      : "🗳 The Weekly Ballot"}
+              </span>
+              <h3>
+                {preOpen ? "Your Ballot Awaits" : voting ? "Cast This Week's Ballot" : "This Week's Ballot"}
+              </h3>
+              {voting ? (
+                <p>
+                  Rank your top 10 — {ballotCount} {ballotCount === 1 ? "ballot is" : "ballots are"} in so far.
+                  Edit any time before the Sunday lock. <b>Every ballot goes public with the Tuesday board</b> —
+                  no anonymous votes, full distribution shown. That&apos;s the whole point.
+                </p>
+              ) : preOpen ? (
+                <p>
+                  Rank your top 10 the moment ballots open. Every citizen votes, every ballot counts the same,
+                  and <b>the full distribution goes public with the board</b>.
+                </p>
+              ) : tabulating ? (
+                <p>
+                  Ballots are locked and the board is tabulating. The reveal airs Tuesday on the show — then
+                  <b> every ballot and the full point distribution go public</b>.
+                </p>
+              ) : (
+                <p>
+                  Every citizen ranks a top 10 each week. Ballots lock Sunday 8 PM ET, the reveal airs Tuesday,
+                  and <b>every ballot goes public with the board</b> — no anonymous votes.
+                </p>
+              )}
+            </div>
+            <div className="balcard">
+              {currentBoard ? (
+                <>
+                  <div className="bt">
+                    <h4>Your {currentBoard.label} Ballot</h4>
+                    <span className="pr">{voting ? "Lock " + etLabel(currentBoard.locks_at) : preOpen ? "Opens " + etLabel(currentBoard.opens_at) : "Locked"}</span>
+                  </div>
+                  <BallotBuilder
+                    teams={teams}
+                    quickPicks={quickPicks}
+                    initial={myBallot ?? []}
+                    editable={voting}
+                    signedIn={Boolean(citizen)}
+                  />
+                </>
+              ) : (
+                <EmptyState
+                  kicker="THE WEEKLY BALLOT"
+                  title="Ballots Open With the Season"
+                  body="The first board's ballots open here — rank your top 10, free with citizenship."
+                  cta={{ href: "/join?next=/poll", label: "Join Free" }}
+                />
+              )}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── FULL JP BOARD (only when the live board runs past the hero's 10) ── */}
+      {results.length > heroRows.length && latestBoard && (
+        <section className="full" id="full-board">
+          <div className="wrap">
+            <div className="sect-head">
+              <span className="eb">Every Ballot Counted</span>
+              <h3>The Full Board · {latestBoard.label}</h3>
+              <span className="live">Points: 10 for a 1st-place vote down to 1 for 10th</span>
+            </div>
+            <div className="nat-grid">
+              {[results.slice(0, Math.ceil(results.length / 2)), results.slice(Math.ceil(results.length / 2))].map(
+                (col, i) => (
+                  <div className="ncol" key={i}>
+                    {col.map((r) => (
+                      <NatRow
+                        key={r.rank}
+                        rank={r.rank}
+                        logo={teamLogo(r.team_slug)}
+                        school={teamName(r.team_slug)}
+                        firstPlace={r.first_place || null}
+                        pts={r.points}
+                      />
+                    ))}
+                  </div>
+                ),
+              )}
+            </div>
           </div>
         </section>
       )}
 
-      <section className="on-soft tight">
-        <div className="wrap">
-          <div className="duo">
-            <div className="art" style={{ height: "100%" }}>
-              <span className="kick">THIS WEEK&apos;S COLUMN · TUESDAYS</span>
-              <h4 style={{ fontSize: 28 }}>Poll Day, Explained</h4>
-              <p style={{ fontSize: 15 }}>
-                Why Texas jumped to 3, why the citizens still don&apos;t trust Alabama, and the Indiana argument
-                Josh lost to his own audience — the written breakdown of every move on the board.
-              </p>
-              <span className="meta">JOSH PATE · 7 MIN READ</span>
-              <div style={{ marginTop: 14 }}><Link className="btn gold" href="/notebook">Read the Column</Link></div>
+      {/* ── NATIONAL BOARDS — live from the wire; only polls that exist ── */}
+      {nationalPolls.length > 0 && (
+        <section className="nat">
+          <div className="wrap">
+            <div className="sect-head">
+              <span className="eb">The Consensus to Argue With</span>
+              <h3>The National Boards</h3>
+              <span className="live">Live from the national wire</span>
             </div>
-            <div>
-              <p className="eyebrow" style={{ marginBottom: 10 }}>The Show · Watch</p>
-              {latestVideo ? (
-                <EpisodeLead video={latestVideo} tag="LATEST EPISODE" />
+            {nationalPolls.map((poll) => (
+              <div key={poll.name}>
+                <div className="tabs">
+                  <span className="tab on">
+                    {poll.name}
+                    {poll.week ? ` · ${poll.week}` : ""}
+                  </span>
+                </div>
+                <div className="nat-grid">
+                  {[
+                    poll.ranks.slice(0, Math.ceil(poll.ranks.length / 2)),
+                    poll.ranks.slice(Math.ceil(poll.ranks.length / 2)),
+                  ].map((col, i) => (
+                    <div className="ncol" key={i}>
+                      {col.map((r) => (
+                        <NatRow
+                          key={r.rank}
+                          rank={r.rank}
+                          logo={r.logo}
+                          school={r.school}
+                          firstPlace={r.firstPlace}
+                          pts={r.points}
+                        />
+                      ))}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+            <p className="src">Source: National wire · Boards appear here the day they drop</p>
+          </div>
+        </section>
+      )}
+
+      {/* ── POLL DAY: THE COLUMN + THE EPISODE ── */}
+      <section className="pd">
+          <div className="wrap">
+            <div className="sect-head">
+              <span className="eb">Every Tuesday</span>
+              <h3>Poll Day, Argued Out</h3>
+            </div>
+            <div className="pd-grid">
+              {pollDayArticle ? (
+                <Link className="pdc" href={`/notebook/${pollDayArticle.slug.current}`}>
+                  {pollDayArticle.heroUrl ? (
+                    <span className="th">
+                      <Image src={pollDayArticle.heroUrl} alt="" fill sizes="(max-width:1080px) 100vw, 50vw" />
+                    </span>
+                  ) : (
+                    <span className="art" />
+                  )}
+                  <span className="tx">
+                    <span className="t">📝 The Column · Poll Day</span>
+                    <h4>{pollDayArticle.headline}</h4>
+                    <span className="by">
+                      {pollDayArticle.byline}
+                      {pollDayArticle.publishedAt ? ` · ${formatDate(pollDayArticle.publishedAt)}` : ""}
+                    </span>
+                  </span>
+                </Link>
               ) : (
-                <p className="play-note">New episodes land here straight from the channel.</p>
+                <Link className="pdc" href="/notebook">
+                  <span className="art" />
+                  <span className="tx">
+                    <span className="t">📝 The Column · Tuesdays</span>
+                    <h4>Poll Day, Explained — Every Move on the Board, in Writing</h4>
+                    <span className="by">The written breakdown lands in the Notebook after the reveal</span>
+                  </span>
+                </Link>
               )}
-              <p style={{ marginTop: 10, fontFamily: "var(--mono)", fontSize: 11, color: "var(--ink-dim)" }}>
-                FIRST TOP 25 REVEAL AIRS TUESDAY SEP 1 — THEN EVERY TUESDAY, ARGUED OUT
+              {latestEpisode && (
+                <a className="pdc" href={videoUrl(latestEpisode.id)} target="_blank" rel="noopener noreferrer">
+                  <span className="th">
+                    <Image src={latestEpisode.thumbnail} alt="" fill sizes="(max-width:1080px) 100vw, 50vw" />
+                    <span className="play"><i>▶</i></span>
+                  </span>
+                  <span className="tx">
+                    <span className="t">▶ The Show · Latest Episode</span>
+                    <h4>{latestEpisode.title}</h4>
+                    <span className="by">{formatDate(latestEpisode.published)} · Watch on YouTube</span>
+                  </span>
+                </a>
+              )}
+            </div>
+          </div>
+      </section>
+
+      {/* ── CITIZENS LINE ── */}
+      <section className="cit">
+        <div className="wrap">
+          <div className="row">
+            <div>
+              <div className="k">More for Citizens</div>
+              <p>
+                Citizens vote the board — <b>rank your top 10 every week</b>, and your public ballot counts
+                the same as everyone else&apos;s in the full published distribution.
               </p>
             </div>
+            <Link className="go" href="/join?next=/poll">Join the State →</Link>
           </div>
         </div>
       </section>
-
-      <section className="on-dark tight">
-        <div className="wrap">
-          <div className="panel panel-dark" style={{ maxWidth: 640, margin: "0 auto" }}>
-            <p className="eyebrow">
-              {voting ? "Ballots are open right now" : "Ballots open Aug 24 · then every Monday"}
-            </p>
-            <h3>Cast This Week&apos;s Ballot</h3>
-            <p>
-              Rank your top 10. Ballots lock Sunday 8PM ET, the reveal airs Tuesday, and every vote goes
-              public with the board.
-            </p>
-            <div style={{ marginTop: 14 }}>
-              <a className="btn gold" href="#ballot">
-                {voting ? "Rank Your Top 10 →" : "See This Week's Ballot →"}
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <div className="cta-band">
-        <div className="wrap row">
-          <div>
-            <h3>Who&apos;s In? See the Playoff Picture.</h3>
-            <p>THE BRACKET, THE RANKINGS, JOSH&apos;S PICKS — AND AN AI TO RUN YOUR OWN</p>
-          </div>
-          <Link className="btn" href="/playoffs" style={{ borderColor: "var(--lamp)", color: "var(--lamp)" }}>
-            Open the Playoffs Page →
-          </Link>
-        </div>
-      </div>
     </main>
   );
 }

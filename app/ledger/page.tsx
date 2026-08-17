@@ -30,7 +30,7 @@ const DEMO_ENTRIES = [
 
 export default function LedgerPage() {
   return (
-    <main>
+    <main className="v5-lite">
       <header className="page-head">
         <div className="wrap">
           <p className="crumb">The Pate State / The Season Ledger</p>

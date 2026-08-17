@@ -125,7 +125,7 @@ export default async function PickemPage() {
   const videos = await getVideos();
 
   return (
-    <main>
+    <main className="v5-lite">
       <header className="page-head">
         <div className="wrap">
           <p className="crumb">The Pate State / Porch Pick&apos;Em</p>

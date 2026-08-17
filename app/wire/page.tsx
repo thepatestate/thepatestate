@@ -20,7 +20,7 @@ export default async function WirePage() {
   ]);
 
   return (
-    <main>
+    <main className="v5-lite">
       <header className="page-head" style={{ paddingBottom: 18 }}>
         <div className="wrap">
           <p className="crumb">The Pate State / The Wire</p>

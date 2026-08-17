@@ -1,0 +1,31 @@
+/* v5-lite: light-editorial token overlay for pages without v3 mockups.
+   Re-maps the chalk theme's custom properties inside any .v5-lite subtree so
+   the old dark-paper pages read as part of the v25 light site. Structural
+   rules stay in globals.css — this file only retunes tokens + type. A page
+   that reads worse with the overlay simply drops the class (exceptions are
+   listed in the v3 rollout report). */
+.v5-lite{
+  --paper:#FFFFFF;
+  --paper-2:#F4F6F9;
+  --ink:#14181F;
+  --ink-dim:#5B6472;
+  --line-l:#E4E8EE;
+  --lamp:#C9A227;
+  --lamp-deep:#A8861B;
+  --chalk:#F4F6F9;
+  --chalk-dim:#B9C6D8;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:var(--v5-sans-f),sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+/* Dark bands inside lite pages adopt the v25 navy instead of chalk-navy. */
+.v5-lite .on-dark, .v5-lite .cta-band{background:#0E2240}
+/* Eyebrows/monospace labels pick up the condensed v25 voice. */
+.v5-lite .eyebrow{font-family:var(--v5-cond-f),sans-serif;font-size:11px;letter-spacing:.22em;font-weight:700}
+/* Buttons: soften the chalk outline into the v25 button language. */
+.v5-lite .btn{font-family:var(--v5-cond-f),sans-serif;font-weight:800;letter-spacing:.1em;border-radius:5px;border-width:1.5px}
+.v5-lite .btn.gold{background:var(--lamp);border-color:var(--lamp);color:#0D1321}
+.v5-lite .btn.gold:hover{background:#DCB43A;border-color:#DCB43A;color:#0D1321}
+/* Cards/panels on white need a hairline instead of paper-2 tint edges. */
+.v5-lite .card, .v5-lite .panel{background:#fff;border-color:var(--line-l);box-shadow:0 2px 10px rgba(14,24,42,.08)}

@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Play — The People's Games · The Pate State</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Public+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --white:#FFFFFF;--off:#F4F6F9;--mast:#0D1321;--navy:#0E2240;--navy-deep:#0A1730;
+    --gold:#C9A227;--gold-dk:#A8861B;--red:#C8102E;--ink:#111722;--mut:#5B6472;--hair:#E4E8EE;
+    --cond:'Barlow Condensed',sans-serif;--body:'Public Sans',sans-serif;--slab:'Public Sans',sans-serif;
+    --sh-sm:0 2px 8px rgba(14,24,42,.08);--sh-md:0 10px 28px rgba(14,24,42,.14);
+    --sh-lg:0 22px 55px rgba(14,24,42,.22);
+    --face:linear-gradient(180deg,#FFFFFF 0%,#F7FAFC 100%);
+    --sh-3d:0 14px 34px rgba(14,24,42,.16),0 3px 8px rgba(14,24,42,.08);
+    --sh-3d-hover:0 26px 56px rgba(14,24,42,.24),0 6px 14px rgba(14,24,42,.10);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--body);background:var(--white);color:var(--ink)}
+  a{text-decoration:none;color:inherit}
+  img{display:block}
+  .wrap{max-width:1200px;margin:0 auto;padding:0 28px}
+
+  /* masthead */
+  .mast{position:sticky;top:0;z-index:50;background:var(--mast);color:#fff;box-shadow:0 4px 18px rgba(0,0,0,.3)}
+  .mast .wrap{display:flex;align-items:center;height:72px;gap:26px}
+  .logo{display:flex;flex-direction:column;gap:2px}
+  .logo b{font:800 21px/1 var(--cond);letter-spacing:.06em;text-transform:uppercase}
+  .logo b em{font-style:normal;color:var(--gold)}
+  .logo span{font:600 8.5px/1 var(--cond);letter-spacing:.3em;text-transform:uppercase;color:#8FA0B8}
+  nav{display:flex;gap:22px;margin-left:14px}
+  nav a{font:700 13px/1 var(--cond);letter-spacing:.1em;text-transform:uppercase;color:#C9D2DE;padding:8px 2px;border-bottom:2px solid transparent}
+  nav a:hover{color:#fff}
+  nav a.on{color:var(--gold);border-bottom-color:var(--gold)}
+  .join{margin-left:auto;font:800 12.5px/1 var(--cond);letter-spacing:.12em;text-transform:uppercase;background:var(--gold);color:var(--mast);padding:12px 18px;border-radius:5px}
+  .join:hover{background:#DCB43A}
+
+  /* page head */
+  .phead{background:linear-gradient(160deg,var(--navy) 0%,var(--navy-deep) 100%);color:#fff;padding:46px 0 0;position:relative;overflow:hidden}
+  .phead::after{content:"PLAY";position:absolute;right:-30px;top:-38px;font:800 200px/1 var(--cond);letter-spacing:-.02em;color:rgba(255,255,255,.04)}
+  .ph-eyebrow{font:800 11px/1 var(--cond);letter-spacing:.28em;text-transform:uppercase;color:var(--gold)}
+  .phead h1{font:800 46px/1.05 var(--slab);letter-spacing:-.02em;margin:12px 0 10px}
+  .phead .sub{font:400 16px/1.55 var(--body);color:#B9C6D8;max-width:640px}
+  .jumps{display:flex;gap:10px;flex-wrap:wrap;margin:26px 0 0;padding-bottom:24px;position:relative}
+  .jumps a{font:800 11.5px/1 var(--cond);letter-spacing:.12em;text-transform:uppercase;color:#EDF1F7;border:1px solid rgba(255,255,255,.28);padding:11px 16px;border-radius:24px;transition:all .15s}
+  .jumps a:hover{background:var(--gold);border-color:var(--gold);color:var(--mast)}
+
+  section{scroll-margin-top:72px}
+  .sect{padding:54px 0 8px}
+  .sect-head{display:flex;align-items:baseline;gap:16px;border-bottom:3px solid var(--navy);padding-bottom:12px;margin-bottom:24px}
+  .sect-head h2{font:800 26px/1.1 var(--slab);letter-spacing:-.01em;color:var(--navy)}
+  .sect-head .k{font:700 11px/1 var(--cond);letter-spacing:.18em;text-transform:uppercase;color:var(--gold-dk)}
+  .sect-head .right{margin-left:auto;font:700 11.5px/1 var(--cond);letter-spacing:.1em;text-transform:uppercase;color:var(--mut)}
+
+  /* pick'em */
+  .pk-note{font:500 14px/1.55 var(--body);color:var(--mut);margin:-8px 0 22px;max-width:720px}
+  .pk-note b{color:var(--ink)}
+  .pk-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+  .game{background:var(--face);border:1px solid var(--hair);border-radius:12px;box-shadow:var(--sh-3d);padding:16px 18px;transition:transform .15s,box-shadow .2s}
+  .game:hover{transform:translateY(-3px);box-shadow:var(--sh-3d-hover)}
+  .g-meta{display:flex;justify-content:space-between;font:700 10px/1 var(--cond);letter-spacing:.14em;text-transform:uppercase;color:var(--mut);margin-bottom:12px}
+  .g-meta .l{color:var(--red)}
+  .sides{display:flex;align-items:center;gap:10px}
+  .side{flex:1;display:flex;align-items:center;gap:10px;border:1.5px solid var(--hair);border-radius:9px;padding:11px 12px;cursor:pointer;font:800 14px/1.1 var(--cond);letter-spacing:.03em;transition:all .13s;background:#fff}
+  .side img{width:26px;height:26px}
+  .side small{display:block;font:600 9.5px/1 var(--cond);letter-spacing:.1em;color:var(--mut)}
+  .side:hover{border-color:var(--navy)}
+  .side.picked{border-color:var(--gold);background:rgba(201,162,39,.13);box-shadow:0 6px 16px rgba(201,162,39,.25)}
+  .side.b{flex-direction:row-reverse;text-align:right}
+  .vs{font:700 11px/1 var(--cond);color:#AAB2BD}
+  .pk-bar{position:sticky;bottom:14px;margin:24px 0 8px;background:var(--mast);color:#fff;border-radius:12px;padding:15px 20px;display:flex;align-items:center;gap:18px;box-shadow:0 16px 40px rgba(0,0,0,.35)}
+  .pk-bar .cnt{font:800 15px/1 var(--cond);letter-spacing:.08em}
+  .pk-bar .cnt em{font-style:normal;color:var(--gold)}
+  .pk-bar .hint{font:500 12px/1.4 var(--body);color:#8FA0B8}
+  .pk-lock{margin-left:auto;font:800 13px/1 var(--cond);letter-spacing:.12em;text-transform:uppercase;background:var(--red);color:#fff;border:0;padding:14px 22px;border-radius:6px;cursor:pointer;box-shadow:0 8px 20px rgba(200,16,46,.4)}
+  .pk-lock:hover{background:#A80D26}
+
+  /* bracket */
+  .brk-note{font:500 14px/1.55 var(--body);color:var(--mut);margin:-8px 0 22px;max-width:760px}
+  .brk-card{background:var(--face);border:1px solid var(--hair);border-radius:16px;box-shadow:var(--sh-3d);padding:26px;position:relative}
+  .brk-card::before{content:"";position:absolute;top:0;left:0;right:0;height:4px;border-radius:16px 16px 0 0;background:linear-gradient(90deg,var(--gold),#DCB43A,var(--gold))}
+  .b12{display:grid;grid-template-columns:1fr 1fr 1fr 1.05fr 1fr 1fr 1fr;gap:12px;align-items:center;background:linear-gradient(168deg,#EDF1F7 0%,#E2E9F1 100%);border:1px solid #D8DFE8;border-radius:12px;box-shadow:inset 0 2px 10px rgba(14,24,42,.10);padding:20px 16px;margin:18px 0 16px}
+  .rd{display:flex;flex-direction:column;gap:12px}
+  .rd-lbl{font:800 8.5px/1 var(--cond);letter-spacing:.16em;text-transform:uppercase;color:var(--mut);text-align:center;margin-bottom:-4px}
+  .mu2{background:linear-gradient(180deg,#FFFFFF 0%,#F3F6FA 100%);border:1px solid #D8DFE8;border-radius:9px;overflow:hidden;box-shadow:0 8px 18px rgba(14,24,42,.14)}
+  .mu2 .t{display:flex;align-items:center;gap:7px;padding:8px 10px;font:800 11px/1 var(--cond);letter-spacing:.03em;cursor:pointer;transition:background .12s,color .12s;min-height:33px}
+  .mu2 .t+.t{border-top:1px solid #E4E8EE}
+  .mu2 .t img{width:17px;height:17px}
+  .mu2 .t:hover{background:rgba(201,162,39,.16);color:var(--gold-dk)}
+  .mu2 .t.adv{background:rgba(201,162,39,.2);color:var(--gold-dk)}
+  .mu2 .t.tbd{color:#9AA4B2;cursor:default;font-weight:700}
+  .champ-col{display:flex;flex-direction:column;align-items:center;gap:10px}
+  .champ{width:88px;height:88px;border-radius:50%;background:linear-gradient(150deg,var(--navy) 0%,var(--navy-deep) 100%);border:3px solid var(--gold);box-shadow:0 10px 26px rgba(14,24,42,.3),0 0 0 6px rgba(201,162,39,.12);display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;animation:champpulse 2.4s infinite}
+  .champ b{font:800 22px/1 var(--cond);color:var(--gold)}
+  .champ span{font:700 8px/1.2 var(--cond);letter-spacing:.14em;text-transform:uppercase;color:#B9C6D8;margin-top:4px}
+  .champ img{width:44px;height:44px}
+  @keyframes champpulse{0%,100%{box-shadow:0 10px 26px rgba(14,24,42,.3),0 0 0 6px rgba(201,162,39,.12)}50%{box-shadow:0 10px 26px rgba(14,24,42,.3),0 0 0 11px rgba(201,162,39,.05)}}
+  .byes{font:600 9.5px/1.5 var(--cond);letter-spacing:.08em;text-transform:uppercase;color:var(--mut);text-align:center}
+  .brk-foot{display:flex;align-items:center;gap:16px}
+  .brk-hint2{font:600 12px/1.4 var(--body);color:var(--mut)}
+  .brk-save{margin-left:auto;font:800 13px/1 var(--cond);letter-spacing:.12em;text-transform:uppercase;background:var(--navy);color:#fff;border:0;padding:14px 22px;border-radius:6px;cursor:pointer;box-shadow:var(--sh-sm)}
+  .brk-save:hover{background:var(--navy-deep)}
+  .pill{font:800 8.5px/1 var(--cond);letter-spacing:.12em;text-transform:uppercase;color:var(--mut);border:1px solid var(--hair);padding:4px 7px;border-radius:20px}
+
+  /* leaderboard */
+  .lb-wrap{background:var(--face);border:1.5px solid var(--navy);border-radius:14px;box-shadow:var(--sh-3d);padding:24px 26px;max-width:760px}
+  .lbr{display:flex;align-items:center;gap:13px;padding:11px 4px;border-bottom:1px solid var(--hair);font:600 14px/1 var(--body)}
+  .lbr .n{font:800 13px/1 var(--cond);color:var(--mut);width:22px}
+  .lbr .who{font-weight:700}
+  .lbr .rec{margin-left:auto;font:700 12.5px/1 var(--cond);letter-spacing:.06em;color:var(--mut)}
+  .lbr.josh{background:rgba(201,162,39,.1);border-radius:9px;border-bottom:none;margin:3px 0;padding:12px}
+  .lbr.josh .who{color:var(--navy)}
+  .lbr.you{border:1.5px dashed #C6CDD7;border-radius:9px;margin-top:8px;padding:12px;border-bottom-style:dashed;color:var(--mut)}
+
+  /* pros */
+  .pros-note{font:500 14.5px/1.6 var(--body);color:var(--mut);margin:-8px 0 22px;max-width:780px}
+  .pros-note b{color:var(--ink)}
+  .pboard{background:var(--face);border:1px solid var(--hair);border-radius:16px;box-shadow:var(--sh-3d);overflow:hidden}
+  .pb-head{display:grid;grid-template-columns:44px 1.3fr 110px 1fr;gap:12px;background:var(--mast);color:#8FA0B8;font:800 9.5px/1 var(--cond);letter-spacing:.16em;text-transform:uppercase;padding:12px 20px}
+  .prow{display:grid;grid-template-columns:44px 1.3fr 110px 1fr;gap:12px;align-items:center;padding:12px 20px;border-bottom:1px solid var(--hair);font:600 14px/1.2 var(--body)}
+  .prow:hover{background:var(--off)}
+  .prow .rk{font:800 14px/1 var(--cond);color:var(--mut)}
+  .prow .nm b{display:block;font-weight:700}
+  .prow .nm span{font:600 10.5px/1 var(--cond);letter-spacing:.1em;text-transform:uppercase;color:var(--mut)}
+  .prow .rec{font:800 14px/1 var(--cond);letter-spacing:.05em;color:var(--navy)}
+  .picks{display:flex;gap:5px;flex-wrap:wrap}
+  .picks img{width:20px;height:20px;border-radius:50%;background:#fff;border:1px solid var(--hair);padding:1.5px}
+  .prow.josh{background:rgba(201,162,39,.12)}
+  .prow.josh .rk{color:var(--gold-dk)}
+  .prow.josh .nm b{color:var(--navy)}
+  .prow .tag{display:inline-block;font:800 8.5px/1 var(--cond);letter-spacing:.1em;text-transform:uppercase;color:var(--gold-dk);border:1px solid var(--gold);padding:3px 6px;border-radius:12px;margin-left:8px;vertical-align:middle}
+  .pmore{display:block;text-align:center;font:800 12px/1 var(--cond);letter-spacing:.12em;text-transform:uppercase;color:var(--navy);padding:15px;background:var(--off)}
+  .pmore:hover{background:#E9EDF3}
+
+  /* poll band + footer */
+  .pollband{margin:54px 0 0;background:linear-gradient(150deg,var(--navy),var(--navy-deep));border-radius:0;padding:34px 0}
+  .pollband .wrap{display:flex;align-items:center;gap:20px;color:#fff}
+  .pollband h3{font:800 22px/1.15 var(--slab)}
+  .pollband p{font:500 13px/1.5 var(--body);color:#B9C6D8;margin-top:5px}
+  .pollband a{margin-left:auto;font:800 12.5px/1 var(--cond);letter-spacing:.12em;text-transform:uppercase;background:var(--gold);color:var(--mast);padding:14px 20px;border-radius:6px;white-space:nowrap}
+  footer{background:var(--mast);color:#8FA0B8;padding:26px 0;margin-top:0}
+  footer .wrap{display:flex;justify-content:space-between;font:600 11px/1 var(--cond);letter-spacing:.12em;text-transform:uppercase}
+
+  @media(max-width:1080px){.b12{grid-template-columns:1fr 1fr;gap:14px}.champ-col{grid-column:1/-1;order:99}.rd-lbl{margin-bottom:2px}}
+  @media(max-width:760px){
+    .wrap{padding:0 18px}
+    nav{display:none}
+    .phead h1{font-size:34px}
+    .pk-grid{grid-template-columns:1fr}
+    .pb-head{display:none}
+    .prow{grid-template-columns:34px 1fr 84px;grid-template-areas:"rk nm rec" ". picks picks"}
+    .prow .rk{grid-area:rk}.prow .nm{grid-area:nm}.prow .rec{grid-area:rec}.prow .picks{grid-area:picks;margin-top:8px}
+    .pollband .wrap{flex-direction:column;align-items:flex-start}
+    .pollband a{margin-left:0}
+  }
+</style>
+</head>
+<body>
+
+<header class="mast">
+  <div class="wrap">
+    <a class="logo" href="index.html"><b>THE PATE <em>STATE</em></b><span>The Front Porch of College Football</span></a>
+    <nav>
+      <a href="#">Latest</a><a href="#">Show</a><a href="#">Scores</a><a href="#">Rankings</a>
+      <a href="#">Recruiting</a><a class="on" href="play.html">Play</a><a href="#">Community</a><a href="#">More ▾</a>
+    </nav>
+    <a class="join" href="#">Join Free</a>
+  </div>
+</header>
+
+<div class="phead">
+  <div class="wrap">
+    <div class="ph-eyebrow">The People's Games · Free to Play</div>
+    <h1>Play The State.</h1>
+    <p class="sub">Pick against Josh every week. Build your playoff bracket. Measure yourself against the biggest names in the sport. One citizen account — every game on this page.</p>
+    <div class="jumps">
+      <a href="#pickem">🏈 This Week's Pick'Em</a>
+      <a href="#bracket">🏆 Playoff Bracket</a>
+      <a href="#leaderboard">📊 The Board</a>
+      <a href="#pros">📺 Josh vs. The Pros</a>
+    </div>
+  </div>
+</div>
+
+<!-- PICK'EM -->
+<section class="sect" id="pickem">
+  <div class="wrap">
+    <div class="sect-head"><span class="k">Week 1</span><h2>Beat Josh. Ten Picks.</h2><span class="right">Picks lock Sat · 11:58 AM ET</span></div>
+    <p class="pk-note">Tap a team in each game. <b>Josh has already locked his ten</b> — his picks reveal the moment you lock yours. Straight up, no spreads, receipts kept all season.</p>
+    <div class="pk-grid">
+      <div class="game" data-g="1">
+        <div class="g-meta"><span>Game 1 · Sat · 12:00 PM ET</span><span class="l">ABC</span></div>
+        <div class="sides">
+          <div class="side" data-pick="Clemson"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/228.png" alt=""><span>Clemson<small>Away</small></span></div>
+          <span class="vs">VS</span>
+          <div class="side b" data-pick="Georgia"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/61.png" alt=""><span>Georgia<small>Home</small></span></div>
+        </div>
+      </div>
+      <div class="game" data-g="2">
+        <div class="g-meta"><span>Game 2 · Sat · 12:00 PM ET</span><span class="l">FOX</span></div>
+        <div class="sides">
+          <div class="side" data-pick="Oklahoma"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/201.png" alt=""><span>Oklahoma<small>Away</small></span></div>
+          <span class="vs">VS</span>
+          <div class="side b" data-pick="Michigan"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/130.png" alt=""><span>Michigan<small>Home</small></span></div>
+        </div>
+      </div>
+      <div class="game" data-g="3">
+        <div class="g-meta"><span>Game 3 · Sat · 3:30 PM ET</span><span class="l">CBS</span></div>
+        <div class="sides">
+          <div class="side" data-pick="Texas A&M"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/245.png" alt=""><span>Texas A&M<small>Away</small></span></div>
+          <span class="vs">VS</span>
+          <div class="side b" data-pick="Notre Dame"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/87.png" alt=""><span>Notre Dame<small>Home</small></span></div>
+        </div>
+      </div>
+      <div class="game" data-g="4">
+        <div class="g-meta"><span>Game 4 · Sat · 3:30 PM ET</span><span class="l">ESPN</span></div>
+        <div class="sides">
+          <div class="side" data-pick="Ole Miss"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/145.png" alt=""><span>Ole Miss<small>Away</small></span></div>
+          <span class="vs">VS</span>
+          <div class="side b" data-pick="LSU"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/99.png" alt=""><span>LSU<small>Home</small></span></div>
+        </div>
+      </div>
+      <div class="game" data-g="5">
+        <div class="g-meta"><span>Game 5 · Sat · 7:00 PM ET</span><span class="l">ABC</span></div>
+        <div class="sides">
+          <div class="side" data-pick="Texas"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/251.png" alt=""><span>Texas<small>Away</small></span></div>
+          <span class="vs">VS</span>
+          <div class="side b" data-pick="Ohio State"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/194.png" alt=""><span>Ohio State<small>Home</small></span></div>
+        </div>
+      </div>
+      <div class="game" data-g="6">
+        <div class="g-meta"><span>Game 6 · Sat · 7:30 PM ET</span><span class="l">NBC</span></div>
+        <div class="sides">
+          <div class="side" data-pick="Alabama"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/333.png" alt=""><span>Alabama<small>Away</small></span></div>
+          <span class="vs">VS</span>
+          <div class="side b" data-pick="Florida St"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/52.png" alt=""><span>Florida St<small>Home</small></span></div>
+        </div>
+      </div>
+      <div class="game" data-g="7">
+        <div class="g-meta"><span>Game 7 · Sat · 7:30 PM ET</span><span class="l">FOX</span></div>
+        <div class="sides">
+          <div class="side" data-pick="Oregon"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/2483.png" alt=""><span>Oregon<small>Away</small></span></div>
+          <span class="vs">VS</span>
+          <div class="side b" data-pick="USC"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/30.png" alt=""><span>USC<small>Home</small></span></div>
+        </div>
+      </div>
+      <div class="game" data-g="8">
+        <div class="g-meta"><span>Game 8 · Sat · 8:00 PM ET</span><span class="l">ESPN</span></div>
+        <div class="sides">
+          <div class="side" data-pick="Tennessee"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/2633.png" alt=""><span>Tennessee<small>Away</small></span></div>
+          <span class="vs">VS</span>
+          <div class="side b" data-pick="Nebraska"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/158.png" alt=""><span>Nebraska<small>Home</small></span></div>
+        </div>
+      </div>
+      <div class="game" data-g="9">
+        <div class="g-meta"><span>Game 9 · Sat · 10:15 PM ET</span><span class="l">FS1</span></div>
+        <div class="sides">
+          <div class="side" data-pick="BYU"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/252.png" alt=""><span>BYU<small>Away</small></span></div>
+          <span class="vs">VS</span>
+          <div class="side b" data-pick="Texas Tech"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/2641.png" alt=""><span>Texas Tech<small>Home</small></span></div>
+        </div>
+      </div>
+      <div class="game" data-g="10">
+        <div class="g-meta"><span>Game 10 · Sat · 10:30 PM ET</span><span class="l">ESPN</span></div>
+        <div class="sides">
+          <div class="side" data-pick="Wisconsin"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/275.png" alt=""><span>Wisconsin<small>Away</small></span></div>
+          <span class="vs">VS</span>
+          <div class="side b" data-pick="Miami"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/2390.png" alt=""><span>Miami<small>Home</small></span></div>
+        </div>
+      </div>
+    </div>
+    <div class="pk-bar">
+      <span class="cnt"><em id="pkCount">0</em> of 10 picked</span>
+      <span class="hint">Lock to reveal Josh's picks and enter this week's board.</span>
+      <button class="pk-lock" type="button">Lock My Picks →</button>
+    </div>
+  </div>
+</section>
+
+<!-- BRACKET -->
+<section class="sect" id="bracket">
+  <div class="wrap">
+    <div class="sect-head"><span class="k">Season-Long</span><h2>Pick the Playoff. Call Your Champ.</h2><span class="right"><span class="pill">12-Team Playoff · Preseason Field per JP Poll</span></span></div>
+    <p class="brk-note">Tap a team to advance it — first round through the title game. The field syncs to the real bracket when the committee reveals it; your picks score against Josh and the whole State.</p>
+    <div class="brk-card">
+      <div class="b12">
+        <div class="rd"><div class="rd-lbl">First Round</div>
+          <div class="mu2" data-feeds="qf1s2"><div class="t" data-t="mia"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/2390.png" alt=""><span>8 Miami</span></div><div class="t" data-t="nd"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/87.png" alt=""><span>9 Notre Dame</span></div></div>
+          <div class="mu2" data-feeds="qf2s2"><div class="t" data-t="tam"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/245.png" alt=""><span>5 Texas A&amp;M</span></div><div class="t" data-t="tul"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/2655.png" alt=""><span>12 Tulane</span></div></div>
+        </div>
+        <div class="rd"><div class="rd-lbl">Quarterfinals</div>
+          <div class="mu2" data-feeds="sf1s1"><div class="t" data-t="osu"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/194.png" alt=""><span>1 Ohio St</span></div><div class="t tbd" id="qf1s2"><span>Winner 8/9</span></div></div>
+          <div class="mu2" data-feeds="sf1s2"><div class="t" data-t="ore"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/2483.png" alt=""><span>4 Oregon</span></div><div class="t tbd" id="qf2s2"><span>Winner 5/12</span></div></div>
+        </div>
+        <div class="rd"><div class="rd-lbl">Semifinal</div>
+          <div class="mu2" data-feeds="f1"><div class="t tbd" id="sf1s1"><span>QF Winner</span></div><div class="t tbd" id="sf1s2"><span>QF Winner</span></div></div>
+        </div>
+        <div class="champ-col"><div class="rd-lbl">National Champion</div>
+          <div class="champ" id="champ"><b>?</b><span>Your Champ</span></div>
+          <div class="byes">Byes: 1 Ohio St · 2 Georgia · 3 Texas · 4 Oregon</div>
+        </div>
+        <div class="rd"><div class="rd-lbl">Semifinal</div>
+          <div class="mu2" data-feeds="f2"><div class="t tbd" id="sf2s1"><span>QF Winner</span></div><div class="t tbd" id="sf2s2"><span>QF Winner</span></div></div>
+        </div>
+        <div class="rd"><div class="rd-lbl">Quarterfinals</div>
+          <div class="mu2" data-feeds="sf2s1"><div class="t" data-t="tex"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/251.png" alt=""><span>3 Texas</span></div><div class="t tbd" id="qf3s2"><span>Winner 6/11</span></div></div>
+          <div class="mu2" data-feeds="sf2s2"><div class="t" data-t="uga"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/61.png" alt=""><span>2 Georgia</span></div><div class="t tbd" id="qf4s2"><span>Winner 7/10</span></div></div>
+        </div>
+        <div class="rd"><div class="rd-lbl">First Round</div>
+          <div class="mu2" data-feeds="qf3s2"><div class="t" data-t="lsu"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/99.png" alt=""><span>6 LSU</span></div><div class="t" data-t="byu"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/252.png" alt=""><span>11 BYU</span></div></div>
+          <div class="mu2" data-feeds="qf4s2"><div class="t" data-t="ala"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/333.png" alt=""><span>7 Alabama</span></div><div class="t" data-t="ten"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/2633.png" alt=""><span>10 Tennessee</span></div></div>
+        </div>
+      </div>
+      <div class="brk-foot">
+        <span class="brk-hint2">Tap teams left to right — your champ fills the circle. Change any pick any time before the field locks.</span>
+        <button class="brk-save" type="button">Save My Bracket →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LEADERBOARD -->
+<section class="sect" id="leaderboard">
+  <div class="wrap">
+    <div class="sect-head"><span class="k">Season Standings</span><h2>The Board.</h2><span class="right">Updated after every slate</span></div>
+    <div class="lb-wrap">
+      <div class="lbr"><span class="n">1</span><span class="who">DawgOnThePorch</span><span class="rec">142–38 · beat Josh by 11</span></div>
+      <div class="lbr"><span class="n">2</span><span class="who">SoonerMagic</span><span class="rec">139–41 · beat Josh by 8</span></div>
+      <div class="lbr"><span class="n">3</span><span class="who">TexAgs_Brent</span><span class="rec">138–42 · beat Josh by 7</span></div>
+      <div class="lbr josh"><span class="n">🎙</span><span class="who">Josh Pate</span><span class="rec">131–49 · he has not let it go</span></div>
+      <div class="lbr you"><span class="n">—</span><span class="who">You</span><span class="rec">0–0 · Week 1 opens Saturday</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- JOSH VS THE PROS -->
+<section class="sect" id="pros">
+  <div class="wrap">
+    <div class="sect-head"><span class="k">The Other Leaderboard</span><h2>Josh vs. The Pros.</h2><span class="right">Same games · straight up · receipts kept</span></div>
+    <p class="pros-note">Every week, Josh's ten picks go up against <b>24 of the biggest names in college football media</b> — Herbstreit, Klatt, Fallica, McElroy, and the rest. Their picks post here every Saturday morning. This is what they picked this week.</p>
+    <div class="pboard">
+      <div class="pb-head"><span></span><span>Pundit</span><span>Season</span><span>This Week's Ten</span></div>
+        <div class="prow josh">
+          <span class="rk">🎙</span>
+          <span class="nm"><b>Josh Pate<span class="tag">THE MAN HIMSELF</span></b><span>The Pate State</span></span>
+          <span class="rec">131–49</span>
+          <span class="picks"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/61.png" alt="" title="pick"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/201.png" alt="" title="pick"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/87.png" alt="" title="pick"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/99.png" alt="" title="pick"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/194.png" alt="" title="pick"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/333.png" alt="" title="pick"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/2483.png" alt="" title="pick"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/2633.png" alt="" title="pick"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/2641.png" alt="" title="pick"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/2390.png" alt="" title="pick"></span>
+        </div>
+        <div class="prow">
+          <span class="rk">1</span>
+          <span class="nm"><b>Chris "The Bear" Fallica</b><span>FOX · Top Pro</span></span>
+          <span class="rec">129–51</span>
+          <span class="picks"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/61.png" alt="" title="pick"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/130.png" alt="" title="pick"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/87.png" alt="" title="pick"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/99.png" alt="" title="pick"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/194.png" alt="" title="pick"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/52.png" alt="" title="pick"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/2483.png" alt="" title="pick"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/2633.png" alt="" title="pick"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/252.png" alt="" title="pick"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/2390.png" alt="" title="pick"></span>
+        </div>
+        <div class="prow">
+          <span class="rk">2</span>
+          <span class="nm"><b>Joel Klatt</b><span>FOX</span></span>
+          <span class="rec">127–53</span>
+          <span class="picks"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/228.png" alt="" title="pick"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/201.png" alt="" title="pick"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/245.png" alt="" title="pick"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/99.png" alt="" title="pick"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/194.png" alt="" title="pick"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/333.png" alt="" title="pick"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/2483.png" alt="" title="pick"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/2633.png" alt="" title="pick"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/2641.png" alt="" title="pick"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/275.png" alt="" title="pick"></span>
+        </div>
+        <div class="prow">
+          <span class="rk">3</span>
+          <span class="nm"><b>Kirk Herbstreit</b><span>ESPN</span></span>
+          <span class="rec">126–54</span>
+          <span class="picks"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/61.png" alt="" title="pick"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/130.png" alt="" title="pick"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/87.png" alt="" title="pick"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/145.png" alt="" title="pick"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/251.png" alt="" title="pick"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/333.png" alt="" title="pick"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/2483.png" alt="" title="pick"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/158.png" alt="" title="pick"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/252.png" alt="" title="pick"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/2390.png" alt="" title="pick"></span>
+        </div>
+        <div class="prow">
+          <span class="rk">4</span>
+          <span class="nm"><b>Greg McElroy</b><span>ESPN</span></span>
+          <span class="rec">124–56</span>
+          <span class="picks"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/61.png" alt="" title="pick"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/201.png" alt="" title="pick"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/245.png" alt="" title="pick"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/99.png" alt="" title="pick"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/251.png" alt="" title="pick"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/333.png" alt="" title="pick"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/30.png" alt="" title="pick"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/2633.png" alt="" title="pick"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/2641.png" alt="" title="pick"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/2390.png" alt="" title="pick"></span>
+        </div>
+        <div class="prow">
+          <span class="rk">5</span>
+          <span class="nm"><b>Desmond Howard</b><span>ESPN</span></span>
+          <span class="rec">122–58</span>
+          <span class="picks"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/228.png" alt="" title="pick"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/130.png" alt="" title="pick"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/87.png" alt="" title="pick"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/145.png" alt="" title="pick"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/194.png" alt="" title="pick"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/52.png" alt="" title="pick"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/2483.png" alt="" title="pick"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/158.png" alt="" title="pick"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/252.png" alt="" title="pick"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/275.png" alt="" title="pick"></span>
+        </div>
+        <div class="prow">
+          <span class="rk">6</span>
+          <span class="nm"><b>David Pollack</b><span>See Ball Get Ball</span></span>
+          <span class="rec">121–59</span>
+          <span class="picks"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/61.png" alt="" title="pick"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/201.png" alt="" title="pick"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/87.png" alt="" title="pick"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/99.png" alt="" title="pick"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/194.png" alt="" title="pick"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/333.png" alt="" title="pick"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/2483.png" alt="" title="pick"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/2633.png" alt="" title="pick"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/2641.png" alt="" title="pick"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/2390.png" alt="" title="pick"></span>
+        </div>
+        <div class="prow">
+          <span class="rk">7</span>
+          <span class="nm"><b>Paul Finebaum</b><span>ESPN</span></span>
+          <span class="rec">119–61</span>
+          <span class="picks"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/61.png" alt="" title="pick"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/130.png" alt="" title="pick"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/245.png" alt="" title="pick"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/99.png" alt="" title="pick"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/251.png" alt="" title="pick"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/333.png" alt="" title="pick"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/30.png" alt="" title="pick"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/2633.png" alt="" title="pick"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/252.png" alt="" title="pick"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/2390.png" alt="" title="pick"></span>
+        </div>
+      <a class="pmore" href="#">See All 24 Pros →</a>
+    </div>
+  </div>
+</section>
+
+<div class="pollband">
+  <div class="wrap">
+    <div><h3>One more ballot belongs to you.</h3><p>The JP Poll — the people's Top 25 — opens every Monday on the Rankings page.</p></div>
+    <a href="#">Cast Your Ballot →</a>
+  </div>
+</div>
+
+<footer><div class="wrap"><span>© 2026 The Pate State</span><span>Play free · One account · Bragging rights eternal</span></div></footer>
+
+<script>
+// Pick'Em: tap to pick, count toward lock
+const games = document.querySelectorAll('.game');
+const cnt = document.getElementById('pkCount');
+games.forEach(g => g.querySelectorAll('.side').forEach(s => s.addEventListener('click', () => {
+  g.querySelectorAll('.side').forEach(x => x.classList.remove('picked'));
+  s.classList.add('picked');
+  cnt.textContent = document.querySelectorAll('.game .side.picked').length;
+})));
+
+// Bracket: tap a team to advance it to the slot this matchup feeds
+const NAMES = {};
+document.querySelectorAll('.mu2 .t[data-t]').forEach(t => NAMES[t.dataset.t] = t.innerHTML);
+document.querySelectorAll('.mu2').forEach(mu => mu.addEventListener('click', e => {
+  const t = e.target.closest('.t'); if (!t || !t.dataset.t) return;
+  mu.querySelectorAll('.t').forEach(x => x.classList.remove('adv'));
+  t.classList.add('adv');
+  const feeds = mu.dataset.feeds;
+  if (feeds === 'f1' || feeds === 'f2') {
+    const c = document.getElementById('champ');
+    c.innerHTML = NAMES[t.dataset.t].replace(/<span>.*<\/span>/, '') + '<span>Your Champ</span>';
+    return;
+  }
+  const slot = document.getElementById(feeds);
+  if (slot) {
+    slot.innerHTML = NAMES[t.dataset.t];
+    slot.classList.remove('tbd');
+    slot.dataset.t = t.dataset.t;
+    if (!slot.closest('.mu2').dataset.bound) {
+      slot.closest('.mu2').dataset.bound = 1;
+    }
+  }
+}));
+</script>
+</body>
+</html>
