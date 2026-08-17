@@ -11,10 +11,10 @@ export default function PorchSection({ threads }: { threads: ThreadSummary[] }) 
   const side = (
     <div className="porch-side">
       <div className="on">The porch is open</div>
-      <h3>The comment section, if the comment section had manners.</h3>
-      <p>Team threads, poll arguments, gameday chats — moderated like a front porch, not a mosh pit. Citizens only.</p>
-      <Link className="btn" href="/community">Join the Conversation</Link>
-      <div className="rules">Free with citizenship · House rules apply · Every take signed</div>
+      <h3>Team threads. Poll arguments. Gameday chats.</h3>
+      <p>Moderated like a front porch, not a mosh pit. Every take signed. Citizens only.</p>
+      <Link className="btn" href="/community">Pull Up a Chair →</Link>
+      <div className="rules">Free with citizenship · House rules apply</div>
     </div>
   );
   return (
@@ -24,6 +24,7 @@ export default function PorchSection({ threads }: { threads: ThreadSummary[] }) 
           <div>
             <div className="eyebrow">Pull Up a Chair</div>
             <h2>Live on the Porch</h2>
+            <div className="sub">The comment section, if the comment section had manners.</div>
           </div>
           <Link className="more" href="/community">All Threads →</Link>
         </div>

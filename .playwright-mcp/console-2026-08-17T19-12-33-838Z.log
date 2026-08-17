@@ -1,0 +1,11 @@
+[     360ms] Error: Minified React error #418; visit https://react.dev/errors/418?args[]=text&args[]= for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
+    at rJ (http://localhost:3000/_next/static/chunks/4561u0v7ysn3r.js:1:62532)
+    at http://localhost:3000/_next/static/chunks/4561u0v7ysn3r.js:1:159851
+    at sy (http://localhost:3000/_next/static/chunks/4561u0v7ysn3r.js:1:163418)
+    at sh (http://localhost:3000/_next/static/chunks/4561u0v7ysn3r.js:1:154670)
+    at http://localhost:3000/_next/static/chunks/4561u0v7ysn3r.js:1:149488
+    at sr (http://localhost:3000/_next/static/chunks/4561u0v7ysn3r.js:1:149589)
+    at sq (http://localhost:3000/_next/static/chunks/4561u0v7ysn3r.js:1:176170)
+    at MessagePort.O (http://localhost:3000/_next/static/chunks/4561u0v7ysn3r.js:1:3356)
+[     374ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/_vercel/insights/script.js:0
+[     374ms] [LOG] [Vercel Web Analytics] Failed to load script from /_vercel/insights/script.js. Be sure to enable Web Analytics for your project and deploy again. See https://vercel.com/docs/analytics/quickstart for more information. @ http://localhost:3000/_next/static/chunks/1jk8_3akoz-wt.js:0
