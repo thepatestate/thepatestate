@@ -11,7 +11,10 @@ import { findReceipt } from "@/lib/quotes";
 import { slugify } from "@/lib/slug";
 
 const MODEL = "claude-sonnet-5";
-const MAX_STORIES_PER_RUN = 2; // volume guard: full stories per monitor pass
+// Client directive (2026-08-17): wire clicks must never leave the site, so
+// every published item gets a full-story attempt — the run cap only guards
+// against a runaway pass, not coverage.
+const MAX_STORIES_PER_RUN = 6;
 const MAX_ITEMS_PER_RUN = 6;
 
 // §20 source network, RSS tier. Detection AND sourcing (Tier 1/2 only — every
@@ -194,6 +197,133 @@ export function hasAttribution(whatHappened: string, outlets: string[]): boolean
   return false;
 }
 
+interface StoryJob {
+  sourceBlock: string;
+  outlets: string[];
+  /** Outlet/url pairs rendered as the story's cited-sources block. */
+  sources: { outlet: string; url: string }[];
+  clusterKey: string;
+  teams: string[];
+  receiptKeywords: string[];
+  itemId: string;
+}
+
+/** Full-story generation + the §21 verification stack (banned patterns,
+ * attribution, second-model fact-check). Shared by the live monitor and the
+ * backfill. Returns "ok" or a skip reason. */
+async function writeStoryFromSources(
+  anthropic: Anthropic,
+  db: ReturnType<typeof createAdminClient> | null,
+  job: StoryJob,
+): Promise<string> {
+  const receipt = await findReceipt(job.teams, job.receiptKeywords);
+  const storyRes = await anthropic.messages.create({
+    model: MODEL,
+    max_tokens: 2048,
+    output_config: { format: { type: "json_schema", schema: STORY_SCHEMA } },
+    system: `${prompt("global-preamble.md")}\n\n${prompt("wire-story.md")}`,
+    messages: [{
+      role: "user",
+      content: `Source cluster:\n${job.sourceBlock}${receipt ? `\n\nJosh's archived on-topic quote (verbatim; render as his receipt, do NOT alter): "${receipt.quote}"` : ""}`,
+    }],
+  });
+  const story = JSON.parse(textOf(storyRes)) as {
+    headline: string; verification: "confirmed" | "reported" | "developing";
+    whatHappened: string; whyItMatters: string[]; readBody: string;
+    whatsNext: string[]; teams: string[]; category: string;
+  };
+
+  const combined = `${story.whatHappened}\n${story.whyItMatters.join("\n")}\n${story.readBody}`;
+  if (BANNED_PATTERNS.some((re) => re.test(combined))) return `banned:${job.clusterKey}`;
+  if (!hasAttribution(story.whatHappened, job.outlets)) return `attribution:${job.clusterKey}`;
+
+  const checkRes = await anthropic.messages.create({
+    model: MODEL,
+    max_tokens: 512,
+    output_config: { effort: "low", format: { type: "json_schema", schema: FACTCHECK_SCHEMA } },
+    system: "You are an independent fact-check gate. You receive SOURCES and a DRAFT. Verdict 'contradicted' if any draft claim conflicts with the sources; 'unsupported' if any material factual claim (names, numbers, timelines, outcomes) does not appear in the sources; else 'pass'. Interpretation clearly labeled as analysis is allowed; invented facts are not. Output JSON only.",
+    messages: [{ role: "user", content: `SOURCES:\n${job.sourceBlock}\n\nDRAFT:\n${combined}` }],
+  });
+  const check = JSON.parse(textOf(checkRes)) as { verdict: string; detail: string };
+  if (check.verdict !== "pass") return `factcheck-${check.verdict}:${job.clusterKey}`;
+
+  const storyId = `wireStory-${job.clusterKey}`;
+  await writeClient.createIfNotExists({
+    _id: storyId,
+    _type: "wireStory",
+    headline: story.headline,
+    slug: { _type: "slug", current: slugify(story.headline) },
+    verification: story.verification,
+    category: story.category,
+    teams: story.teams,
+    whatHappened: story.whatHappened,
+    whyItMatters: story.whyItMatters.slice(0, 3),
+    ...(receipt
+      ? { joshReceipt: { quote: receipt.quote, ytId: receipt.yt_id, tsSeconds: receipt.ts_seconds } }
+      : {}),
+    readLabel: "THE PATE STATE READ",
+    readBody: story.readBody,
+    whatsNext: story.whatsNext.slice(0, 3),
+    sources: job.sources.slice(0, 6),
+    publishedAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  });
+  if (db) await db.from("wire_clusters").update({ story_id: storyId }).eq("item_id", job.itemId);
+  await writeClient.patch(job.itemId).set({ story: { _type: "reference", _ref: storyId } }).commit();
+  return "ok";
+}
+
+/** Backfill: full stories for already-published wire items that never got
+ * one (pre-directive importance gate, verification skips, caps). Rebuilds a
+ * source block from the item's stored metadata and runs the same stack —
+ * items whose thin metadata can't clear fact-check simply stay storyless. */
+export async function backfillWireStories(limit = 20): Promise<{
+  candidates: number; stories: number; skipped: string[];
+}> {
+  const summary = { candidates: 0, stories: 0, skipped: [] as string[] };
+  if (!isAdminConfigured || !isSanityWriteConfigured || !process.env.ANTHROPIC_API_KEY) {
+    summary.skipped.push("not-configured");
+    return summary;
+  }
+  const db = createAdminClient();
+  const anthropic = new Anthropic();
+  const items: {
+    _id: string; headline: string; sub?: string; category?: string;
+    teams?: string[]; sourceUrls?: string[]; sourceOutlets?: string[];
+  }[] = await writeClient.fetch(
+    `*[_type == "wireItem" && !defined(story)] | order(publishedAt desc)[0...$limit]{
+      _id, headline, sub, category, teams, sourceUrls, sourceOutlets
+    }`,
+    { limit },
+  );
+  summary.candidates = items.length;
+  for (const item of items) {
+    try {
+      const outlets = item.sourceOutlets?.length ? item.sourceOutlets : ["the original report"];
+      const urls = item.sourceUrls ?? [];
+      const sourceBlock = outlets
+        .map((o, i) => `- [${o}] ${item.headline}\n  ${item.sub ?? ""}\n  ${urls[i] ?? urls[0] ?? ""}`)
+        .join("\n");
+      const clusterKey = item._id.replace(/^wireItem-/, "");
+      const result = await writeStoryFromSources(anthropic, db, {
+        sourceBlock,
+        outlets,
+        sources: outlets.map((o, i) => ({ outlet: o, url: urls[i] ?? urls[0] ?? "" })),
+        clusterKey,
+        teams: item.teams ?? [],
+        receiptKeywords: [...titleKeywords(item.headline)],
+        itemId: item._id,
+      });
+      if (result === "ok") summary.stories++;
+      else summary.skipped.push(result);
+    } catch (err) {
+      console.error("[wire:backfill]", item._id, err);
+      summary.skipped.push(`error:${item._id.slice(0, 40)}`);
+    }
+  }
+  return summary;
+}
+
 /** One monitor pass. Returns a summary for the route response. Never throws. */
 export async function runWireMonitor(): Promise<{
   entries: number; clusters: number; items: number; stories: number; skipped: string[];
@@ -324,77 +454,21 @@ export async function runWireMonitor(): Promise<{
       await db.from("wire_clusters").update({ item_id: itemId }).eq("id", inserted.id);
       summary.items++;
 
-      // Full on-site story for importance >= 6, capped per run. (§3.3 said 7;
-      // 172 items never cleared it — the scorer runs conservative, so 6 is
-      // the working big-news line. Client wants readers staying on-site.)
-      if (item.importance >= 6 && summary.stories < MAX_STORIES_PER_RUN) {
-        const receipt = await findReceipt(item.teams, [...titleKeywords(cluster.title)]);
-        const storyRes = await anthropic.messages.create({
-          model: MODEL,
-          max_tokens: 2048,
-          output_config: { format: { type: "json_schema", schema: STORY_SCHEMA } },
-          system: `${prompt("global-preamble.md")}\n\n${prompt("wire-story.md")}`,
-          messages: [{
-            role: "user",
-            content: `Source cluster:\n${sourceBlock}${receipt ? `\n\nJosh's archived on-topic quote (verbatim; render as his receipt, do NOT alter): "${receipt.quote}"` : ""}`,
-          }],
+      // Client directive (2026-08-17): every published item gets a
+      // full-story attempt so no wire click ever leaves the site. The old
+      // importance ≥ 6 gate is gone; the per-run cap is only a runaway guard.
+      if (summary.stories < MAX_STORIES_PER_RUN) {
+        const result = await writeStoryFromSources(anthropic, db, {
+          sourceBlock,
+          outlets,
+          sources: cluster.entries.map((e) => ({ outlet: e.outlet, url: e.link })),
+          clusterKey,
+          teams: item.teams,
+          receiptKeywords: [...titleKeywords(cluster.title)],
+          itemId,
         });
-        const story = JSON.parse(textOf(storyRes)) as {
-          headline: string; verification: "confirmed" | "reported" | "developing";
-          whatHappened: string; whyItMatters: string[]; readBody: string;
-          whatsNext: string[]; teams: string[]; category: string;
-        };
-
-        // §21 verification stack
-        const combined = `${story.whatHappened}\n${story.whyItMatters.join("\n")}\n${story.readBody}`;
-        if (BANNED_PATTERNS.some((re) => re.test(combined))) {
-          summary.skipped.push(`banned:${clusterKey}`);
-          continue;
-        }
-        if (!hasAttribution(story.whatHappened, outlets)) {
-          summary.skipped.push(`attribution:${clusterKey}`);
-          continue;
-        }
-        // Second-model fact-check pass: sources + draft only.
-        const checkRes = await anthropic.messages.create({
-          model: MODEL,
-          max_tokens: 512,
-          output_config: { effort: "low", format: { type: "json_schema", schema: FACTCHECK_SCHEMA } },
-          system: "You are an independent fact-check gate. You receive SOURCES and a DRAFT. Verdict 'contradicted' if any draft claim conflicts with the sources; 'unsupported' if any material factual claim (names, numbers, timelines, outcomes) does not appear in the sources; else 'pass'. Interpretation clearly labeled as analysis is allowed; invented facts are not. Output JSON only.",
-          messages: [{ role: "user", content: `SOURCES:\n${sourceBlock}\n\nDRAFT:\n${combined}` }],
-        });
-        const check = JSON.parse(textOf(checkRes)) as { verdict: string; detail: string };
-        if (check.verdict !== "pass") {
-          summary.skipped.push(`factcheck-${check.verdict}:${clusterKey}`);
-          continue;
-        }
-
-        const storyId = `wireStory-${clusterKey}`;
-        await writeClient.createIfNotExists({
-          _id: storyId,
-          _type: "wireStory",
-          headline: story.headline,
-          slug: { _type: "slug", current: slugify(story.headline) },
-          verification: story.verification,
-          category: story.category,
-          teams: story.teams,
-          whatHappened: story.whatHappened,
-          whyItMatters: story.whyItMatters.slice(0, 3),
-          ...(receipt
-            ? { joshReceipt: { quote: receipt.quote, ytId: receipt.yt_id, tsSeconds: receipt.ts_seconds } }
-            : {}),
-          readLabel: "THE PATE STATE READ",
-          readBody: story.readBody,
-          whatsNext: story.whatsNext.slice(0, 3),
-          sources: cluster.entries.map((e) => ({ outlet: e.outlet, url: e.link })).slice(0, 6),
-          // §14 universal YouTube rule: every story carries an episode link
-          // (the receipt's timestamped episode when present, else the latest).
-          publishedAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-        });
-        await db.from("wire_clusters").update({ story_id: storyId }).eq("id", inserted.id);
-        await writeClient.patch(itemId).set({ story: { _type: "reference", _ref: storyId } }).commit();
-        summary.stories++;
+        if (result === "ok") summary.stories++;
+        else summary.skipped.push(result);
       }
     } catch (err) {
       console.error("[wire:cluster]", cluster.title.slice(0, 60), err);

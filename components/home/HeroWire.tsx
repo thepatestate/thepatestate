@@ -35,14 +35,22 @@ export default function HeroWire({ featured, wire }: {
                 const inner = (
                   <>
                     <span className={i === 0 ? "tmchip hot" : "tmchip"}><RelTime iso={w.publishedAt} short /></span>
-                    <div><h4>{w.headline}</h4><span className="c">{w.category ?? "News"}</span></div>
+                    <div>
+                      <h4>{w.headline}</h4>
+                      <span className="c">
+                        {w.category ?? "News"}
+                        {/* Headlines never leave the site (client directive
+                            2026-08-17); outbound credit is a small explicit
+                            chip on storyless items only. */}
+                        {!w.storySlug && w.sourceUrl && (
+                          <> · <a href={w.sourceUrl} target="_blank" rel="noopener" style={{ color: "var(--gold-dk)" }}>via {w.sourceOutlet ?? "source"} ↗</a></>
+                        )}
+                      </span>
+                    </div>
                   </>
                 );
-                // Story → on-site; otherwise the original source (§1.3).
                 return w.storySlug ? (
                   <Link className="lw-item" href={`/wire/${w.storySlug}`} key={w._id}>{inner}</Link>
-                ) : w.sourceUrl ? (
-                  <a className="lw-item" href={w.sourceUrl} target="_blank" rel="noopener" key={w._id}>{inner}</a>
                 ) : (
                   <div className="lw-item" key={w._id}>{inner}</div>
                 );

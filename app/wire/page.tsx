@@ -71,20 +71,28 @@ export default async function WirePage() {
                       <span style={{ fontFamily: "var(--mono)", fontSize: 10, letterSpacing: ".08em", color: "var(--gold, #B8842C)" }}>
                         {it.category?.toUpperCase() ?? "NEWS"}
                         {it.publishedAt ? ` · ${formatDate(it.publishedAt)}` : ""}
-                        {it.storySlug ? " · ⚡ FULL STORY" : it.sourceUrl ? " · READ IT →" : ""}
+                        {it.storySlug ? " · ⚡ FULL STORY" : ""}
                       </span>
                       <b style={{ fontSize: 16, lineHeight: 1.3 }}>{it.headline}</b>
                       {it.sub && <span style={{ fontSize: 14, color: "var(--ink-dim)" }}>{it.sub}</span>}
+                      {/* Headlines never leave the site (client directive
+                          2026-08-17): storyless items keep a small explicit
+                          outbound credit instead of an off-site click. */}
+                      {!it.storySlug && it.sourceUrl && (
+                        <a
+                          href={it.sourceUrl}
+                          target="_blank"
+                          rel="noopener"
+                          style={{ fontFamily: "var(--mono)", fontSize: 10, letterSpacing: ".08em", color: "var(--lamp-deep)", width: "fit-content" }}
+                        >
+                          VIA {(it.sourceOutlet ?? "SOURCE").toUpperCase()} ↗
+                        </a>
+                      )}
                     </div>
                   </div>
                 );
-                // Every item opens somewhere: our full story when one exists,
-                // otherwise straight to the source coverage (same rule as the
-                // homepage rail — v2 §1.3, every item clickable).
                 return it.storySlug ? (
                   <Link key={it._id} href={`/wire/${it.storySlug}`} style={{ textDecoration: "none", color: "inherit" }}>{inner}</Link>
-                ) : it.sourceUrl ? (
-                  <a key={it._id} href={it.sourceUrl} target="_blank" rel="noopener" style={{ textDecoration: "none", color: "inherit" }}>{inner}</a>
                 ) : (
                   <div key={it._id}>{inner}</div>
                 );

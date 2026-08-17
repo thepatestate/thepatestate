@@ -149,6 +149,7 @@ export interface SanityWireItem {
   category?: string;
   teams?: string[];
   sourceUrl?: string | null;
+  sourceOutlet?: string | null;
   importance?: number;
   publishedAt?: string;
   storySlug?: string | null;
@@ -180,7 +181,7 @@ export async function getWireItems(limit = 8): Promise<SanityWireItem[]> {
   return await readClient.fetch(
     `*[_type == "wireItem"] | order(publishedAt desc)[0...$limit]{
       _id, headline, sub, category, teams, importance, publishedAt,
-      "storySlug": story->slug.current, "sourceUrl": sourceUrls[0]
+      "storySlug": story->slug.current, "sourceUrl": sourceUrls[0], "sourceOutlet": sourceOutlets[0]
     }`,
     { limit },
     { next: { revalidate: 120, tags: ["wire"] } } as never

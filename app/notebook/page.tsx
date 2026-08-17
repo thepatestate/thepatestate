@@ -270,12 +270,12 @@ export default async function NotebookPage({
                       </div>
                     </>
                   );
-                  // Click-through rule: on-site story → /wire/[slug]; else the
-                  // original source; an item with neither renders unlinked.
+                  // Headlines never leave the site (client directive
+                  // 2026-08-17): on-site story → /wire/[slug]; storyless
+                  // items render unlinked here (outbound credit lives on the
+                  // /wire index and inside stories).
                   return w.storySlug ? (
                     <Link className="trend" href={`/wire/${w.storySlug}`} key={w._id}>{inner}</Link>
-                  ) : w.sourceUrl ? (
-                    <a className="trend" href={w.sourceUrl} target="_blank" rel="noopener" key={w._id}>{inner}</a>
                   ) : (
                     <div className="trend" key={w._id}>{inner}</div>
                   );

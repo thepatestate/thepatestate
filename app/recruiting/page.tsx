@@ -53,8 +53,10 @@ function itemEntry(it: SanityWireItem): FeedEntry {
     kind: "wire",
     headline: it.headline,
     dek: it.sub,
-    href: it.storySlug ? `/wire/${it.storySlug}` : it.sourceUrl ?? "/wire",
-    external: !it.storySlug && Boolean(it.sourceUrl),
+    // Headlines never leave the site (client directive 2026-08-17):
+    // storyless items land on the wire index, not the outside source.
+    href: it.storySlug ? `/wire/${it.storySlug}` : "/wire",
+    external: false,
     publishedAt: it.publishedAt,
     team: it.teams?.[0],
   };
