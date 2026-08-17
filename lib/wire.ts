@@ -273,10 +273,34 @@ async function writeStoryFromSources(
   return "ok";
 }
 
+/** Fetches a source article and extracts readable text (og:description +
+ * paragraph content, tags stripped) so backfilled stories are grounded in
+ * the actual report, not just a stored headline. Fail-soft empty string. */
+async function fetchSourceText(url: string): Promise<string> {
+  try {
+    const res = await fetch(url, {
+      headers: { "user-agent": "PateStateWire/1.0 (+https://thepatestate.com)" },
+      signal: AbortSignal.timeout(8000),
+      cache: "no-store",
+    });
+    if (!res.ok) return "";
+    const html = await res.text();
+    const ogDesc = html.match(/<meta[^>]+property=["']og:description["'][^>]+content=["']([^"']+)["']/i)?.[1] ?? "";
+    const paras = [...html.matchAll(/<p[^>]*>([\s\S]*?)<\/p>/gi)]
+      .map((m) => decodeEntities(m[1]))
+      .filter((t) => t.length > 60)
+      .slice(0, 12)
+      .join("\n");
+    return decodeEntities(`${ogDesc}\n${paras}`).slice(0, 2400);
+  } catch {
+    return "";
+  }
+}
+
 /** Backfill: full stories for already-published wire items that never got
- * one (pre-directive importance gate, verification skips, caps). Rebuilds a
- * source block from the item's stored metadata and runs the same stack —
- * items whose thin metadata can't clear fact-check simply stay storyless. */
+ * one (pre-directive importance gate, verification skips, caps). Fetches
+ * the stored source articles for real grounding, then runs the same
+ * verification stack — items that still can't clear it stay storyless. */
 export async function backfillWireStories(limit = 20): Promise<{
   candidates: number; stories: number; skipped: string[];
 }> {
@@ -301,8 +325,12 @@ export async function backfillWireStories(limit = 20): Promise<{
     try {
       const outlets = item.sourceOutlets?.length ? item.sourceOutlets : ["the original report"];
       const urls = item.sourceUrls ?? [];
+      const texts = await Promise.all(urls.slice(0, 2).map(fetchSourceText));
       const sourceBlock = outlets
-        .map((o, i) => `- [${o}] ${item.headline}\n  ${item.sub ?? ""}\n  ${urls[i] ?? urls[0] ?? ""}`)
+        .map((o, i) => {
+          const body = texts[i] || texts[0] || item.sub || "";
+          return `- [${o}] ${item.headline}\n  ${body}\n  ${urls[i] ?? urls[0] ?? ""}`;
+        })
         .join("\n");
       const clusterKey = item._id.replace(/^wireItem-/, "");
       const result = await writeStoryFromSources(anthropic, db, {
