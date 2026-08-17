@@ -1,0 +1,173 @@
+/* v3 Show page layer — every selector scoped under .v5.pg-show.
+   Source of truth: wireframes/v3/show-v2.html. Chrome (rhythm bar, masthead,
+   footer) comes from the shared v5 chrome components; only the page sections
+   are ported here. Tokens (--navy, --gold, --hair, …) inherit from .v5.
+
+   Porting notes:
+   - Fill anchors: containers that hold a next/image `fill` carry
+     position:relative + the aspect-ratio moved off the mockup's img rules
+     (.hthumb, .ep .th, .sitc .im, .ro .im, .short).
+   - The mockup's dark shorts SECTION was renamed .shorts-band because
+     v5.css already uses `.v5 .shorts` as a homepage grid.
+   - globals.css bleed neutralized where the mockup reuses global names:
+     bare section{padding:40px 0}, .crumb (mono font + lamp + margin),
+     .ep (dark flex card), .ep-grid (margin-top), .sect-head (v5 sets
+     justify-content:space-between), .short (v5 sets aspect-ratio:9/14 and
+     img opacity .9), .empty-state / .btn (chalk-era look). */
+
+.v5.pg-show{background:var(--white);color:var(--ink)}
+.v5.pg-show .wrap{max-width:1200px;margin:0 auto;padding:0 24px}
+/* globals.css: section{padding:40px 0} — each band sets its own rhythm */
+.v5.pg-show section{padding:0}
+/* anchor targets under the sticky masthead */
+.v5.pg-show [id]{scroll-margin-top:84px}
+
+/* page head */
+.v5.pg-show .phead{border-bottom:1px solid var(--hair);background:linear-gradient(180deg,#FBFCFE 0%,#FFFFFF 100%)}
+.v5.pg-show .phead .wrap{padding:24px 24px 0}
+.v5.pg-show .crumb{font:700 10.5px/1 var(--cond);letter-spacing:.16em;text-transform:uppercase;color:var(--mut);margin-bottom:0}
+.v5.pg-show .crumb b{color:var(--gold-dk)}
+.v5.pg-show .phead .toprow{display:flex;align-items:flex-end;gap:20px;flex-wrap:wrap;margin-top:11px}
+.v5.pg-show .phead h1{font:800 38px/1.05 var(--slab);letter-spacing:-.02em;color:var(--navy)}
+.v5.pg-show .plat{display:flex;gap:8px;margin-left:auto;flex-wrap:wrap}
+.v5.pg-show .plat a{font:700 11px/1 var(--cond);letter-spacing:.1em;text-transform:uppercase;color:var(--mut);border:1.5px solid var(--hair);padding:9px 13px;border-radius:20px;transition:all .15s}
+.v5.pg-show .plat a:hover{border-color:var(--navy);color:var(--navy);background:var(--off)}
+.v5.pg-show .plat a.yt{background:var(--red);border-color:var(--red);color:#fff}
+.v5.pg-show .plat a.yt:hover{background:#A80D27}
+.v5.pg-show .phead .sub{font:600 15px/1.5 var(--body);color:var(--ink);max-width:640px;margin-top:8px}
+.v5.pg-show .cats{display:flex;gap:8px;margin:18px 0 0;padding-bottom:16px;overflow-x:auto;scrollbar-width:none}
+.v5.pg-show .cats::-webkit-scrollbar{display:none}
+.v5.pg-show .cat{font:700 11.5px/1 var(--cond);letter-spacing:.1em;text-transform:uppercase;color:var(--mut);border:1.5px solid var(--hair);padding:9px 14px;border-radius:20px;white-space:nowrap;transition:all .15s;flex:none}
+.v5.pg-show .cat:hover{border-color:var(--navy);color:var(--navy);background:var(--off)}
+.v5.pg-show .cat.on{background:var(--navy);border-color:var(--navy);color:#fff}
+
+/* hero episode */
+.v5.pg-show .heroep{padding:26px 0 8px}
+.v5.pg-show .hero-grid{display:grid;grid-template-columns:1.55fr 1fr;gap:30px;align-items:center}
+/* fill anchor: aspect-ratio moved from the mockup's img rule */
+.v5.pg-show .hthumb{position:relative;aspect-ratio:16/9;border-radius:12px;overflow:hidden;background:var(--navy-deep);box-shadow:0 26px 60px rgba(14,24,42,.26),0 6px 16px rgba(14,24,42,.12);display:block}
+.v5.pg-show .hthumb .tag{position:absolute;top:14px;left:14px;background:var(--red);color:#fff;font:800 10px/1 var(--cond);letter-spacing:.16em;text-transform:uppercase;padding:7px 11px;border-radius:4px;z-index:2}
+.v5.pg-show .hthumb .play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:2}
+.v5.pg-show .hthumb .play i{width:74px;height:74px;border-radius:50%;background:rgba(13,19,33,.82);border:2.5px solid var(--gold);display:flex;align-items:center;justify-content:center;font-style:normal;color:var(--gold);font-size:24px;padding-left:5px;transition:transform .15s,background .15s}
+.v5.pg-show .hthumb:hover .play i{transform:scale(1.08);background:rgba(13,19,33,.95)}
+.v5.pg-show .hcopy .k{font:800 10.5px/1 var(--cond);letter-spacing:.16em;text-transform:uppercase;color:var(--gold-dk)}
+.v5.pg-show .hcopy h2{font:800 28px/1.18 var(--slab);letter-spacing:-.015em;margin:10px 0 10px;color:var(--ink)}
+.v5.pg-show .hcopy .dek{font:400 14.5px/1.6 var(--body);color:var(--mut)}
+.v5.pg-show .hcopy .meta{font:700 11px/1 var(--cond);letter-spacing:.12em;text-transform:uppercase;color:var(--mut);margin-top:14px}
+.v5.pg-show .hcopy .ctas{display:flex;gap:12px;margin-top:16px;flex-wrap:wrap}
+.v5.pg-show .hcopy .go{font:800 12.5px/1 var(--cond);letter-spacing:.12em;text-transform:uppercase;background:var(--red);color:#fff;padding:14px 20px;border-radius:5px;box-shadow:0 8px 20px rgba(200,16,46,.35)}
+.v5.pg-show .hcopy .go:hover{background:#A80D27}
+.v5.pg-show .hcopy .alt{font:800 12.5px/1 var(--cond);letter-spacing:.12em;text-transform:uppercase;color:var(--navy);border:1.5px solid var(--navy);padding:12.5px 20px;border-radius:5px}
+.v5.pg-show .hcopy .alt:hover{background:var(--off)}
+
+/* section frame — v5.css sets justify-content:space-between + margin-bottom:22px
+   on .sect-head; redefine everything the mockup depends on */
+.v5.pg-show .sect{padding:30px 0}
+.v5.pg-show .sect-head{display:flex;align-items:baseline;justify-content:flex-start;gap:16px;margin-bottom:18px}
+.v5.pg-show .sect-head .eb{font:800 10.5px/1 var(--cond);letter-spacing:.2em;text-transform:uppercase;color:var(--gold-dk);margin-bottom:0}
+.v5.pg-show .sect-head h3{font:800 24px/1 var(--slab);letter-spacing:-.015em;color:var(--navy)}
+.v5.pg-show .sect-head a{margin-left:auto;font:800 11.5px/1 var(--cond);letter-spacing:.12em;text-transform:uppercase;color:var(--gold-dk);white-space:nowrap;padding-bottom:0}
+.v5.pg-show .sect-head a:hover{color:var(--navy)}
+
+/* episode grid — globals.css .ep is a dark flex row with padding, and
+   .ep-grid carries margin-top:26px; redefine both fully */
+.v5.pg-show .ep-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:0}
+.v5.pg-show .ep{background:var(--white);border:1px solid var(--hair);border-radius:11px;overflow:hidden;box-shadow:var(--sh-sm);transition:transform .18s,box-shadow .2s;display:block;padding:0;gap:0}
+.v5.pg-show .ep:hover{transform:translateY(-4px);box-shadow:var(--sh-lg);border-color:var(--hair)}
+/* fill anchor */
+.v5.pg-show .ep .th{position:relative;display:block;aspect-ratio:16/9;background:var(--navy-deep)}
+.v5.pg-show .ep .th .dur{position:absolute;right:8px;bottom:8px;background:rgba(13,19,33,.85);color:#fff;font:700 10.5px/1 var(--cond);letter-spacing:.06em;padding:5px 8px;border-radius:4px;z-index:2}
+.v5.pg-show .ep .tx{display:block;padding:13px 16px 15px}
+.v5.pg-show .ep .t{font:800 9.5px/1 var(--cond);letter-spacing:.14em;text-transform:uppercase;color:var(--red);display:block;margin-bottom:6px}
+.v5.pg-show .ep h4{font:700 15.5px/1.3 var(--slab);letter-spacing:-.01em;color:var(--ink)}
+.v5.pg-show .ep:hover h4{color:var(--navy)}
+.v5.pg-show .ep .by{font:500 11px/1 var(--body);color:var(--mut);margin-top:7px;display:block}
+
+/* sit-down band */
+.v5.pg-show .sit{background:linear-gradient(150deg,var(--navy) 0%,var(--navy-deep) 100%);color:#EDF1F7;padding:34px 0}
+.v5.pg-show .sit .sect-head h3{color:#fff}
+.v5.pg-show .sit .sect-head .eb{color:var(--gold)}
+.v5.pg-show .sit .sect-head a{color:var(--gold)}
+.v5.pg-show .sit .sect-head a:hover{color:#fff}
+.v5.pg-show .sit-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.v5.pg-show .sitc{display:flex;gap:16px;align-items:center;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:14px;transition:background .15s,transform .15s}
+.v5.pg-show .sitc:hover{background:rgba(255,255,255,.09);transform:translateY(-3px)}
+/* fill anchor (wraps the mockup's fixed-width img) */
+.v5.pg-show .sitc .im{position:relative;width:168px;min-width:168px;aspect-ratio:16/9;border-radius:8px;overflow:hidden;background:var(--navy-deep)}
+.v5.pg-show .sitc .tx{display:block;min-width:0}
+.v5.pg-show .sitc .t{font:800 9.5px/1 var(--cond);letter-spacing:.14em;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:6px}
+.v5.pg-show .sitc h4{font:700 16px/1.3 var(--slab);color:#EDEFF3}
+.v5.pg-show .sitc:hover h4{color:#fff}
+.v5.pg-show .sitc .by{font:500 11px/1 var(--body);color:#8FA0B8;margin-top:7px;display:block}
+/* honest fallback when the feed has no interviews in window */
+.v5.pg-show .sit-empty{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:22px 24px}
+.v5.pg-show .sit-empty p{font:400 14px/1.65 var(--body);color:#B9C6D8;max-width:64ch}
+.v5.pg-show .sit-empty a{display:inline-block;margin-top:13px;font:800 12px/1 var(--cond);letter-spacing:.12em;text-transform:uppercase;color:var(--gold)}
+.v5.pg-show .sit-empty a:hover{color:#fff}
+
+/* more episodes rows */
+.v5.pg-show .ro-stack{display:flex;flex-direction:column;gap:10px}
+.v5.pg-show .ro{display:flex;gap:15px;align-items:center;background:var(--white);border:1px solid var(--hair);border-radius:11px;padding:11px 13px;box-shadow:var(--sh-sm);transition:transform .15s,box-shadow .2s}
+.v5.pg-show .ro:hover{transform:translateY(-3px);box-shadow:var(--sh-md)}
+/* fill anchor */
+.v5.pg-show .ro .im{position:relative;width:150px;min-width:150px;aspect-ratio:16/9;border-radius:8px;overflow:hidden;background:var(--navy-deep)}
+.v5.pg-show .ro .tx{display:block;min-width:0}
+.v5.pg-show .ro .t{font:800 9.5px/1 var(--cond);letter-spacing:.13em;text-transform:uppercase;color:var(--red);display:block;margin-bottom:5px}
+.v5.pg-show .ro h4{font:700 16px/1.3 var(--slab);letter-spacing:-.01em;color:var(--ink)}
+.v5.pg-show .ro:hover h4{color:var(--navy)}
+.v5.pg-show .ro .by{font:500 11px/1 var(--body);color:var(--mut);margin-top:6px;display:block}
+.v5.pg-show .more{display:block;text-align:center;font:800 12.5px/1 var(--cond);letter-spacing:.14em;text-transform:uppercase;color:var(--navy);border:1.5px solid var(--navy);border-radius:6px;padding:15px;margin-top:16px;transition:all .15s}
+.v5.pg-show .more:hover{background:var(--navy);color:#fff}
+
+/* shorts band — renamed from the mockup's .shorts (v5.css owns `.v5 .shorts`
+   as a homepage grid); v5's `.v5 .short` also sets aspect-ratio:9/14 and
+   dims img opacity — both overridden here */
+.v5.pg-show .shorts-band{background:var(--mast);padding:30px 0}
+.v5.pg-show .shorts-band .sect-head h3{color:#fff}
+.v5.pg-show .shorts-band .sect-head .eb{color:var(--gold)}
+.v5.pg-show .shorts-band .sect-head a{color:var(--gold)}
+.v5.pg-show .shorts-band .sect-head a:hover{color:#fff}
+.v5.pg-show .sh-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:14px}
+/* fill anchor */
+.v5.pg-show .short{position:relative;aspect-ratio:9/16;border-radius:10px;overflow:hidden;display:block;background:#000;box-shadow:none;transition:transform .15s}
+.v5.pg-show .short:hover{transform:translateY(-4px)}
+.v5.pg-show .short img{opacity:1}
+.v5.pg-show .short .lbl{position:absolute;left:0;right:0;bottom:0;padding:24px 10px 10px;background:linear-gradient(180deg,transparent,rgba(10,23,48,.9));color:#fff;font:700 11.5px/1.35 var(--body);z-index:2}
+
+/* watch + read conversion band */
+.v5.pg-show .wb{background:var(--off);border-top:1px solid var(--hair);padding:30px 0}
+.v5.pg-show .wb-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.v5.pg-show .wbc{background:var(--white);border:1px solid var(--hair);border-radius:12px;padding:22px 24px;box-shadow:var(--sh-sm);display:flex;flex-direction:column;align-items:flex-start}
+.v5.pg-show .wbc .k{font:800 10px/1 var(--cond);letter-spacing:.2em;text-transform:uppercase;color:var(--gold-dk)}
+.v5.pg-show .wbc h4{font:800 19px/1.25 var(--slab);color:var(--navy);margin:9px 0 6px}
+.v5.pg-show .wbc p{font:400 13px/1.55 var(--body);color:var(--mut)}
+.v5.pg-show .wbc .go{font:800 12px/1 var(--cond);letter-spacing:.12em;text-transform:uppercase;color:#fff;background:var(--navy);padding:12px 17px;border-radius:5px;margin-top:14px;box-shadow:var(--sh-sm)}
+.v5.pg-show .wbc .go:hover{background:var(--navy-deep)}
+.v5.pg-show .wbc.yt .go{background:var(--red)}
+.v5.pg-show .wbc.yt .go:hover{background:#A80D27}
+.v5.pg-show .wbc .alt-link{font:700 11.5px/1 var(--cond);letter-spacing:.12em;text-transform:uppercase;color:var(--gold-dk);margin-top:12px}
+.v5.pg-show .wbc .alt-link:hover{color:var(--navy)}
+
+/* empty state — restyle globals.css's chalk-era .empty-state/.btn to the
+   v5 light-editorial look */
+.v5.pg-show .empty-state{margin:26px 0;border:1px dashed var(--hair);border-radius:10px;background:var(--off);padding:26px 22px;text-align:center}
+.v5.pg-show .empty-state .es-kicker{font-family:var(--cond);font-weight:800;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold-dk)}
+.v5.pg-show .empty-state .es-title{font-family:var(--slab);font-weight:800;font-size:21px;color:var(--navy);margin:7px 0 5px}
+.v5.pg-show .empty-state .es-body{font:400 13.5px/1.55 var(--body);color:var(--mut);max-width:48ch;margin:0 auto}
+.v5.pg-show .empty-state .btn{font-family:var(--cond);font-weight:800;font-size:12px;letter-spacing:.12em;text-transform:uppercase;border:1.5px solid var(--navy);color:var(--navy);background:none;border-radius:5px;padding:12px 18px;display:inline-block}
+.v5.pg-show .empty-state .btn:hover{background:var(--navy);color:#fff}
+
+@media(max-width:1080px){
+  .v5.pg-show .hero-grid,.v5.pg-show .sit-grid,.v5.pg-show .wb-grid{grid-template-columns:1fr}
+  .v5.pg-show .ep-grid{grid-template-columns:1fr 1fr}
+  .v5.pg-show .sh-grid{grid-template-columns:repeat(3,1fr)}
+}
+@media(max-width:760px){
+  .v5.pg-show .phead h1{font-size:29px}
+  .v5.pg-show .hcopy h2{font-size:21px}
+  .v5.pg-show .ep-grid{grid-template-columns:1fr}
+  .v5.pg-show .sh-grid{grid-template-columns:repeat(2,1fr)}
+  .v5.pg-show .ro .im{width:110px;min-width:110px}
+  .v5.pg-show .ro h4{font-size:14px}
+  .v5.pg-show .sitc .im{width:120px;min-width:120px}
+}
