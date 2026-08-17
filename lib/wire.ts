@@ -219,7 +219,9 @@ async function writeStoryFromSources(
   const receipt = await findReceipt(job.teams, job.receiptKeywords);
   const storyRes = await anthropic.messages.create({
     model: MODEL,
-    max_tokens: 2048,
+    // 2048 truncated JSON mid-string once drafts were grounded in fetched
+    // source text (backfill) — headroom, not a target.
+    max_tokens: 4096,
     output_config: { format: { type: "json_schema", schema: STORY_SCHEMA } },
     system: `${prompt("global-preamble.md")}\n\n${prompt("wire-story.md")}`,
     messages: [{
