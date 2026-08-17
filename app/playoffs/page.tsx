@@ -213,7 +213,7 @@ export default function PlayoffsPage() {
   const art = createArtPicker();
   const readRoomLead = art.pick("playoffs", "Josh Pate breaking down his 2026 playoff bracket on the show");
   return (
-    <main>
+    <main className="v5-lite">
       <header className="page-head">
         <div className="wrap">
           <p className="crumb">The Pate State / Playoffs</p>

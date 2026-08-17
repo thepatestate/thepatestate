@@ -28,7 +28,7 @@ export default async function MePage() {
     .map((t) => ({ value: t.slug, label: t.school }));
 
   return (
-    <main>
+    <main className="v5-lite">
       <header className="page-head">
         <div className="wrap">
           <p className="crumb">The Pate State / Your Seat</p>

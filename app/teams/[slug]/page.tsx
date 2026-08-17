@@ -111,7 +111,7 @@ export default async function TeamHubPage({ params }: { params: Promise<{ slug: 
   const accent = info.color ?? "var(--lamp)";
 
   return (
-    <main>
+    <main className="v5-lite">
       {/* Team header (§4.2): brand stays dominant, team color accents. */}
       <div className="board-bar team" style={{ borderBottomColor: accent }}>
         <div className="wrap">

@@ -37,7 +37,7 @@ const DEMO_GUIDES: readonly TailgateGuide[] = [
 
 export default function TailgatePage() {
   return (
-    <main>
+    <main className="v5-lite">
       <header className="page-head">
         <div className="wrap">
           <p className="crumb">The Pate State / Pate Tailgate</p>

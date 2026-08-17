@@ -15,7 +15,7 @@ export default async function JoinByCodePage({ params }: { params: Promise<{ cod
   const citizen = await getCitizen();
 
   return (
-    <main>
+    <main className="v5-lite">
       <header className="page-head">
         <div className="wrap">
           <p className="crumb">The Pate State / Play / Join a Group</p>

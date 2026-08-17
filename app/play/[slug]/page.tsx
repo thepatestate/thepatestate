@@ -85,7 +85,7 @@ export default async function CompetitionPage({ params }: { params: Promise<{ sl
     .sort((a, b) => a.school.localeCompare(b.school));
 
   return (
-    <main>
+    <main className="v5-lite">
       <header className="page-head">
         <div className="wrap">
           <p className="crumb">

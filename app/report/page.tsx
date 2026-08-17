@@ -36,7 +36,7 @@ const DEMO_SPREADS = [
 
 export default function ReportPage() {
   return (
-    <main>
+    <main className="v5-lite">
       <header className="page-head">
         <div className="wrap">
           <p className="crumb">The Pate State / The Pate Report</p>

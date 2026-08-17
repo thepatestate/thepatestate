@@ -38,7 +38,7 @@ export default async function GroupPage({ params }: { params: Promise<{ id: stri
   const scored = board.some((e) => e.points != null);
 
   return (
-    <main>
+    <main className="v5-lite">
       <header className="page-head">
         <div className="wrap">
           <p className="crumb">
