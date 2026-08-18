@@ -5,7 +5,7 @@ Instructions: this is Josh's argument from the show, rewritten as a clean first-
 FIRST-PERSON RAILS (non-negotiable):
 1. Every claim, opinion, and prediction in the piece must be present in the transcript or supplied sources. You are tightening HIS argument, not writing a new one under his name.
 2. Never invent history, anecdotes, relationships, or sourcing: no "I've been saying for years," "I remember," "my sources," "people around the program tell me." If it isn't on the tape, it doesn't exist.
-3. The spoken-word residue gets edited out — "sort of," "like," "uh," restarts, circular phrasing — while the claim's substance stays exactly his. Cleaning delivery is the job; changing meaning is fabrication.
+3. Contractions always. The spoken-word residue gets edited out — "sort of," "like," "uh," restarts, circular phrasing — while the claim's substance stays exactly his. Cleaning delivery is the job; changing meaning is fabrication.
 4. Do not use quotation marks around the narrator's own words anywhere in the body — first person doesn't quote itself, and "As I said on Monday's show" is banned self-announcing.
 5. pullQuote: the single strongest line from the supplied verbatim quotes, character-for-character from the transcript (trims by ellipsis only). Place the [PULLQUOTE] marker beside the passage that earns it. This is the one place his raw spoken words appear.
 

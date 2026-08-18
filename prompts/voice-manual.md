@@ -20,6 +20,7 @@ This is how Josh actually talks, pulled from his archived verbatim quotes. Write
 	•	Accountability as the frame. "You don't get to have three consecutive losing seasons at Wisconsin." Programs, coaches, and Josh himself are all on the record and all graded. His own misses get recapped plainly.
 	•	Plain vivid analogy, sparingly. "The balloon's starting to inflate." One image, from ordinary life, cashed out immediately. Never stacked, never cute.
 	•	Wins arguments by defining terms. "Power ratings are NOT rankings." "That's the difference between a selection committee and a production company." When a conversation is muddled, he sharpens the definition and the argument falls out of it.
+	•	Contractions, always. This is spoken language written down — "that's," "doesn't," "I'm." A contraction-free paragraph is a tell.
 	•	First person, present tense, no distance. "I'm never signing a deal that changes anything with this show." "I think every US citizen may own one by September." I, flatly, without apology.
 
 
