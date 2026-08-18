@@ -1,6 +1,7 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
+import { writeJSON } from "@/lib/writer";
 
 export const BYLINE_STAFF = "The Pate State Staff";
 export const SERIES_VALUES = [
@@ -274,14 +275,14 @@ export async function draftCompanion(input: {
 
   for (let attempt = 0; attempt < 2; attempt++) {
     try {
-      const res = await c.messages.create({
-        model: MODEL,
-        max_tokens: 8192,
-        output_config: { format: { type: "json_schema", schema: DRAFT_SCHEMA } },
+      const raw = await writeJSON({
         system,
-        messages: [{ role: "user", content: user }],
+        user,
+        schema: DRAFT_SCHEMA,
+        schemaName: "companion_draft",
+        maxTokens: 8192,
       });
-      const draft = validateDraft(JSON.parse(textOf(res)));
+      const draft = validateDraft(JSON.parse(raw));
       if (!draft) continue; // schema/parse miss — retry with the same prompt
 
       if (!input.transcriptText) return draft; // nothing to verify quotes against

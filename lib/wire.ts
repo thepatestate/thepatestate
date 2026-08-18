@@ -9,6 +9,7 @@ import { createAdminClient, isAdminConfigured } from "@/lib/supabase/admin";
 import { writeClient, isSanityWriteConfigured } from "@/lib/sanity";
 import { findReceipt } from "@/lib/quotes";
 import { slugify } from "@/lib/slug";
+import { writeJSON } from "@/lib/writer";
 
 const MODEL = "claude-sonnet-5";
 // Client directive (2026-08-17): wire clicks must never leave the site, so
@@ -217,19 +218,17 @@ async function writeStoryFromSources(
   job: StoryJob,
 ): Promise<string> {
   const receipt = await findReceipt(job.teams, job.receiptKeywords);
-  const storyRes = await anthropic.messages.create({
-    model: MODEL,
-    // 2048 truncated JSON mid-string once drafts were grounded in fetched
-    // source text (backfill) — headroom, not a target.
-    max_tokens: 4096,
-    output_config: { format: { type: "json_schema", schema: STORY_SCHEMA } },
+  // Written by the provider-routed prose writer; 4096 tokens because 2048
+  // truncated JSON mid-string once drafts were grounded in fetched source
+  // text (backfill) — headroom, not a target.
+  const storyRaw = await writeJSON({
     system: `${prompt("global-preamble.md")}\n\n${prompt("wire-story.md")}`,
-    messages: [{
-      role: "user",
-      content: `Source cluster:\n${job.sourceBlock}${receipt ? `\n\nJosh's archived on-topic quote (verbatim; render as his receipt, do NOT alter): "${receipt.quote}"` : ""}`,
-    }],
+    user: `Source cluster:\n${job.sourceBlock}${receipt ? `\n\nJosh's archived on-topic quote (verbatim; render as his receipt, do NOT alter): "${receipt.quote}"` : ""}`,
+    schema: STORY_SCHEMA,
+    schemaName: "wire_story",
+    maxTokens: 4096,
   });
-  const story = JSON.parse(textOf(storyRes)) as {
+  const story = JSON.parse(storyRaw) as {
     headline: string; verification: "confirmed" | "reported" | "developing";
     whatHappened: string; whyItMatters: string[]; readBody: string;
     whatsNext: string[]; teams: string[]; category: string;
@@ -424,15 +423,15 @@ export async function runWireMonitor(): Promise<{
         .map((e) => `- [${e.outlet}] ${e.title}\n  ${e.description}\n  ${e.link}`)
         .join("\n");
 
-      // Wire item (12.3)
-      const itemRes = await anthropic.messages.create({
-        model: MODEL,
-        max_tokens: 512,
-        output_config: { effort: "low", format: { type: "json_schema", schema: ITEM_SCHEMA } },
+      // Wire item (12.3) — written by the provider-routed prose writer.
+      const itemRaw = await writeJSON({
         system: prompt("wire-item.md"),
-        messages: [{ role: "user", content: `Source cluster:\n${sourceBlock}` }],
+        user: `Source cluster:\n${sourceBlock}`,
+        schema: ITEM_SCHEMA,
+        schemaName: "wire_item",
+        maxTokens: 512,
       });
-      const item = JSON.parse(textOf(itemRes)) as {
+      const item = JSON.parse(itemRaw) as {
         headline: string; sub: string; category: string; teams: string[];
         importance: number; importance_reason: string;
       };
