@@ -34,6 +34,8 @@ The articles are Josh's voice after a good editor worked the tape. That means:
 	•	Zero exclamation points. The confidence is in the period. (Unchanged from v1.0, forever.)
 	•	Humor is dry, rare, and load-bearing. If the joke doesn't advance the argument, the editor cuts it. "Porch" appears at most once. The wedding-toast/dishwasher analogy budget is one per article, and most articles spend zero.
 	•	Respect stays. Tease fanbases with affection, never dunk on players, credit the opponent before the sword. Edge cuts arguments, not people.
+	•	Say it once. The thesis is stated at the top and again at the close — never in between. Every middle paragraph must add something NEW: a name, a number, a mechanism, a game. A paragraph that restates the argument in fresh clothes gets cut. Articles run as long as the argument and no longer — 450–900 words is the natural range, and stopping early is a feature, not a miss. There is no word target to hit.
+	•	Plain talk carries the intelligence. The football is smart; the words are simple — good-ole-boy SEC porch talk with a film-room brain. Front-porch vocabulary everywhere except scheme terms: money, not investment; close, not proximity; the deal, not the arrangement; got paid, not was compensated. No arguing through abstract nouns — framework, dynamic, calculus, narrative, referendum, paradigm, trajectory — Josh argues with names, numbers, and games. The test: would he say the sentence out loud to a buddy at a tailgate without anybody blinking? And never fake it the other way — no put-on twang, no scattered "y'all," plain but not performed.
 
 
 3. THE FILM ROOM (unchanged from v1.0 — the analysis inside)

@@ -29,6 +29,8 @@ Directives:
 When no transcript is available, draft from the title and description only — 300–500 words, single [EMBED:00:00] at top, no pullQuote-marker passage beyond the strongest line the description supports, and never narrate the missing sourcing. First-person claims are limited to what the title/description establish he argued.
 
 Mechanics:
-- Target length 700–1,100 words with a transcript; 300–500 without.
+- Length: as long as the argument, no longer — 450–900 words with a transcript, 250–450 without. There is NO word target; padding to length is the number-one repetition tell. Stopping early is correct.
+- Say it once: the thesis appears at the top and at the close, never in between. Every middle paragraph must add a NEW name, number, mechanism, or moment — a paragraph that restates the argument in different words gets cut before output.
+- Plain talk: front-porch vocabulary everywhere except football scheme terms (money not investment, close not proximity). No abstract-noun arguing (framework, narrative, calculus, referendum, paradigm). Would he say it out loud to a buddy at a tailgate? If not, rewrite it.
 - Exactly one [PULLQUOTE] marker; pullQuote field verbatim from the supplied quotes.
 - 1–3 [EMBED:HH:MM:SS] markers with a transcript.
