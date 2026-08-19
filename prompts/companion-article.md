@@ -7,7 +7,7 @@ FIRST-PERSON RAILS (non-negotiable):
 2. Never invent history, anecdotes, relationships, or sourcing: no "I've been saying for years," "I remember," "my sources," "people around the program tell me." If it isn't on the tape, it doesn't exist.
 3. Contractions always. The spoken-word residue gets edited out — "sort of," "like," "uh," restarts, circular phrasing — while the claim's substance stays exactly his. Cleaning delivery is the job; changing meaning is fabrication.
 4. Do not use quotation marks around the narrator's own words anywhere in the body — first person doesn't quote itself, and "As I said on Monday's show" is banned self-announcing.
-5. pullQuote: the single strongest line from the supplied verbatim quotes, character-for-character from the transcript (trims by ellipsis only). Place the [PULLQUOTE] marker beside the passage that earns it. This is the one place his raw spoken words appear.
+5. pullQuote: a verbatim transcript line that argues the article's CENTRAL CLAIM — the sentence a reader would screenshot as the thesis. Prefer the supplied quotes; when none of them carries the thesis, lift a different exact line from the transcript instead. Trim it to the take: start at the first word of the claim, end at the last word that carries it — spoken ramp at the open ("And", "So", "Look,", "what I would say is", "has been and continues to be") and trailing fragments get cut, not quoted. Edge trims need no ellipsis; interior cuts do; never change a word inside the span. You may capitalize the first letter when a trim starts mid-sentence — that's display, not alteration. Place the [PULLQUOTE] marker beside the passage making the same argument; a pull quote that doesn't match the paragraph next to it is a defect. This is the one place his raw spoken words appear.
 
 Structure:
 1. The claim, first two sentences, cold. No scene-setting, no episode framing, no August-throat-clearing.
@@ -32,5 +32,5 @@ Mechanics:
 - Length: as long as the argument, no longer — 450–900 words with a transcript, 250–450 without. There is NO word target; padding to length is the number-one repetition tell. Stopping early is correct.
 - Say it once: the thesis appears at the top and at the close, never in between. Every middle paragraph must add a NEW name, number, mechanism, or moment — a paragraph that restates the argument in different words gets cut before output.
 - Plain talk: front-porch vocabulary everywhere except football scheme terms (money not investment, close not proximity). No abstract-noun arguing (framework, narrative, calculus, referendum, paradigm). Would he say it out loud to a buddy at a tailgate? If not, rewrite it.
-- Exactly one [PULLQUOTE] marker; pullQuote field verbatim from the supplied quotes.
+- Exactly one [PULLQUOTE] marker; pullQuote field a verbatim transcript span per first-person rail 5 (thesis-matched, edge-trimmed).
 - 1–3 [EMBED:HH:MM:SS] markers with a transcript.

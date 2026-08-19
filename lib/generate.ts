@@ -75,14 +75,21 @@ function extractQuotedSpans(body: string): string[] {
 
 /** Pure, unit-testable check: returns every quoted span (straight or curly quotes, ≥5
  * words — short scare-quotes are exempt) in bodyMarkdown that is NOT a verbatim substring
- * of transcript, after normalizing both for punctuation/quote-style/whitespace differences. */
+ * of transcript, after normalizing both for punctuation/quote-style/whitespace differences.
+ * Ellipses ("…" or "...") mark editorial interior cuts (voice manual: trims by ellipsis
+ * only), so an ellipsized quote verifies as its parts — each part must be verbatim. */
 export function findNonVerbatimQuotes(body: string, transcript: string): string[] {
   const normTranscript = normalizeForCompare(transcript);
   const bad: string[] = [];
   for (const raw of extractQuotedSpans(body)) {
     const wordCount = raw.trim().split(/\s+/).filter(Boolean).length;
     if (wordCount < 5) continue;
-    if (!normTranscript.includes(normalizeForCompare(raw))) bad.push(raw.trim());
+    const parts = raw
+      .split(/(?:\.\.\.|…)/)
+      .map((p) => p.trim())
+      .filter((p) => p.split(/\s+/).filter(Boolean).length >= 2);
+    if (parts.length === 0) continue;
+    if (parts.some((p) => !normTranscript.includes(normalizeForCompare(p)))) bad.push(raw.trim());
   }
   return bad;
 }

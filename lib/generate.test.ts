@@ -65,6 +65,18 @@ describe("findNonVerbatimQuotes", () => {
     expect(findNonVerbatimQuotes(body, transcript)).toEqual([]);
   });
 
+  it("passes an interior ellipsis cut when both parts are verbatim", () => {
+    const body = 'Pate said, "the Georgia offensive line is a problem … it gets fixed by November." He moved on.';
+    expect(findNonVerbatimQuotes(body, transcript)).toEqual([]);
+  });
+
+  it("fails an ellipsis cut whose parts are not verbatim", () => {
+    const body = 'Pate said, "the Georgia offensive line is elite … fixed well before September." He moved on.';
+    expect(findNonVerbatimQuotes(body, transcript)).toEqual([
+      "the Georgia offensive line is elite … fixed well before September.",
+    ]);
+  });
+
   it("passes a quote that spans a caption-segment boundary (real-world YouTube auto-captions run 2-4 words/line)", () => {
     // transcriptToPromptText() prepends a [MM:SS] marker to every short caption line, so a
     // genuine verbatim quote spanning two adjacent lines has a literal timestamp token
