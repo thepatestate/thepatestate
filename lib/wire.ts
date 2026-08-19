@@ -25,6 +25,12 @@ const FEEDS: { outlet: string; url: string }[] = [
   { outlet: "ESPN", url: "https://www.espn.com/espn/rss/ncf/news" },
   { outlet: "CBS Sports", url: "https://www.cbssports.com/rss/headlines/college-football/" },
   { outlet: "Yahoo Sports", url: "https://sports.yahoo.com/college-football/rss.xml" },
+  // Josh, 2026-08-19: "We cannot just rely on Yahoo." On3's feed is
+  // site-wide (recruiting-heavy, some other sports) — the CFB relevance
+  // filter below already discards off-topic entries, same as Yahoo's
+  // wrestling. Bleacher Report, SI, and Fox no longer publish RSS
+  // (verified 404, 2026-08-19); X requires the paid API — see ops notes.
+  { outlet: "On3", url: "https://www.on3.com/feed/" },
 ];
 
 export interface FeedEntry {

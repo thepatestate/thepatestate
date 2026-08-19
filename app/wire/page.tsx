@@ -75,18 +75,13 @@ export default async function WirePage() {
                       </span>
                       <b style={{ fontSize: 16, lineHeight: 1.3 }}>{it.headline}</b>
                       {it.sub && <span style={{ fontSize: 14, color: "var(--ink-dim)" }}>{it.sub}</span>}
-                      {/* Headlines never leave the site (client directive
-                          2026-08-17): storyless items keep a small explicit
-                          outbound credit instead of an off-site click. */}
-                      {!it.storySlug && it.sourceUrl && (
-                        <a
-                          href={it.sourceUrl}
-                          target="_blank"
-                          rel="noopener"
-                          style={{ fontFamily: "var(--mono)", fontSize: 10, letterSpacing: ".08em", color: "var(--lamp-deep)", width: "fit-content" }}
-                        >
-                          VIA {(it.sourceOutlet ?? "SOURCE").toUpperCase()} ↗
-                        </a>
+                      {/* Wire list surfaces never link off-site (Josh,
+                          2026-08-19): storyless items carry a plain-text
+                          credit; linked citations live inside full stories. */}
+                      {!it.storySlug && it.sourceOutlet && (
+                        <span style={{ fontFamily: "var(--mono)", fontSize: 10, letterSpacing: ".08em", color: "var(--lamp-deep)" }}>
+                          VIA {it.sourceOutlet.toUpperCase()}
+                        </span>
                       )}
                     </div>
                   </div>

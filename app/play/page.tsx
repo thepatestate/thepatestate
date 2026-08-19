@@ -13,6 +13,7 @@ import {
   type PlayEntry,
 } from "@/lib/play";
 import { teamLogoUrl } from "@/lib/teams-meta";
+import { JOSH_BRACKET_FIELD, JOSH_BRACKET_ARTICLE, JOSH_BRACKET_LABEL } from "@/lib/josh-bracket";
 
 export const metadata: Metadata = {
   title: "Play — Games & Competitions",
@@ -201,6 +202,40 @@ export default async function PlayPage() {
                 the whole State once the committee reveals the real field — every pick is yours to change
                 until the field locks.
               </p>
+            </div>
+            {/* Josh's on-the-record field renders until the real one exists
+                (Josh, 2026-08-19: "at least see a bracket somewhere"). */}
+            <div className="jb-mini">
+              <div className="jb-mini-h">
+                <span className="k">{JOSH_BRACKET_LABEL}</span>
+                <Link href={JOSH_BRACKET_ARTICLE}>The Full Argument →</Link>
+              </div>
+              <div className="jb-byes">
+                {JOSH_BRACKET_FIELD.filter((t) => t.note === "bye").map((t) => {
+                  const logo = teamLogoUrl(t.slug);
+                  return (
+                    <span className="bye" key={t.slug}>
+                      {logo && <Image src={logo} alt="" width={20} height={20} />}
+                      {t.seed} {t.name} <em>BYE</em>
+                    </span>
+                  );
+                })}
+              </div>
+              <div className="jb-r1">
+                {[[12, 5], [11, 6], [10, 7], [9, 8]].map(([a, h]) => {
+                  const away = JOSH_BRACKET_FIELD.find((t) => t.seed === a)!;
+                  const home = JOSH_BRACKET_FIELD.find((t) => t.seed === h)!;
+                  const [al, hl] = [teamLogoUrl(away.slug), teamLogoUrl(home.slug)];
+                  return (
+                    <span className="g" key={h}>
+                      {al && <Image src={al} alt="" width={18} height={18} />}
+                      {away.seed} {away.name} <b>at</b> {home.seed} {home.name}
+                      {hl && <Image src={hl} alt="" width={18} height={18} />}
+                    </span>
+                  );
+                })}
+              </div>
+              <div className="jb-champ">Josh&apos;s champ, locked: <b>Georgia</b> · Think he&apos;s wrong? Build yours.</div>
             </div>
             <div className="brk-foot">
               <span className="brk-hint2">

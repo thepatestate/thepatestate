@@ -173,3 +173,20 @@
   .v5.pg-poll .brow{padding:10px 16px}
   .v5.pg-poll .brow .pts{display:none}
 }
+
+/* ── Josh's Board (the JP Poll proper — 2026-08-19) ── */
+.v5.pg-poll .jboard{padding:26px 0 6px}
+.v5.pg-poll .jboard .jb-head{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;margin-bottom:14px}
+.v5.pg-poll .jboard .jb-head .k{font:800 10.5px/1 var(--cond);letter-spacing:.16em;text-transform:uppercase;color:var(--gold-dk,#8a6a1f)}
+.v5.pg-poll .jboard .jb-head h2{font:800 24px/1.1 var(--slab);margin:6px 0 6px}
+.v5.pg-poll .jboard .jb-head p{font:400 14px/1.5 var(--body);color:var(--mut);max-width:560px}
+.v5.pg-poll .jboard .jb-link{font:800 12px/1 var(--cond);letter-spacing:.1em;text-transform:uppercase;color:var(--gold-dk,#8a6a1f);white-space:nowrap}
+.v5.pg-poll .jboard .jb-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.v5.pg-poll .jboard .jb-row{display:flex;align-items:center;gap:9px;padding:10px 12px;background:#fff;border:1px solid var(--line-l);border-radius:6px;box-shadow:var(--sh-sm)}
+.v5.pg-poll .jboard .jb-row .rk{font:800 13px/1 var(--cond);color:var(--gold-dk,#8a6a1f);min-width:16px}
+.v5.pg-poll .jboard .jb-row img{border-radius:50%;background:#fff}
+.v5.pg-poll .jboard .jb-row .tn{font:700 13.5px/1.2 var(--body);flex:1}
+.v5.pg-poll .jboard .jb-row .note{font:800 9px/1 var(--cond);letter-spacing:.12em;color:var(--mut)}
+.v5.pg-poll .jboard .jb-row .note.bye{color:var(--gold-dk,#8a6a1f)}
+.v5.pg-poll .jboard .jb-foot{margin-top:12px;font:400 13.5px/1.5 var(--body);color:var(--mut)}
+@media (max-width:900px){.v5.pg-poll .jboard .jb-grid{grid-template-columns:repeat(2,1fr)}.v5.pg-poll .jboard .jb-head{flex-direction:column;align-items:flex-start}}

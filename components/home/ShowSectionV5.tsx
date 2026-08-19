@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
-import { type Video, videoUrl, CHANNEL_URL, SUBSCRIBE_URL, APPLE_PODCASTS_URL } from "@/lib/youtube";
+import InlineYouTube from "@/components/InlineYouTube";
+import { type Video, CHANNEL_URL, SUBSCRIBE_URL, APPLE_PODCASTS_URL } from "@/lib/youtube";
 import { formatDate } from "@/lib/format";
 
 // v25 "The Josh Pate Show": centered premium band — four episode cards the
@@ -19,16 +20,18 @@ export default function ShowSectionV5({ episodes }: { episodes: Video[] }) {
         </div>
         <div className="ep-grid">
           {episodes.slice(0, 4).map((v) => (
-            <a className="ep" href={videoUrl(v.id)} target="_blank" rel="noopener" key={v.id}>
-              <span className="th">
+            <div className="ep" key={v.id}>
+              {/* Plays in place — homepage video clicks stay on the page
+                  (Josh, 2026-08-19). */}
+              <InlineYouTube ytId={v.id} title={v.title} className="th">
                 <Image src={v.thumbnail} alt="" fill sizes="(max-width:760px) 50vw, 300px" style={{ objectFit: "cover" }} />
                 <span className="pl"><span>▶</span></span>
-              </span>
+              </InlineYouTube>
               <div className="pad">
                 <h4>{v.title.replace(TITLE_SUFFIX, "")}</h4>
                 <div className="d">{formatDate(v.published)} · Full Episode</div>
               </div>
-            </a>
+            </div>
           ))}
         </div>
         <div className="actions">
@@ -52,10 +55,10 @@ export function ShortsStrip({ shorts }: { shorts: { id: string; title: string }[
         </div>
         <div className="shorts">
           {shorts.slice(0, 6).map((s) => (
-            <a className="short" href={`https://www.youtube.com/shorts/${s.id}`} target="_blank" rel="noopener" key={s.id}>
+            <InlineYouTube ytId={s.id} title={s.title} className="short" key={s.id}>
               <Image src={`https://i.ytimg.com/vi/${s.id}/oardefault.jpg`} alt="" fill sizes="(max-width:760px) 50vw, 200px" style={{ objectFit: "cover" }} />
               <span className="cap">{s.title}</span>
-            </a>
+            </InlineYouTube>
           ))}
         </div>
       </div>

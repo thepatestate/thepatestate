@@ -5,7 +5,7 @@ import EmptyState from "@/components/EmptyState";
 import PreseasonChip from "@/components/PreseasonChip";
 import RelTime from "@/components/RelTime";
 import { DEMO_MODE } from "@/lib/demo";
-import { getRecruitingRankings } from "@/lib/cfbd";
+import { getRecruitingRankings, getRecruitingPlayers } from "@/lib/cfbd";
 import { getWireItems, getWireStories, type SanityWireItem, type SanityWireStory } from "@/lib/sanity";
 import { teamLogoUrl } from "@/lib/teams-meta";
 
@@ -106,8 +106,9 @@ const DEMO_FLIP_WATCH = [
 const FEED_ART = ["p1", "p4", "p3", "p2", "p5", "p6"] as const;
 
 export default async function RecruitingPage() {
-  const [board, allStories, allItems] = await Promise.all([
+  const [board, playerIndex, allStories, allItems] = await Promise.all([
     getRecruitingRankings().catch(() => null),
+    getRecruitingPlayers(12).catch(() => null),
     getWireStories(24).catch(() => [] as SanityWireStory[]),
     getWireItems(40).catch(() => [] as SanityWireItem[]),
   ]);
@@ -174,7 +175,8 @@ export default async function RecruitingPage() {
         <div className="cats">
           <a className="cat on" href="#feed">Latest</a>
           <a className="cat" href="#class-board">The Class Board</a>
-          {board && <a className="cat" href="#full-top-25">Full Top 25</a>}
+          {playerIndex && <a className="cat" href="#player-index">Player Rankings</a>}
+          {board && <a className="cat" href="#full-top-25">The Full Board</a>}
           <a className="cat" href="#portal">The Portal</a>
           <Link className="cat" href="/wire">The Wire</Link>
           <Link className="cat" href="/teams">Teams</Link>
@@ -281,7 +283,7 @@ export default async function RecruitingPage() {
                     <span className="n"><b>{t.points.toFixed(1)}</b> 247 pts</span>
                   </div>
                 ))}
-                <a className="rf" href="#full-top-25">Full Top 25 ↓</a>
+                <a className="rf" href="#full-top-25">The Full Board — Every Ranked Team ↓</a>
               </>) : DEMO_MODE ? (<>
                 <div className="empty-pad" style={{ paddingBottom: 0 }}><PreseasonChip /></div>
                 {DEMO_CLASS_BOARD.map((t) => {
@@ -334,16 +336,53 @@ export default async function RecruitingPage() {
         </div>
       </div></section>
 
-      {/* Full top 25 — the complete real board the rail links to */}
+      {/* Player Index — sits below the Class Board, leads to its own page
+          (Josh, 2026-08-19). Real 247Sports Composite player rankings. */}
+      {playerIndex && (
+        <section className="pindex" id="player-index"><div className="wrap">
+          <div className="p-head">
+            <span className="eb">The Class of {playerIndex.year}</span>
+            <h3>The Player Index</h3>
+            <Link href="/recruiting/players">Top 100 · By Position →</Link>
+          </div>
+          <table className="rank-table players">
+            <thead>
+              <tr><th>RK</th><th>Player</th><th>POS</th><th>HT / WT</th><th>Hometown</th><th>Committed</th></tr>
+            </thead>
+            <tbody>
+              {playerIndex.players.map((p) => (
+                <tr key={p.ranking}>
+                  <td className="rk">{String(p.ranking).padStart(2, "0")}</td>
+                  <td><span className="tcell"><b>{p.name}</b><span className="stars">{"★".repeat(p.stars)}</span></span></td>
+                  <td className="conf">{p.position}</td>
+                  <td className="conf">{p.heightIn ? `${Math.floor(p.heightIn / 12)}'${p.heightIn % 12}"` : "—"}{p.weightLb ? ` · ${p.weightLb}` : ""}</td>
+                  <td className="conf">{p.city && p.state ? `${p.city}, ${p.state}` : p.state || "—"}</td>
+                  <td>
+                    <span className="tcell">
+                      {p.committedLogo && <Image src={p.committedLogo} alt="" width={20} height={20} style={{ objectFit: "contain" }} />}
+                      {p.committedTo ?? "Uncommitted"}
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <Link className="pindex-more" href="/recruiting/players">See the Top 100 — filter by position, sort by school →</Link>
+        </div></section>
+      )}
+
+      {/* Full board — every ranked team, the rail links here */}
       {board && (
         <section className="fullrank" id="full-top-25"><div className="wrap">
-          <p className="fh2">The Full Top 25 — Class of {board.year}</p>
+          <p className="fh2">The Full Board — Every Ranked Team, Class of {board.year}</p>
           <table className="rank-table">
             <thead>
               <tr><th>RK</th><th>Team</th><th>Conference</th><th style={{ textAlign: "right" }}>247 PTS</th></tr>
             </thead>
             <tbody>
-              {board.ranks.map((r) => (
+              {/* FBS only — CFBD ranks FCS classes too; the directory join
+                  (conference present) is the FBS membership test. */}
+              {board.ranks.filter((r) => r.conference).map((r) => (
                 <tr key={r.rank}>
                   <td className="rk">{String(r.rank).padStart(2, "0")}</td>
                   <td>

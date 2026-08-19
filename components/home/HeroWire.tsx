@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import InlineYouTube from "@/components/InlineYouTube";
 import type { Video } from "@/lib/youtube";
 import type { SanityWireItem } from "@/lib/sanity";
 import { formatDate } from "@/lib/format";
@@ -17,15 +18,17 @@ export default function HeroWire({ featured, wire }: {
       <div className="wrap">
         <div className="top-grid">
           {featured && (
-            <a className="hero" href={`https://www.youtube.com/watch?v=${featured.id}`} target="_blank" rel="noopener">
-              <div className="thumb">
+            <div className="hero">
+              {/* Plays in place — homepage video clicks stay on the page
+                  (Josh, 2026-08-19). */}
+              <InlineYouTube ytId={featured.id} title={featured.title} className="thumb">
                 <Image src={featured.thumbnail} alt="" fill sizes="(max-width:1080px) 100vw, 780px" style={{ objectFit: "cover" }} priority />
                 <span className="tag">Today&apos;s Show</span>
                 <div className="playbtn"><span>▶</span></div>
-              </div>
+              </InlineYouTube>
               <h1>{featured.title.replace(/ - Josh Pate's College Football Show/i, "")}</h1>
               <span className="by">Josh Pate · {formatDate(featured.published)} · ▶ Watch</span>
-            </a>
+            </div>
           )}
           {wire.length > 0 && (
             <div className="lw lwA">
@@ -39,12 +42,11 @@ export default function HeroWire({ featured, wire }: {
                       <h4>{w.headline}</h4>
                       <span className="c">
                         {w.category ?? "News"}
-                        {/* Headlines never leave the site (client directive
-                            2026-08-17); outbound credit is a small explicit
-                            chip on storyless items only. */}
-                        {!w.storySlug && w.sourceUrl && (
-                          <> · <a href={w.sourceUrl} target="_blank" rel="noopener" style={{ color: "var(--gold-dk)" }}>via {w.sourceOutlet ?? "source"} ↗</a></>
-                        )}
+                        {/* Nothing in this section leaves the site (Josh,
+                            2026-08-19 — the Latest rail was "leading people
+                            away"). Outbound credit is plain text; the linked
+                            citation lives inside the full story only. */}
+                        {!w.storySlug && w.sourceOutlet && <> · via {w.sourceOutlet}</>}
                       </span>
                     </div>
                   </>

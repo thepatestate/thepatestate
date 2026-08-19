@@ -165,8 +165,10 @@ export interface RecruitingRank {
 
 /** National team recruiting rankings (247Sports Composite via CFBD) for the
  * newest published cycle — tries the current class first, then falls back to
- * the last complete one. null when no cycle is available. */
-export async function getRecruitingRankings(): Promise<{ year: number; ranks: RecruitingRank[] } | null> {
+ * the last complete one. null when no cycle is available. Returns every
+ * ranked team by default (Josh, 2026-08-19: the board goes past a top 25);
+ * pass `limit` to trim. */
+export async function getRecruitingRankings(limit = Infinity): Promise<{ year: number; ranks: RecruitingRank[] } | null> {
   for (const year of [2027, 2026]) {
     const rows = await cfbd<{ rank: number; team: string; points: number }[]>(
       `/recruiting/teams?year=${year}`,
@@ -176,7 +178,7 @@ export async function getRecruitingRankings(): Promise<{ year: number; ranks: Re
       const dir = await getTeamDirectory();
       return {
         year,
-        ranks: rows.slice(0, 25).map((r) => {
+        ranks: rows.slice(0, limit === Infinity ? rows.length : limit).map((r) => {
           const slug = slugifyTeam(r.team);
           return {
             rank: r.rank,
@@ -188,6 +190,73 @@ export async function getRecruitingRankings(): Promise<{ year: number; ranks: Re
           };
         }),
       };
+    }
+  }
+  return null;
+}
+
+// --- Recruiting player rankings (paid CFBD tier) ---------------------------
+
+export interface RecruitPlayer {
+  ranking: number;
+  name: string;
+  position: string;
+  stars: number;
+  rating: number;
+  heightIn: number | null;
+  weightLb: number | null;
+  city: string;
+  state: string;
+  highSchool: string;
+  committedTo: string | null;
+  committedSlug: string | null;
+  committedLogo: string | null;
+}
+
+/** National player recruiting rankings (247Sports Composite via CFBD) for
+ * the newest published high-school cycle — same year-fallback pattern as the
+ * team board. null when no cycle is available. */
+export async function getRecruitingPlayers(limit = 100): Promise<{ year: number; players: RecruitPlayer[] } | null> {
+  interface Row {
+    ranking: number | null;
+    name: string;
+    school: string | null;
+    committedTo: string | null;
+    position: string | null;
+    height: number | null;
+    weight: number | null;
+    stars: number | null;
+    rating: number | null;
+    city: string | null;
+    stateProvince: string | null;
+  }
+  for (const year of [2027, 2026]) {
+    const rows = await cfbd<Row[]>(`/recruiting/players?year=${year}&classification=HighSchool`, 86400);
+    if (rows && rows.length >= 100) {
+      const dir = await getTeamDirectory();
+      const players = rows
+        .filter((r) => typeof r.ranking === "number" && r.name)
+        .sort((a, b) => (a.ranking ?? 0) - (b.ranking ?? 0))
+        .slice(0, limit)
+        .map((r) => {
+          const committedSlug = r.committedTo ? slugifyTeam(r.committedTo) : null;
+          return {
+            ranking: r.ranking as number,
+            name: r.name,
+            position: r.position ?? "ATH",
+            stars: r.stars ?? 0,
+            rating: r.rating ?? 0,
+            heightIn: r.height ?? null,
+            weightLb: r.weight ?? null,
+            city: r.city ?? "",
+            state: r.stateProvince ?? "",
+            highSchool: r.school ?? "",
+            committedTo: r.committedTo,
+            committedSlug,
+            committedLogo: committedSlug ? (dir[committedSlug]?.logo ?? null) : null,
+          };
+        });
+      return { year, players };
     }
   }
   return null;

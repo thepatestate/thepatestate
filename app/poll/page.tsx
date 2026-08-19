@@ -19,6 +19,7 @@ import {
 import { createClient as createServerClient, getCitizen } from "@/lib/supabase/server";
 import { getPublishedArticles, type SanityArticle } from "@/lib/sanity";
 import { getVideos, isEpisode, videoUrl } from "@/lib/youtube";
+import { JOSH_BRACKET_FIELD, JOSH_BRACKET_ARTICLE, JOSH_BRACKET_FINAL } from "@/lib/josh-bracket";
 
 export const metadata: Metadata = {
   title: "The JP Poll — The People's Top 25",
@@ -139,6 +140,42 @@ export default async function PollPage() {
           )}
         </div>
       </div>
+
+      {/* ── JOSH'S BOARD (the JP Poll proper — his rankings, on the record;
+          Josh 2026-08-19: "I don't see the JP Poll (Josh's rankings) on the
+          JP Poll page." Interim content is his published playoff bracket;
+          the full preseason Top 25 slots in here when he sends it.) ── */}
+      <section className="jboard">
+        <div className="wrap">
+          <div className="jb-head">
+            <div>
+              <span className="k">📋 Josh&apos;s Board</span>
+              <h2>The JP Poll — Josh&apos;s Rankings</h2>
+              <p>
+                Josh&apos;s full preseason Top 25 drops with the Field Manual the week before kickoff.
+                Until then, his playoff field is on the record — seeded, argued, and locked since August.
+              </p>
+            </div>
+            <Link className="jb-link" href={JOSH_BRACKET_ARTICLE}>Read the Bracket Argument →</Link>
+          </div>
+          <div className="jb-grid">
+            {JOSH_BRACKET_FIELD.map((t) => {
+              const logo = teamLogo(t.slug);
+              return (
+                <div className="jb-row" key={t.slug}>
+                  <span className="rk">{t.seed}</span>
+                  {logo && <Image src={logo} alt="" width={24} height={24} />}
+                  <span className="tn">{t.name}</span>
+                  <span className={`note ${t.note}`}>{t.note === "bye" ? "BYE" : t.note.toUpperCase()}</span>
+                </div>
+              );
+            })}
+          </div>
+          <div className="jb-foot">
+            Champion, on the record: <b>Georgia</b> — {JOSH_BRACKET_FINAL}. Graded in January, receipts kept.
+          </div>
+        </div>
+      </section>
 
       {/* ── HERO: THE JP BOARD (live citizen votes, real math) ── */}
       <section className="hero">

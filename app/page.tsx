@@ -5,6 +5,7 @@ import { getSlateGames, getTeamDirectory } from "@/lib/cfbd";
 import { getThreads, publicClient } from "@/lib/community";
 import { getLatestPublished, getBoardResults } from "@/lib/jp-poll";
 import { teamLogoUrl } from "@/lib/teams-meta";
+import { JOSH_BRACKET_FIELD } from "@/lib/josh-bracket";
 import ScoresTicker from "@/components/home/ScoresTicker";
 import HeroWire from "@/components/home/HeroWire";
 import ShowSectionV5, { ShortsStrip } from "@/components/home/ShowSectionV5";
@@ -37,13 +38,14 @@ export default async function Home() {
   const featured = episodes[0] ?? videos[0] ?? null;
   const showEpisodes = episodes.filter((v) => v.id !== featured?.id);
 
-  // Bracket-preview seeds: JP board top 8, named via the team directory.
+  // Bracket-preview seeds: JP board top 8 when one is published; otherwise
+  // Josh's on-the-record preseason bracket (Josh, 2026-08-19: the bracket
+  // card always shows a bracket, never an empty slot).
   let seeds: BracketSeed[] = [];
+  let seedSource: "poll" | "josh" = "poll";
+  const dir = await getTeamDirectory().catch(() => ({}) as Awaited<ReturnType<typeof getTeamDirectory>>);
   if (jpBoard) {
-    const [results, dir] = await Promise.all([
-      getBoardResults(jpBoard.id).catch(() => []),
-      getTeamDirectory().catch(() => ({}) as Awaited<ReturnType<typeof getTeamDirectory>>),
-    ]);
+    const results = await getBoardResults(jpBoard.id).catch(() => []);
     seeds = results.slice(0, 8).map((r) => ({
       slug: r.team_slug,
       seed: r.rank,
@@ -51,6 +53,15 @@ export default async function Home() {
       logo: dir[r.team_slug]?.logo ?? teamLogoUrl(r.team_slug),
     }));
     if (seeds.length !== 8) seeds = [];
+  }
+  if (seeds.length !== 8) {
+    seedSource = "josh";
+    seeds = JOSH_BRACKET_FIELD.slice(0, 8).map((t) => ({
+      slug: t.slug,
+      seed: t.seed,
+      name: dir[t.slug]?.abbrev ?? t.name,
+      logo: dir[t.slug]?.logo ?? teamLogoUrl(t.slug),
+    }));
   }
 
   return (
@@ -65,6 +76,7 @@ export default async function Home() {
         stack={articles.slice(1, 5)}
         trending={articles.slice(5, 10).length >= 3 ? articles.slice(5, 10) : articles.slice(0, 5)}
         seeds={seeds}
+        seedSource={seedSource}
       />
       <PorchSection threads={threads} />
       <ShortsStrip shorts={shorts} />

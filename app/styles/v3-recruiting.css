@@ -192,3 +192,17 @@
   .v5.pg-recruiting .nb-row .dek{display:none}
   .v5.pg-recruiting .pgrid{grid-template-columns:1fr}
 }
+
+/* ── The Player Index (2026-08-19) ── */
+.v5.pg-recruiting .pindex{padding:26px 0 10px}
+.v5.pg-recruiting .pindex .p-head{display:flex;align-items:baseline;gap:14px;margin-bottom:12px}
+.v5.pg-recruiting .pindex .p-head h3{font:800 22px/1.1 var(--slab)}
+.v5.pg-recruiting .pindex .p-head .eb{font:800 10.5px/1 var(--cond);letter-spacing:.15em;text-transform:uppercase;color:var(--gold-dk,#8a6a1f)}
+.v5.pg-recruiting .pindex .p-head a{margin-left:auto;font:800 11.5px/1 var(--cond);letter-spacing:.1em;text-transform:uppercase;color:var(--gold-dk,#8a6a1f)}
+.v5.pg-recruiting .rank-table.players .stars{color:var(--gold-dk,#8a6a1f);font-size:11px;margin-left:8px;letter-spacing:.1em}
+.v5.pg-recruiting .rank-table.players .tcell b{font-weight:700}
+.v5.pg-recruiting .pindex-more{display:inline-block;margin-top:12px;font:800 12px/1 var(--cond);letter-spacing:.1em;text-transform:uppercase;color:var(--gold-dk,#8a6a1f)}
+.v5.pg-recruiting .pos-pills{display:flex;flex-wrap:wrap;gap:7px;margin:4px 0 14px}
+.v5.pg-recruiting .pos-pills .pill{font:800 11px/1 var(--cond);letter-spacing:.1em;text-transform:uppercase;padding:8px 13px;border:1px solid var(--line-l);border-radius:99px;background:#fff;color:var(--mut);cursor:pointer}
+.v5.pg-recruiting .pos-pills .pill.on{background:var(--gold,#C9A227);border-color:var(--gold,#C9A227);color:#1b1607}
+@media (max-width:760px){.v5.pg-recruiting .rank-table.players th:nth-child(6),.v5.pg-recruiting .rank-table.players td:nth-child(6){display:none}}

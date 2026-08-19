@@ -4,6 +4,7 @@ import { getLatestPublished, getBoardResults, getBallotCount, type JpBoard, type
 import { getCompetitions, getLeaderboard, getEntryCount, type Competition, type PlayEntry } from "@/lib/play";
 import { getTeamDirectory } from "@/lib/cfbd";
 import { teamLogoUrl } from "@/lib/teams-meta";
+import { JOSH_BRACKET_FIELD } from "@/lib/josh-bracket";
 
 // v25 "The People's Games": the JP Poll card shows the LIVE board top 5 when
 // one is published; the Pick'Em card shows the real leaderboard once scores
@@ -52,8 +53,8 @@ export default async function PeoplesGames() {
         </div>
         <div className="duo">
           <div className="card-poll">
-            <div className="gc-k">🗳 The JP Poll</div>
-            <div className="gc-title">{poll ? `The People's Top 25 — ${poll.board.label}` : "The People's Power Ranking"}</div>
+            <div className="gc-k">🗳 The People&apos;s Power Ranking</div>
+            <div className="gc-title">{poll ? `The People's Top 25 — ${poll.board.label}` : "Rank Your Top 10. Stack Up Against Josh, the Coaches, and the Press."}</div>
             {poll ? (
               <>
                 <div className="gc-sub">
@@ -76,11 +77,21 @@ export default async function PeoplesGames() {
               </>
             ) : (
               <>
-                <div className="gc-sub">One board, voted by those who actually watch, revealed every Tuesday.</div>
+                <div className="gc-sub">One board, voted by those who actually watch, revealed every Tuesday — with every disagreement vs. Josh, the AP, and the Coaches marked in gold.</div>
+                {/* Real data, not invented ballots: Josh's on-the-record
+                    preseason top seeds as the argument-starter. */}
+                <div className="jt5">
+                  <span className="jt5-k">Josh&apos;s top 5, on the record:</span>
+                  <span className="jt5-row">
+                    {JOSH_BRACKET_FIELD.slice(0, 5).map((t) => {
+                      const logo = dir[t.slug]?.logo ?? teamLogoUrl(t.slug);
+                      return logo ? <Image src={logo} alt={t.name} title={`${t.seed}. ${t.name}`} width={30} height={30} key={t.slug} /> : null;
+                    })}
+                  </span>
+                  <span className="jt5-q">Think he&apos;s wrong? Put it on a ballot.</span>
+                </div>
                 <div className="gc-row"><b>Open Now</b> Ballots are live — every citizen ranks a top 10</div>
-                <div className="gc-row"><b>Sun 8PM ET</b> Ballots lock, the board tabulates overnight</div>
                 <div className="gc-row"><b>Tuesday</b> The reveal airs live on the show, argued out</div>
-                <div className="gc-row"><b>In Gold</b> Every disagreement vs. the AP, Coaches, and CFP — marked</div>
               </>
             )}
             <Link className="gc-btn" href="/poll#ballot">Add Your Ballot to the Board →</Link>
@@ -109,9 +120,14 @@ export default async function PeoplesGames() {
                   Pick against Josh and the whole State. Build a streak. Earn your patches.
                   {pick && pick.entries > 0 ? ` ${pick.entries.toLocaleString()} citizens already in.` : ""}
                 </div>
-                <div className="gc-row"><b>Weekly</b> Best score wins merch + a shoutout on Monday&apos;s show</div>
-                <div className="gc-row"><b>Monthly</b> Top citizen gets a signed Pate Report + Poll Day spotlight</div>
-                <div className="gc-row"><b>Top 10</b> Finish the season top 10 — game tickets covered</div>
+                {/* The podium is real the moment Week 1 scores — until then
+                    the medals show what's at stake, never invented names. */}
+                <div className="lb podium-preview">
+                  <div className="lb-r"><span className="med">🥇</span><span className="who open">Gold — open until Week 1 scores</span><span className="rec">Merch + Monday shoutout</span></div>
+                  <div className="lb-r"><span className="med">🥈</span><span className="who open">Silver — the podium fills fast</span><span className="rec">Signed Pate Report</span></div>
+                  <div className="lb-r"><span className="med">🥉</span><span className="who open">Bronze — somebody&apos;s spot</span><span className="rec">Poll Day spotlight</span></div>
+                  <div className="lb-r you"><span className="med">—</span><span className="who">You</span><span className="rec">Make your picks →</span></div>
+                </div>
                 <div className="gc-row"><b>Champion</b> Watches a game with Josh · name on the Wall, forever</div>
               </>
             )}

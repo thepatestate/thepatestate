@@ -32,11 +32,12 @@ export interface BracketSeed {
   seed: number;
 }
 
-export default function NotebookTrending({ lead, stack, trending, seeds }: {
+export default function NotebookTrending({ lead, stack, trending, seeds, seedSource = "poll" }: {
   lead: SanityArticle | null;
   stack: SanityArticle[];
   trending: SanityArticle[];
   seeds: BracketSeed[];
+  seedSource?: "poll" | "josh";
 }) {
   const art = createArtPicker();
   const leadImg = lead?.heroUrl ? { src: lead.heroUrl, alt: lead.headline } : art.pick("weekend-truths");
@@ -124,7 +125,7 @@ export default function NotebookTrending({ lead, stack, trending, seeds }: {
             <div className="rail-brkt">
               <div className="rb-k">
                 🏆 Playoffs · Free to Play
-                <span className="rb-preview">{bracketReady ? "Seeded by the JP Poll" : "Bracket Preview"}</span>
+                <span className="rb-preview">{seedSource === "poll" ? "Seeded by the JP Poll" : "Josh's Preseason Bracket"}</span>
               </div>
               <h4>Pick the Playoff. Call Your Champ.</h4>
               <p className="rb-sub">Build your bracket and see how you stack up against Josh and the State.</p>
@@ -157,7 +158,7 @@ export default function NotebookTrending({ lead, stack, trending, seeds }: {
                       </div>
                     ))}
                   </div>
-                  <div className="brk-hint">Tap in to make your first pick</div>
+                  <div className="brk-hint">{seedSource === "josh" ? "Josh's field, on the record — tap in and argue with it" : "Tap in to make your first pick"}</div>
                 </Link>
               )}
               <Link className="rb-go" href="/playoffs">Build My Bracket →</Link>
