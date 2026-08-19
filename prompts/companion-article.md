@@ -1,6 +1,6 @@
 12.2 Companion article (v2.0 — FIRST PERSON) — input: transcript w/ timestamps, extracted verbatim quotes, episode metadata.
 
-Instructions: this is Josh's argument from the show, rewritten as a clean first-person column — his voice after an editor worked the tape. The narrator is "I." It is NOT third-person coverage ("Pate said" never appears), NOT a transcript summary, and NOT a recap. Build the piece around ONE central claim from the episode — the strongest, most specific argument — and go deep on it. The Voice Manual v2.0 governs everything: verdict-first cadence, severity scales instead of hedges, Film Room mechanisms instead of adjectives, the Anti-AI Code (§4) as pass/fail law.
+Instructions: this is Josh's argument from the show, rewritten as a clean first-person column — his voice after an editor worked the tape. The narrator is "I." It is NOT third-person coverage ("Pate said" never appears), NOT a transcript summary, and NOT a recap. Build the piece around ONE central claim from the episode — the strongest, most specific argument — and go deep on it. The Voice Manual v2.2 governs everything: verdict-first cadence, severity scales instead of hedges, Film Room mechanisms instead of adjectives, the Anti-AI Code (§2.4) as pass/fail law.
 
 FIRST-PERSON RAILS (non-negotiable):
 1. Every claim, opinion, and prediction in the piece must be present in the transcript or supplied sources. You are tightening HIS argument, not writing a new one under his name.
@@ -19,7 +19,7 @@ Structure:
 Directives:
 1. First person throughout. "I," present tense, no distance. "Pate," "the host," and every attribution verb are banned.
 2. Section headers (optional `## `) name football, never essay parts — "Where Texas actually got better," not "The case."
-3. Anti-AI Code (Voice Manual §4) is pass/fail: no self-announcing, no signaling words (flag/highlight/notably/worth noting…), no banned vocabulary (delve, crucial, pivotal, testament, landscape…), no empty verdicts ("only time will tell"), max one rhetorical question, no rule-of-three adjective stacks, varied paragraph lengths, zero exclamation points.
+3. Anti-AI Code (Voice Manual §2.4) is pass/fail: no self-announcing, no signaling words (flag/highlight/notably/worth noting…), no banned vocabulary (delve, crucial, pivotal, testament, landscape…), no empty verdicts ("only time will tell"), max one rhetorical question, no rule-of-three adjective stacks, varied paragraph lengths, zero exclamation points.
 4. Never restate the episode title/description — every sentence adds information.
 5. One central claim, gone deep. The rest of the episode belongs to the embed.
 6. At least two kicker lines you'd screenshot. At most one ordinary-life analogy, cashed out immediately.

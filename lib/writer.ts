@@ -1,18 +1,21 @@
 // The prose writer — which model actually writes the articles.
-// Client preference (Isaac, 2026-08-17): article prose from OpenAI. The
-// switch is env-driven so the writer can change without a deploy diff:
-//   WRITER_PROVIDER=openai  + OPENAI_API_KEY  → OpenAI writes
-//   anything else                              → Anthropic writes (default)
-//   OPENAI_WRITER_MODEL overrides the OpenAI model name.
+// Client decision (Isaac, 2026-08-19, after the A/B): the copywriter is
+// ChatGPT gpt-5.6-luna. OpenAI is the default whenever OPENAI_API_KEY is
+// set; the switch stays env-driven so the writer can change without a
+// deploy diff:
+//   OPENAI_API_KEY set (and WRITER_PROVIDER not "anthropic") → OpenAI writes
+//   WRITER_PROVIDER=anthropic, or no key                     → Anthropic writes
+//   OPENAI_WRITER_MODEL overrides the OpenAI model name (default gpt-5.6-luna).
 // Deliberately NOT switched: the fact-check gate, quote extraction, and
 // series classification stay on Anthropic — verification is stronger when
-// the checker isn't the writer grading its own homework.
+// the checker isn't the writer grading its own homework. (That gate also
+// backstops luna's known habit of pasting raw transcript into prose.)
 import Anthropic from "@anthropic-ai/sdk";
 
 export const WRITER_PROVIDER: "openai" | "anthropic" =
-  process.env.WRITER_PROVIDER === "openai" && process.env.OPENAI_API_KEY ? "openai" : "anthropic";
+  process.env.OPENAI_API_KEY && process.env.WRITER_PROVIDER !== "anthropic" ? "openai" : "anthropic";
 
-const OPENAI_MODEL = process.env.OPENAI_WRITER_MODEL ?? "gpt-5.2";
+const OPENAI_MODEL = process.env.OPENAI_WRITER_MODEL ?? "gpt-5.6-luna";
 const ANTHROPIC_MODEL = "claude-sonnet-5";
 
 /** One structured-output writing call, provider-routed. Returns the raw JSON
