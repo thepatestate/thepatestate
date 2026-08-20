@@ -71,7 +71,9 @@ for (const r of targets) {
 
     const res = await anthropic.messages.create({
       model: "claude-sonnet-5",
-      max_tokens: 2048,
+      // 2048 truncated two multi-quote verdicts mid-string — effort-high
+      // reasoning shares this budget with the JSON answer.
+      max_tokens: 4096,
       output_config: {
         effort: "high",
         format: {

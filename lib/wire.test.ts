@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { titleKeywords, keywordOverlap, hasAttributionOpener, cleanHeadline } from "./wire";
+import { titleKeywords, keywordOverlap, hasAttributionOpener, cleanHeadline, headlineNamesOutlet } from "./wire";
 
 describe("wire clustering", () => {
   it("clusters same-story titles across outlets", () => {
@@ -50,5 +50,17 @@ describe("cleanHeadline", () => {
   });
   it("leaves clean headlines alone", () => {
     expect(cleanHeadline("Texas A&M to Unveil Statue Honoring R.C. Slocum")).toBe("Texas A&M to Unveil Statue Honoring R.C. Slocum");
+  });
+});
+
+describe("cleanHeadline leading-outlet strip", () => {
+  it("strips outlet-verb openers", () => {
+    expect(cleanHeadline("On3 Reports Five Oregon Players Raising Their Stock in Fall Camp")).toBe("Five Oregon Players Raising Their Stock in Fall Camp");
+    expect(cleanHeadline("ESPN: Rebuilt Pac-12 Aims to Be 'League of Its Own'")).toBe("Rebuilt Pac-12 Aims to Be 'League of Its Own'");
+    expect(cleanHeadline("Yahoo ranks Miami atop 2026 ACC power rankings")).toBe("Miami atop 2026 ACC power rankings");
+  });
+  it("flags mid-headline outlet mentions for real rewrite", () => {
+    expect(headlineNamesOutlet("Miami\u2019s New Quarterback Headlines Yahoo Sports\u2019 ACC Transfer List")).toBe(true);
+    expect(headlineNamesOutlet("Texas A&M to Unveil Statue Honoring R.C. Slocum")).toBe(false);
   });
 });

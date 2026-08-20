@@ -34,7 +34,10 @@ export default function HeroWire({ featured, wire }: {
             <div className="lw lwA">
               <div className="col-title">Latest</div>
               <div className="col-sub"><span className="lv">Live</span> What&apos;s happening now · from The Wire</div>
-              {wire.slice(0, 5).map((w, i) => {
+              {/* Homepage shows ONLY clickable items (Josh via Isaac,
+                  2026-08-20: no dead headlines on the main page). Storyless
+                  items still appear on /wire as unlinked text. */}
+              {wire.filter((w) => w.storySlug).slice(0, 5).map((w, i) => {
                 const inner = (
                   <>
                     <span className={i === 0 ? "tmchip hot" : "tmchip"}><RelTime iso={w.publishedAt} short /></span>

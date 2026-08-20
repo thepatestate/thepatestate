@@ -242,11 +242,30 @@ const BANNED_PATTERNS = [
  * fields (renders as literal asterisks) and trailing outlet leans ("…, per
  * On3") that the prose gate can't see. Applied to every item and story
  * headline. Exported for tests. */
+const OUTLET_NAMES = "(?:On3|ESPN|Yahoo(?:\\s+Sports)?|CBS(?:\\s+Sports)?|247Sports|Athlon(?:\\s+Sports)?|Rivals)";
+
 export function cleanHeadline(h: string): string {
-  return h
+  let out = h
     .replace(/\*\*?/g, "")
     .replace(/,?\s+(per|according to|via)\s+[A-Za-z0-9 .&'’]+$/i, "")
+    // "On3 Reports Five Oregon Players…" / "ESPN: Rebuilt Pac-12…" — the
+    // news is the subject, never the outlet (Josh via Isaac, 2026-08-20).
+    .replace(
+      new RegExp(
+        `^${OUTLET_NAMES}[’']?s?:?\\s*(?:report(?:s|ed)?|detail(?:s|ed)?|examin(?:es|ed)|project(?:s|ed)?|update(?:s|d)?|publish(?:es|ed)?|breaks?\\s+down|broke\\s+down|list(?:s|ed)?|name(?:s|d)?|rank(?:s|ed)?|grade(?:s|d)?|flag(?:s|ged)?|pick(?:s|ed)?|preview(?:s|ed)?|release(?:s|d)?|say(?:s)?|note(?:s|d)?)?\\s*`,
+        "i",
+      ),
+      "",
+    )
     .trim();
+  if (out && out !== h.trim()) out = out.charAt(0).toUpperCase() + out.slice(1);
+  return out;
+}
+
+/** True when a headline still names an outlet after cleaning — those need a
+ * real rewrite, not a regex strip. Exported for the archive pass + tests. */
+export function headlineNamesOutlet(h: string): boolean {
+  return new RegExp(`\\b${OUTLET_NAMES}\\b`, "i").test(h);
 }
 
 export function hasAttributionOpener(text: string): boolean {
@@ -381,19 +400,24 @@ export async function backfillWireStories(limit = 20): Promise<{
   summary.candidates = items.length;
   for (const item of items) {
     try {
+      // Attempt cap: a story that failed verification 3 times isn't going
+      // to pass on identical grounding — stop paying for retries. The
+      // counter lives on the cluster row.
+      const { data: cl } = await db
+        .from("wire_clusters")
+        .select("id, source_text, backfill_attempts")
+        .eq("item_id", item._id)
+        .maybeSingle();
+      if ((cl?.backfill_attempts ?? 0) >= 3) {
+        summary.skipped.push(`attempts:${item._id.slice(9, 49)}`);
+        continue;
+      }
       const outlets = item.sourceOutlets?.length ? item.sourceOutlets : ["the original report"];
       const urls = item.sourceUrls ?? [];
       const texts = await Promise.all(urls.slice(0, 2).map(fetchSourceText));
       // Outlets that block our fetcher (On3) leave texts empty — fall back
       // to the feed article text stored on the cluster at detection time.
-      if (!texts.some(Boolean)) {
-        const { data: cl } = await db
-          .from("wire_clusters")
-          .select("source_text")
-          .eq("item_id", item._id)
-          .maybeSingle();
-        if (cl?.source_text) texts[0] = cl.source_text;
-      }
+      if (!texts.some(Boolean) && cl?.source_text) texts[0] = cl.source_text;
       const sourceBlock = outlets
         .map((o, i) => {
           const body = texts[i] || texts[0] || item.sub || "";
@@ -411,7 +435,15 @@ export async function backfillWireStories(limit = 20): Promise<{
         itemId: item._id,
       });
       if (result === "ok") summary.stories++;
-      else summary.skipped.push(result);
+      else {
+        summary.skipped.push(result);
+        if (cl?.id) {
+          await db
+            .from("wire_clusters")
+            .update({ backfill_attempts: (cl.backfill_attempts ?? 0) + 1 })
+            .eq("id", cl.id);
+        }
+      }
     } catch (err) {
       console.error("[wire:backfill]", item._id, err);
       summary.skipped.push(`error:${item._id.slice(0, 40)}`);
@@ -574,6 +606,20 @@ export async function runWireMonitor(): Promise<{
     } catch (err) {
       console.error("[wire:cluster]", cluster.title.slice(0, 60), err);
       summary.skipped.push(`error:${cluster.title.slice(0, 40)}`);
+    }
+  }
+
+  // Self-heal (2026-08-20): leftover story budget converts the storyless
+  // backlog so dead headlines drain instead of accumulating between manual
+  // backfills. The attempt cap above keeps hopeless items from burning the
+  // budget every run.
+  if (summary.stories < MAX_STORIES_PER_RUN) {
+    try {
+      const extra = await backfillWireStories(MAX_STORIES_PER_RUN - summary.stories);
+      summary.stories += extra.stories;
+      summary.skipped.push(...extra.skipped.map((s) => `bf-${s}`));
+    } catch (err) {
+      console.error("[wire:selfheal]", err);
     }
   }
 
