@@ -56,7 +56,10 @@ export function ShortsStrip({ shorts }: { shorts: { id: string; title: string }[
         <div className="shorts">
           {shorts.slice(0, 6).map((s) => (
             <InlineYouTube ytId={s.id} title={s.title} className="short" key={s.id}>
-              <Image src={`https://i.ytimg.com/vi/${s.id}/oardefault.jpg`} alt="" fill sizes="(max-width:760px) 50vw, 200px" style={{ objectFit: "cover" }} />
+              {/* hqdefault exists for every video; oardefault 404s on some
+                  shorts and left a grey tile (site review 2026-08-20). The
+                  9:16 crop comes from objectFit on the 4:3 source. */}
+              <Image src={`https://i.ytimg.com/vi/${s.id}/hqdefault.jpg`} alt="" fill sizes="(max-width:760px) 50vw, 200px" style={{ objectFit: "cover" }} />
               <span className="cap">{s.title}</span>
             </InlineYouTube>
           ))}

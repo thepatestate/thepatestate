@@ -395,7 +395,9 @@ async function writeStoryFromSources(
       ? { joshReceipt: { quote: receipt.quote, ytId: receipt.yt_id, tsSeconds: receipt.ts_seconds } }
       : {}),
     readLabel: "THE PATE STATE READ",
-    readBody: story.readBody,
+    // The page renders the label as a heading — a "THE PATE STATE READ:"
+    // prefix inside the body doubled it on screen (site review 2026-08-20).
+    readBody: story.readBody.replace(/^\s*THE PATE STATE READ:?\s*/i, ""),
     whatsNext: story.whatsNext.slice(0, 3),
     sources: job.sources.slice(0, 6),
     publishedAt: new Date().toISOString(),
