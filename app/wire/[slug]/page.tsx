@@ -166,9 +166,11 @@ export default async function WireStoryPage({ params }: { params: Promise<{ slug
             >
               ▶ {receiptHref ? "Watch Josh's take" : "Watch the latest show"}
             </a>
+            {/* Source credit lives here — below the article, greyed, small,
+                italic (Josh via Isaac, 2026-08-20) — never in the prose. */}
             {story.sources && story.sources.length > 0 && (
-              <p style={{ fontFamily: "var(--mono)", fontSize: 12, color: "var(--ink-dim)" }}>
-                Sources:{" "}
+              <p style={{ fontSize: 11.5, fontStyle: "italic", color: "var(--ink-dim)", opacity: 0.85 }}>
+                Reported by{" "}
                 {story.sources.map((s, i) => (
                   <span key={i}>
                     {i > 0 && " · "}
@@ -183,9 +185,9 @@ export default async function WireStoryPage({ params }: { params: Promise<{ slug
                 ))}
               </p>
             )}
-            <p style={{ fontFamily: "var(--mono)", fontSize: 12, color: "var(--ink-dim)" }}>
-              This story was drafted by The Pate State&apos;s Wire Desk AI from the cited sources under the
-              site&apos;s verification rules, and is monitored by an editor — corrections are timestamped, never silent.
+            <p style={{ fontSize: 11.5, fontStyle: "italic", color: "var(--ink-dim)", opacity: 0.85 }}>
+              Drafted by The Pate State&apos;s Wire Desk AI from the cited sources under the site&apos;s
+              verification rules, monitored by an editor — corrections are timestamped, never silent.
             </p>
             <p style={{ fontSize: 14 }}>
               <Link href="/wire" style={{ color: "var(--gold, #E8A33D)" }}>← All wire coverage</Link>

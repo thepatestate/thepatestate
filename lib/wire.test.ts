@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { titleKeywords, keywordOverlap, hasAttribution } from "./wire";
+import { titleKeywords, keywordOverlap, hasAttributionOpener } from "./wire";
 
 describe("wire clustering", () => {
   it("clusters same-story titles across outlets", () => {
@@ -22,14 +22,20 @@ describe("wire clustering", () => {
   });
 });
 
-describe("§21 attribution enforcement", () => {
-  it("passes 'per ESPN' first sentences", () => {
-    expect(hasAttribution("Georgia's starting left tackle will miss six weeks, per ESPN's report. More context.", ["ESPN"])).toBe(true);
+describe("§21 attribution rule (flipped 2026-08-20: no in-prose attribution)", () => {
+  it("rejects 'Per X' openers", () => {
+    expect(hasAttributionOpener("Per On3's report, Kentucky will open in Week Zero. More context.")).toBe(true);
   });
-  it("passes official announcements", () => {
-    expect(hasAttribution("Ohio State officially announced a contract extension for its head coach.", ["ESPN"])).toBe(true);
+  it("rejects 'According to X' openers", () => {
+    expect(hasAttributionOpener("According to ESPN, Georgia's left tackle will miss six weeks.")).toBe(true);
   });
-  it("fails unattributed first sentences", () => {
-    expect(hasAttribution("Georgia's starting left tackle will miss six weeks. Everyone is sad.", ["ESPN"])).toBe(false);
+  it("rejects prose that narrates the report", () => {
+    expect(hasAttributionOpener("Kentucky moved its opener. The report notes the change helps travel.")).toBe(true);
+  });
+  it("passes plain factual openers", () => {
+    expect(hasAttributionOpener("Georgia's starting left tackle will miss six weeks. Everyone is sad.")).toBe(false);
+  });
+  it("passes official-announcement phrasing", () => {
+    expect(hasAttributionOpener("Ohio State officially announced a contract extension for its head coach.")).toBe(false);
   });
 });

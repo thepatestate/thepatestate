@@ -33,4 +33,5 @@ Mechanics:
 - Say it once: the thesis appears at the top and at the close, never in between. Every middle paragraph must add a NEW name, number, mechanism, or moment — a paragraph that restates the argument in different words gets cut before output.
 - Plain talk: front-porch vocabulary everywhere except football scheme terms (money not investment, close not proximity). No abstract-noun arguing (framework, narrative, calculus, referendum, paradigm). Would he say it out loud to a buddy at a tailgate? If not, rewrite it.
 - Exactly one [PULLQUOTE] marker; pullQuote field a verbatim transcript span per first-person rail 5 (thesis-matched, edge-trimmed).
+- At most 1–2 [QUOTE:ts]…[/QUOTE] blocks, each beside the paragraph arguing the same point, boundaries trimmed to the take (no ramp openers, no trailing fragments). Fewer, better-placed quotes beat coverage.
 - 1–3 [EMBED:HH:MM:SS] markers with a transcript.

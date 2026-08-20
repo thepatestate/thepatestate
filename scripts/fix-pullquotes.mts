@@ -86,7 +86,9 @@ for (const r of targets) {
 
     const res = await anthropic.messages.create({
       model: "claude-sonnet-5",
-      max_tokens: 512,
+      // 512 truncated two structured outputs mid-string (JSON parse FAILs) —
+      // effort-high reasoning shares this budget with the answer.
+      max_tokens: 2048,
       output_config: {
         effort: "high",
         format: {
@@ -143,6 +145,23 @@ Output valid JSON matching the schema, nothing else.`,
     }
     if (findNonVerbatimQuotes(`"${q}"`, transcript).length > 0) {
       console.log(`KEEP (not verbatim)   ${r._id}  candidate: "${q.slice(0, 70)}…"`);
+      kept++; continue;
+    }
+    // Thesis guard: a replacement must be at least as on-headline as the
+    // incumbent, unless the incumbent has a structural defect we can see
+    // locally (ramp opener / lowercase mid-sentence start). Caught by the
+    // Notre Dame case, where the judge swapped an on-thesis quote for a
+    // tangent.
+    const thesis = new Set(norm(`${r.headline} ${r.dek ?? ""}`).split(" ").filter((w) => w.length >= 4));
+    const overlap = (text: string) => {
+      const ws = new Set(norm(text).split(" ").filter((w) => w.length >= 4));
+      let hit = 0; for (const w of ws) if (thesis.has(w)) hit++;
+      return ws.size ? hit / ws.size : 0;
+    };
+    const oldQ = (r.pullQuote ?? "").trim();
+    const oldDefective = !oldQ || /^[a-z]/.test(oldQ) || /^(and|so|but|look|i mean|you know|now)\b/i.test(oldQ);
+    if (!oldDefective && overlap(q) < overlap(oldQ)) {
+      console.log(`KEEP (thesis guard)   ${r._id}  candidate less on-headline than incumbent`);
       kept++; continue;
     }
     if (q === (r.pullQuote ?? "").trim()) { console.log(`KEEP (unchanged)      ${r._id}`); kept++; continue; }

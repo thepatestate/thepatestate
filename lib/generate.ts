@@ -256,8 +256,11 @@ export async function draftCompanion(input: {
   const c = client();
   if (!c) return null;
   const system = `${prompt("global-preamble.md")}\n\n${prompt("companion-article.md")}`;
+  // 1–2 quotes, not 2–4 (Isaac, 2026-08-20: scattered quotes with ramp at
+  // the edges read disjointed) — each must anchor one of the article's
+  // highest-value passages and sit beside the prose arguing the same point.
   const quotesBlock = input.extractedQuotes?.length
-    ? `Extracted verbatim quotes (weave 2–4 in as [QUOTE:timestamp]…[/QUOTE]; pull_quote must be one of these word-for-word):\n${input.extractedQuotes
+    ? `Extracted verbatim quotes. Weave in AT MOST 1–2 — only the ones that anchor the article's highest-value argument — as [QUOTE:timestamp]…[/QUOTE], each placed immediately beside the paragraph making the same point (a quote whose neighbors argue something else is a defect; skip quotes rather than scatter them). Trim each to the take: no ramp opener, no trailing fragment — edge trims are free, interior cuts use " … ", never change a word inside. The pullQuote follows its own rail.\n${input.extractedQuotes
         .map((q, i) => `${i + 1}. [${q.timestamp}] "${q.quote}" (${q.topic}, heat ${q.heat})`)
         .join("\n")}`
     : null;

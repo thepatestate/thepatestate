@@ -22,7 +22,7 @@ const MAX_ITEMS_PER_RUN = 6;
 // feed here is a named national outlet, so the source-tier gate is inherent:
 // clusters can only ever contain claims from these outlets).
 const FEEDS: { outlet: string; url: string }[] = [
-  { outlet: "ESPN", url: "https://www.espn.com/espn/rss/ncf/news" },
+  // ESPN arrives via fetchEspnNews() (site API) — their RSS is abandoned.
   { outlet: "CBS Sports", url: "https://www.cbssports.com/rss/headlines/college-football/" },
   { outlet: "Yahoo Sports", url: "https://sports.yahoo.com/college-football/rss.xml" },
   // Josh, 2026-08-19: "We cannot just rely on Yahoo." On3's feed is
@@ -38,6 +38,10 @@ export interface FeedEntry {
   title: string;
   link: string;
   description: string;
+  /** Full article text when the feed provides it (content:encoded — On3's
+   * WordPress feed carries whole articles; their pages block our fetcher,
+   * so this is the only real grounding we get for On3 stories). */
+  content: string;
   pubDate: string;
 }
 
@@ -65,11 +69,43 @@ function tag(xml: string, name: string): string {
   return m ? decodeEntities(m[1]) : "";
 }
 
+/** ESPN killed meaningful RSS output (their ncf feed carries ~1 item), but
+ * the same site API the rest of the app already leans on has a live news
+ * endpoint. Video clips have no article text to ground a story in, so only
+ * real story links pass through. Fail-soft empty. */
+async function fetchEspnNews(): Promise<FeedEntry[]> {
+  try {
+    const res = await fetch(
+      "https://site.api.espn.com/apis/site/v2/sports/football/college-football/news?limit=20",
+      { signal: AbortSignal.timeout(10000), cache: "no-store" },
+    );
+    if (!res.ok) return [];
+    const data = (await res.json()) as {
+      articles?: { headline?: string; description?: string; published?: string; links?: { web?: { href?: string } } }[];
+    };
+    return (data.articles ?? [])
+      .filter((a) => a.headline && a.links?.web?.href && !a.links.web.href.includes("/video/"))
+      .slice(0, 15)
+      .map((a) => ({
+        outlet: "ESPN",
+        title: a.headline!,
+        link: a.links!.web!.href!,
+        description: (a.description ?? "").slice(0, 500),
+        content: "",
+        pubDate: a.published ?? "",
+      }));
+  } catch (err) {
+    console.error("[wire:feed]", "ESPN api", err);
+    return [];
+  }
+}
+
 /** Fetches and parses all monitored feeds. Per-feed fail-soft. */
 export async function fetchFeeds(): Promise<FeedEntry[]> {
   const out: FeedEntry[] = [];
-  await Promise.all(
-    FEEDS.map(async (feed) => {
+  await Promise.all([
+    fetchEspnNews().then((entries) => out.push(...entries)),
+    ...FEEDS.map(async (feed) => {
       try {
         const res = await fetch(feed.url, {
           headers: { "user-agent": "PateStateWire/1.0 (+https://thepatestate.com)" },
@@ -87,14 +123,15 @@ export async function fetchFeeds(): Promise<FeedEntry[]> {
             title,
             link: tag(raw, "link") || tag(raw, "guid"),
             description: tag(raw, "description").slice(0, 500),
+            content: tag(raw, "content:encoded").slice(0, 2400),
             pubDate: tag(raw, "pubDate"),
           });
         }
       } catch (err) {
         console.error("[wire:feed]", feed.outlet, err);
       }
-    })
-  );
+    }),
+  ]);
   return out;
 }
 
@@ -193,15 +230,16 @@ const BANNED_PATTERNS = [
   /\bguaranteed\b/i,
 ];
 
-/** §21 attribution enforcement: first sentence of whatHappened must credit an
- * outlet (or be an official statement). Exported for tests. */
-export function hasAttribution(whatHappened: string, outlets: string[]): boolean {
-  const first = whatHappened.split(/(?<=[.!?])\s/)[0]?.toLowerCase() ?? "";
-  if (/\bofficial(ly)?\b|\bannounced\b|\bstatement\b/.test(first)) return true;
-  if (/\bper\b|\baccording to\b|\breports?\b|\breported\b/.test(first)) {
-    return outlets.some((o) => first.includes(o.toLowerCase())) || /\bper\b|\baccording to\b/.test(first);
-  }
-  return false;
+/** §21 attribution rule, FLIPPED (Josh via Isaac, 2026-08-20): source credit
+ * lives in the cited-sources footer, never in the prose. This gate REJECTS
+ * drafts that open on an outlet lean ("Per On3's report, …", "According to
+ * ESPN, …") or narrate "the report" instead of the news. Official-statement
+ * phrasing ("Tennessee announced…") is normal prose and passes. Exported
+ * for tests. */
+export function hasAttributionOpener(text: string): boolean {
+  const first = text.split(/(?<=[.!?])\s/)[0]?.toLowerCase() ?? "";
+  if (/^\s*(per|according to)\b/.test(first)) return true;
+  return /\b(a|the|its|their) reports? (says|said|notes|noted|adds|added|examines|examined|presents|presented|includes|included|details|detailed|indicates|indicated)\b/i.test(text);
 }
 
 interface StoryJob {
@@ -242,7 +280,7 @@ async function writeStoryFromSources(
 
   const combined = `${story.whatHappened}\n${story.whyItMatters.join("\n")}\n${story.readBody}`;
   if (BANNED_PATTERNS.some((re) => re.test(combined))) return `banned:${job.clusterKey}`;
-  if (!hasAttribution(story.whatHappened, job.outlets)) return `attribution:${job.clusterKey}`;
+  if (hasAttributionOpener(story.whatHappened)) return `attribution:${job.clusterKey}`;
 
   const checkRes = await anthropic.messages.create({
     model: MODEL,
@@ -333,6 +371,16 @@ export async function backfillWireStories(limit = 20): Promise<{
       const outlets = item.sourceOutlets?.length ? item.sourceOutlets : ["the original report"];
       const urls = item.sourceUrls ?? [];
       const texts = await Promise.all(urls.slice(0, 2).map(fetchSourceText));
+      // Outlets that block our fetcher (On3) leave texts empty — fall back
+      // to the feed article text stored on the cluster at detection time.
+      if (!texts.some(Boolean)) {
+        const { data: cl } = await db
+          .from("wire_clusters")
+          .select("source_text")
+          .eq("item_id", item._id)
+          .maybeSingle();
+        if (cl?.source_text) texts[0] = cl.source_text;
+      }
       const sourceBlock = outlets
         .map((o, i) => {
           const body = texts[i] || texts[0] || item.sub || "";
@@ -425,9 +473,13 @@ export async function runWireMonitor(): Promise<{
     try {
       const outlets = [...new Set(cluster.entries.map((e) => e.outlet))];
       const urls = [...new Set(cluster.entries.map((e) => e.link).filter(Boolean))];
+      // Feed-provided article text (content:encoded) grounds the story far
+      // better than a 500-char description — and for On3 it's the only
+      // grounding, since their pages block our fetcher.
       const sourceBlock = cluster.entries
-        .map((e) => `- [${e.outlet}] ${e.title}\n  ${e.description}\n  ${e.link}`)
+        .map((e) => `- [${e.outlet}] ${e.title}\n  ${e.content || e.description}\n  ${e.link}`)
         .join("\n");
+      const clusterSourceText = cluster.entries.map((e) => e.content).find(Boolean) ?? "";
 
       // Wire item (12.3) — written by the provider-routed prose writer.
       const itemRaw = await writeJSON({
@@ -452,6 +504,7 @@ export async function runWireMonitor(): Promise<{
           source_urls: urls.slice(0, 10),
           source_outlets: outlets,
           importance: item.importance,
+          source_text: clusterSourceText || null,
         })
         .select("id")
         .single();

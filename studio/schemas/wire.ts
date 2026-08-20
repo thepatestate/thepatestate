@@ -42,7 +42,7 @@ export const wireStory = defineType({
     }),
     defineField({ name: "category", type: "string" }),
     defineField({ name: "teams", type: "array", of: [{ type: "string" }] }),
-    defineField({ name: "whatHappened", type: "text", description: "80–120 words of verified facts, attribution in sentence one" }),
+    defineField({ name: "whatHappened", type: "text", description: "80–120 words of verified facts, stated directly — no in-prose attribution (sources render in the footer)" }),
     defineField({ name: "whyItMatters", type: "array", of: [{ type: "string" }], description: "2–3 mechanism bullets" }),
     defineField({
       name: "joshReceipt",
