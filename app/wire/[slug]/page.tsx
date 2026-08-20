@@ -112,12 +112,20 @@ export default async function WireStoryPage({ params }: { params: Promise<{ slug
             </>
           )}
 
+          {/* The bold quote is the story quoting itself (Josh via Isaac,
+              2026-08-20) — never a loosely matched archive line. */}
+          {story.callout && (
+            <div className="pullquote" style={{ marginTop: 24 }}>{story.callout}</div>
+          )}
+
+          {/* Josh's take renders only when he was genuinely talking about
+              this news (relevance-gated at generation). */}
           {story.joshReceipt?.quote && (
             <>
-              <h2 className="display" style={{ fontSize: 22, marginTop: 28 }}>Josh&apos;s Receipt</h2>
-              <div className="pullquote" style={{ marginTop: 8 }}>
+              <h2 className="display" style={{ fontSize: 22, marginTop: 28 }}>Josh Said It First</h2>
+              <blockquote style={{ margin: "8px 0 0", padding: "10px 16px", borderLeft: "3px solid var(--gold, #E8A33D)", fontStyle: "italic", fontSize: 15.5, lineHeight: 1.55 }}>
                 &ldquo;{story.joshReceipt.quote}&rdquo;
-                <span className="who">
+                <span style={{ display: "block", marginTop: 6, fontStyle: "normal", fontFamily: "var(--mono)", fontSize: 12, color: "var(--ink-dim)" }}>
                   — Josh Pate{receiptHref && (
                     <>
                       {" · "}
@@ -127,7 +135,7 @@ export default async function WireStoryPage({ params }: { params: Promise<{ slug
                     </>
                   )}
                 </span>
-              </div>
+              </blockquote>
             </>
           )}
 

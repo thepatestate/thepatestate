@@ -205,13 +205,62 @@ const STORY_SCHEMA = {
     whatHappened: { type: "string" },
     whyItMatters: { type: "array", items: { type: "string" } },
     readBody: { type: "string" },
+    callout: { type: "string" },
     whatsNext: { type: "array", items: { type: "string" } },
     teams: { type: "array", items: { type: "string" } },
     category: { type: "string" },
   },
-  required: ["headline", "verification", "whatHappened", "whyItMatters", "readBody", "whatsNext", "teams", "category"],
+  required: ["headline", "verification", "whatHappened", "whyItMatters", "readBody", "callout", "whatsNext", "teams", "category"],
   additionalProperties: false,
 } as const;
+
+/** The callout must be the story quoting itself — a verbatim sentence from
+ * its own text (Josh via Isaac, 2026-08-20: "the bold quotes should be a
+ * call out from the article"). Normalized-substring check; "" when the
+ * writer freelanced. Exported for tests. */
+export function validCallout(callout: string, combined: string): string {
+  const normalize = (s: string) => s.toLowerCase().replace(/[^a-z0-9\s]/g, " ").replace(/\s+/g, " ").trim();
+  const c = callout.trim();
+  if (!c || c.split(/\s+/).length < 4) return "";
+  return normalize(combined).includes(normalize(c)) ? c : "";
+}
+
+/** Josh's Receipt only renders when he was genuinely talking about THIS
+ * news — team overlap alone attached Heisman takes to recruiting notes
+ * (Isaac, 2026-08-20). Cheap second-model check; fail-soft false. */
+async function receiptIsRelevant(
+  anthropic: Anthropic,
+  receipt: { quote: string; topic: string },
+  job: StoryJob,
+): Promise<boolean> {
+  try {
+    const res = await anthropic.messages.create({
+      model: MODEL,
+      max_tokens: 256,
+      output_config: {
+        effort: "low",
+        format: {
+          type: "json_schema",
+          schema: {
+            type: "object",
+            properties: { relevant: { type: "boolean" } },
+            required: ["relevant"],
+            additionalProperties: false,
+          },
+        },
+      },
+      system:
+        'An archived spoken quote may be attached to a news story as "Josh said it first." Return relevant=true ONLY when the quote is clearly about the same specific subject as the news — the same player, hire, game, ranking argument, or storyline. Same team but different topic is NOT relevant. When unsure, false. Output JSON only.',
+      messages: [{
+        role: "user",
+        content: `NEWS:\n${job.sourceBlock.slice(0, 900)}\n\nARCHIVED QUOTE (topic: ${receipt.topic}):\n"${receipt.quote}"`,
+      }],
+    });
+    return JSON.parse(textOf(res)).relevant === true;
+  } catch {
+    return false;
+  }
+}
 
 const FACTCHECK_SCHEMA = {
   type: "object",
@@ -298,7 +347,8 @@ async function writeStoryFromSources(
   db: ReturnType<typeof createAdminClient> | null,
   job: StoryJob,
 ): Promise<string> {
-  const receipt = await findReceipt(job.teams, job.receiptKeywords);
+  let receipt = await findReceipt(job.teams, job.receiptKeywords);
+  if (receipt && !(await receiptIsRelevant(anthropic, receipt, job))) receipt = null;
   // Written by the provider-routed prose writer; 4096 tokens because 2048
   // truncated JSON mid-string once drafts were grounded in fetched source
   // text (backfill) — headroom, not a target.
@@ -312,7 +362,7 @@ async function writeStoryFromSources(
   const story = JSON.parse(storyRaw) as {
     headline: string; verification: "confirmed" | "reported" | "developing";
     whatHappened: string; whyItMatters: string[]; readBody: string;
-    whatsNext: string[]; teams: string[]; category: string;
+    callout: string; whatsNext: string[]; teams: string[]; category: string;
   };
 
   const combined = `${story.whatHappened}\n${story.whyItMatters.join("\n")}\n${story.readBody}`;
@@ -340,6 +390,7 @@ async function writeStoryFromSources(
     teams: story.teams,
     whatHappened: story.whatHappened,
     whyItMatters: story.whyItMatters.slice(0, 3),
+    callout: validCallout(story.callout, combined),
     ...(receipt
       ? { joshReceipt: { quote: receipt.quote, ytId: receipt.yt_id, tsSeconds: receipt.ts_seconds } }
       : {}),

@@ -44,6 +44,7 @@ export const wireStory = defineType({
     defineField({ name: "teams", type: "array", of: [{ type: "string" }] }),
     defineField({ name: "whatHappened", type: "text", description: "80–120 words of verified facts, stated directly — no in-prose attribution (sources render in the footer)" }),
     defineField({ name: "whyItMatters", type: "array", of: [{ type: "string" }], description: "2–3 mechanism bullets" }),
+    defineField({ name: "callout", type: "text", description: "The story's own sharpest line — renders as the bold pull quote (verbatim from the story text)" }),
     defineField({
       name: "joshReceipt",
       title: "Josh's Receipt (archive quote)",

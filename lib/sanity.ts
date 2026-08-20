@@ -164,6 +164,7 @@ export interface SanityWireStory {
   teams?: string[];
   whatHappened?: string;
   whyItMatters?: string[];
+  callout?: string;
   joshReceipt?: { quote?: string; ytId?: string; tsSeconds?: number } | null;
   readLabel?: string;
   readBody?: string;
@@ -175,7 +176,7 @@ export interface SanityWireStory {
 }
 
 const WIRE_STORY_FIELDS = `_id, headline, slug, verification, category, teams, whatHappened,
-  whyItMatters, joshReceipt, readLabel, readBody, whatsNext, sources, publishedAt, updatedAt, corrections`;
+  whyItMatters, callout, joshReceipt, readLabel, readBody, whatsNext, sources, publishedAt, updatedAt, corrections`;
 
 export async function getWireItems(limit = 8): Promise<SanityWireItem[]> {
   return await readClient.fetch(
