@@ -140,9 +140,11 @@ export async function fetchFeeds(): Promise<FeedEntry[]> {
 // football only — kill off-topic entries before they cost a scoring call.
 const OFF_TOPIC = /\b(wrestl\w*|basketball|hoops|baseball|softball|volleyball|gymnastics|hockey|lacrosse|soccer|golf|tennis|track and field|swimming|wnba|nba|nfl|mlb|nhl|high school)\b/i;
 
-/** True when an entry clearly isn't college football. Exported for tests. */
+/** True when an entry clearly isn't college football. Exported for tests.
+ * 400 chars of body text — 160 missed sport mentions that arrive a sentence
+ * or two in (a basketball portal story slipped through on 2026-08-20). */
 export function isOffTopic(title: string, description = ""): boolean {
-  return OFF_TOPIC.test(title) || OFF_TOPIC.test(description.slice(0, 160));
+  return OFF_TOPIC.test(title) || OFF_TOPIC.test(description.slice(0, 400));
 }
 
 const STOPWORDS = new Set([
@@ -236,6 +238,17 @@ const BANNED_PATTERNS = [
  * ESPN, …") or narrate "the report" instead of the news. Official-statement
  * phrasing ("Tennessee announced…") is normal prose and passes. Exported
  * for tests. */
+/** Headline hygiene: the writer sometimes emits markdown bold in string
+ * fields (renders as literal asterisks) and trailing outlet leans ("…, per
+ * On3") that the prose gate can't see. Applied to every item and story
+ * headline. Exported for tests. */
+export function cleanHeadline(h: string): string {
+  return h
+    .replace(/\*\*?/g, "")
+    .replace(/,?\s+(per|according to|via)\s+[A-Za-z0-9 .&'’]+$/i, "")
+    .trim();
+}
+
 export function hasAttributionOpener(text: string): boolean {
   const first = text.split(/(?<=[.!?])\s/)[0]?.toLowerCase() ?? "";
   if (/^\s*(per|according to)\b/.test(first)) return true;
@@ -296,7 +309,7 @@ async function writeStoryFromSources(
   await writeClient.createIfNotExists({
     _id: storyId,
     _type: "wireStory",
-    headline: story.headline,
+    headline: cleanHeadline(story.headline),
     slug: { _type: "slug", current: slugify(story.headline) },
     verification: story.verification,
     category: story.category,
@@ -434,7 +447,7 @@ export async function runWireMonitor(): Promise<{
   // Group THIS batch's entries into new clusters (or attach to existing ones).
   const fresh: { title: string; entries: FeedEntry[] }[] = [];
   for (const entry of entries) {
-    if (isOffTopic(entry.title, entry.description)) {
+    if (isOffTopic(entry.title, `${entry.description} ${entry.content.slice(0, 300)}`)) {
       summary.skipped.push(`offtopic:${entry.title.slice(0, 40)}`);
       continue;
     }
@@ -530,7 +543,7 @@ export async function runWireMonitor(): Promise<{
       await writeClient.createIfNotExists({
         _id: itemId,
         _type: "wireItem",
-        headline: item.headline,
+        headline: cleanHeadline(item.headline),
         sub: item.sub,
         category: item.category,
         teams: item.teams,

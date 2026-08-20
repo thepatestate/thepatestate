@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { titleKeywords, keywordOverlap, hasAttributionOpener } from "./wire";
+import { titleKeywords, keywordOverlap, hasAttributionOpener, cleanHeadline } from "./wire";
 
 describe("wire clustering", () => {
   it("clusters same-story titles across outlets", () => {
@@ -37,5 +37,18 @@ describe("§21 attribution rule (flipped 2026-08-20: no in-prose attribution)", 
   });
   it("passes official-announcement phrasing", () => {
     expect(hasAttributionOpener("Ohio State officially announced a contract extension for its head coach.")).toBe(false);
+  });
+});
+
+describe("cleanHeadline", () => {
+  it("strips markdown bold", () => {
+    expect(cleanHeadline("**Akron promotion draws backlash**")).toBe("Akron promotion draws backlash");
+  });
+  it("strips trailing outlet leans", () => {
+    expect(cleanHeadline("Kentucky Pursues Jaxon Kohler and Mark Mitchell, per On3")).toBe("Kentucky Pursues Jaxon Kohler and Mark Mitchell");
+    expect(cleanHeadline("Luke Fickell enters Wisconsin season on hot seat, per Yahoo Sports")).toBe("Luke Fickell enters Wisconsin season on hot seat");
+  });
+  it("leaves clean headlines alone", () => {
+    expect(cleanHeadline("Texas A&M to Unveil Statue Honoring R.C. Slocum")).toBe("Texas A&M to Unveil Statue Honoring R.C. Slocum");
   });
 });
