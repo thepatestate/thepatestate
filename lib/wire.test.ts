@@ -62,5 +62,7 @@ describe("cleanHeadline leading-outlet strip", () => {
   it("flags mid-headline outlet mentions for real rewrite", () => {
     expect(headlineNamesOutlet("Miami\u2019s New Quarterback Headlines Yahoo Sports\u2019 ACC Transfer List")).toBe(true);
     expect(headlineNamesOutlet("Texas A&M to Unveil Statue Honoring R.C. Slocum")).toBe(false);
+    expect(headlineNamesOutlet("Georgia trails three SEC rivals in NIL spending")).toBe(false);
+    expect(headlineNamesOutlet("Four-star WR climbs the Rivals300 after camp season")).toBe(true);
   });
 });

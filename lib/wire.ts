@@ -263,9 +263,14 @@ export function cleanHeadline(h: string): string {
 }
 
 /** True when a headline still names an outlet after cleaning — those need a
- * real rewrite, not a regex strip. Exported for the archive pass + tests. */
+ * real rewrite, not a regex strip. "Rivals" is matched case-sensitively:
+ * lowercase "rivals" is ordinary football English ("three SEC rivals"), the
+ * brand is always capitalized. Exported for the archive pass + tests. */
 export function headlineNamesOutlet(h: string): boolean {
-  return new RegExp(`\\b${OUTLET_NAMES}\\b`, "i").test(h);
+  return (
+    /\b(?:On3|ESPN|Yahoo(?:\s+Sports)?|CBS(?:\s+Sports)?|247Sports|Athlon(?:\s+Sports)?)\b/i.test(h) ||
+    /\bRivals(?:100|250|300|\.com)?\b/.test(h)
+  );
 }
 
 export function hasAttributionOpener(text: string): boolean {
