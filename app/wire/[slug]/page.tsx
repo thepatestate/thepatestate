@@ -98,6 +98,13 @@ export default async function WireStoryPage({ params }: { params: Promise<{ slug
 
       <section style={{ paddingTop: 24 }}>
         <div className="wrap" style={{ maxWidth: 860 }}>
+          {/* The bold quote is the story quoting itself, rendered up top as
+              a deck — max distance from The Read it usually comes from, so
+              short stories don't show the same line twice in a row. */}
+          {story.callout && (
+            <div className="pullquote" style={{ marginBottom: 24 }}>{story.callout}</div>
+          )}
+
           <h2 className="display" style={{ fontSize: 22 }}>What Happened</h2>
           <p className="lede" style={{ marginTop: 6 }}>{story.whatHappened}</p>
 
@@ -110,12 +117,6 @@ export default async function WireStoryPage({ params }: { params: Promise<{ slug
                 ))}
               </ul>
             </>
-          )}
-
-          {/* The bold quote is the story quoting itself (Josh via Isaac,
-              2026-08-20) — never a loosely matched archive line. */}
-          {story.callout && (
-            <div className="pullquote" style={{ marginTop: 24 }}>{story.callout}</div>
           )}
 
           {/* Josh's take renders only when he was genuinely talking about

@@ -4,7 +4,7 @@
 //      matching attached Heisman takes to recruiting notes — irrelevant
 //      receipts get unset.
 //   2. Which verbatim sentence of the story's own text is the callout?
-//      (validCallout enforces the substring guarantee locally.)
+//      (selectCallout scores the story's own sentences — see lib/wire.ts.)
 //
 // Run:  npx tsx scripts/fix-receipts.mts [--dry-run]
 import { readFileSync, existsSync, appendFileSync } from "node:fs";
@@ -27,7 +27,7 @@ loadDotEnvLocal();
 
 const { default: Anthropic } = await import("@anthropic-ai/sdk");
 const { writeClient } = await import("../lib/sanity.ts");
-const { validCallout } = await import("../lib/wire.ts");
+const { selectCallout } = await import("../lib/wire.ts");
 
 const DRY_RUN = process.argv.includes("--dry-run");
 const anthropic = new Anthropic();
@@ -89,7 +89,7 @@ Output valid JSON matching the schema, nothing else.`,
       else { unset.push("joshReceipt"); receiptsDropped++; }
     }
     if (!r.callout) {
-      const c = validCallout(out.callout ?? "", combined);
+      const c = selectCallout(r);
       if (c) { patch.callout = c; callouts++; }
     }
     if (Object.keys(patch).length === 0 && unset.length === 0) continue;

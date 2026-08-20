@@ -205,24 +205,115 @@ const STORY_SCHEMA = {
     whatHappened: { type: "string" },
     whyItMatters: { type: "array", items: { type: "string" } },
     readBody: { type: "string" },
-    callout: { type: "string" },
     whatsNext: { type: "array", items: { type: "string" } },
     teams: { type: "array", items: { type: "string" } },
     category: { type: "string" },
   },
-  required: ["headline", "verification", "whatHappened", "whyItMatters", "readBody", "callout", "whatsNext", "teams", "category"],
+  required: ["headline", "verification", "whatHappened", "whyItMatters", "readBody", "whatsNext", "teams", "category"],
   additionalProperties: false,
 } as const;
 
-/** The callout must be the story quoting itself — a verbatim sentence from
- * its own text (Josh via Isaac, 2026-08-20: "the bold quotes should be a
- * call out from the article"). Normalized-substring check; "" when the
- * writer freelanced. Exported for tests. */
-export function validCallout(callout: string, combined: string): string {
-  const normalize = (s: string) => s.toLowerCase().replace(/[^a-z0-9\s]/g, " ").replace(/\s+/g, " ").trim();
-  const c = callout.trim();
-  if (!c || c.split(/\s+/).length < 4) return "";
-  return normalize(combined).includes(normalize(c)) ? c : "";
+// ---------------------------------------------------------------------------
+// Callout selection (overhaul 2026-08-20, per the Claude/ChatGPT/Grok
+// consult): the bold quote is chosen by an independent scorer over the
+// story's own complete sentences — never by the writer picking its own
+// "sharpest line," which produced template phrases and hedges. No sentence
+// clears the bar → no callout; an empty slot beats junk.
+
+/** Sentence tokenizer tuned for sports copy: protects common abbreviations,
+ * dates ("Oct. 10"), ranks ("No. 10"), and initials so splits land on real
+ * sentence boundaries. Exported for tests. */
+export function splitSentences(text: string): string[] {
+  const SHIELD = "";
+  const shielded = text
+    .replace(/\b(No|Oct|Nov|Dec|Jan|Feb|Sept?|Aug|Jul|Jun|Apr|Mar|St|Dr|Jr|Sr|Mr|Mrs|Ms|vs|U\.S|D\.C)\.\s/g, (m) => m.replace(". ", `${SHIELD} `))
+    .replace(/\b([A-Z])\.\s(?=[A-Z]\.)/g, `$1${SHIELD} `)
+    .replace(/\b([A-Z])\.([A-Z])\.\s/g, `$1${SHIELD}$2${SHIELD} `);
+  return shielded
+    .split(/(?<=[.!?])\s+/)
+    .map((s) => s.replace(new RegExp(SHIELD, "g"), ".").trim())
+    .filter(Boolean);
+}
+
+/** Phrases and shapes that never make a pull quote — the observed template
+ * leaks and the hedge/process vocabulary. Exported so the prompt-hygiene
+ * test can assert the prompts themselves stay clean. */
+export const CALLOUT_BANNED: RegExp[] = [
+  /a spot,? not the earth/i,
+  /\bthe (task|job) (now|is|gets|for)\b/i,
+  /\bfailure condition\b/i,
+  /\bdecision communication\b/i,
+  /\bavailable (information|reporting)\b/i,
+  /\b(doesn'?t|does not) establish\b/i,
+  /\bremains to be seen\b|\bonly time will tell\b|\bwe'?ll see\b/i,
+  /^\s*(this|that|it) (moves|changes|shifts|means|makes this)\b/i,
+  /\bthe (process|conversation|needle)\b/i,
+  /\bworth (noting|watching)\b|\bnotably\b/i,
+  /\bverification event\b/i,
+];
+
+const HEDGES = /\b(might|could|whether|unclear|uncertain|possibly|perhaps|may\b)/gi;
+const CONTRAST = /\b(but|yet|however|still|instead|until|unless)\b/i;
+const STRONG_VERBS = /\b(wins?|forces?|owns?|costs?|decides?|buys?|breaks?|ends?|beats?|carries|swings?|settles?|earns?|loses?|proves?)\b/i;
+
+/** Scores one sentence as a pull-quote candidate; -Infinity = vetoed.
+ * Rubric from the consult: concrete beats abstract, claims beat process,
+ * contrast reads well ripped out of context. Exported for tests. */
+export function scoreCallout(sentence: string): number {
+  const s = sentence.trim();
+  const words = s.split(/\s+/).filter(Boolean);
+  if (words.length < 8 || words.length > 24) return -Infinity;
+  if (!/^[A-Z"“]/.test(s) || !/[.!?”"]$/.test(s)) return -Infinity;
+  if (CALLOUT_BANNED.some((re) => re.test(s))) return -Infinity;
+  if (headlineNamesOutlet(s) || /\breport(s|ed|ing)?\b/i.test(s)) return -Infinity;
+  const hedges = s.match(HEDGES)?.length ?? 0;
+  if (hedges >= 2) return -Infinity;
+  let score = 0;
+  // Proper noun anywhere past the first word — a name anchors the line.
+  if (words.slice(1).some((w) => /^[A-Z][a-z]/.test(w.replace(/^["“(']/, "")))) score += 2;
+  if (/\d/.test(s)) score += 2;
+  if (CONTRAST.test(s)) score += 2;
+  if (STRONG_VERBS.test(s)) score += 1;
+  if (words.length >= 10 && words.length <= 18) score += 1;
+  score -= hedges;
+  return score;
+}
+
+/** Picks the story's callout: every complete sentence competes — the read
+ * (the take lives there, +2.5) over the bullets (+0.5) over the facts
+ * (-0.5, so biography/transaction trivia can't outrank a real claim).
+ * A sentence that mostly restates the headline is penalized (the pull
+ * quote must ADD something), and sober categories (injury, legal) never
+ * carry one. Nothing qualifying → "". */
+export function selectCallout(story: {
+  whatHappened?: string;
+  whyItMatters?: string[];
+  readBody?: string;
+  headline?: string;
+  category?: string;
+}): string {
+  if (story.category === "injury" || story.category === "legal") return "";
+  const headlineKw = titleKeywords(story.headline ?? "");
+  const pools: { text: string; bonus: number }[] = [
+    { text: story.readBody ?? "", bonus: 2.5 },
+    { text: (story.whyItMatters ?? []).join(" "), bonus: 0.5 },
+    { text: story.whatHappened ?? "", bonus: -0.5 },
+  ];
+  let best = "";
+  let bestScore = -Infinity;
+  for (const pool of pools) {
+    for (const sentence of splitSentences(pool.text)) {
+      let score = scoreCallout(sentence);
+      if (score === -Infinity) continue;
+      // Restating the headline in different clothes adds nothing.
+      if (headlineKw.size > 0 && keywordOverlap(titleKeywords(sentence), headlineKw) >= 0.5) score -= 3;
+      // Biography shape ("X is a former … who …") is trivia, not a take.
+      if (/\bis an? (former|current)?\s?\w+ (alumnus|native|graduate|member|executive|goalkeeper|walk-on)\b/i.test(sentence)) score -= 3;
+      const total = score + pool.bonus;
+      if (total > bestScore) { bestScore = total; best = sentence; }
+    }
+  }
+  return bestScore >= 4 ? best : "";
 }
 
 /** Josh's Receipt only renders when he was genuinely talking about THIS
@@ -362,7 +453,7 @@ async function writeStoryFromSources(
   const story = JSON.parse(storyRaw) as {
     headline: string; verification: "confirmed" | "reported" | "developing";
     whatHappened: string; whyItMatters: string[]; readBody: string;
-    callout: string; whatsNext: string[]; teams: string[]; category: string;
+    whatsNext: string[]; teams: string[]; category: string;
   };
 
   const combined = `${story.whatHappened}\n${story.whyItMatters.join("\n")}\n${story.readBody}`;
@@ -390,7 +481,7 @@ async function writeStoryFromSources(
     teams: story.teams,
     whatHappened: story.whatHappened,
     whyItMatters: story.whyItMatters.slice(0, 3),
-    callout: validCallout(story.callout, combined),
+    callout: selectCallout({ ...story, headline: story.headline, category: story.category }),
     ...(receipt
       ? { joshReceipt: { quote: receipt.quote, ytId: receipt.yt_id, tsSeconds: receipt.ts_seconds } }
       : {}),
