@@ -362,14 +362,23 @@
 .v5-page .playbook h2{font:800 40px/1.08 var(--slab);color:#fff;letter-spacing:-.02em;margin:14px 0 12px}
 .v5-page .playbook h2 em{font-style:normal;color:var(--gold)}
 .v5-page .pb-sub{font:400 15.5px/1.6 var(--body);color:#B9C6D8;max-width:520px;margin-bottom:22px}
-.v5-page .pb-form{display:flex;gap:10px;max-width:520px}
-.v5-page .pb-form form{display:flex;gap:10px;flex:1}
-.v5-page .pb-form input{flex:1;font:500 15px var(--body);padding:15px 17px;border:none;border-radius:6px;outline:none;background:#fff;color:var(--ink);box-shadow:var(--sh-md)}
-.v5-page .pb-form input::placeholder{color:#9AA1AB}
+/* JoinForm renders a globals .panel card (label / input / submit / OR /
+   Google) — restyle that real structure for the navy band instead of
+   assuming a bare input+button row (broken layout screenshot, 2026-08-20). */
+.v5-page .pb-form{max-width:520px}
+.v5-page .pb-form .panel{background:transparent;border:none;box-shadow:none;padding:0;margin:0}
+.v5-page .pb-form .panel h3{color:#fff;font:800 20px/1.2 var(--slab);margin:6px 0}
+.v5-page .pb-form form{display:block}
+.v5-page .pb-form label.eyebrow{display:block;font:800 10.5px/1 var(--cond);letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin:0 0 2px}
+.v5-page .pb-form input{width:100%;box-sizing:border-box}
 .v5-page .pb-form input:focus{box-shadow:0 0 0 3px rgba(201,162,39,.5)}
 .v5-page .pb-form button{font:800 13.5px/1 var(--cond);letter-spacing:.12em;text-transform:uppercase;background:var(--gold);color:var(--mast);border:none;padding:15px 24px;border-radius:6px;cursor:pointer;box-shadow:0 6px 18px rgba(201,162,39,.4);transition:transform .15s}
 .v5-page .pb-form button:hover{background:#DCB43A;transform:translateY(-1px)}
+.v5-page .pb-form button.btn:not(.solid){background:transparent;color:var(--gold);border:1.5px solid rgba(201,162,39,.55);box-shadow:none}
+.v5-page .pb-form button.btn:not(.solid):hover{background:rgba(201,162,39,.12)}
+.v5-page .pb-form form + p{color:#8DA0B8 !important;margin:14px 0 10px}
 .v5-page .pb-form p, .v5-page .pb-form .lede{color:#B9C6D8;font:500 14px/1.5 var(--body)}
+.v5-page .pb-form .note{color:#E8C77D}
 .v5-page .pb-perks{display:flex;gap:8px 10px;flex-wrap:wrap;margin-top:20px}
 .v5-page .pb-perks span{font:700 10.5px/1 var(--cond);letter-spacing:.1em;text-transform:uppercase;color:#D5DCE7;border:1px solid rgba(255,255,255,.22);padding:8px 12px;border-radius:20px}
 .v5-page .pb-proof{font:600 12px/1.5 var(--body);color:#B9C6D8;margin-top:16px}
@@ -417,7 +426,9 @@
 .v5-page .tour .eyebrow{font:700 10.5px/1 var(--cond);letter-spacing:.24em;text-transform:uppercase;color:var(--gold)}
 .v5-page .tour h3{font:800 26px/1.15 var(--slab);color:#fff;margin:9px 0 10px}
 .v5-page .tour p{font:400 14px/1.55 var(--body);color:#B9C6D8;margin-bottom:16px}
-.v5-page .tour .badge{display:inline-block;font:800 10px/1 var(--cond);letter-spacing:.16em;text-transform:uppercase;background:rgba(201,162,39,.16);border:1px solid rgba(201,162,39,.45);color:var(--gold);padding:7px 12px;border-radius:20px;margin-bottom:14px}
+/* width/height:auto neutralize globals' 52px circular achievement .badge
+   (bleed hazard — it stacked this pill's text vertically in a tiny circle). */
+.v5-page .tour .badge{display:inline-block;width:auto;height:auto;font:800 10px/1.5 var(--cond);letter-spacing:.16em;text-transform:uppercase;background:rgba(201,162,39,.16);border:1px solid rgba(201,162,39,.45);color:var(--gold);padding:7px 12px;border-radius:20px;margin-bottom:14px}
 .v5-page .tour .go{display:inline-block;font:800 12.5px/1 var(--cond);letter-spacing:.12em;text-transform:uppercase;background:var(--gold);color:var(--mast);padding:13px 19px;border-radius:5px;box-shadow:var(--sh-sm)}
 .v5-page .tour .go:hover{background:#DCB43A}
 .v5-page .tour .photo{position:relative} /* fill anchor */
