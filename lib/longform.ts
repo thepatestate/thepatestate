@@ -104,8 +104,9 @@ export async function generateLongformArticle(): Promise<string> {
 
     const selRes = await anthropic.messages.create({
       model: MODEL,
-      max_tokens: 1024,
-      output_config: { format: { type: "json_schema", schema: SELECT_SCHEMA } },
+      // Reasoning shares this budget with the JSON answer — 1024 truncated.
+      max_tokens: 4096,
+      output_config: { effort: "low", format: { type: "json_schema", schema: SELECT_SCHEMA } },
       system: `You are the article selection engine for The Pate State (Article Playbook v3.0). Pick the ONE standalone long-form article a serious college football fan would most want to read today. Choose a type from the menu, a specific topic, and a sharp angle. Rules: never duplicate or closely overlap a recent article headline; prefer a big recent wire story angle (NR-01/NR-03/TI-05) when one is genuinely consequential, else an evergreen type on a prominent team or national question; the angle must be arguable from the wire coverage provided plus general mechanism reasoning (no facts the pack won't contain); teams are lowercase-hyphenated slugs. wireStoryIds: the _ids of the 1-4 provided stories most relevant to the topic (empty for pure evergreen). Output JSON only.`,
       messages: [{
         role: "user",
