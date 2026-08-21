@@ -46,11 +46,13 @@ export default function UpNextRoll({
   }, [contentId, nextPath, nextTitle]);
 
   return (
-    <div className="upnext-teaser">
+    // A real link (Isaac, 2026-08-21: the teaser must be clickable site-wide)
+    // — clicking navigates immediately; scrolling past still reveals in place.
+    <a className="upnext-teaser" href={nextPath} style={{ display: "block", textDecoration: "none", color: "inherit", cursor: "pointer" }}>
       <span className="upnext-kicker">Up Next — Keep Scrolling</span>
       <b className="upnext-headline">{nextHeadline}</b>
       {nextDek && <span className="upnext-dek">{nextDek}</span>}
       <div ref={sentinelRef} aria-hidden="true" />
-    </div>
+    </a>
   );
 }

@@ -96,7 +96,7 @@ for (const r of targets) {
           schema: {
             type: "object",
             properties: {
-              verdict: { type: "string", enum: ["keep", "replace"] },
+              verdict: { type: "string", enum: ["keep", "replace", "remove"] },
               pullQuote: { type: "string" },
             },
             required: ["verdict", "pullQuote"],
@@ -104,24 +104,21 @@ for (const r of targets) {
           },
         },
       },
-      system: `You are a print editor auditing the pull quote of a published article. The test: would a magazine editor set this EXACT text in 24-point type? Judge the CURRENT pull quote:
+      system: `You are a print editor auditing the pull quote of a published article. Two tests, both mandatory: (1) would a magazine editor set this EXACT text in 24-point type? (2) THE STANDALONE TEST — a reader seeing ONLY the quote, with zero article context, must fully understand it: it carries its own subject and its own stakes. A bare scale reference ("That's a 10. That may be like the rare 10.25."), an unexplained pronoun ("There's no way this happens"), or an ellipsis-chopped line that no longer parses as a sentence ALL FAIL the standalone test.
 
-verdict "replace" when ANY of these defects is present:
-- Off-thesis: the quote isn't about the headline's central argument.
-- Spoken windup inside or at the open: "has been and continues to be", "is going to be", "what I would say is", "I mean", "kind of", "sort of", "you know" — print cuts these.
-- Starts lowercase mid-sentence, opens on connective ramp (And/So/But/Look/Now), or ends on a trailing fragment.
-- Doubled or redundant phrasing a print editor would tighten.
+verdict "keep" only when the quote argues the headline's central claim, reads like set type as-is, AND passes the standalone test unchanged.
 
-verdict "keep" only when the quote argues the central claim AND reads like set type as-is. When keeping, return the current quote unchanged in pullQuote.
+verdict "replace" when the right line exists but needs tightening, or a better transcript line carries the thesis. Rules for the replacement:
+- Exact contiguous span from the transcript, or two spans joined with " … " for an interior cut — but ONLY when the joined result still reads as one natural sentence; a jarring splice fails. Never change a word inside a span; capitalizing the first letter is allowed.
+- Start at the first word of the claim, end at the last word that carries it. Never open on ramp (And/So/But/Look/Now); never end mid-thought.
+- 8–35 words, self-contained, screenshot-worthy, passes the standalone test.
 
-When replacing, the fix is often the SAME quote tightened — a shorter span, an interior cut, a capitalized first letter — not necessarily a different line. Rules for the replacement:
-- Exact contiguous span from the transcript, or two spans joined with " … " for an interior cut (ignore [MM:SS] markers; never include them). Never change a word inside a span; capitalizing the first letter is allowed.
-- Start at the first word of the claim, end at the last word that carries it. Never open on ramp; never end mid-thought.
-- 8–35 words, self-contained, screenshot-worthy. If nothing meets ALL of these, verdict "keep".
+verdict "remove" when NO transcript line meets all of the above — an article with no pull quote beats one with a mediocre quote. Expect to remove often; return "" in pullQuote.
 
 Examples:
-- CURRENT: "the first and biggest lie in college football has been and continues to be you are what your record says you are." → replace → "The first and biggest lie in college football … you are what your record says you are."
-- CURRENT: "Rivalries should be more secure than Fort Knox." → keep.
+- "There's no way this happens. That's a 10. That may be like the rare 10.25." → remove (scale reference means nothing standalone).
+- "The first and biggest lie in college football … you are what your record says you are." → remove unless the transcript offers the thought as one natural continuous sentence — the splice reads chopped.
+- "Rivalries should be more secure than Fort Knox." → keep.
 
 Output valid JSON matching the schema, nothing else.`,
       messages: [{
@@ -132,6 +129,17 @@ Output valid JSON matching the schema, nothing else.`,
     const block = res.content.find((b) => b.type === "text");
     const parsed = JSON.parse(block && block.type === "text" ? block.text : "{}");
     const q: string = (parsed.pullQuote ?? "").trim();
+    if (parsed.verdict === "remove") {
+      if (!DRY_RUN) {
+        await writeClient.patch(r._id).set({
+          bodyMarkdown: r.bodyMarkdown.replace(/\[PULLQUOTE\]\s*/g, ""),
+        }).unset(["pullQuote"]).commit();
+        appendFileSync(logPath, JSON.stringify({ id: r._id, old: r.pullQuote, new: null }) + "\n");
+      }
+      fixed++;
+      console.log(`REMOVE ${r._id}\n    was: "${(r.pullQuote ?? "").slice(0, 90)}"`);
+      continue;
+    }
     if (parsed.verdict !== "replace") { console.log(`KEEP (verdict)        ${r._id}`); kept++; continue; }
     const words = q.split(/\s+/).filter(Boolean).length;
     if (!q || words < 5 || words > 45) { console.log(`KEEP (no valid pick)  ${r._id}`); kept++; continue; }

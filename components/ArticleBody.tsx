@@ -29,7 +29,11 @@ function initials(name: string): string {
 }
 
 // Tiny inline formatter for **bold** / *italic* — no markdown dependency.
-function renderInline(text: string): ReactNode[] {
+function renderInline(raw: string): ReactNode[] {
+  // Writers occasionally emit stray marker tokens ("[/PULLQUOTE]", an
+  // unclosed "[QUOTE:…]") that upstream parsing can't consume — they must
+  // never reach the reader as literal text (Josh, 2026-08-21).
+  const text = raw.replace(/\[\/?(?:PULLQUOTE|QUOTE|EMBED)[^\]]*\]/g, "").replace(/ {2,}/g, " ");
   const nodes: ReactNode[] = [];
   const re = /\*\*(.+?)\*\*|\*(.+?)\*/g;
   let last = 0;

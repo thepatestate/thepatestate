@@ -9,7 +9,6 @@ import { JOSH_BRACKET_FIELD } from "@/lib/josh-bracket";
 import ScoresTicker from "@/components/home/ScoresTicker";
 import HeroWire from "@/components/home/HeroWire";
 import ShowSectionV5, { ShortsStrip } from "@/components/home/ShowSectionV5";
-import YourSaturday from "@/components/home/YourSaturday";
 import PeoplesGames from "@/components/home/PeoplesGames";
 import NotebookTrending, { type BracketSeed } from "@/components/home/NotebookTrending";
 import PorchSection from "@/components/home/PorchSection";
@@ -69,8 +68,8 @@ export default async function Home() {
       <ScoresTicker games={slate} />
       <HeroWire featured={featured} wire={wire} />
       <ShowSectionV5 episodes={showEpisodes} />
-      <YourSaturday />
-      <PeoplesGames />
+      {/* Josh, 2026-08-21: Your Saturday removed; The Notebook sits above
+          The People's Games. */}
       <NotebookTrending
         lead={articles[0] ?? null}
         stack={articles.slice(1, 5)}
@@ -78,6 +77,7 @@ export default async function Home() {
         seeds={seeds}
         seedSource={seedSource}
       />
+      <PeoplesGames />
       <PorchSection threads={threads} />
       <ShortsStrip shorts={shorts} />
       <PlaybookSection />

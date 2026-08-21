@@ -58,6 +58,23 @@ export async function ingestEpisode(v: IngestVideo): Promise<IngestResult> {
     if (existingArticleId) return "skipped";
     if (await articleExistsForEpisode(episodeId)) return "skipped";
 
+    // 2b. Editorial cadence (Josh, 2026-08-21): 3–5 show-companion articles
+    // per WEEK, max 1 per day — the show posts ~20 videos a week and every
+    // one becoming an article buried the good ones. Episodes past the cap
+    // still ingest (episode-only) so the show page stays complete; the
+    // daily long-form pipeline (lib/longform.ts) carries the article load.
+    const [weekCount, dayCount] = await Promise.all([
+      writeClient.fetch<number>(
+        `count(*[_type == "article" && defined(episode._ref) && _createdAt > $since])`,
+        { since: new Date(Date.now() - 7 * 24 * 3600_000).toISOString() },
+      ),
+      writeClient.fetch<number>(
+        `count(*[_type == "article" && defined(episode._ref) && _createdAt > $since])`,
+        { since: new Date(Date.now() - 24 * 3600_000).toISOString() },
+      ),
+    ]);
+    if (weekCount >= 5 || dayCount >= 1) return "episode-only";
+
     // 3. Transcript (fail-soft)
     const segs = await fetchTranscript(v.id);
     const transcriptText = segs ? transcriptToPromptText(segs) : null;

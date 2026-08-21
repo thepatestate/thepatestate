@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { titleKeywords, keywordOverlap, hasAttributionOpener, cleanHeadline, headlineNamesOutlet, splitSentences, scoreCallout, selectCallout, scrubDashes, resolveTeamSlug, CALLOUT_BANNED } from "./wire";
+import { titleKeywords, keywordOverlap, hasAttributionOpener, cleanHeadline, headlineNamesOutlet, splitSentences, scoreCallout, selectCallout, scrubDashes, resolveTeamSlug, narratesSourcing, CALLOUT_BANNED } from "./wire";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
@@ -149,5 +149,28 @@ describe("resolveTeamSlug", () => {
   });
   it("returns the original when nothing resolves", () => {
     expect(resolveTeamSlug("unknown-team", dir)).toBe("unknown-team");
+  });
+});
+
+describe("narratesSourcing", () => {
+  it("rejects document-narration prose", () => {
+    expect(narratesSourcing("Washington's 2028 board is described as loaded with five-star prospects.")).toBe(true);
+    expect(narratesSourcing("No commitment is reported in the source material.")).toBe(true);
+    expect(narratesSourcing("No individual prospect names, decision dates or class ranking are provided here.")).toBe(true);
+    expect(narratesSourcing("The available information does not identify the players.")).toBe(true);
+  });
+  it("passes plain analyst prose and legal 'reported to be' phrasing", () => {
+    expect(narratesSourcing("Washington is chasing a 2028 class headlined by the nation's No. 1 tight end.")).toBe(false);
+    expect(narratesSourcing("The injury is reported to be an Achilles.")).toBe(false);
+    expect(narratesSourcing("Washington hasn't said who takes the first-team reps.")).toBe(false);
+  });
+});
+
+describe("scoreCallout standalone anchor", () => {
+  it("vetoes unanchored abstractions", () => {
+    expect(scoreCallout("The opener being just over two weeks away gives the contrast some timing value, but not enough to call it a separator.")).toBe(-Infinity);
+  });
+  it("keeps anchored claims", () => {
+    expect(scoreCallout("Kansas State opens against Iowa State without a single returning starter up front.")).toBeGreaterThan(0);
   });
 });

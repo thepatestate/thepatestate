@@ -143,3 +143,12 @@ Minor stories: stay near 600 words, combine sections, never force the Chessboard
 **The final test:** would a serious college football fan who already knew the headline finish this page and feel smarter about the sport? If not, it isn't done.
 
 *The Pate State Wire · Production Guide v1.2 · Aug 20, 2026 · Reference build: **wire-kansas-state-pastore-v3.html** (final, porch-voice edition) · Companions: the Wire Desk master prompt (story generation) and the site design tokens (page shell).*
+
+---
+
+## Addendum v1.3 (site desk, Aug 21, 2026 — per Isaac)
+**Answer the reader's questions.** Every story identifies the 3–5 questions a fan who just saw the headline would ask (Is he out for the year? Who replaces him? Does this change the opener? What does it cost the class?) and answers every one the sources can support, each in its natural section — never as a bolted-on FAQ. Questions the sources can't answer yet get named plainly, usually in What We're Watching. This adds coverage to the existing architecture; it never adds length for its own sake.
+
+**The prose never narrates its own sourcing.** Extends §5/§8: "the source material," "the available information," "is described as," "no names are provided," "per the report" are banned everywhere. State what is known as fact; state what's unknown the way a person would say it ("Washington hasn't said who"). The register is a sharp analyst explaining news to a friend — a great Axios brief crossed with a broadcaster's read.
+
+**Pull quotes stand alone.** The Wire Desk callout must make complete sense to someone reading ONLY the quote: it carries its own subject (a name or a number, never a bare "the contrast" / "the move"), and a mediocre quote never ships — no callout beats a weak one.

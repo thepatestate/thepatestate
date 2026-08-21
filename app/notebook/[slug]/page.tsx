@@ -185,16 +185,18 @@ export default async function ArticlePage({
                 </>
               )}
 
+              <ArticleBody article={article} />
+
+              <Corrections corrections={article.corrections} />
+
+              {/* Standards labeling lives at the END of the article (Josh,
+                  2026-08-21) — never above the prose. */}
               <EditorialLabel
                 contentType={article.contentType}
                 productionMethod={article.productionMethod}
                 byline={article.byline}
                 reviewedBy={article.reviewedBy}
               />
-
-              <ArticleBody article={article} />
-
-              <Corrections corrections={article.corrections} />
 
               {/* §3.8 growth loop: every article ends at the Porch. Team
                   articles land on their team's board when one exists. */}
@@ -252,19 +254,21 @@ export default async function ArticlePage({
                   />
                   <div id={`upnext-${rollNext.slug.current}`} hidden className="upnext-body">
                     <div className="upnext-divider">CONTINUED FROM THE NOTEBOOK</div>
-                    <h1 className="display" style={{ fontSize: "clamp(26px,3.4vw,40px)", lineHeight: 1.08 }}>
-                      {rollNext.headline}
-                    </h1>
+                    <Link href={`/notebook/${rollNext.slug.current}`} style={{ textDecoration: "none", color: "inherit" }}>
+                      <h1 className="display" style={{ fontSize: "clamp(26px,3.4vw,40px)", lineHeight: 1.08 }}>
+                        {rollNext.headline}
+                      </h1>
+                    </Link>
                     {rollNext.dek && (
                       <p className="lede" style={{ marginTop: 10, fontSize: 17 }}>{rollNext.dek}</p>
                     )}
+                    <ArticleBody article={rollNext} />
                     <EditorialLabel
                       contentType={rollNext.contentType}
                       productionMethod={rollNext.productionMethod}
                       byline={rollNext.byline}
                       reviewedBy={rollNext.reviewedBy}
                     />
-                    <ArticleBody article={rollNext} />
                     <div style={{ marginTop: 26 }}>
                       <Link
                         className="btn"

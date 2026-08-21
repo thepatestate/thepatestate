@@ -285,15 +285,9 @@ export default async function WireStoryPage({ params }: { params: Promise<{ slug
         </article>
 
         <aside className="rail">
-          {story.impact && (
-            <div className="rc">
-              <div className="hd red">Impact Rating</div>
-              <div className="bd"><div className="impact">
-                <span className="badge">{story.impact.replace("-", " ")}</span>
-                {story.impactRationale && <p>{story.impactRationale}</p>}
-              </div></div>
-            </div>
-          )}
+          {/* Impact Rating rail card removed (Isaac, 2026-08-21) — the
+              impact chip in the kicker row carries the rating; the
+              rationale lives in the data for Studio/QA. */}
           {(story.facts?.length ?? 0) > 0 && (
             <div className="rc">
               <div className="hd">The Facts</div>

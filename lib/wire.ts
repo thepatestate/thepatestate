@@ -342,10 +342,14 @@ export function scoreCallout(sentence: string): number {
   if (headlineNamesOutlet(s) || /\breport(s|ed|ing)?\b/i.test(s)) return -Infinity;
   const hedges = s.match(HEDGES)?.length ?? 0;
   if (hedges >= 2) return -Infinity;
+  // Standalone anchor (Isaac 2026-08-21: a reader seeing ONLY the quote must
+  // understand it): a sentence with neither a name nor a number is unmoored.
+  const hasProper = words.slice(1).some((w) => /^[A-Z][a-z]/.test(w.replace(/^["“(']/, "")));
+  const hasDigit = /\d/.test(s);
+  if (!hasProper && !hasDigit) return -Infinity;
   let score = 0;
-  // Proper noun anywhere past the first word — a name anchors the line.
-  if (words.slice(1).some((w) => /^[A-Z][a-z]/.test(w.replace(/^["“(']/, "")))) score += 2;
-  if (/\d/.test(s)) score += 2;
+  if (hasProper) score += 2;
+  if (hasDigit) score += 2;
   if (CONTRAST.test(s)) score += 2;
   if (STRONG_VERBS.test(s)) score += 1;
   if (words.length >= 10 && words.length <= 18) score += 1;
@@ -494,7 +498,22 @@ export function headlineNamesOutlet(h: string): boolean {
 export function hasAttributionOpener(text: string): boolean {
   const first = text.split(/(?<=[.!?])\s/)[0]?.toLowerCase() ?? "";
   if (/^\s*(per|according to)\b/.test(first)) return true;
-  return /\b(a|the|its|their) reports? (says|said|notes|noted|adds|added|examines|examined|presents|presented|includes|included|details|detailed|indicates|indicated)\b/i.test(text);
+  return /\b(a|the|its|their) reports? (says|said|notes|noted|adds|added|examines|examined|presents|presented|includes|included|details|detailed|indicates|indicated|frames|framed|describes|described|lists|listed)\b/i.test(text);
+}
+
+/** Isaac, 2026-08-21: the prose must never narrate its own sourcing —
+ * "described as," "the source material," "provided here" reads like a
+ * paralegal, not an analyst. Applied to ALL prose fields with a corrective
+ * retry. ("reported to be …" stays legal per §5.) Exported for tests. */
+export function narratesSourcing(text: string): boolean {
+  return (
+    /\b(the|this) (source material|available information|available reporting)\b/i.test(text) ||
+    /\bin the source(s| material)?\b/i.test(text) ||
+    /\bis (described|framed|characterized|listed|presented) as\b/i.test(text) ||
+    /\b(provided|identified|named|listed) (here|in the report)\b/i.test(text) ||
+    /\bper the (report|reporting)\b/i.test(text) ||
+    /\bno [^.!?]{0,40} (is|are) (reported|provided|identified|named|listed)\b/i.test(text)
+  );
 }
 
 export interface StoryJob {
@@ -534,10 +553,12 @@ export async function generateWireStory(
       schemaName: "wire_story",
       maxTokens: 8192,
     });
-    const draft = JSON.parse(storyRaw) as { deck?: string; whatHappened?: string };
+    const draft = JSON.parse(storyRaw) as Record<string, string | undefined>;
     const upper = `${draft.deck ?? ""}\n${draft.whatHappened ?? ""}`;
-    if (!headlineNamesOutlet(upper) && !hasAttributionOpener(draft.whatHappened ?? "")) break;
-    user = `${baseUser}\n\nYOUR PREVIOUS DRAFT VIOLATED §5: it named an outlet or used in-prose attribution in the deck or What Happened. Rewrite so the lede attributes only to the OFFICIAL source or a NAMED individual reporter; unconfirmed details are "reported to be…" with no website named anywhere in the deck or What Happened. Outlet credit lives only in the sourcing footer (which the site renders automatically).`;
+    const allProse = ["deck", "whatHappened", "whyBody", "missing", "section04Body", "chessboard", "readBody"]
+      .map((k) => draft[k] ?? "").join("\n");
+    if (!headlineNamesOutlet(upper) && !hasAttributionOpener(draft.whatHappened ?? "") && !narratesSourcing(allProse)) break;
+    user = `${baseUser}\n\nYOUR PREVIOUS DRAFT VIOLATED the writing standard. Never name an outlet or use in-prose attribution in the deck or What Happened (official source or a NAMED individual reporter only; unconfirmed details are "reported to be…"). And NEVER narrate your own sourcing anywhere — no "the source material," "the available information," "is described as," "no names are provided," "per the report." Write what IS known directly, the way an analyst explains news to a friend; where something is unknown, say what we don't know yet in plain speech ("Washington hasn't said who") without pointing at documents. Rewrite the full story.`;
   }
   const story = JSON.parse(storyRaw) as {
     headline: string; deck: string; verification: "confirmed" | "reported" | "developing";
@@ -568,6 +589,7 @@ export async function generateWireStory(
   if (hasAttributionOpener(story.whatHappened) || headlineNamesOutlet(`${story.deck}\n${story.whatHappened}`)) {
     return { ok: false, reason: `attribution:${job.clusterKey}` };
   }
+  if (narratesSourcing(combined)) return { ok: false, reason: `sourcenarration:${job.clusterKey}` };
 
   const checkRes = await anthropic.messages.create({
     model: MODEL,

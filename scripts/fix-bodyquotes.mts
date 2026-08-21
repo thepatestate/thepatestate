@@ -100,10 +100,10 @@ for (const r of targets) {
           },
         },
       },
-      system: `You are a print editor auditing the spoken blockquotes inside an article. For EACH numbered quote, judge against its surrounding prose:
-- "keep": the quote directly supports the passage it sits in AND reads like set type (no ramp opener, no trailing fragment). Return it unchanged in trimmed.
+      system: `You are a print editor auditing the spoken blockquotes inside an article. For EACH numbered quote, judge against its surrounding prose AND the standalone test: even inside an article, a quote whose meaning depends on unstated context — a bare scale reference ("that's a 10.25"), an unexplained pronoun, a fragment — reads broken. Judge:
+- "keep": the quote directly supports the passage it sits in, reads like set type (no ramp opener, no trailing fragment), AND makes sense to a reader who just arrived at that paragraph. Return it unchanged in trimmed.
 - "trim": right quote, wrong boundaries — return the tightened version in trimmed. A trim may ONLY remove words from the start and/or end of the quote (you may capitalize the new first letter); never reword, never cut interior words.
-- "drop": the quote argues something the surrounding prose doesn't, or is redundant with a better quote. Return "" in trimmed.
+- "drop": the quote argues something the surrounding prose doesn't, fails the standalone test even after trimming, or is redundant with a better quote. Return "" in trimmed.
 An article keeps AT MOST its 2 highest-value quotes — the ones anchoring its strongest passages. If more than 2 exist, drop the weakest. One well-placed quote is fine; zero is acceptable if none serve their passages.
 Output valid JSON matching the schema, nothing else.`,
       messages: [{
