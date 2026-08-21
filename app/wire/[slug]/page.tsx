@@ -32,9 +32,15 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (!story) return { title: "The Wire" };
   return {
     title: `${story.headline} — The Wire`,
-    description: (story.deck ?? story.whatHappened)?.slice(0, 155),
+    description: truncateMeta(story.deck ?? story.whatHappened ?? ""),
     alternates: { canonical: `/wire/${slug}` },
   };
+}
+
+function truncateMeta(text: string, max = 155): string {
+  if (text.length <= max) return text;
+  const cut = text.slice(0, max);
+  return cut.slice(0, cut.lastIndexOf(" ")).replace(/[,;:.]?$/, "") + "…";
 }
 
 function SectionHead({ n, kicker, title }: { n: number; kicker: string; title: string }) {
@@ -189,7 +195,7 @@ export default async function WireStoryPage({ params }: { params: Promise<{ slug
               <>
                 <SectionHead n={next()} kicker="The Detail Beneath the Headline" title="What Most People Are Missing" />
                 <div className="missbox">
-                  <div className="eb">The Wire&apos;s signature question: what&apos;s the story under the story?</div>
+                  <div className="eb">The story under the story</div>
                   <p>{story.missing}</p>
                 </div>
               </>
@@ -230,7 +236,7 @@ export default async function WireStoryPage({ params }: { params: Promise<{ slug
               <>
                 <SectionHead n={next()} kicker="The Thesis" title="The Pate State Read" />
                 <div className="readcard">
-                  <div className="eb">The house analysis — identical treatment on every team&apos;s story</div>
+                  <div className="eb">The house analysis</div>
                   <p>{story.readBody}</p>
                 </div>
               </>

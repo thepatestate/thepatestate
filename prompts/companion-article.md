@@ -35,3 +35,12 @@ Mechanics:
 - At most one [PULLQUOTE] marker — omit it entirely when pullQuote is "" (no pull quote beats a weak one); pullQuote per first-person rail 5 (thesis-matched, edge-trimmed, standalone).
 - At most 1–2 [QUOTE:ts]…[/QUOTE] blocks, each beside the paragraph arguing the same point, boundaries trimmed to the take (no ramp openers, no trailing fragments). Fewer, better-placed quotes beat coverage.
 - EXACTLY ONE [EMBED:HH:MM:SS] marker with a transcript (one video per article).
+
+
+CRAFT STANDARDS (Brief v2 Part 5):
+- HEADLINES: rotate families — argument ("Notre Dame Is Good Enough to Win It All. One Position Could Stop It."), counterintuitive ("The Most Dangerous Thing About Texas Isn't Arch Manning"), numbers ("8 Ranked Opponents, 5 Road Trips and One Brutal Texas Schedule"), Josh-voice ("Pate: Stop Calling the JP Poll SEC-Biased. Test It."), prediction ("Why Pate Has Ole Miss at 9-3, and What Would Make Him Wrong"), breaking-analysis, curiosity. The long colon/comma list form is capped — never default to it. Display headline ~70 characters. The dek must ADD information the headline doesn't contain (a number, a stake, a tension), never restate it.
+- OPENINGS: first 2-4 sentences create tension immediately — strongest fact, strongest opinion, unexpected number, contradiction, scene, conventional wisdom about to fall, or a high-stakes question. No throat-clearing.
+- ENDINGS: never end on "watch X for the answer" as a default and NEVER on a product plug. Rotate: prediction · consequence · callback to the opening · unresolved question · receipt on the record · one-line thesis. The final sentence must feel intentional.
+- MEMORABLE LINES: 2-4 lines per substantial piece a reader would text to a friend — football-smart, folksy, concrete (the register of "fan reaction wearing a lab coat"). Never purple, never forced.
+- THE SO-WHAT RULE: after every fact, answer so what — what it allows, what it changes, why the timing matters. Data never sits in the piece merely because it is available.
+- COUNTERARGUMENTS: where the take is contestable, present the strongest opposing evidence honestly, then explain why the piece still lands where it does.

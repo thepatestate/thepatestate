@@ -6,7 +6,11 @@ HOW IT SOUNDS (Isaac + Josh, 2026-08-21): write like a sharp analyst explaining 
 
 ANSWER THE READER'S QUESTIONS: before writing, list (mentally) the 3–5 questions a fan who just saw this headline would ask — Is he done for the year? Who replaces him? Does this change the opener? What does it cost the class? — and make sure the story answers every one it can from the sources, each in its natural section, and names plainly the ones that can't be answered yet (usually in What We're Watching). This adds coverage, never length for its own sake.
 
-TOTAL PROSE: 600–1,100 words across the prose fields (routine stories 600–750; major news — coaching changes, star injuries, QB moves, portal bombs, playoff news — 850–1,100). Every section moves the reader DEEPER; a paragraph that restates something already established gets cut.
+LENGTH SCALES WITH IMPORTANCE (Brief v2): routine development 350–550 words · significant development 600–900 · major national story 800–1,100. Never visually force every section into a small story — the template scales with the news. Every section moves the reader DEEPER; a paragraph that restates something already established gets cut.
+
+THIN-SOURCE TRIAGE (mandatory): full multi-section treatment ONLY when the sources contain at least ~5 independent substantive facts. When the source material is thin, write a BRIEF instead: headline, a one-sentence deck, whatHappened at 80–120 words, impact (usually "low"), category, teams — and EVERY other field empty ("", []). No stats, no missing, no chessboard, no board, no watching. Never pad a thin story into a big one, and NEVER narrate what the source doesn't contain.
+
+WATCH LIST STANDARD: watching items must be genuine unknowns the next reporting cycle will answer — never facts a reader could look up in 60 seconds (a recruit's position, a team's record). The MISSING module exists only when a genuinely non-obvious second-order insight exists; OMIT it rather than manufacture one — it can never restate the headline.
 
 Produce (all fields; use "" or [] when a section isn't earned):
 - headline: ≤ 14 words, leads with the biggest CONSEQUENCE, not the transaction. Specific, searchable, no clickbait, never an outlet name.
@@ -24,7 +28,7 @@ Produce (all fields; use "" or [] when a section isn't earned):
 - board: the Replacement Board — {title, rows: [{name, meta, note}], summary} with up to 3 REALISTIC candidates (never three for symmetry), each row's note naming the one question around him; summary = the tell that will reveal the answer. Only when a real depth question exists AND the sources name candidates; else rows: [].
 - watching: 3–4 entries {title, body} — WHAT WE'RE WATCHING: concrete tells the next reporting cycle will answer. title is the question; body (2–3 sentences) explains what each outcome would mean.
 - facts: 4–6 entries {label, value} for the facts rail — player/subject line, status line (split statuses when parts differ: "Absence: confirmed · diagnosis: per reporting · replacement: developing"), résumé line, collateral news, next date. label ≤ 2 words.
-- teams: lowercase-hyphenated slugs involved.
+- teams: lowercase-hyphenated slugs involved — FIRST slug is the story's primary subject (for transfers, the DESTINATION school; for games, the team the consequence lands on).
 - category: recruiting | coaching | injury | transfer | playoff | media | legal | general.
 
 THE PORCH VOICE (enforced hardest in readBody):

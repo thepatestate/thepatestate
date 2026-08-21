@@ -11,6 +11,7 @@ import { getTeamDirectory } from "@/lib/cfbd";
 import { findReceipt } from "@/lib/quotes";
 import { slugify } from "@/lib/slug";
 import { writeJSON } from "@/lib/writer";
+import { boilerplateViolations, BOILERPLATE_PROMPT } from "@/lib/editorial";
 
 const MODEL = "claude-sonnet-5";
 // Client directive (2026-08-17): wire clicks must never leave the site, so
@@ -548,7 +549,7 @@ export async function generateWireStory(
 ): Promise<{ ok: true; fields: Record<string, unknown> } | { ok: false; reason: string }> {
   let receipt = await findReceipt(job.teams, job.receiptKeywords);
   if (receipt && !(await receiptIsRelevant(anthropic, receipt, job))) receipt = null;
-  const baseUser = `Source cluster:\n${job.sourceBlock}${receipt ? `\n\nJosh's archived on-topic quote (verbatim; render as his receipt, do NOT alter): "${receipt.quote}"` : ""}`;
+  const baseUser = `${BOILERPLATE_PROMPT}\n\nSource cluster:\n${job.sourceBlock}${receipt ? `\n\nJosh's archived on-topic quote (verbatim; render as his receipt, do NOT alter): "${receipt.quote}"` : ""}`;
   // One corrective retry when the draft names an outlet in the upper page
   // (guide §5) — the old pipeline REQUIRED that habit, so writers relapse.
   let storyRaw = "";
@@ -565,7 +566,7 @@ export async function generateWireStory(
     const upper = `${draft.deck ?? ""}\n${draft.whatHappened ?? ""}`;
     const allProse = ["deck", "whatHappened", "whyBody", "missing", "section04Body", "chessboard", "readBody"]
       .map((k) => draft[k] ?? "").join("\n");
-    if (!headlineNamesOutlet(upper) && !hasAttributionOpener(draft.whatHappened ?? "") && !narratesSourcing(allProse) && !hasFirstPersonProse(allProse)) break;
+    if (!headlineNamesOutlet(upper) && !hasAttributionOpener(draft.whatHappened ?? "") && !narratesSourcing(allProse) && !hasFirstPersonProse(allProse) && boilerplateViolations(allProse).length === 0) break;
     user = `${baseUser}\n\nYOUR PREVIOUS DRAFT VIOLATED the writing standard. The desk NEVER speaks in first person — no "I," "my," or "we've" anywhere in prose (the desk has no self; Josh's voice exists only in the receipt module). Never name an outlet or use in-prose attribution in the deck or What Happened (official source or a NAMED individual reporter only; unconfirmed details are "reported to be…"). And NEVER narrate your own sourcing anywhere — no "the source material," "the available information," "is described as," "no names are provided," "per the report." Write what IS known directly, the way an analyst explains news to a friend; where something is unknown, say what we don't know yet in plain speech ("Washington hasn't said who") without pointing at documents. Rewrite the full story.`;
   }
   const story = JSON.parse(storyRaw) as {
@@ -662,7 +663,12 @@ async function writeStoryFromSources(
     updatedAt: new Date().toISOString(),
   });
   if (db) await db.from("wire_clusters").update({ story_id: storyId }).eq("item_id", job.itemId);
-  await writeClient.patch(job.itemId).set({ story: { _type: "reference", _ref: storyId } }).commit();
+  // Brief v2 Part 7: the homepage teaser IS the story headline — one
+  // headline, never two versions of it.
+  await writeClient
+    .patch(job.itemId)
+    .set({ story: { _type: "reference", _ref: storyId }, headline: gen.fields.headline as string })
+    .commit();
   return "ok";
 }
 

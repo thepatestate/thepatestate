@@ -21,6 +21,8 @@ import { uploadHeroImage, setArticleHeroImage } from "@/lib/sanity";
 import { slugify } from "@/lib/slug";
 import { BYLINE_STAFF } from "@/lib/generate";
 import { JOSH_BRACKET_FIELD, JOSH_BRACKET_FINAL, JOSH_BRACKET_LABEL } from "@/lib/josh-bracket";
+import { pickArchitecture, boilerplateViolations, BOILERPLATE_PROMPT, scoreDraft } from "@/lib/editorial";
+import { hasFirstPersonProse } from "@/lib/wire";
 
 const MODEL = "claude-sonnet-5";
 
@@ -97,10 +99,15 @@ export async function generateLongformArticle(): Promise<string> {
         `*[_type == "wireStory" && publishedAt > $since] | order(publishedAt desc) [0...14]{ _id, headline, whatHappened, category, teams }`,
         { since: new Date(Date.now() - 72 * 3600_000).toISOString() },
       ),
-      writeClient.fetch<{ headline: string }[]>(
-        `*[_type == "article"] | order(coalesce(publishedAt, _createdAt) desc) [0...20]{ headline }`,
+      writeClient.fetch<{ headline: string; tags?: string[] }[]>(
+        `*[_type == "article"] | order(coalesce(publishedAt, _createdAt) desc) [0...20]{ headline, tags }`,
       ),
     ]);
+    const recentArch = recentArticles
+      .flatMap((a) => a.tags ?? [])
+      .filter((t) => t.startsWith("arch:"))
+      .map((t) => t.replace(/^arch:/, ""));
+    const arch = pickArchitecture(recentArch, recentArticles.length);
 
     const selRes = await anthropic.messages.create({
       model: MODEL,
@@ -139,7 +146,8 @@ export async function generateLongformArticle(): Promise<string> {
     }
     const standing = `ON-RECORD SITE POSITIONS (never contradict silently): ${JOSH_BRACKET_LABEL} — field: ${JOSH_BRACKET_FIELD.map((t) => `${t.seed} ${t.name}`).join(", ")}; final on record: ${JOSH_BRACKET_FINAL}. The JP Poll shown on the show is the MODEL's power ratings (Ohio State No. 1 preseason), not a ranking.`;
     const sourcePack = [
-      `ASSIGNMENT: type ${sel.typeId} — ${sel.topic}\nANGLE: ${sel.angle}`,
+      `ASSIGNMENT: type ${sel.typeId} — ${sel.topic}\nANGLE: ${sel.angle}\nARCHITECTURE FOR THIS PIECE (Brief v2 Rule 2 — commit to it fully): ${arch.name} — ${arch.brief}`,
+      BOILERPLATE_PROMPT,
       fullStories.length
         ? `WIRE COVERAGE (verified facts — the fact base):\n${fullStories
             .map((s) => `• ${s.headline}\n${[s.whatHappened, s.whyBody, s.missing, s.section04Body, s.readBody].filter(Boolean).join("\n")}`)
@@ -153,18 +161,27 @@ export async function generateLongformArticle(): Promise<string> {
       standing,
     ].join("\n\n");
 
-    // --- Draft ----------------------------------------------------------
-    const raw = await writeJSON({
-      system: `${prompt("global-preamble.md")}\n\n${prompt("standalone-article.md")}`,
-      user: sourcePack,
-      schema: LONGFORM_SCHEMA,
-      schemaName: "longform_article",
-      maxTokens: 8192,
-    });
-    const draft = JSON.parse(raw) as {
+    // --- Draft (one corrective retry on boilerplate/voice violations) ----
+    let raw = "";
+    let user = sourcePack;
+    let draft!: {
       headline: string; dek: string; bodyMarkdown: string; pullQuote: string;
       primaryTeam: string; teams: string[]; tags: string[]; seo: { title: string; description: string };
     };
+    for (let attempt = 0; attempt < 2; attempt++) {
+      raw = await writeJSON({
+        system: `${prompt("global-preamble.md")}\n\n${prompt("standalone-article.md")}`,
+        user,
+        schema: LONGFORM_SCHEMA,
+        schemaName: "longform_article",
+        maxTokens: 8192,
+      });
+      draft = JSON.parse(raw) as typeof draft;
+      const boiler = boilerplateViolations(draft.bodyMarkdown);
+      const firstPerson = hasFirstPersonProse(draft.bodyMarkdown);
+      if (boiler.length === 0 && !firstPerson) break;
+      user = `${sourcePack}\n\nYOUR PREVIOUS DRAFT VIOLATED house style${firstPerson ? " — it used first person under a Staff byline (Josh's positions are third person: \"Pate expects…\")" : ""}${boiler.length ? ` — banned boilerplate: ${boiler.join("; ")}` : ""}. Keep the analysis; rewrite the offending passages in fresh concrete prose.`;
+    }
     draft.bodyMarkdown = scrubDashes(draft.bodyMarkdown).replace(/\[EMBED:[^\]]*\]\s*/g, "").replace(/\[\/PULLQUOTE\]/g, "");
     draft.dek = scrubDashes(draft.dek);
 
@@ -210,6 +227,24 @@ export async function generateLongformArticle(): Promise<string> {
     const check = JSON.parse(textOf(checkRes)) as { verdict: string };
     if (check.verdict !== "pass") return `factcheck-${check.verdict}`;
 
+    // Brief v2 Part 8: scored quality gate — one rewrite with the judge's
+    // notes when the draft scores below 8 in two or more categories.
+    const verdict = await scoreDraft(anthropic, { headline: draft.headline, dek: draft.dek, body: draft.bodyMarkdown });
+    if (!verdict.pass) {
+      const raw2 = await writeJSON({
+        system: `${prompt("global-preamble.md")}\n\n${prompt("standalone-article.md")}`,
+        user: `${user}\n\nEDITOR'S REWRITE NOTES (your previous draft failed the quality gate — fix these precisely, keep what works): ${verdict.notes}`,
+        schema: LONGFORM_SCHEMA,
+        schemaName: "longform_article",
+        maxTokens: 8192,
+      });
+      const draft2 = JSON.parse(raw2) as typeof draft;
+      draft2.bodyMarkdown = scrubDashes(draft2.bodyMarkdown).replace(/\[EMBED:[^\]]*\]\s*/g, "").replace(/\[\/PULLQUOTE\]/g, "");
+      if (boilerplateViolations(draft2.bodyMarkdown).length === 0 && !hasFirstPersonProse(draft2.bodyMarkdown)) {
+        Object.assign(draft, draft2);
+      }
+    }
+
     // --- Publish --------------------------------------------------------
     const slug = slugify(draft.headline);
     const articleId = `article-lf-${slug.slice(0, 60)}`;
@@ -227,7 +262,7 @@ export async function generateLongformArticle(): Promise<string> {
       lowConfidence: false,
       primaryTeam: draft.primaryTeam,
       teams: draft.teams,
-      tags: [...draft.tags, sel.typeId],
+      tags: [...draft.tags, sel.typeId, `arch:${arch.key}`],
       contentType: "Analysis",
       productionMethod: "ai-reviewed",
       seoTitle: draft.seo.title,

@@ -13,6 +13,12 @@ import { formatDate } from "@/lib/format";
 
 export const revalidate = 300;
 
+function truncateMeta(text: string, max = 155): string {
+  if (text.length <= max) return text;
+  const cut = text.slice(0, max);
+  return cut.slice(0, cut.lastIndexOf(" ")).replace(/[,;:.]?$/, "") + "…";
+}
+
 export async function generateMetadata({
   params,
 }: {
@@ -23,7 +29,7 @@ export async function generateMetadata({
   if (!article) return {};
 
   const title = article.seoTitle || article.headline;
-  const description = article.seoDescription || article.dek;
+  const description = truncateMeta(article.seoDescription || article.dek || "");
   // Prefer the article's own generated hero; fall back to the episode's
   // YouTube thumbnail. If neither exists, leave openGraph/twitter unset so
   // the route inherits the site-wide app/opengraph-image.tsx + twitter-image.tsx.
@@ -78,7 +84,7 @@ export default async function ArticlePage({
     "@context": "https://schema.org",
     "@type": "NewsArticle",
     headline: article.headline,
-    description: article.dek,
+    description: truncateMeta(article.seoDescription || article.dek || ""),
     datePublished: article.publishedAt,
     dateModified: article.publishedAt,
     mainEntityOfPage: canonicalUrl,
@@ -165,7 +171,7 @@ export default async function ArticlePage({
                     </div>
                     <div className="cover-scrim" />
                     <div className="cover-body">
-                      <span className="fr">📝 The Notebook</span>
+                      <span className="fr">📝 {({"weekend-truths":"Weekend Truths","poll-day":"Poll Day","sit-down":"The Sit-Down","picks-drop":"Picks Drop","espn-friday":"The ESPN Show",mailbag:"The Mailbag"} as Record<string,string>)[article.episode?.series ?? ""] ?? "The Notebook"}</span>
                       <h1>{article.headline}</h1>
                       {article.dek && <p className="dek">{article.dek}</p>}
                       <div style={{ fontFamily: "var(--mono)", fontSize: 11, color: "var(--chalk-dim)", marginTop: 12 }}>
@@ -185,7 +191,7 @@ export default async function ArticlePage({
                 </>
               )}
 
-              <ArticleBody article={article} />
+              <ArticleBody article={article} hideKicker={Boolean(article.heroUrl || article.episode?.thumbnailUrl)} />
 
               <Corrections corrections={article.corrections} />
 

@@ -143,6 +143,9 @@ export async function setArticleHeroImage(articleId: string, assetId: string): P
 // ---- Wire Desk (v1.2) ----
 
 export interface SanityWireItem {
+  /** Story impact rating, projected for homepage triage (Brief v2: low-impact
+   * items never occupy the Latest module's top five). */
+  impact?: string;
   _id: string;
   headline: string;
   sub?: string;
@@ -197,7 +200,8 @@ export async function getWireItems(limit = 8): Promise<SanityWireItem[]> {
   return await readClient.fetch(
     `*[_type == "wireItem"] | order(publishedAt desc)[0...$limit]{
       _id, headline, sub, category, teams, importance, publishedAt,
-      "storySlug": story->slug.current, "sourceUrl": sourceUrls[0], "sourceOutlet": sourceOutlets[0]
+      "storySlug": story->slug.current, "impact": story->impact,
+      "sourceUrl": sourceUrls[0], "sourceOutlet": sourceOutlets[0]
     }`,
     { limit },
     { next: { revalidate: 120, tags: ["wire"] } } as never

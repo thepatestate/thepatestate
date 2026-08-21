@@ -2,6 +2,7 @@ import Anthropic from "@anthropic-ai/sdk";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { writeJSON } from "@/lib/writer";
+import { boilerplateViolations, BOILERPLATE_PROMPT, type Architecture } from "@/lib/editorial";
 
 export const BYLINE_STAFF = "The Pate State Staff";
 export const SERIES_VALUES = [
@@ -49,6 +50,12 @@ function normalizeForCompare(s: string): string {
     .replace(/[‘’]/g, "'")
     .replace(/[“”]/g, '"')
     .replace(/[,.]/g, "")
+    // Quote hygiene (Brief v2 Part 6): ASR garble tolerance — "0 and2"
+    // matches a cleaned "0 and 2"; ums/uhs removed from comparison so
+    // journalistically cleaned quotes still verify as verbatim.
+    .replace(/(\d)([a-z])/g, "$1 $2")
+    .replace(/([a-z])(\d)/g, "$1 $2")
+    .replace(/\b(um+|uh+|erm+)\b/g, " ")
     .replace(/\s+/g, " ")
     .trim();
 }
@@ -252,6 +259,8 @@ export async function extractQuotes(transcriptText: string): Promise<ExtractedQu
 export async function draftCompanion(input: {
   title: string; description: string; publishedAt: string; series: string; transcriptText: string | null;
   extractedQuotes?: ExtractedQuote[];
+  /** Editorial Brief v2 Rule 2: the pre-selected architecture for this piece. */
+  architecture?: Architecture;
 }): Promise<CompanionDraft | null> {
   const c = client();
   if (!c) return null;
@@ -265,6 +274,10 @@ export async function draftCompanion(input: {
         .join("\n")}`
     : null;
   const baseUser = [
+    ...(input.architecture
+      ? [`ARCHITECTURE FOR THIS PIECE (Brief v2 Rule 2 — the structure was chosen for this story; commit to it fully): ${input.architecture.name} — ${input.architecture.brief}`]
+      : []),
+    BOILERPLATE_PROMPT,
     `Episode title: ${input.title}`,
     `Series: ${input.series}`,
     `Published: ${input.publishedAt}`,
@@ -297,6 +310,12 @@ export async function draftCompanion(input: {
 
       if (!input.transcriptText) return draft; // nothing to verify quotes against
 
+      const boiler = boilerplateViolations(draft.bodyMarkdown);
+      if (boiler.length > 0 && attempt === 0) {
+        lastDraft = draft;
+        user = `${baseUser}\n\nYour previous draft used banned house boilerplate: ${boiler.join("; ")}. Keep the analysis, rewrite those passages in fresh concrete prose per the banned-boilerplate rules, and vary the section anchors.`;
+        continue;
+      }
       const badQuotes = findNonVerbatimQuotes(draft.bodyMarkdown, input.transcriptText);
       // v1.2: the pull quote itself must also be verbatim from the transcript.
       if (

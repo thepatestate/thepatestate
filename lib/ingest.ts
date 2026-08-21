@@ -1,7 +1,8 @@
 import type { Video } from "@/lib/youtube";
 import { writeClient, isSanityWriteConfigured, articleExistsForEpisode, uploadHeroImage, setArticleHeroImage } from "@/lib/sanity";
 import { fetchTranscript, transcriptToPromptText } from "@/lib/transcript";
-import { classifySeries, draftCompanion, extractQuotes, BYLINE_STAFF } from "@/lib/generate";
+import { classifySeries, draftCompanion, extractQuotes } from "@/lib/generate";
+import { pickArchitecture } from "@/lib/editorial";
 import { storeQuotes } from "@/lib/quotes";
 import { generateArticleHero } from "@/lib/hero-image";
 import { slugify } from "@/lib/slug";
@@ -85,10 +86,15 @@ export async function ingestEpisode(v: IngestVideo): Promise<IngestResult> {
     const quotes = transcriptText ? await extractQuotes(transcriptText) : [];
     if (quotes.length > 0) await storeQuotes(v.id, quotes);
 
-    // 5. Draft
+    // 5. Draft — with a rotated architecture (Brief v2 Rule 2).
+    const recentArch = await writeClient.fetch<string[]>(
+      `*[_type == "article"] | order(_createdAt desc) [0...6].tags[@ match "arch:*"]`
+    ).catch(() => [] as string[]);
+    const arch = pickArchitecture(recentArch.map((t) => t.replace(/^arch:/, "")), weekCount + dayCount);
     const draft = await draftCompanion({
       title: v.title, description: v.description ?? "", publishedAt: v.published,
       series: series ?? "general", transcriptText, extractedQuotes: quotes,
+      architecture: arch,
     });
     if (!draft) return "episode-only"; // poll cycle retries later
 
@@ -103,7 +109,10 @@ export async function ingestEpisode(v: IngestVideo): Promise<IngestResult> {
       bodyMarkdown: draft.bodyMarkdown,
       pullQuote: draft.pullQuote,
       episode: { _type: "reference", _ref: episodeId },
-      byline: BYLINE_STAFF,
+      // Editorial Brief v2 Rule 1: a faithful first-person adaptation of
+      // Josh's argument carries HIS byline with the "Adapted from The Josh
+      // Pate Show" label — never a Staff byline speaking as "I."
+      byline: "Josh Pate",
       // Auto-publish (owner call, 08-11): clean drafts go live immediately;
       // Josh's team can unpublish or correct any piece in Studio. Drafts
       // with no transcript grounding or self-flagged low confidence still
@@ -115,7 +124,7 @@ export async function ingestEpisode(v: IngestVideo): Promise<IngestResult> {
       lowConfidence: !transcriptText || draft.lowConfidence === true,
       primaryTeam: draft.primaryTeam,
       teams: draft.teams,
-      tags: draft.tags,
+      tags: [...draft.tags, `arch:${arch.key}`],
       seoTitle: draft.seo.title,
       seoDescription: draft.seo.description,
     });

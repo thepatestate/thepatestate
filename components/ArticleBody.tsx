@@ -101,18 +101,25 @@ function TextBlocks({ markdown, ytId }: { markdown: string; ytId?: string }) {
   );
 }
 
-export default function ArticleBody({ article }: { article: SanityArticle }) {
+export default function ArticleBody({ article, hideKicker = false }: { article: SanityArticle; hideKicker?: boolean }) {
   const segments = parseMarkers(article.bodyMarkdown);
 
   return (
     <>
-      <span className="fr" style={{ marginBottom: 0 }}>
-        📝 {seriesLabel(article.episode?.series)}
-      </span>
+      {/* One article, one series tag (Brief v2 Part 7.4): the cover shows
+          the series when it exists, so the body kicker is suppressed. */}
+      {!hideKicker && (
+        <span className="fr" style={{ marginBottom: 0 }}>
+          📝 {seriesLabel(article.episode?.series)}
+        </span>
+      )}
       <div className="byline">
         <div className="avatar">{initials(article.byline)}</div>
         <div className="who">
           <b>{article.byline}</b>
+          {article.episode && /josh pate/i.test(article.byline) && (
+            <span>Adapted from The Josh Pate Show</span>
+          )}
           {article.publishedAt && <span>{formatDate(article.publishedAt)}</span>}
         </div>
       </div>
