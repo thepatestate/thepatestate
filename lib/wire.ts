@@ -497,7 +497,7 @@ export function hasAttributionOpener(text: string): boolean {
   return /\b(a|the|its|their) reports? (says|said|notes|noted|adds|added|examines|examined|presents|presented|includes|included|details|detailed|indicates|indicated)\b/i.test(text);
 }
 
-interface StoryJob {
+export interface StoryJob {
   sourceBlock: string;
   outlets: string[];
   /** Outlet/url pairs rendered as the story's cited-sources block. */
@@ -511,11 +511,14 @@ interface StoryJob {
 /** Full-story generation + the §21 verification stack (banned patterns,
  * attribution, second-model fact-check). Shared by the live monitor and the
  * backfill. Returns "ok" or a skip reason. */
-async function writeStoryFromSources(
+/** Generation + the full §21 verification stack, shared by the live
+ * monitor, the backfill, and the archive-upgrade script. Returns the
+ * sanity-ready field object (everything but _id/_type/slug/publishedAt)
+ * or a skip reason. */
+export async function generateWireStory(
   anthropic: Anthropic,
-  db: ReturnType<typeof createAdminClient> | null,
   job: StoryJob,
-): Promise<string> {
+): Promise<{ ok: true; fields: Record<string, unknown> } | { ok: false; reason: string }> {
   let receipt = await findReceipt(job.teams, job.receiptKeywords);
   if (receipt && !(await receiptIsRelevant(anthropic, receipt, job))) receipt = null;
   const baseUser = `Source cluster:\n${job.sourceBlock}${receipt ? `\n\nJosh's archived on-topic quote (verbatim; render as his receipt, do NOT alter): "${receipt.quote}"` : ""}`;
@@ -561,9 +564,9 @@ async function writeStoryFromSources(
     ...story.watching.map((w) => `${w.title} ${w.body}`),
     ...(story.stats ?? []).map((st) => `${st.value} ${st.label}`),
   ].filter(Boolean).join("\n");
-  if (BANNED_PATTERNS.some((re) => re.test(combined))) return `banned:${job.clusterKey}`;
+  if (BANNED_PATTERNS.some((re) => re.test(combined))) return { ok: false, reason: `banned:${job.clusterKey}` };
   if (hasAttributionOpener(story.whatHappened) || headlineNamesOutlet(`${story.deck}\n${story.whatHappened}`)) {
-    return `attribution:${job.clusterKey}`;
+    return { ok: false, reason: `attribution:${job.clusterKey}` };
   }
 
   const checkRes = await anthropic.messages.create({
@@ -574,16 +577,14 @@ async function writeStoryFromSources(
     messages: [{ role: "user", content: `SOURCES:\n${job.sourceBlock}\n\nDRAFT:\n${combined}` }],
   });
   const check = JSON.parse(textOf(checkRes)) as { verdict: string; detail: string };
-  if (check.verdict !== "pass") return `factcheck-${check.verdict}:${job.clusterKey}`;
+  if (check.verdict !== "pass") return { ok: false, reason: `factcheck-${check.verdict}:${job.clusterKey}` };
 
   const teamDir = await getTeamDirectory().catch(() => ({}) as Record<string, unknown>);
   const normalizedTeams = (story.teams ?? []).map((t) => resolveTeamSlug(t, teamDir));
-  const storyId = `wireStory-${job.clusterKey}`;
-  await writeClient.createIfNotExists({
-    _id: storyId,
-    _type: "wireStory",
+  return {
+    ok: true,
+    fields: {
     headline: cleanHeadline(story.headline),
-    slug: { _type: "slug", current: slugify(story.headline) },
     verification: story.verification,
     category: story.category,
     teams: normalizedTeams,
@@ -609,6 +610,23 @@ async function writeStoryFromSources(
     readLabel: "THE PATE STATE READ",
     readBody: story.readBody.replace(/^\s*THE PATE STATE READ:?\s*/i, ""),
     sources: job.sources.slice(0, 6),
+    },
+  };
+}
+
+async function writeStoryFromSources(
+  anthropic: Anthropic,
+  db: ReturnType<typeof createAdminClient> | null,
+  job: StoryJob,
+): Promise<string> {
+  const gen = await generateWireStory(anthropic, job);
+  if (!gen.ok) return gen.reason;
+  const storyId = `wireStory-${job.clusterKey}`;
+  await writeClient.createIfNotExists({
+    _id: storyId,
+    _type: "wireStory",
+    slug: { _type: "slug", current: slugify(gen.fields.headline as string) },
+    ...gen.fields,
     publishedAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   });
@@ -620,7 +638,7 @@ async function writeStoryFromSources(
 /** Fetches a source article and extracts readable text (og:description +
  * paragraph content, tags stripped) so backfilled stories are grounded in
  * the actual report, not just a stored headline. Fail-soft empty string. */
-async function fetchSourceText(url: string): Promise<string> {
+export async function fetchSourceText(url: string): Promise<string> {
   try {
     const res = await fetch(url, {
       headers: { "user-agent": "PateStateWire/1.0 (+https://thepatestate.com)" },
