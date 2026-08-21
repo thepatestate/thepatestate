@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { titleKeywords, keywordOverlap, hasAttributionOpener, cleanHeadline, headlineNamesOutlet, splitSentences, scoreCallout, selectCallout, CALLOUT_BANNED } from "./wire";
+import { titleKeywords, keywordOverlap, hasAttributionOpener, cleanHeadline, headlineNamesOutlet, splitSentences, scoreCallout, selectCallout, scrubDashes, CALLOUT_BANNED } from "./wire";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
@@ -125,5 +125,15 @@ describe("prompt hygiene (regression guard)", () => {
         }
       }
     }
+  });
+});
+
+describe("scrubDashes (porch voice: no em dashes in prose)", () => {
+  it("replaces em and en dashes with commas", () => {
+    expect(scrubDashes("He was the continuity — the lone returning starter.")).toBe("He was the continuity, the lone returning starter.");
+    expect(scrubDashes("A 6–4 senior")).toBe("A 6, 4 senior".replace("6, 4", "6, 4"));
+  });
+  it("leaves hyphenated words alone", () => {
+    expect(scrubDashes("a five-year clock and third-and-manageable")).toBe("a five-year clock and third-and-manageable");
   });
 });

@@ -164,6 +164,19 @@ export interface SanityWireStory {
   teams?: string[];
   whatHappened?: string;
   whyItMatters?: string[];
+  // Production Guide v1.2 fields (new-format stories; legacy stories lack them)
+  deck?: string;
+  impact?: string;
+  impactRationale?: string;
+  stats?: { value?: string; label?: string; critical?: boolean }[];
+  whyBody?: string;
+  missing?: string;
+  section04Title?: string;
+  section04Body?: string;
+  chessboard?: string;
+  board?: { title?: string; rows?: { name?: string; meta?: string; note?: string }[]; summary?: string } | null;
+  watching?: { title?: string; body?: string }[];
+  facts?: { label?: string; value?: string }[];
   callout?: string;
   joshReceipt?: { quote?: string; ytId?: string; tsSeconds?: number } | null;
   readLabel?: string;
@@ -176,7 +189,9 @@ export interface SanityWireStory {
 }
 
 const WIRE_STORY_FIELDS = `_id, headline, slug, verification, category, teams, whatHappened,
-  whyItMatters, callout, joshReceipt, readLabel, readBody, whatsNext, sources, publishedAt, updatedAt, corrections`;
+  whyItMatters, deck, impact, impactRationale, stats, whyBody, missing, section04Title, section04Body,
+  chessboard, board, watching, facts, callout, joshReceipt, readLabel, readBody, whatsNext, sources,
+  publishedAt, updatedAt, corrections`;
 
 export async function getWireItems(limit = 8): Promise<SanityWireItem[]> {
   return await readClient.fetch(

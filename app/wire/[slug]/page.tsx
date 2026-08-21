@@ -1,19 +1,29 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getWireStoryBySlug, getWireStories } from "@/lib/sanity";
+import { getWireStoryBySlug, getWireStories, type SanityWireStory } from "@/lib/sanity";
+import { getTeamDirectory } from "@/lib/cfbd";
 import { teamLogoUrl } from "@/lib/teams-meta";
 import { getVideos, videoUrl, CHANNEL_URL } from "@/lib/youtube";
 import { formatDate } from "@/lib/format";
-import EditorialLabel, { Corrections } from "@/components/EditorialLabel";
-import Image from "next/image";
+import { Corrections } from "@/components/EditorialLabel";
 
 export const revalidate = 120;
 
-const VERIFICATION_STYLE: Record<string, { label: string; bg: string }> = {
-  confirmed: { label: "CONFIRMED", bg: "var(--field, #1E3B2E)" },
-  reported: { label: "REPORTED", bg: "var(--navy, #16213A)" },
-  developing: { label: "DEVELOPING", bg: "#7A5C1E" },
+// Wire story page — Production Guide v1.2 design constitution.
+// Reference build: docs/content/wire-kansas-state-pastore-v3.html.
+// New-format stories render the full architecture; legacy stories (pre-v1.2)
+// degrade to their sections inside the same shell.
+
+const STATUS_LABEL: Record<string, string> = {
+  confirmed: "Confirmed",
+  reported: "Reported",
+  developing: "Developing",
+};
+
+const CATEGORY_LABEL: Record<string, string> = {
+  recruiting: "Recruiting", coaching: "Coaching", injury: "Injury report",
+  transfer: "Transfer portal", playoff: "Playoff", media: "Media", legal: "Legal", general: "Breaking coverage",
 };
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
@@ -22,21 +32,41 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (!story) return { title: "The Wire" };
   return {
     title: `${story.headline} — The Wire`,
-    description: story.whatHappened?.slice(0, 155),
+    description: (story.deck ?? story.whatHappened)?.slice(0, 155),
     alternates: { canonical: `/wire/${slug}` },
   };
 }
 
+function SectionHead({ n, kicker, title }: { n: number; kicker: string; title: string }) {
+  return (
+    <h2><span className="pt">{String(n).padStart(2, "0")} · {kicker}</span>{title}</h2>
+  );
+}
+
 export default async function WireStoryPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const story = await getWireStoryBySlug(slug);
+  const story: SanityWireStory | null = await getWireStoryBySlug(slug);
   if (!story) notFound();
 
-  const v = VERIFICATION_STYLE[story.verification ?? "reported"] ?? VERIFICATION_STYLE.reported;
-  const latest = (await getVideos().catch(() => []))[0] ?? null;
+  const [dir, latestVideos, moreStories] = await Promise.all([
+    getTeamDirectory().catch(() => ({}) as Awaited<ReturnType<typeof getTeamDirectory>>),
+    getVideos().catch(() => []),
+    getWireStories(8).catch(() => []),
+  ]);
+  const team = story.teams?.[0];
+  const teamInfo = team ? dir[team] : undefined;
+  const teamLogo = team ? (teamInfo?.logo ?? teamLogoUrl(team)) : null;
+  const teamColor = teamInfo?.color ? `#${teamInfo.color.replace(/^#/, "")}` : "#1A2C55";
+  const latest = latestVideos[0] ?? null;
+  const related = moreStories.filter((s) => s.slug.current !== story.slug.current).slice(0, 3);
+
   const receiptHref = story.joshReceipt?.ytId
     ? `https://www.youtube.com/watch?v=${story.joshReceipt.ytId}&t=${story.joshReceipt.tsSeconds ?? 0}s`
     : null;
+  const status = STATUS_LABEL[story.verification ?? "reported"] ?? "Reported";
+  const stats = (story.stats ?? []).filter((s) => s.value && s.label);
+  const watching = (story.watching ?? []).filter((w) => w.title);
+  const boardRows = story.board?.rows?.filter((r) => r.name) ?? [];
 
   const storyUrl = `https://thepatestate.com/wire/${story.slug.current}`;
   const jsonLd = [
@@ -44,7 +74,7 @@ export default async function WireStoryPage({ params }: { params: Promise<{ slug
       "@context": "https://schema.org",
       "@type": "NewsArticle",
       headline: story.headline,
-      description: story.whatHappened?.slice(0, 300),
+      description: (story.deck ?? story.whatHappened)?.slice(0, 300),
       datePublished: story.publishedAt,
       dateModified: story.updatedAt ?? story.publishedAt,
       mainEntityOfPage: storyUrl,
@@ -66,162 +96,238 @@ export default async function WireStoryPage({ params }: { params: Promise<{ slug
     },
   ];
 
+  // Section numbering only counts sections that actually render.
+  let n = 0;
+  const next = () => ++n;
+
   return (
-    <main className="v5-lite">
+    <main className="v5 pg-wirestory">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}
       />
-      <header className="page-head" style={{ paddingBottom: 18 }}>
-        <div className="wrap">
-          <p className="crumb">The Pate State / The Wire</p>
-          <div style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap", marginBottom: 8 }}>
-            <span style={{ background: v.bg, color: "var(--chalk, #F3EFE6)", fontFamily: "var(--mono)", fontSize: 11, letterSpacing: ".08em", padding: "4px 10px", borderRadius: 3 }}>
-              THE WIRE · {v.label}
-            </span>
-            {story.teams?.slice(0, 3).map((t) => {
-              const logo = teamLogoUrl(t);
-              return logo ? (
-                <Image key={t} src={logo} alt={t} width={26} height={26} style={{ borderRadius: "50%", background: "#fff", padding: 2 }} />
-              ) : null;
-            })}
-            {story.updatedAt && (
-              <span style={{ fontFamily: "var(--mono)", fontSize: 11, color: "var(--ink-dim)" }}>
-                Updated {formatDate(story.updatedAt)}
+
+      <div className="wirestrip"><div className="wrap">
+        <span className="dot" /><b>The Wire</b>
+        <span>{CATEGORY_LABEL[story.category ?? "general"] ?? "Breaking coverage"}{teamInfo?.conference ? ` · ${teamInfo.conference}` : ""}</span>
+        <span className="t">UPDATED {formatDate(story.updatedAt ?? story.publishedAt ?? "").toUpperCase()}</span>
+      </div></div>
+
+      <div className="wrap"><div className="art-grid">
+        <article className="article">
+          <div className="a-crumb"><Link href="/">The Pate State</Link> / <Link href="/wire"><b>The Wire</b></Link></div>
+
+          <div className="a-kick">
+            <span className="k">The Wire</span>
+            <span className="st">Status · {status}</span>
+            {story.impact && <span className="imp">Impact · {story.impact.replace("-", " ")}</span>}
+            {team && (
+              <span className="team">
+                {teamLogo && <img src={teamLogo} alt="" width={22} height={22} />}
+                {teamInfo?.school ?? team.replace(/-/g, " ")}{teamInfo?.conference ? ` · ${teamInfo.conference}` : ""}
               </span>
             )}
           </div>
-          <h1 style={{ maxWidth: 900 }}>{story.headline}</h1>
-          <EditorialLabel contentType="News" productionMethod="ai-monitored" />
-        </div>
-      </header>
 
-      <section style={{ paddingTop: 24 }}>
-        <div className="wrap" style={{ maxWidth: 860 }}>
-          {/* The bold quote is the story quoting itself, rendered up top as
-              a deck — max distance from The Read it usually comes from, so
-              short stories don't show the same line twice in a row. */}
-          {story.callout && (
-            <div className="pullquote" style={{ marginBottom: 24 }}>{story.callout}</div>
-          )}
+          <h1 className="a-hl">{story.headline}</h1>
+          {story.deck && <p className="a-dek">{story.deck}</p>}
 
-          <h2 className="display" style={{ fontSize: 22 }}>What Happened</h2>
-          <p className="lede" style={{ marginTop: 6 }}>{story.whatHappened}</p>
-
-          {story.whyItMatters && story.whyItMatters.length > 0 && (
-            <>
-              <h2 className="display" style={{ fontSize: 22, marginTop: 28 }}>Why It Matters</h2>
-              <ul style={{ marginTop: 8, paddingLeft: 20, display: "grid", gap: 8 }}>
-                {story.whyItMatters.map((b, i) => (
-                  <li key={i} style={{ fontSize: 16, lineHeight: 1.55 }}>{b}</li>
-                ))}
-              </ul>
-            </>
-          )}
-
-          {/* Josh's take renders only when he was genuinely talking about
-              this news (relevance-gated at generation). */}
-          {story.joshReceipt?.quote && (
-            <>
-              <h2 className="display" style={{ fontSize: 22, marginTop: 28 }}>Josh Said It First</h2>
-              <blockquote style={{ margin: "8px 0 0", padding: "10px 16px", borderLeft: "3px solid var(--gold, #E8A33D)", fontStyle: "italic", fontSize: 15.5, lineHeight: 1.55 }}>
-                &ldquo;{story.joshReceipt.quote}&rdquo;
-                <span style={{ display: "block", marginTop: 6, fontStyle: "normal", fontFamily: "var(--mono)", fontSize: 12, color: "var(--ink-dim)" }}>
-                  — Josh Pate{receiptHref && (
-                    <>
-                      {" · "}
-                      <a href={receiptHref} target="_blank" rel="noopener" style={{ color: "var(--gold, #E8A33D)" }}>
-                        watch the moment →
-                      </a>
-                    </>
-                  )}
-                </span>
-              </blockquote>
-            </>
-          )}
-
-          <h2 className="display" style={{ fontSize: 22, marginTop: 28 }}>
-            {story.readLabel ?? "THE PATE STATE READ"}
-          </h2>
-          <p style={{ marginTop: 6, fontSize: 16, lineHeight: 1.6 }}>
-            {story.readBody}
-            {story.readLabel !== "JOSH'S READ" && (
-              <em style={{ display: "block", marginTop: 6, fontSize: 13, color: "var(--ink-dim)" }}>
-                (Josh has not yet commented.)
-              </em>
-            )}
-          </p>
-
-          {story.whatsNext && story.whatsNext.length > 0 && (
-            <>
-              <h2 className="display" style={{ fontSize: 22, marginTop: 28 }}>What&apos;s Next</h2>
-              <ul style={{ marginTop: 8, paddingLeft: 20, display: "grid", gap: 6 }}>
-                {story.whatsNext.map((w, i) => (
-                  <li key={i} style={{ fontSize: 15 }}>{w}</li>
-                ))}
-              </ul>
-            </>
-          )}
-
-          <Corrections corrections={story.corrections} />
-
-          <div style={{ marginTop: 32, borderTop: "1px solid var(--line-l)", paddingTop: 16, display: "grid", gap: 8 }}>
-            <a
-              href={receiptHref ?? (latest ? videoUrl(latest.id) : CHANNEL_URL)}
-              target="_blank"
-              rel="noopener"
-              className="btn gold"
-              style={{ justifySelf: "start" }}
-            >
-              ▶ {receiptHref ? "Watch Josh's take" : "Watch the latest show"}
-            </a>
-            {/* Source credit lives here — below the article, greyed, small,
-                italic (Josh via Isaac, 2026-08-20) — never in the prose. */}
-            {story.sources && story.sources.length > 0 && (
-              <p style={{ fontSize: 11.5, fontStyle: "italic", color: "var(--ink-dim)", opacity: 0.85 }}>
-                Reported by{" "}
-                {story.sources.map((s, i) => (
-                  <span key={i}>
-                    {i > 0 && " · "}
-                    {s.url ? (
-                      <a href={s.url} target="_blank" rel="noopener" style={{ color: "inherit", textDecoration: "underline" }}>
-                        {s.outlet ?? "source"}
-                      </a>
-                    ) : (
-                      s.outlet
-                    )}
-                  </span>
-                ))}
-              </p>
-            )}
-            <p style={{ fontSize: 11.5, fontStyle: "italic", color: "var(--ink-dim)", opacity: 0.85 }}>
-              Drafted by The Pate State&apos;s Wire Desk AI from the cited sources under the site&apos;s
-              verification rules, monitored by an editor — corrections are timestamped, never silent.
-            </p>
-            <p style={{ fontSize: 14 }}>
-              <Link href="/wire" style={{ color: "var(--gold, #E8A33D)" }}>← All wire coverage</Link>
-            </p>
-
-            {/* Reading never dead-ends: chain to the next stories on the
-                wire (the notebook's scroll-roll pattern lands here once
-                story volume supports it). */}
-            {(await getWireStories(6).catch(() => []))
-              .filter((s) => s.slug.current !== story.slug.current)
-              .slice(0, 3)
-              .map((s, i) => (
-                <Link
-                  key={s._id}
-                  href={`/wire/${s.slug.current}`}
-                  className="upnext-teaser"
-                  style={{ textDecoration: "none", color: "inherit", marginTop: i === 0 ? 30 : 18 }}
-                >
-                  <span className="upnext-kicker">{i === 0 ? "Up Next on the Wire" : "Then"}</span>
-                  <b className="upnext-headline" style={{ fontSize: 20 }}>{s.headline}</b>
-                </Link>
-              ))}
+          <div className="a-by">
+            <div className="av">WD</div>
+            <div className="who">
+              <b>The Pate State Wire Desk</b>
+              <span>Verified reporting · full source list below · monitored by an editor</span>
+            </div>
+            <div className="upd"><b>● {status}</b><br />{formatDate(story.publishedAt ?? "")}</div>
           </div>
+
+          {teamLogo && (
+            <div className="a-hero">
+              <div
+                className="ph"
+                style={{
+                  background: `radial-gradient(640px 340px at 70% 12%, ${teamColor}66, transparent 58%), linear-gradient(140deg, ${teamColor}40 0%, var(--w-navy-deep) 62%, #1A2C55 100%)`,
+                }}
+              >
+                {/* Team logo on a tinted field — the Wire graphic (guide §2:
+                    team color is a garnish, never an identity). */}
+                <img src={teamLogo} alt="" width={150} height={150} />
+              </div>
+              <span className="lbl">The Pate State · Wire Graphic</span>
+            </div>
+          )}
+
+          {stats.length > 0 && (
+            <div className="nums">
+              {stats.slice(0, 3).map((s, i) => (
+                <div className="num" key={i}>
+                  <div className={s.critical ? "n crit" : "n"}>{s.value}</div>
+                  <p>{s.label}</p>
+                </div>
+              ))}
+            </div>
+          )}
+
+          <div className="a-body">
+            <SectionHead n={next()} kicker="The News" title="What Happened" />
+            <p>{story.whatHappened}</p>
+
+            {(story.whyBody || (story.whyItMatters?.length ?? 0) > 0) && (
+              <>
+                <SectionHead n={next()} kicker="The Stakes" title="Why This One Matters" />
+                {story.whyBody ? (
+                  <p>{story.whyBody}</p>
+                ) : (
+                  <ul className="legacy">
+                    {story.whyItMatters!.map((b, i) => <li key={i}>{b}</li>)}
+                  </ul>
+                )}
+              </>
+            )}
+
+            {story.missing && (
+              <>
+                <SectionHead n={next()} kicker="The Detail Beneath the Headline" title="What Most People Are Missing" />
+                <div className="missbox">
+                  <div className="eb">The Wire&apos;s signature question: what&apos;s the story under the story?</div>
+                  <p>{story.missing}</p>
+                </div>
+              </>
+            )}
+
+            {story.callout && (
+              <div className="pull"><p>&ldquo;{story.callout}&rdquo;</p><span>The Wire Desk</span></div>
+            )}
+
+            {story.section04Body && (
+              <>
+                <SectionHead n={next()} kicker="The Personnel" title={story.section04Title || "What Changes Now"} />
+                <p>{story.section04Body}</p>
+              </>
+            )}
+
+            {boardRows.length > 0 && (
+              <div className="p22">
+                <div className="hd"><b>{story.board?.title || "The Replacement Board"}</b><span>Pate State projection — not a confirmed depth chart</span></div>
+                {boardRows.map((r, i) => (
+                  <div className="row" key={i}>
+                    <div className="pos">{r.name}<small>{r.meta}</small></div>
+                    <div className="who">{r.note}</div>
+                  </div>
+                ))}
+                {story.board?.summary && <div className="sum"><b>The tell:</b> {story.board.summary}</div>}
+              </div>
+            )}
+
+            {story.chessboard && (
+              <>
+                <SectionHead n={next()} kicker="The Chessboard" title="What the Coaches Can Actually Change" />
+                <div className="chessbox"><p>{story.chessboard}</p></div>
+              </>
+            )}
+
+            {story.readBody && (
+              <>
+                <SectionHead n={next()} kicker="The Thesis" title="The Pate State Read" />
+                <div className="readcard">
+                  <div className="eb">The house analysis — identical treatment on every team&apos;s story</div>
+                  <p>{story.readBody}</p>
+                </div>
+              </>
+            )}
+
+            {story.joshReceipt?.quote && (
+              <div className="joshtake">
+                <div className="eb">Josh&apos;s Take · on the record</div>
+                <p>&ldquo;{story.joshReceipt.quote}&rdquo;</p>
+                <span className="who">
+                  — Josh Pate{receiptHref && <> · <a href={receiptHref} target="_blank" rel="noopener">watch the moment →</a></>}
+                </span>
+              </div>
+            )}
+
+            {(watching.length > 0 || (story.whatsNext?.length ?? 0) > 0) && (
+              <>
+                <SectionHead n={next()} kicker="The Watch List" title="What We're Watching" />
+                <div className="wl">
+                  {watching.length > 0
+                    ? watching.map((w, i) => (
+                        <div key={i}><div className="n">{i + 1}</div><div><h3>{w.title}</h3>{w.body && <p>{w.body}</p>}</div></div>
+                      ))
+                    : story.whatsNext!.map((w, i) => (
+                        <div key={i}><div className="n">{i + 1}</div><div><h3>{w}</h3></div></div>
+                      ))}
+                </div>
+              </>
+            )}
+
+            <Corrections corrections={story.corrections} />
+
+            <div className="stdnote">
+              <b>Sourcing &amp; standards:</b>{" "}
+              {story.sources && story.sources.length > 0 && (
+                <>
+                  Reporting via{" "}
+                  {story.sources.map((s, i) => (
+                    <span key={i}>
+                      {i > 0 && " · "}
+                      {s.url ? <a href={s.url} target="_blank" rel="noopener">{s.outlet ?? "source"}</a> : s.outlet}
+                    </span>
+                  ))}
+                  .{" "}
+                </>
+              )}
+              Produced by the Pate State Wire Desk under the site&apos;s{" "}
+              <Link href="/standards">verification rules</Link>, monitored by an editor. Corrections are
+              timestamped, never silent.
+            </div>
+          </div>
+        </article>
+
+        <aside className="rail">
+          {story.impact && (
+            <div className="rc">
+              <div className="hd red">Impact Rating</div>
+              <div className="bd"><div className="impact">
+                <span className="badge">{story.impact.replace("-", " ")}</span>
+                {story.impactRationale && <p>{story.impactRationale}</p>}
+              </div></div>
+            </div>
+          )}
+          {(story.facts?.length ?? 0) > 0 && (
+            <div className="rc">
+              <div className="hd">The Facts</div>
+              <div className="bd"><ul>
+                {story.facts!.map((f, i) => (
+                  <li key={i}><b>{f.label}</b><i style={{ fontStyle: "normal" }}>{f.value}</i></li>
+                ))}
+              </ul></div>
+            </div>
+          )}
+          <div className="rc">
+            <div className="hd">Citizenship</div>
+            <Link className="cta" href="/join">Join Free</Link>
+            <p className="sub">Picks logged. Polls archived. The Porch gets the last word.</p>
+          </div>
+        </aside>
+      </div></div>
+
+      <div className="wrn"><div className="wrap">
+        <h2>What to Read &amp; Watch Next</h2>
+        <p className="sub">The story continues on the show and across the Wire.</p>
+        <div className="grid">
+          <a className="vid" href={latest ? videoUrl(latest.id) : CHANNEL_URL} target="_blank" rel="noopener">
+            <small>▶ Video · The Show</small>
+            <b>{latest ? latest.title.replace(/ - Josh Pate's College Football Show/i, "") : "Watch the latest episode of Josh Pate's College Football Show"}</b>
+          </a>
+          {related.map((s) => (
+            <Link href={`/wire/${s.slug.current}`} key={s._id}>
+              <small>{CATEGORY_LABEL[s.category ?? "general"] ?? "The Wire"}</small>
+              <b>{s.headline}</b>
+            </Link>
+          ))}
         </div>
-      </section>
+      </div></div>
     </main>
   );
 }

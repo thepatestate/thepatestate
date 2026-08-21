@@ -197,21 +197,81 @@ const ITEM_SCHEMA = {
   additionalProperties: false,
 } as const;
 
+// Production Guide v1.2 architecture (prompts/wire-production-guide.md,
+// reference build docs/content/wire-kansas-state-pastore-v3.html).
 const STORY_SCHEMA = {
   type: "object",
   properties: {
     headline: { type: "string" },
+    deck: { type: "string" },
     verification: { type: "string", enum: ["confirmed", "reported", "developing"] },
+    impact: { type: "string", enum: ["low", "moderate", "significant", "major", "season-shaping"] },
+    impactRationale: { type: "string" },
+    stats: {
+      type: "array",
+      items: {
+        type: "object",
+        properties: { value: { type: "string" }, label: { type: "string" }, critical: { type: "boolean" } },
+        required: ["value", "label", "critical"],
+        additionalProperties: false,
+      },
+    },
     whatHappened: { type: "string" },
-    whyItMatters: { type: "array", items: { type: "string" } },
+    whyBody: { type: "string" },
+    missing: { type: "string" },
+    section04Title: { type: "string" },
+    section04Body: { type: "string" },
+    chessboard: { type: "string" },
     readBody: { type: "string" },
-    whatsNext: { type: "array", items: { type: "string" } },
+    board: {
+      type: "object",
+      properties: {
+        title: { type: "string" },
+        rows: {
+          type: "array",
+          items: {
+            type: "object",
+            properties: { name: { type: "string" }, meta: { type: "string" }, note: { type: "string" } },
+            required: ["name", "meta", "note"],
+            additionalProperties: false,
+          },
+        },
+        summary: { type: "string" },
+      },
+      required: ["title", "rows", "summary"],
+      additionalProperties: false,
+    },
+    watching: {
+      type: "array",
+      items: {
+        type: "object",
+        properties: { title: { type: "string" }, body: { type: "string" } },
+        required: ["title", "body"],
+        additionalProperties: false,
+      },
+    },
+    facts: {
+      type: "array",
+      items: {
+        type: "object",
+        properties: { label: { type: "string" }, value: { type: "string" } },
+        required: ["label", "value"],
+        additionalProperties: false,
+      },
+    },
     teams: { type: "array", items: { type: "string" } },
     category: { type: "string" },
   },
-  required: ["headline", "verification", "whatHappened", "whyItMatters", "readBody", "whatsNext", "teams", "category"],
+  required: ["headline", "deck", "verification", "impact", "impactRationale", "stats", "whatHappened", "whyBody", "missing", "section04Title", "section04Body", "chessboard", "readBody", "board", "watching", "facts", "teams", "category"],
   additionalProperties: false,
 } as const;
+
+/** Porch-voice rule (§7): zero em dashes in article prose — the number-one
+ * AI tell. Deterministic scrub as the backstop behind the prompt ban.
+ * Exported for tests. */
+export function scrubDashes(t: string): string {
+  return t.replace(/\s*[—–]\s*/g, ", ").replace(/,\s*,/g, ", ");
+}
 
 // ---------------------------------------------------------------------------
 // Callout selection (overhaul 2026-08-20, per the Claude/ChatGPT/Grok
@@ -296,6 +356,10 @@ export function selectCallout(story: {
   const headlineKw = titleKeywords(story.headline ?? "");
   const pools: { text: string; bonus: number }[] = [
     { text: story.readBody ?? "", bonus: 2.5 },
+    { text: (story as { missing?: string }).missing ?? "", bonus: 1.5 },
+    { text: (story as { chessboard?: string }).chessboard ?? "", bonus: 1 },
+    { text: (story as { section04Body?: string }).section04Body ?? "", bonus: 0.5 },
+    { text: (story as { whyBody?: string }).whyBody ?? "", bonus: 0.5 },
     { text: (story.whyItMatters ?? []).join(" "), bonus: 0.5 },
     { text: story.whatHappened ?? "", bonus: -0.5 },
   ];
@@ -448,15 +512,33 @@ async function writeStoryFromSources(
     user: `Source cluster:\n${job.sourceBlock}${receipt ? `\n\nJosh's archived on-topic quote (verbatim; render as his receipt, do NOT alter): "${receipt.quote}"` : ""}`,
     schema: STORY_SCHEMA,
     schemaName: "wire_story",
-    maxTokens: 4096,
+    maxTokens: 8192,
   });
   const story = JSON.parse(storyRaw) as {
-    headline: string; verification: "confirmed" | "reported" | "developing";
-    whatHappened: string; whyItMatters: string[]; readBody: string;
-    whatsNext: string[]; teams: string[]; category: string;
+    headline: string; deck: string; verification: "confirmed" | "reported" | "developing";
+    impact: string; impactRationale: string;
+    stats: { value: string; label: string; critical: boolean }[];
+    whatHappened: string; whyBody: string; missing: string;
+    section04Title: string; section04Body: string; chessboard: string; readBody: string;
+    board: { title: string; rows: { name: string; meta: string; note: string }[]; summary: string };
+    watching: { title: string; body: string }[];
+    facts: { label: string; value: string }[];
+    teams: string[]; category: string;
   };
+  // Porch voice: scrub em dashes from every prose field (labels/data keep theirs).
+  for (const k of ["deck", "whatHappened", "whyBody", "missing", "section04Body", "chessboard", "readBody"] as const) {
+    story[k] = scrubDashes(story[k] ?? "");
+  }
+  story.watching = (story.watching ?? []).slice(0, 4).map((w) => ({ title: w.title, body: scrubDashes(w.body ?? "") }));
 
-  const combined = `${story.whatHappened}\n${story.whyItMatters.join("\n")}\n${story.readBody}`;
+  const combined = [
+    story.deck, story.whatHappened, story.whyBody, story.missing,
+    story.section04Body, story.chessboard, story.readBody,
+    ...(story.board?.rows ?? []).map((r) => `${r.name} ${r.meta} ${r.note}`),
+    story.board?.summary ?? "",
+    ...story.watching.map((w) => `${w.title} ${w.body}`),
+    ...(story.stats ?? []).map((st) => `${st.value} ${st.label}`),
+  ].filter(Boolean).join("\n");
   if (BANNED_PATTERNS.some((re) => re.test(combined))) return `banned:${job.clusterKey}`;
   if (hasAttributionOpener(story.whatHappened)) return `attribution:${job.clusterKey}`;
 
@@ -479,17 +561,27 @@ async function writeStoryFromSources(
     verification: story.verification,
     category: story.category,
     teams: story.teams,
+    deck: story.deck,
+    impact: story.impact,
+    impactRationale: story.impactRationale,
+    stats: (story.stats ?? []).slice(0, 3).map((st, i) => ({ _key: `stat${i}`, ...st })),
     whatHappened: story.whatHappened,
-    whyItMatters: story.whyItMatters.slice(0, 3),
+    whyBody: story.whyBody,
+    missing: story.missing,
+    section04Title: story.section04Title,
+    section04Body: story.section04Body,
+    chessboard: story.chessboard,
+    ...(story.board?.rows?.length
+      ? { board: { title: story.board.title, summary: story.board.summary, rows: story.board.rows.slice(0, 3).map((r, i) => ({ _key: `row${i}`, ...r })) } }
+      : {}),
+    watching: story.watching.map((w, i) => ({ _key: `w${i}`, ...w })),
+    facts: (story.facts ?? []).slice(0, 6).map((f, i) => ({ _key: `f${i}`, ...f })),
     callout: selectCallout({ ...story, headline: story.headline, category: story.category }),
     ...(receipt
       ? { joshReceipt: { quote: receipt.quote, ytId: receipt.yt_id, tsSeconds: receipt.ts_seconds } }
       : {}),
     readLabel: "THE PATE STATE READ",
-    // The page renders the label as a heading — a "THE PATE STATE READ:"
-    // prefix inside the body doubled it on screen (site review 2026-08-20).
     readBody: story.readBody.replace(/^\s*THE PATE STATE READ:?\s*/i, ""),
-    whatsNext: story.whatsNext.slice(0, 3),
     sources: job.sources.slice(0, 6),
     publishedAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
