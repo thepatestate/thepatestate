@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { titleKeywords, keywordOverlap, hasAttributionOpener, cleanHeadline, headlineNamesOutlet, splitSentences, scoreCallout, selectCallout, scrubDashes, resolveTeamSlug, narratesSourcing, CALLOUT_BANNED } from "./wire";
+import { titleKeywords, keywordOverlap, hasAttributionOpener, cleanHeadline, headlineNamesOutlet, splitSentences, scoreCallout, selectCallout, scrubDashes, resolveTeamSlug, narratesSourcing, hasFirstPersonProse, CALLOUT_BANNED } from "./wire";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
@@ -172,5 +172,16 @@ describe("scoreCallout standalone anchor", () => {
   });
   it("keeps anchored claims", () => {
     expect(scoreCallout("Kansas State opens against Iowa State without a single returning starter up front.")).toBeGreaterThan(0);
+  });
+});
+
+describe("hasFirstPersonProse (the desk has no self)", () => {
+  it("rejects first-person desk prose", () => {
+    expect(hasFirstPersonProse("I don't need the award to prove Oregon is good.")).toBe(true);
+    expect(hasFirstPersonProse("The verdict is simple, and I'm confident in it.")).toBe(true);
+  });
+  it("passes desk voice and second person", () => {
+    expect(hasFirstPersonProse("Oregon's real gain here is belief, and its real risk is expectation.")).toBe(false);
+    expect(hasFirstPersonProse("You don't get three losing seasons at Wisconsin.")).toBe(false);
   });
 });

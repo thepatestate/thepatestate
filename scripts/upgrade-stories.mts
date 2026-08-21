@@ -38,6 +38,8 @@ const { createAdminClient, isAdminConfigured } = await import("../lib/supabase/a
 const DRY_RUN = process.argv.includes("--dry-run");
 const limitArg = process.argv.indexOf("--limit");
 const LIMIT = limitArg !== -1 ? Number(process.argv[limitArg + 1]) : 50;
+const storyArg = process.argv.indexOf("--story");
+const STORY = storyArg !== -1 ? process.argv[storyArg + 1] : null;
 const anthropic = new Anthropic();
 const db = isAdminConfigured ? createAdminClient() : null;
 const logPath = join(process.cwd(), ".superpowers", "story-upgrades.log");
@@ -56,11 +58,16 @@ interface Candidate {
 }
 
 const candidates = await writeClient.fetch<Candidate[]>(
-  `*[_type == "wireItem" && defined(story) && !defined(story->deck)]{
+  STORY
+    ? `*[_type == "wireItem" && story._ref == $story]{
+    _id, importance, publishedAt, headline, sub, teams, sourceUrls, sourceOutlets,
+    "storyId": story->_id, "storyHeadline": story->headline
+  }`
+    : `*[_type == "wireItem" && defined(story) && !defined(story->deck)]{
     _id, importance, publishedAt, headline, sub, teams, sourceUrls, sourceOutlets,
     "storyId": story->_id, "storyHeadline": story->headline
   } | order(coalesce(importance, 4) desc, publishedAt desc) [0...$limit]`,
-  { limit: LIMIT },
+  { limit: LIMIT, story: STORY },
 );
 // Two items can reference one story — first (highest-ranked) wins.
 const seen = new Set<string>();

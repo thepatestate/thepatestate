@@ -339,6 +339,7 @@ export function scoreCallout(sentence: string): number {
   if (words.length < 8 || words.length > 24) return -Infinity;
   if (!/^[A-Z"“]/.test(s) || !/[.!?”"]$/.test(s)) return -Infinity;
   if (CALLOUT_BANNED.some((re) => re.test(s))) return -Infinity;
+  if (/(?:^|[\s“"(])(I|I'm|I've|I'd|my)\b/.test(s)) return -Infinity;
   if (headlineNamesOutlet(s) || /\breport(s|ed|ing)?\b/i.test(s)) return -Infinity;
   const hedges = s.match(HEDGES)?.length ?? 0;
   if (hedges >= 2) return -Infinity;
@@ -501,6 +502,13 @@ export function hasAttributionOpener(text: string): boolean {
   return /\b(a|the|its|their) reports? (says|said|notes|noted|adds|added|examines|examined|presents|presented|includes|included|details|detailed|indicates|indicated|frames|framed|describes|described|lists|listed)\b/i.test(text);
 }
 
+/** The desk has no self (wire-desk rule): first-person prose in a wire
+ * story is a fabricated voice — the receipt module is the only place a
+ * person speaks. Exported for tests. */
+export function hasFirstPersonProse(text: string): boolean {
+  return /(?:^|[\s“"(])(I|I'm|I've|I'd|I'll|my|me|we're|we've)(?=[\s,.!?'’])/m.test(text) && /\bI\b|I'm|I've|I'd|I'll/.test(text);
+}
+
 /** Isaac, 2026-08-21: the prose must never narrate its own sourcing —
  * "described as," "the source material," "provided here" reads like a
  * paralegal, not an analyst. Applied to ALL prose fields with a corrective
@@ -557,8 +565,8 @@ export async function generateWireStory(
     const upper = `${draft.deck ?? ""}\n${draft.whatHappened ?? ""}`;
     const allProse = ["deck", "whatHappened", "whyBody", "missing", "section04Body", "chessboard", "readBody"]
       .map((k) => draft[k] ?? "").join("\n");
-    if (!headlineNamesOutlet(upper) && !hasAttributionOpener(draft.whatHappened ?? "") && !narratesSourcing(allProse)) break;
-    user = `${baseUser}\n\nYOUR PREVIOUS DRAFT VIOLATED the writing standard. Never name an outlet or use in-prose attribution in the deck or What Happened (official source or a NAMED individual reporter only; unconfirmed details are "reported to be…"). And NEVER narrate your own sourcing anywhere — no "the source material," "the available information," "is described as," "no names are provided," "per the report." Write what IS known directly, the way an analyst explains news to a friend; where something is unknown, say what we don't know yet in plain speech ("Washington hasn't said who") without pointing at documents. Rewrite the full story.`;
+    if (!headlineNamesOutlet(upper) && !hasAttributionOpener(draft.whatHappened ?? "") && !narratesSourcing(allProse) && !hasFirstPersonProse(allProse)) break;
+    user = `${baseUser}\n\nYOUR PREVIOUS DRAFT VIOLATED the writing standard. The desk NEVER speaks in first person — no "I," "my," or "we've" anywhere in prose (the desk has no self; Josh's voice exists only in the receipt module). Never name an outlet or use in-prose attribution in the deck or What Happened (official source or a NAMED individual reporter only; unconfirmed details are "reported to be…"). And NEVER narrate your own sourcing anywhere — no "the source material," "the available information," "is described as," "no names are provided," "per the report." Write what IS known directly, the way an analyst explains news to a friend; where something is unknown, say what we don't know yet in plain speech ("Washington hasn't said who") without pointing at documents. Rewrite the full story.`;
   }
   const story = JSON.parse(storyRaw) as {
     headline: string; deck: string; verification: "confirmed" | "reported" | "developing";
@@ -590,6 +598,7 @@ export async function generateWireStory(
     return { ok: false, reason: `attribution:${job.clusterKey}` };
   }
   if (narratesSourcing(combined)) return { ok: false, reason: `sourcenarration:${job.clusterKey}` };
+  if (hasFirstPersonProse(combined)) return { ok: false, reason: `firstperson:${job.clusterKey}` };
 
   const checkRes = await anthropic.messages.create({
     model: MODEL,
