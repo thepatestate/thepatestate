@@ -171,15 +171,22 @@ export async function generateLongformArticle(): Promise<string> {
     // --- Gates ----------------------------------------------------------
     if (narratesSourcing(draft.bodyMarkdown)) return "gate-sourcenarration";
     if (/!\s|\bguaranteed\b/i.test(draft.bodyMarkdown)) return "gate-banned";
-    // Pull quote must be verbatim from a SUPPLIED archived quote (or empty).
+    // Pull quote must be verbatim from a SUPPLIED archived quote (or empty),
+    // and must not ALSO be written into the body — writers sometimes quote
+    // inline and drop the marker mid-sentence, rendering the quote twice
+    // (caught live 2026-08-21). Inline quoting wins; the marker goes.
     if (draft.pullQuote.trim()) {
-      const ok = quotes.some((q) => normalize(q.quote).includes(normalize(draft.pullQuote)));
-      if (!ok) {
+      const verbatim = quotes.some((q) => normalize(q.quote).includes(normalize(draft.pullQuote)));
+      const duplicatedInline = normalize(draft.bodyMarkdown).includes(normalize(draft.pullQuote));
+      if (!verbatim || duplicatedInline) {
         draft.pullQuote = "";
-        draft.bodyMarkdown = draft.bodyMarkdown.replace(/\[PULLQUOTE\]\s*/g, "");
+        draft.bodyMarkdown = draft.bodyMarkdown.replace(/\s*\[PULLQUOTE\]\s*/g, " ").replace(/ {2,}/g, " ");
+      } else {
+        // Marker renders as its own block — it always sits on its own line.
+        draft.bodyMarkdown = draft.bodyMarkdown.replace(/\s*\[PULLQUOTE\]\s*/g, "\n\n[PULLQUOTE]\n\n");
       }
     } else {
-      draft.bodyMarkdown = draft.bodyMarkdown.replace(/\[PULLQUOTE\]\s*/g, "");
+      draft.bodyMarkdown = draft.bodyMarkdown.replace(/\s*\[PULLQUOTE\]\s*/g, " ").replace(/ {2,}/g, " ");
     }
     const checkRes = await anthropic.messages.create({
       model: MODEL,

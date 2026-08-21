@@ -118,7 +118,7 @@ export default async function PeoplesGames() {
               <>
                 <div className="gc-sub">
                   Pick against Josh and the whole State. Build a streak. Earn your patches.
-                  {pick && pick.entries > 0 ? ` ${pick.entries.toLocaleString()} citizens already in.` : ""}
+                  {pick && pick.entries > 0 ? ` ${pick.entries.toLocaleString()} ${pick.entries === 1 ? "citizen" : "citizens"} already in.` : ""}
                 </div>
                 {/* The podium is real the moment Week 1 scores — until then
                     the medals show what's at stake, never invented names. */}
