@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { titleKeywords, keywordOverlap, hasAttributionOpener, cleanHeadline, headlineNamesOutlet, splitSentences, scoreCallout, selectCallout, scrubDashes, CALLOUT_BANNED } from "./wire";
+import { titleKeywords, keywordOverlap, hasAttributionOpener, cleanHeadline, headlineNamesOutlet, splitSentences, scoreCallout, selectCallout, scrubDashes, resolveTeamSlug, CALLOUT_BANNED } from "./wire";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
@@ -135,5 +135,19 @@ describe("scrubDashes (porch voice: no em dashes in prose)", () => {
   });
   it("leaves hyphenated words alone", () => {
     expect(scrubDashes("a five-year clock and third-and-manageable")).toBe("a five-year clock and third-and-manageable");
+  });
+});
+
+describe("resolveTeamSlug", () => {
+  const dir = { lsu: {}, "ohio-state": {}, "miami-oh": {} };
+  it("passes through known slugs", () => {
+    expect(resolveTeamSlug("ohio-state", dir)).toBe("ohio-state");
+  });
+  it("drops mascot suffixes to find the directory key", () => {
+    expect(resolveTeamSlug("lsu-tigers", dir)).toBe("lsu");
+    expect(resolveTeamSlug("ohio-state-buckeyes", dir)).toBe("ohio-state");
+  });
+  it("returns the original when nothing resolves", () => {
+    expect(resolveTeamSlug("unknown-team", dir)).toBe("unknown-team");
   });
 });

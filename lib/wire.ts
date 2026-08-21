@@ -7,6 +7,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { createAdminClient, isAdminConfigured } from "@/lib/supabase/admin";
 import { writeClient, isSanityWriteConfigured } from "@/lib/sanity";
+import { getTeamDirectory } from "@/lib/cfbd";
 import { findReceipt } from "@/lib/quotes";
 import { slugify } from "@/lib/slug";
 import { writeJSON } from "@/lib/writer";
@@ -266,6 +267,19 @@ const STORY_SCHEMA = {
   additionalProperties: false,
 } as const;
 
+/** Writers sometimes emit slug-plus-mascot ("lsu-tigers") — resolve to the
+ * FBS directory key by progressively dropping trailing words. Exported for
+ * tests. */
+export function resolveTeamSlug(slug: string, dir: Record<string, unknown>): string {
+  if (dir[slug]) return slug;
+  const parts = slug.split("-");
+  for (let cut = 1; cut < parts.length; cut++) {
+    const candidate = parts.slice(0, parts.length - cut).join("-");
+    if (dir[candidate]) return candidate;
+  }
+  return slug;
+}
+
 /** Porch-voice rule (§7): zero em dashes in article prose — the number-one
  * AI tell. Deterministic scrub as the backstop behind the prompt ban.
  * Exported for tests. */
@@ -504,16 +518,24 @@ async function writeStoryFromSources(
 ): Promise<string> {
   let receipt = await findReceipt(job.teams, job.receiptKeywords);
   if (receipt && !(await receiptIsRelevant(anthropic, receipt, job))) receipt = null;
-  // Written by the provider-routed prose writer; 4096 tokens because 2048
-  // truncated JSON mid-string once drafts were grounded in fetched source
-  // text (backfill) — headroom, not a target.
-  const storyRaw = await writeJSON({
-    system: `${prompt("global-preamble.md")}\n\n${prompt("wire-story.md")}`,
-    user: `Source cluster:\n${job.sourceBlock}${receipt ? `\n\nJosh's archived on-topic quote (verbatim; render as his receipt, do NOT alter): "${receipt.quote}"` : ""}`,
-    schema: STORY_SCHEMA,
-    schemaName: "wire_story",
-    maxTokens: 8192,
-  });
+  const baseUser = `Source cluster:\n${job.sourceBlock}${receipt ? `\n\nJosh's archived on-topic quote (verbatim; render as his receipt, do NOT alter): "${receipt.quote}"` : ""}`;
+  // One corrective retry when the draft names an outlet in the upper page
+  // (guide §5) — the old pipeline REQUIRED that habit, so writers relapse.
+  let storyRaw = "";
+  let user = baseUser;
+  for (let attempt = 0; attempt < 2; attempt++) {
+    storyRaw = await writeJSON({
+      system: `${prompt("global-preamble.md")}\n\n${prompt("wire-story.md")}`,
+      user,
+      schema: STORY_SCHEMA,
+      schemaName: "wire_story",
+      maxTokens: 8192,
+    });
+    const draft = JSON.parse(storyRaw) as { deck?: string; whatHappened?: string };
+    const upper = `${draft.deck ?? ""}\n${draft.whatHappened ?? ""}`;
+    if (!headlineNamesOutlet(upper) && !hasAttributionOpener(draft.whatHappened ?? "")) break;
+    user = `${baseUser}\n\nYOUR PREVIOUS DRAFT VIOLATED §5: it named an outlet or used in-prose attribution in the deck or What Happened. Rewrite so the lede attributes only to the OFFICIAL source or a NAMED individual reporter; unconfirmed details are "reported to be…" with no website named anywhere in the deck or What Happened. Outlet credit lives only in the sourcing footer (which the site renders automatically).`;
+  }
   const story = JSON.parse(storyRaw) as {
     headline: string; deck: string; verification: "confirmed" | "reported" | "developing";
     impact: string; impactRationale: string;
@@ -540,7 +562,9 @@ async function writeStoryFromSources(
     ...(story.stats ?? []).map((st) => `${st.value} ${st.label}`),
   ].filter(Boolean).join("\n");
   if (BANNED_PATTERNS.some((re) => re.test(combined))) return `banned:${job.clusterKey}`;
-  if (hasAttributionOpener(story.whatHappened)) return `attribution:${job.clusterKey}`;
+  if (hasAttributionOpener(story.whatHappened) || headlineNamesOutlet(`${story.deck}\n${story.whatHappened}`)) {
+    return `attribution:${job.clusterKey}`;
+  }
 
   const checkRes = await anthropic.messages.create({
     model: MODEL,
@@ -552,6 +576,8 @@ async function writeStoryFromSources(
   const check = JSON.parse(textOf(checkRes)) as { verdict: string; detail: string };
   if (check.verdict !== "pass") return `factcheck-${check.verdict}:${job.clusterKey}`;
 
+  const teamDir = await getTeamDirectory().catch(() => ({}) as Record<string, unknown>);
+  const normalizedTeams = (story.teams ?? []).map((t) => resolveTeamSlug(t, teamDir));
   const storyId = `wireStory-${job.clusterKey}`;
   await writeClient.createIfNotExists({
     _id: storyId,
@@ -560,7 +586,7 @@ async function writeStoryFromSources(
     slug: { _type: "slug", current: slugify(story.headline) },
     verification: story.verification,
     category: story.category,
-    teams: story.teams,
+    teams: normalizedTeams,
     deck: story.deck,
     impact: story.impact,
     impactRationale: story.impactRationale,
