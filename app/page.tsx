@@ -25,7 +25,9 @@ export default async function Home() {
     getVideos().catch(() => []),
     getShorts(6).catch(() => []),
     getPublishedArticles(12).catch(() => []),
-    getWireItems(12).catch(() => []),
+    // 40-deep so the Latest rail's clickable + non-low-impact filter still
+    // fills five slots on brief-heavy news days.
+    getWireItems(40).catch(() => []),
     getSlateGames(1, 6).catch(() => []),
     getChannelStats().catch(() => null),
     // publicClient() itself throws when Supabase env is absent — wrap the
