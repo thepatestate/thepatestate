@@ -2,7 +2,7 @@ import Anthropic from "@anthropic-ai/sdk";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { writeJSON } from "@/lib/writer";
-import { boilerplateViolations, BOILERPLATE_PROMPT, type Architecture } from "@/lib/editorial";
+import { boilerplateViolations, BOILERPLATE_PROMPT, VOICE_V4_PROMPT, type Architecture } from "@/lib/editorial";
 
 export const BYLINE_STAFF = "The Pate State Staff";
 export const SERIES_VALUES = [
@@ -277,6 +277,7 @@ export async function draftCompanion(input: {
     ...(input.architecture
       ? [`ARCHITECTURE FOR THIS PIECE (Brief v2 Rule 2 — the structure was chosen for this story; commit to it fully): ${input.architecture.name} — ${input.architecture.brief}`]
       : []),
+    VOICE_V4_PROMPT,
     BOILERPLATE_PROMPT,
     `Episode title: ${input.title}`,
     `Series: ${input.series}`,

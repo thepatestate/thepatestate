@@ -21,6 +21,31 @@ describe("boilerplateViolations", () => {
       ),
     ).toEqual([]);
   });
+  it("flags Article Updates 4.0 corporate noun phrases", () => {
+    expect(boilerplateViolations("The move reshapes the roster strategy in Athens.")).toContain("corporate noun phrase");
+    expect(boilerplateViolations("Nobody questions the production profile here.")).toContain("corporate noun phrase");
+    expect(boilerplateViolations("That raises the value of every internal answer.")).toContain("answer-as-player");
+    expect(boilerplateViolations("The room needs a dependable answer behind Fleming.")).toContain("answer-as-player");
+  });
+  it("flags fake drama and fake profundity", () => {
+    expect(boilerplateViolations("The season hinges on the left tackle.")).toContain("fake drama");
+    expect(boilerplateViolations("The offense can't cash that check yet.")).toContain("fake drama");
+    expect(boilerplateViolations("The season has to prove what the preseason can only assume.")).toContain("fake profundity");
+    expect(boilerplateViolations("Continuity only matters until continuity is tested.")).toContain("fake profundity");
+  });
+  it("flags the-clean-read and story-under-the-story", () => {
+    expect(boilerplateViolations("The clean read is that Georgia holds serve.")).toContain("the-clean-read");
+    expect(boilerplateViolations("That's the story under the story here.")).toContain("story-under-the-story");
+  });
+  it("allows one thesis-announcing opener but flags repetition", () => {
+    const one = "The question is whether the line holds up in November.";
+    expect(boilerplateViolations(one)).not.toContain("repeated thesis-announcing openers");
+    const two = one + "\nThe reality is that nobody knows yet.";
+    expect(boilerplateViolations(two)).toContain("repeated thesis-announcing openers");
+  });
+  it("normal football prose survives the answer-as-player rule", () => {
+    expect(boilerplateViolations("Stockton had an answer for every blitz Auburn showed him.")).toEqual([]);
+  });
 });
 
 describe("pickArchitecture", () => {

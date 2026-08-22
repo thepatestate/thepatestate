@@ -57,7 +57,18 @@ const BOILERPLATE: { name: string; re: RegExp }[] = [
   { name: "credit-belongs", re: /\bcredit (belongs|also belongs) to\b/i },
   { name: "quickly-supporting", re: /\bquickly, the supporting\b/i },
   { name: "task-before-the", re: /\bthe (task|matchup|question) (comes )?before the\b/i },
+  // Article Updates 4.0 additions (Josh via ChatGPT, 2026-08-22):
+  { name: "corporate noun phrase", re: /\b(roster strategy|internal answer|usable answers?|production profile|expectation territory|postseason burden|roster construction dynamic|continuity equation|developmental infrastructure|personnel solution|position-group outcome|competitive landscape|program trajectory|evaluation point|strategic implication|volume gap|larger offensive assignment|deployment becomes)\b/i },
+  { name: "answer-as-player", re: /\b(dependable|second|offensive|defensive|roster|another|every internal) answer(s)?\b/i },
+  { name: "fake drama", re: /\b(carries the burden|must answer the call|the season hinges on|faces a defining test|must prove itself|cash (that|the) check|the pressure now falls)\b/i },
+  { name: "fake profundity", re: /\b(what the preseason can only assume|only matters until [^.!?]{2,30} is tested|create(s)? (its|their) own burden|between projection and production)\b/i },
+  { name: "the-clean-read", re: /\bthe clean read\b/i },
+  { name: "story-under-the-story", re: /\bthe story under the story\b/i },
 ];
+
+// Thesis-announcing paragraph openers (Updates 4.0 rule 2): one is fine,
+// repetition is the robot tell — flag at two or more.
+const THESIS_OPENERS = /(?:^|\n)\s*(?:\*\*)?The (story|reality|question|key|clean read|bigger point|part easy to miss|polling|roster) (is|says)\b/gi;
 
 /** Returns the names of banned-boilerplate violations in a draft: any
  * boilerplate label, or more than one counterpoint framing. Exported for
@@ -67,6 +78,8 @@ export function boilerplateViolations(text: string): string[] {
   for (const b of BOILERPLATE) if (b.re.test(text)) hits.push(b.name);
   const counter = text.match(COUNTERPOINT_RE)?.length ?? 0;
   if (counter > 1) hits.push("multiple counterpoint framings");
+  const thesisOpeners = text.match(THESIS_OPENERS)?.length ?? 0;
+  if (thesisOpeners >= 2) hits.push("repeated thesis-announcing openers");
   return hits;
 }
 
@@ -80,6 +93,7 @@ export const BOILERPLATE_PROMPT = `BANNED BOILERPLATE (the analytical move stays
 export const QUALITY_CATEGORIES = [
   "voice", "originality", "specificity", "evidence", "pacing",
   "personality", "structuralVariety", "valueAdded", "headline", "accuracy",
+  "humanity",
 ] as const;
 
 export interface QualityVerdict {
@@ -130,7 +144,8 @@ structuralVariety — does the shape feel like a template? (formulaic = low)
 valueAdded — would someone who already watched the source video still learn something?
 headline — would a serious CFB fan click, and does the dek add information?
 accuracy — any name, stat, or claim that smells unverified?
-notes: 2-4 blunt sentences naming the weakest categories and exactly what to fix. Output JSON only.`,
+humanity — the Article Updates 4.0 test: does this sound WRITTEN or GENERATED? Generated tells (score low for any): abstract nouns doing football's job ("roster strategy," "internal answer," "production profile"), paragraphs that open by announcing their thesis ("The story is… The reality is… The question is…"), fake-profound sentences that inform nothing ("the season has to prove what the preseason can only assume"), every sentence straining to sound important, five same-length declaratives in a row, corporate language a coach would never say aloud. Written tells (score high): named people over concepts, one earned memorable line, varied rhythm, a sentence a smart fan would actually say on a podcast.
+notes: 2-4 blunt sentences naming the weakest categories and exactly what to fix; when humanity scores low, QUOTE the two or three sentences that sound most generated so the rewrite can target them. Output JSON only.`,
       messages: [{ role: "user", content: `HEADLINE: ${input.headline}\nDEK: ${input.dek ?? ""}\n\n${input.body}` }],
     });
     const block = res.content.find((b) => b.type === "text");
@@ -141,3 +156,23 @@ notes: 2-4 blunt sentences naming the weakest categories and exactly what to fix
     return { scores: {}, notes: "", pass: true };
   }
 }
+
+// Article Updates 4.0 (Josh via ChatGPT, 2026-08-22) — the distilled
+// human-voice layer injected into EVERY writer call. Full document:
+// prompts/article-updates-v4.md. This is deliberately long; voice is the
+// product.
+export const VOICE_V4_PROMPT = `HUMAN VOICE RULES (Article Updates 4.0 — the standard is "written, not generated"):
+- CONCRETE BEFORE ABSTRACT. Players, coaches, positions, games, decisions — never abstract nouns. Not "the roster strategy raises the value of every internal answer" but "with Williams out, somebody who expected to be the fourth edge rusher may need real snaps in September." When an abstract sentence can be translated into actual football, translate it.
+- STOP ANNOUNCING THESES. Never open paragraphs repeatedly with "The story is / The reality is / The question is / The key is / The clean read is / What matters here is." Tell the reader what happened and let the meaning emerge. Real transitions instead: "And that's where this gets interesting." "There's one problem." "That's the bet." "Now comes the harder part." "Nobody knows that answer yet." (Use these selectively — they must never become the new template.)
+- NEVER corporate football: roster strategy, internal/usable/dependable "answers" (name what's needed: a tight end who can catch, someone who can play 30 snaps), production profile, personnel solution, competitive landscape, program trajectory. If it could appear in a strategy memo, rewrite it.
+- NO FAKE PROFUNDITY ("the season has to prove what the preseason can only assume") and NO FAKE DRAMA on routine stories ("carries the burden," "the season hinges on"). Simple beats manufactured: "Georgia looks deep in August. Williams' injury gives us an early chance to find out how deep."
+- ONE memorable short line beats six attempted ones. Punchy landing sentences only after the information earns them.
+- PEOPLE OVER CONCEPTS. Name the person; allow warmth without sentimentality ("Szymanski has spent most of his Maryland career waiting for exactly this kind of opening"). Never invent emotions.
+- VARY RHYTHM: a short sentence, a normal one, occasionally a long one connecting ideas. If five consecutive sentences share length and shape, rewrite. Vary temperature too: reporting, then observation, then football analysis, then a touch of personality ("Defenses can live with one problem. Two gets annoying.").
+- WRITE TO ONE SMART FAN across the table — no lecturing, no over-explaining, forward pull every few paragraphs ("But Fleming isn't actually the most interesting part of this"). Lead with the interesting sentence, not the comprehensive one: "Fleming caught 40 passes last year. Every other Maryland tight end combined caught nine."
+- CONTRAST when the facts support it: "Georgia doesn't have a talent problem. It has a January problem." Never manufacture false binaries.
+- ONE CENTRAL QUESTION per story, revealed progressively — each section advances it, never restates it; the concluding read RESOLVES it like the writer finally putting cards on the table, and the ending leaves the reader something specific to watch on Saturday ("Watch who stays on the field next to Fleming when Maryland has to throw"), never "time will tell."
+- LET THE WRITER NOTICE THINGS: one player with nearly all of a group's production, the freshman suddenly in the two-deep, the schedule stretch that changes the urgency. The reader should feel someone is noticing things on his behalf, and at least once think "I hadn't considered that."
+- THE READ-ALOUD TEST governs every sentence: would a knowledgeable college football person actually SAY this on a podcast? Nobody says "the roster's 2026 answer is expected to come from players already in the program." Someone says "Georgia is betting that most of the answers are already on the roster." Before finishing, find the five sentences that sound most like AI and rewrite all five.
+Every example sentence above is an illustration from OTHER stories (Georgia, Maryland, Fleming, Williams) — never reuse their wording, teams, players, or lines in your story; they show the register, not phrases to copy.
+The voice in one sentence: a smart, curious college football obsessive who did more homework than everyone else, talking to a friend on the front porch — not a professor at a podium, not an algorithm delivering a thesis.`;

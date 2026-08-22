@@ -21,7 +21,7 @@ import { uploadHeroImage, setArticleHeroImage } from "@/lib/sanity";
 import { slugify } from "@/lib/slug";
 import { BYLINE_STAFF } from "@/lib/generate";
 import { JOSH_BRACKET_FIELD, JOSH_BRACKET_FINAL, JOSH_BRACKET_LABEL } from "@/lib/josh-bracket";
-import { pickArchitecture, boilerplateViolations, BOILERPLATE_PROMPT, scoreDraft } from "@/lib/editorial";
+import { pickArchitecture, boilerplateViolations, BOILERPLATE_PROMPT, VOICE_V4_PROMPT, scoreDraft } from "@/lib/editorial";
 import { hasFirstPersonProse } from "@/lib/wire";
 
 const MODEL = "claude-sonnet-5";
@@ -147,6 +147,7 @@ export async function generateLongformArticle(): Promise<string> {
     const standing = `ON-RECORD SITE POSITIONS (never contradict silently): ${JOSH_BRACKET_LABEL} — field: ${JOSH_BRACKET_FIELD.map((t) => `${t.seed} ${t.name}`).join(", ")}; final on record: ${JOSH_BRACKET_FINAL}. The JP Poll shown on the show is the MODEL's power ratings (Ohio State No. 1 preseason), not a ranking.`;
     const sourcePack = [
       `ASSIGNMENT: type ${sel.typeId} — ${sel.topic}\nANGLE: ${sel.angle}\nARCHITECTURE FOR THIS PIECE (Brief v2 Rule 2 — commit to it fully): ${arch.name} — ${arch.brief}`,
+      VOICE_V4_PROMPT,
       BOILERPLATE_PROMPT,
       fullStories.length
         ? `WIRE COVERAGE (verified facts — the fact base):\n${fullStories

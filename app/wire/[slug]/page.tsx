@@ -195,7 +195,6 @@ export default async function WireStoryPage({ params }: { params: Promise<{ slug
               <>
                 <SectionHead n={next()} kicker="The Detail Beneath the Headline" title="What Most People Are Missing" />
                 <div className="missbox">
-                  <div className="eb">The story under the story</div>
                   <p>{story.missing}</p>
                 </div>
               </>
@@ -236,7 +235,6 @@ export default async function WireStoryPage({ params }: { params: Promise<{ slug
               <>
                 <SectionHead n={next()} kicker="The Thesis" title="The Pate State Read" />
                 <div className="readcard">
-                  <div className="eb">The house analysis</div>
                   <p>{story.readBody}</p>
                 </div>
               </>

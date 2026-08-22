@@ -11,7 +11,7 @@ import { getTeamDirectory } from "@/lib/cfbd";
 import { findReceipt } from "@/lib/quotes";
 import { slugify } from "@/lib/slug";
 import { writeJSON } from "@/lib/writer";
-import { boilerplateViolations, BOILERPLATE_PROMPT } from "@/lib/editorial";
+import { boilerplateViolations, BOILERPLATE_PROMPT, VOICE_V4_PROMPT, scoreDraft } from "@/lib/editorial";
 
 const MODEL = "claude-sonnet-5";
 // Client directive (2026-08-17): wire clicks must never leave the site, so
@@ -549,7 +549,7 @@ export async function generateWireStory(
 ): Promise<{ ok: true; fields: Record<string, unknown> } | { ok: false; reason: string }> {
   let receipt = await findReceipt(job.teams, job.receiptKeywords);
   if (receipt && !(await receiptIsRelevant(anthropic, receipt, job))) receipt = null;
-  const baseUser = `${BOILERPLATE_PROMPT}\n\nSource cluster:\n${job.sourceBlock}${receipt ? `\n\nJosh's archived on-topic quote (verbatim; render as his receipt, do NOT alter): "${receipt.quote}"` : ""}`;
+  const baseUser = `${VOICE_V4_PROMPT}\n\n${BOILERPLATE_PROMPT}\n\nSource cluster:\n${job.sourceBlock}${receipt ? `\n\nJosh's archived on-topic quote (verbatim; render as his receipt, do NOT alter): "${receipt.quote}"` : ""}`;
   // One corrective retry when the draft names an outlet in the upper page
   // (guide §5) — the old pipeline REQUIRED that habit, so writers relapse.
   let storyRaw = "";
@@ -569,7 +569,7 @@ export async function generateWireStory(
     if (!headlineNamesOutlet(upper) && !hasAttributionOpener(draft.whatHappened ?? "") && !narratesSourcing(allProse) && !hasFirstPersonProse(allProse) && boilerplateViolations(allProse).length === 0) break;
     user = `${baseUser}\n\nYOUR PREVIOUS DRAFT VIOLATED the writing standard. The desk NEVER speaks in first person — no "I," "my," or "we've" anywhere in prose (the desk has no self; Josh's voice exists only in the receipt module). Never name an outlet or use in-prose attribution in the deck or What Happened (official source or a NAMED individual reporter only; unconfirmed details are "reported to be…"). And NEVER narrate your own sourcing anywhere — no "the source material," "the available information," "is described as," "no names are provided," "per the report." Write what IS known directly, the way an analyst explains news to a friend; where something is unknown, say what we don't know yet in plain speech ("Washington hasn't said who") without pointing at documents. Rewrite the full story.`;
   }
-  const story = JSON.parse(storyRaw) as {
+  type StoryDraft = {
     headline: string; deck: string; verification: "confirmed" | "reported" | "developing";
     impact: string; impactRationale: string;
     stats: { value: string; label: string; critical: boolean }[];
@@ -581,35 +581,68 @@ export async function generateWireStory(
     teams: string[]; category: string;
   };
   // Porch voice: scrub em dashes from every prose field (labels/data keep theirs).
-  for (const k of ["deck", "whatHappened", "whyBody", "missing", "section04Body", "chessboard", "readBody"] as const) {
-    story[k] = scrubDashes(story[k] ?? "");
-  }
-  story.watching = (story.watching ?? []).slice(0, 4).map((w) => ({ title: w.title, body: scrubDashes(w.body ?? "") }));
+  const parseDraft = (raw: string): { story: StoryDraft; combined: string } => {
+    const draft = JSON.parse(raw) as StoryDraft;
+    for (const k of ["deck", "whatHappened", "whyBody", "missing", "section04Body", "chessboard", "readBody"] as const) {
+      draft[k] = scrubDashes(draft[k] ?? "");
+    }
+    draft.watching = (draft.watching ?? []).slice(0, 4).map((w) => ({ title: w.title, body: scrubDashes(w.body ?? "") }));
+    const combined = [
+      draft.deck, draft.whatHappened, draft.whyBody, draft.missing,
+      draft.section04Body, draft.chessboard, draft.readBody,
+      ...(draft.board?.rows ?? []).map((r) => `${r.name} ${r.meta} ${r.note}`),
+      draft.board?.summary ?? "",
+      ...draft.watching.map((w) => `${w.title} ${w.body}`),
+      ...(draft.stats ?? []).map((st) => `${st.value} ${st.label}`),
+    ].filter(Boolean).join("\n");
+    return { story: draft, combined };
+  };
+  const proseGateFailure = (d: StoryDraft, c: string): string | null => {
+    if (BANNED_PATTERNS.some((re) => re.test(c))) return "banned";
+    if (hasAttributionOpener(d.whatHappened) || headlineNamesOutlet(`${d.deck}\n${d.whatHappened}`)) return "attribution";
+    if (narratesSourcing(c)) return "sourcenarration";
+    if (hasFirstPersonProse(c)) return "firstperson";
+    return null;
+  };
+  const factCheck = async (c: string): Promise<{ verdict: string; detail: string }> => {
+    const checkRes = await anthropic.messages.create({
+      model: MODEL,
+      max_tokens: 512,
+      output_config: { effort: "low", format: { type: "json_schema", schema: FACTCHECK_SCHEMA } },
+      system: "You are an independent fact-check gate. You receive SOURCES and a DRAFT. Verdict 'contradicted' if any draft claim conflicts with the sources; 'unsupported' if any material factual claim (names, numbers, timelines, outcomes) does not appear in the sources; else 'pass'. Interpretation clearly labeled as analysis is allowed; invented facts are not. Output JSON only.",
+      messages: [{ role: "user", content: `SOURCES:\n${job.sourceBlock}\n\nDRAFT:\n${c}` }],
+    });
+    return JSON.parse(textOf(checkRes)) as { verdict: string; detail: string };
+  };
 
-  const combined = [
-    story.deck, story.whatHappened, story.whyBody, story.missing,
-    story.section04Body, story.chessboard, story.readBody,
-    ...(story.board?.rows ?? []).map((r) => `${r.name} ${r.meta} ${r.note}`),
-    story.board?.summary ?? "",
-    ...story.watching.map((w) => `${w.title} ${w.body}`),
-    ...(story.stats ?? []).map((st) => `${st.value} ${st.label}`),
-  ].filter(Boolean).join("\n");
-  if (BANNED_PATTERNS.some((re) => re.test(combined))) return { ok: false, reason: `banned:${job.clusterKey}` };
-  if (hasAttributionOpener(story.whatHappened) || headlineNamesOutlet(`${story.deck}\n${story.whatHappened}`)) {
-    return { ok: false, reason: `attribution:${job.clusterKey}` };
-  }
-  if (narratesSourcing(combined)) return { ok: false, reason: `sourcenarration:${job.clusterKey}` };
-  if (hasFirstPersonProse(combined)) return { ok: false, reason: `firstperson:${job.clusterKey}` };
-
-  const checkRes = await anthropic.messages.create({
-    model: MODEL,
-    max_tokens: 512,
-    output_config: { effort: "low", format: { type: "json_schema", schema: FACTCHECK_SCHEMA } },
-    system: "You are an independent fact-check gate. You receive SOURCES and a DRAFT. Verdict 'contradicted' if any draft claim conflicts with the sources; 'unsupported' if any material factual claim (names, numbers, timelines, outcomes) does not appear in the sources; else 'pass'. Interpretation clearly labeled as analysis is allowed; invented facts are not. Output JSON only.",
-    messages: [{ role: "user", content: `SOURCES:\n${job.sourceBlock}\n\nDRAFT:\n${combined}` }],
-  });
-  const check = JSON.parse(textOf(checkRes)) as { verdict: string; detail: string };
+  let { story, combined } = parseDraft(storyRaw);
+  const gateFail = proseGateFailure(story, combined);
+  if (gateFail) return { ok: false, reason: `${gateFail}:${job.clusterKey}` };
+  const check = await factCheck(combined);
   if (check.verdict !== "pass") return { ok: false, reason: `factcheck-${check.verdict}:${job.clusterKey}` };
+
+  // Article Updates 4.0: the scored judge (now including the humanity
+  // category) gets one shot at forcing a rewrite. Fail-open by design — the
+  // Wire has to publish, and the hard gates above remain the floor; the
+  // rewrite is only adopted when it passes those same gates plus fact-check.
+  const verdict = await scoreDraft(anthropic, { headline: story.headline, dek: story.deck, body: combined });
+  if (!verdict.pass) {
+    try {
+      const rewriteRaw = await writeJSON({
+        system: `${prompt("global-preamble.md")}\n\n${prompt("wire-story.md")}`,
+        user: `${baseUser}\n\nYOUR PREVIOUS DRAFT FAILED the pre-publish quality judge. Judge notes (fix exactly these): ${verdict.notes}\n\nPrevious draft for reference:\n${storyRaw}\n\nRewrite the full story. Keep every verified fact; change the writing. The humanity standard is pass/fail: it must sound written by a person, never generated.`,
+        schema: STORY_SCHEMA,
+        schemaName: "wire_story",
+        maxTokens: 8192,
+      });
+      const re = parseDraft(rewriteRaw);
+      if (!proseGateFailure(re.story, re.combined) && (await factCheck(re.combined)).verdict === "pass") {
+        ({ story, combined } = re);
+      }
+    } catch (err) {
+      console.error("[wire:judge-rewrite]", job.clusterKey, err);
+    }
+  }
 
   const teamDir = await getTeamDirectory().catch(() => ({}) as Record<string, unknown>);
   const normalizedTeams = (story.teams ?? []).map((t) => resolveTeamSlug(t, teamDir));

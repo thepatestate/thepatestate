@@ -90,7 +90,9 @@ describe("ingestEpisode", () => {
     );
     expect(articleCall).toBeTruthy();
     const articleDoc = articleCall![0] as Record<string, unknown>;
-    expect(articleDoc.byline).toBe("The Pate State Staff");
+    // Brief v2 Rule 1: episode adaptations carry the Josh Pate byline (the
+    // page renders the "Adapted from The Josh Pate Show" label beside it).
+    expect(articleDoc.byline).toBe("Josh Pate");
     expect(articleDoc.workflowState).toBe("ai-drafted");
   });
 

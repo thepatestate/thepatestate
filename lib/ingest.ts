@@ -90,7 +90,7 @@ export async function ingestEpisode(v: IngestVideo): Promise<IngestResult> {
     const recentArch = await writeClient.fetch<string[]>(
       `*[_type == "article"] | order(_createdAt desc) [0...6].tags[@ match "arch:*"]`
     ).catch(() => [] as string[]);
-    const arch = pickArchitecture(recentArch.map((t) => t.replace(/^arch:/, "")), weekCount + dayCount);
+    const arch = pickArchitecture((recentArch ?? []).map((t) => t.replace(/^arch:/, "")), weekCount + dayCount);
     const draft = await draftCompanion({
       title: v.title, description: v.description ?? "", publishedAt: v.published,
       series: series ?? "general", transcriptText, extractedQuotes: quotes,
