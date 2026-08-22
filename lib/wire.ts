@@ -140,7 +140,7 @@ export async function fetchFeeds(): Promise<FeedEntry[]> {
 // National CFB feeds carry other sports (Yahoo's especially: wrestling
 // schedules, hoops recruiting, high-school previews). The Wire is college
 // football only — kill off-topic entries before they cost a scoring call.
-const OFF_TOPIC = /\b(wrestl\w*|basketball|hoops|baseball|softball|volleyball|gymnastics|hockey|lacrosse|soccer|golf|tennis|track and field|swimming|wnba|nba|nfl|mlb|nhl|high school)\b/i;
+const OFF_TOPIC = /\b(wrestl\w*|basketball|hoops|baseball|softball|volleyball|gymnastics|hockey|lacrosse|soccer|golf|tennis|track and field|swimming|wnba|nba|nfl|mlb|nhl|high school|nascar|indycar|formula one|motocross|real american freestyle|boxing|mma|ufc)\b/i;
 
 /** True when an entry clearly isn't college football. Exported for tests.
  * 400 chars of body text — 160 missed sport mentions that arrive a sentence
@@ -340,6 +340,8 @@ export function scoreCallout(sentence: string): number {
   if (words.length < 8 || words.length > 24) return -Infinity;
   if (!/^[A-Z"“]/.test(s) || !/[.!?”"]$/.test(s)) return -Infinity;
   if (CALLOUT_BANNED.some((re) => re.test(s))) return -Infinity;
+  // Ramp openers read as mid-paragraph fragments, not standalone lines.
+  if (/^(speaking|according to|talking|appearing|in an interview|asked about|when asked)\b/i.test(s)) return -Infinity;
   if (/(?:^|[\s“"(])(I|I'm|I've|I'd|my)\b/.test(s)) return -Infinity;
   if (headlineNamesOutlet(s) || /\breport(s|ed|ing)?\b/i.test(s)) return -Infinity;
   const hedges = s.match(HEDGES)?.length ?? 0;
@@ -373,6 +375,10 @@ export function selectCallout(story: {
   category?: string;
 }): string {
   if (story.category === "injury" || story.category === "legal") return "";
+  // Thin-source briefs (whatHappened only) never earned a strong line — a
+  // callout there is writing toward the graphic (Updates 4.0 rule 10).
+  const st = story as { missing?: string; whyBody?: string };
+  if (!story.readBody && !st.missing && !st.whyBody && !(story.whyItMatters ?? []).length) return "";
   const headlineKw = titleKeywords(story.headline ?? "");
   const pools: { text: string; bonus: number }[] = [
     { text: story.readBody ?? "", bonus: 2.5 },

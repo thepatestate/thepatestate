@@ -28,6 +28,7 @@ const { default: Anthropic } = await import("@anthropic-ai/sdk");
 const { writeClient } = await import("../lib/sanity.ts");
 const { generateWireStory, fetchSourceText, titleKeywords, hasFirstPersonProse, narratesSourcing } = await import("../lib/wire.ts");
 const { createAdminClient, isAdminConfigured } = await import("../lib/supabase/admin.ts");
+const { boilerplateViolations } = await import("../lib/editorial.ts");
 
 const DRY_RUN = process.argv.includes("--dry-run");
 const limitArg = process.argv.indexOf("--limit");
@@ -51,7 +52,9 @@ const rows = await writeClient.fetch<Row[]>(
 );
 const prose = (s: Row) =>
   [s.deck, s.whatHappened, s.whyBody, s.missing, s.section04Body, s.chessboard, s.readBody].filter(Boolean).join("\n");
-const flagged = rows.filter((s) => hasFirstPersonProse(prose(s)) || narratesSourcing(prose(s))).slice(0, LIMIT);
+// Article Updates 4.0: the boilerplate lint (corporate phrases, fake drama,
+// thesis openers, the-clean-read, …) now flags for regeneration too.
+const flagged = rows.filter((s) => hasFirstPersonProse(prose(s)) || narratesSourcing(prose(s)) || boilerplateViolations(prose(s)).length > 0).slice(0, LIMIT);
 console.log(`${flagged.length} flagged v1.2 stories (of ${rows.length})${DRY_RUN ? " (DRY RUN)" : ""}\n`);
 if (DRY_RUN) process.exit(0);
 
