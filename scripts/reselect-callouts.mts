@@ -28,9 +28,12 @@ const { selectCallout } = await import("../lib/wire.ts");
 
 const DRY_RUN = process.argv.includes("--dry-run");
 
-interface Row { _id: string; headline?: string; category?: string; whatHappened?: string; whyItMatters?: string[]; readBody?: string; callout?: string }
+interface Row { _id: string; headline?: string; category?: string; whatHappened?: string; whyItMatters?: string[]; readBody?: string; callout?: string; missing?: string; whyBody?: string; chessboard?: string; section04Body?: string }
+// Projection must carry EVERY field selectCallout scores or gates on —
+// without missing/whyBody the brief-detection rule would clear callouts
+// on full stories.
 const rows = await writeClient.fetch<Row[]>(
-  `*[_type == "wireStory"]{ _id, headline, category, whatHappened, whyItMatters, readBody, callout }`
+  `*[_type == "wireStory"]{ _id, headline, category, whatHappened, whyItMatters, readBody, callout, missing, whyBody, chessboard, section04Body }`
 );
 
 let set = 0, cleared = 0, unchanged = 0;
