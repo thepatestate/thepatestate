@@ -62,6 +62,11 @@ export const wireStory = defineType({
     defineField({ name: "section04Title", type: "string", description: "Adaptive: Next Man Up / What Changes Now / …" }),
     defineField({ name: "section04Body", type: "text" }),
     defineField({ name: "chessboard", type: "text", description: "What the coaches can actually change — only when a schematic angle exists" }),
+    // Wire Editorial System v2.0 §47–48 (2026-08-23): per-story section headers; empty = page default.
+    defineField({ name: "openTitle", type: "string", description: "Opening header (What Happened / The Injury / The Move / The Ruling …); empty = What Happened" }),
+    defineField({ name: "whyTitle", type: "string", description: "Significance header; empty = Why This One Matters" }),
+    defineField({ name: "missingTitle", type: "string", description: "Hidden-layer header; empty = What Most People Are Missing" }),
+    defineField({ name: "chessboardTitle", type: "string", description: "Football header; empty = What the Coaches Can Actually Change" }),
     defineField({
       name: "board", type: "object",
       fields: [

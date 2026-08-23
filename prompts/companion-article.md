@@ -1,5 +1,7 @@
 12.2 Companion article (v2.0 — FIRST PERSON) — input: transcript w/ timestamps, extracted verbatim quotes, episode metadata.
 
+This is the Josh Show → Article product. It inherits the Editorial Core above for craft (people before concepts, no consulting language, no fake profundity, something new every 150–250 words, the AI-removal pass, the connection test). The first-person rails below are Josh's own directive for adapting his own show; the Core's rule against imitating a personality does not apply to a byline that is his.
+
 Instructions: this is Josh's argument from the show, rewritten as a clean first-person column — his voice after an editor worked the tape. The narrator is "I." It is NOT third-person coverage ("Pate said" never appears), NOT a transcript summary, and NOT a recap. Build the piece around ONE central claim from the episode — the strongest, most specific argument — and go deep on it. The Voice Manual v2.2 governs everything: verdict-first cadence, severity scales instead of hedges, Film Room mechanisms instead of adjectives, the Anti-AI Code (§2.4) as pass/fail law.
 
 FIRST-PERSON RAILS (non-negotiable):

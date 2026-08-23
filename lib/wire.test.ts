@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { titleKeywords, keywordOverlap, hasAttributionOpener, cleanHeadline, headlineNamesOutlet, splitSentences, scoreCallout, selectCallout, scrubDashes, resolveTeamSlug, narratesSourcing, hasFirstPersonProse, CALLOUT_BANNED } from "./wire";
+import { titleKeywords, keywordOverlap, hasAttributionOpener, cleanHeadline, headlineNamesOutlet, splitSentences, scoreCallout, selectCallout, scrubDashes, resolveTeamSlug, narratesSourcing, hasFirstPersonProse, cleanSectionTitle, CALLOUT_BANNED } from "./wire";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
@@ -158,6 +158,8 @@ describe("narratesSourcing", () => {
     expect(narratesSourcing("No commitment is reported in the source material.")).toBe(true);
     expect(narratesSourcing("No individual prospect names, decision dates or class ranking are provided here.")).toBe(true);
     expect(narratesSourcing("The available information does not identify the players.")).toBe(true);
+    expect(narratesSourcing("The rotation remains unsettled based on the available report.")).toBe(true);
+    expect(narratesSourcing("Based on the report, the staff has not named a starter.")).toBe(true);
   });
   it("passes plain analyst prose and legal 'reported to be' phrasing", () => {
     expect(narratesSourcing("Washington is chasing a 2028 class headlined by the nation's No. 1 tight end.")).toBe(false);
@@ -183,5 +185,19 @@ describe("hasFirstPersonProse (the desk has no self)", () => {
   it("passes desk voice and second person", () => {
     expect(hasFirstPersonProse("Oregon's real gain here is belief, and its real risk is expectation.")).toBe(false);
     expect(hasFirstPersonProse("You don't get three losing seasons at Wisconsin.")).toBe(false);
+  });
+});
+
+describe("cleanSectionTitle (Wire Editorial System §48 headers)", () => {
+  it("keeps short descriptive headers and strips markdown, dashes, trailing punctuation", () => {
+    expect(cleanSectionTitle("**Why This One Hurts**")).toBe("Why This One Hurts");
+    expect(cleanSectionTitle("Next Man Up — The Room Now")).toBe("Next Man Up: The Room Now");
+    expect(cleanSectionTitle("The Number That Changes This.")).toBe("The Number That Changes This");
+  });
+  it("drops sentences, outlet names, and empties so the page falls back to its default", () => {
+    expect(cleanSectionTitle("This is a long sentence that should never become a section header on the page")).toBe("");
+    expect(cleanSectionTitle("What On3 Reported")).toBe("");
+    expect(cleanSectionTitle("")).toBe("");
+    expect(cleanSectionTitle(undefined)).toBe("");
   });
 });

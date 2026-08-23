@@ -177,6 +177,12 @@ export interface SanityWireStory {
   section04Title?: string;
   section04Body?: string;
   chessboard?: string;
+  // Wire Editorial System v2.0 §47–48: per-story section headers (2026-08-23);
+  // empty/absent = the page's default label.
+  openTitle?: string;
+  whyTitle?: string;
+  missingTitle?: string;
+  chessboardTitle?: string;
   board?: { title?: string; rows?: { name?: string; meta?: string; note?: string }[]; summary?: string } | null;
   watching?: { title?: string; body?: string }[];
   facts?: { label?: string; value?: string }[];
@@ -193,7 +199,8 @@ export interface SanityWireStory {
 
 const WIRE_STORY_FIELDS = `_id, headline, slug, verification, category, teams, whatHappened,
   whyItMatters, deck, impact, impactRationale, stats, whyBody, missing, section04Title, section04Body,
-  chessboard, board, watching, facts, callout, joshReceipt, readLabel, readBody, whatsNext, sources,
+  chessboard, openTitle, whyTitle, missingTitle, chessboardTitle,
+  board, watching, facts, callout, joshReceipt, readLabel, readBody, whatsNext, sources,
   publishedAt, updatedAt, corrections`;
 
 export async function getWireItems(limit = 8): Promise<SanityWireItem[]> {

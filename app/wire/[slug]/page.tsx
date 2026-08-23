@@ -175,12 +175,14 @@ export default async function WireStoryPage({ params }: { params: Promise<{ slug
           )}
 
           <div className="a-body">
-            <SectionHead n={next()} kicker="The News" title="What Happened" />
+            {/* Wire Editorial System v2.0 §47–48: headers adapt to the story; the
+                writer's title wins, the label below is the fallback. */}
+            <SectionHead n={next()} kicker="The News" title={story.openTitle || "What Happened"} />
             <p>{story.whatHappened}</p>
 
             {(story.whyBody || (story.whyItMatters?.length ?? 0) > 0) && (
               <>
-                <SectionHead n={next()} kicker="The Stakes" title="Why This One Matters" />
+                <SectionHead n={next()} kicker="The Stakes" title={story.whyTitle || "Why This One Matters"} />
                 {story.whyBody ? (
                   <p>{story.whyBody}</p>
                 ) : (
@@ -193,7 +195,7 @@ export default async function WireStoryPage({ params }: { params: Promise<{ slug
 
             {story.missing && (
               <>
-                <SectionHead n={next()} kicker="The Detail Beneath the Headline" title="What Most People Are Missing" />
+                <SectionHead n={next()} kicker="The Detail Beneath the Headline" title={story.missingTitle || "What Most People Are Missing"} />
                 <div className="missbox">
                   <p>{story.missing}</p>
                 </div>
@@ -226,7 +228,7 @@ export default async function WireStoryPage({ params }: { params: Promise<{ slug
 
             {story.chessboard && (
               <>
-                <SectionHead n={next()} kicker="The Chessboard" title="What the Coaches Can Actually Change" />
+                <SectionHead n={next()} kicker="The Chessboard" title={story.chessboardTitle || "What the Coaches Can Actually Change"} />
                 <div className="chessbox"><p>{story.chessboard}</p></div>
               </>
             )}

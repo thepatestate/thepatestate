@@ -11,7 +11,7 @@ import { getTeamDirectory } from "@/lib/cfbd";
 import { findReceipt } from "@/lib/quotes";
 import { slugify } from "@/lib/slug";
 import { writeJSON } from "@/lib/writer";
-import { boilerplateViolations, BOILERPLATE_PROMPT, VOICE_V4_PROMPT, scoreDraft } from "@/lib/editorial";
+import { boilerplateViolations, BOILERPLATE_PROMPT, VOICE_V4_PROMPT, scoreDraft, editorialSystem } from "@/lib/editorial";
 
 const MODEL = "claude-sonnet-5";
 // Client directive (2026-08-17): wire clicks must never leave the site, so
@@ -201,7 +201,7 @@ const ITEM_SCHEMA = {
 
 // Production Guide v1.2 architecture (prompts/wire-production-guide.md,
 // reference build docs/content/wire-kansas-state-pastore-v3.html).
-const STORY_SCHEMA = {
+export const STORY_SCHEMA = {
   type: "object",
   properties: {
     headline: { type: "string" },
@@ -218,11 +218,18 @@ const STORY_SCHEMA = {
         additionalProperties: false,
       },
     },
+    // Wire Editorial System v2.0 §47–48: the visible architecture adapts to
+    // the story — each section carries its own descriptive header ("" = the
+    // page's default). Never the same six headers on every story.
+    openTitle: { type: "string" },
     whatHappened: { type: "string" },
+    whyTitle: { type: "string" },
     whyBody: { type: "string" },
+    missingTitle: { type: "string" },
     missing: { type: "string" },
     section04Title: { type: "string" },
     section04Body: { type: "string" },
+    chessboardTitle: { type: "string" },
     chessboard: { type: "string" },
     readBody: { type: "string" },
     board: {
@@ -264,7 +271,7 @@ const STORY_SCHEMA = {
     teams: { type: "array", items: { type: "string" } },
     category: { type: "string" },
   },
-  required: ["headline", "deck", "verification", "impact", "impactRationale", "stats", "whatHappened", "whyBody", "missing", "section04Title", "section04Body", "chessboard", "readBody", "board", "watching", "facts", "teams", "category"],
+  required: ["headline", "deck", "verification", "impact", "impactRationale", "stats", "openTitle", "whatHappened", "whyTitle", "whyBody", "missingTitle", "missing", "section04Title", "section04Body", "chessboardTitle", "chessboard", "readBody", "board", "watching", "facts", "teams", "category"],
   additionalProperties: false,
 } as const;
 
@@ -522,7 +529,8 @@ export function hasFirstPersonProse(text: string): boolean {
  * retry. ("reported to be …" stays legal per §5.) Exported for tests. */
 export function narratesSourcing(text: string): boolean {
   return (
-    /\b(the|this) (source material|available information|available reporting)\b/i.test(text) ||
+    /\b(the|this) (source material|available information|available report(ing|s)?)\b/i.test(text) ||
+    /\bbased on (the|this) report\b/i.test(text) ||
     /\bin the source(s| material)?\b/i.test(text) ||
     /\bis (described|framed|characterized|listed|presented) as\b/i.test(text) ||
     /\b(provided|identified|named|listed) (here|in the report)\b/i.test(text) ||
@@ -552,6 +560,16 @@ export interface StoryJob {
 /** The page renders board.summary behind a bold "The tell:" label, so a
  * summary that opens with its own "The tell will be…" doubles the label.
  * Strip the writer's copy of it. Exported for tests. */
+/** Section headers (Wire §48) are short descriptive labels: strip markdown,
+ * dashes, trailing punctuation, and anything longer than eight words
+ * (a sentence is not a header) so the page never renders a runaway h2.
+ * Exported for tests. */
+export function cleanSectionTitle(title: string | undefined): string {
+  const t = (title ?? "").replace(/\*\*?/g, "").replace(/\s*[—–]\s*/g, ": ").replace(/[.:;,\s]+$/g, "").trim();
+  if (!t || t.split(/\s+/).length > 8 || headlineNamesOutlet(t)) return "";
+  return t;
+}
+
 export function cleanTellSummary(summary: string): string {
   const stripped = (summary ?? "").replace(/^\s*the tell (will be|is|:|comes?( first)? (with|from|in))[:,]?\s*/i, "");
   return stripped ? stripped.charAt(0).toUpperCase() + stripped.slice(1) : summary;
@@ -566,11 +584,14 @@ export async function generateWireStory(
   const baseUser = `${VOICE_V4_PROMPT}\n\n${BOILERPLATE_PROMPT}\n\nSource cluster:\n${job.sourceBlock}${receipt ? `\n\nJosh's archived on-topic quote (verbatim; render as his receipt, do NOT alter): "${receipt.quote}"` : ""}`;
   // One corrective retry when the draft names an outlet in the upper page
   // (guide §5) — the old pipeline REQUIRED that habit, so writers relapse.
+  // System prompt = preamble → 00 Editorial Core → 01 Wire (Josh's documents,
+  // verbatim) → house overrides → the JSON contract in wire-story.md.
+  const system = editorialSystem("wire", prompt("wire-story.md"));
   let storyRaw = "";
   let user = baseUser;
   for (let attempt = 0; attempt < 2; attempt++) {
     storyRaw = await writeJSON({
-      system: `${prompt("global-preamble.md")}\n\n${prompt("wire-story.md")}`,
+      system,
       user,
       schema: STORY_SCHEMA,
       schemaName: "wire_story",
@@ -580,15 +601,16 @@ export async function generateWireStory(
     const upper = `${draft.deck ?? ""}\n${draft.whatHappened ?? ""}`;
     const allProse = ["deck", "whatHappened", "whyBody", "missing", "section04Body", "chessboard", "readBody"]
       .map((k) => draft[k] ?? "").join("\n");
-    if (!headlineNamesOutlet(upper) && !hasAttributionOpener(draft.whatHappened ?? "") && !narratesSourcing(allProse) && !hasFirstPersonProse(allProse) && boilerplateViolations(allProse).length === 0 && !/\*{2,}/.test(allProse)) break;
-    user = `${baseUser}\n\nYOUR PREVIOUS DRAFT VIOLATED the writing standard. The desk NEVER speaks in first person — no "I," "my," or "we've" anywhere in prose (the desk has no self; Josh's voice exists only in the receipt module). Never name an outlet or use in-prose attribution in the deck or What Happened (official source or a NAMED individual reporter only; unconfirmed details are "reported to be…"). And NEVER narrate your own sourcing anywhere — no "the source material," "the available information," "is described as," "no names are provided," "per the report." Write what IS known directly, the way an analyst explains news to a friend; where something is unknown, say what we don't know yet in plain speech ("Washington hasn't said who") without pointing at documents. Never include censored profanity from a source quote ("a lot of good *** can happen") — trim the quote at a word boundary before the censored word, or paraphrase the sentiment without quoting. Rewrite the full story.`;
+    const boiler = boilerplateViolations(allProse);
+    if (!headlineNamesOutlet(upper) && !hasAttributionOpener(draft.whatHappened ?? "") && !narratesSourcing(allProse) && !hasFirstPersonProse(allProse) && boiler.length === 0 && !/\*{2,}/.test(allProse)) break;
+    user = `${baseUser}\n\nYOUR PREVIOUS DRAFT VIOLATED the writing standard${boiler.length ? ` (gated language found: ${boiler.join("; ")})` : ""}. The desk NEVER speaks in first person — no "I," "my," or "we've" anywhere in prose (the desk has no self; Josh's voice exists only in the receipt module). Never name an outlet or use in-prose attribution in the deck or the opening section (official source or a NAMED individual reporter only; unconfirmed details are "reported to be…"). And NEVER narrate your own sourcing anywhere — no "the source material," "the available information," "is described as," "no names are provided," "per the report." Write what IS known directly, the way an analyst explains news to a friend; where something is unknown, say what we don't know yet in plain speech ("Washington hasn't said who") without pointing at documents. Never include censored profanity from a source quote ("a lot of good *** can happen") — trim the quote at a word boundary before the censored word, or paraphrase the sentiment without quoting. Never reuse the editorial documents' example sentences or people. Rewrite the full story.`;
   }
   type StoryDraft = {
     headline: string; deck: string; verification: "confirmed" | "reported" | "developing";
     impact: string; impactRationale: string;
     stats: { value: string; label: string; critical: boolean }[];
-    whatHappened: string; whyBody: string; missing: string;
-    section04Title: string; section04Body: string; chessboard: string; readBody: string;
+    openTitle: string; whatHappened: string; whyTitle: string; whyBody: string; missingTitle: string; missing: string;
+    section04Title: string; section04Body: string; chessboardTitle: string; chessboard: string; readBody: string;
     board: { title: string; rows: { name: string; meta: string; note: string }[]; summary: string };
     watching: { title: string; body: string }[];
     facts: { label: string; value: string }[];
@@ -643,7 +665,7 @@ export async function generateWireStory(
   if (!verdict.pass) {
     try {
       const rewriteRaw = await writeJSON({
-        system: `${prompt("global-preamble.md")}\n\n${prompt("wire-story.md")}`,
+        system,
         user: `${baseUser}\n\nYOUR PREVIOUS DRAFT FAILED the pre-publish quality judge. Judge notes (fix exactly these): ${verdict.notes}\n\nPrevious draft for reference:\n${storyRaw}\n\nRewrite the full story. Keep every verified fact; change the writing. The humanity standard is pass/fail: it must sound written by a person, never generated.`,
         schema: STORY_SCHEMA,
         schemaName: "wire_story",
@@ -671,11 +693,15 @@ export async function generateWireStory(
     impact: story.impact,
     impactRationale: story.impactRationale,
     stats: (story.stats ?? []).slice(0, 3).map((st, i) => ({ _key: `stat${i}`, ...st })),
+    openTitle: cleanSectionTitle(story.openTitle),
     whatHappened: story.whatHappened,
+    whyTitle: cleanSectionTitle(story.whyTitle),
     whyBody: story.whyBody,
+    missingTitle: cleanSectionTitle(story.missingTitle),
     missing: story.missing,
-    section04Title: story.section04Title,
+    section04Title: cleanSectionTitle(story.section04Title),
     section04Body: story.section04Body,
+    chessboardTitle: cleanSectionTitle(story.chessboardTitle),
     chessboard: story.chessboard,
     ...(story.board?.rows?.length
       ? { board: { title: story.board.title, summary: cleanTellSummary(story.board.summary), rows: story.board.rows.slice(0, 3).map((r, i) => ({ _key: `row${i}`, ...r })) } }

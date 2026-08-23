@@ -2,7 +2,7 @@ import Anthropic from "@anthropic-ai/sdk";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { writeJSON } from "@/lib/writer";
-import { boilerplateViolations, BOILERPLATE_PROMPT, VOICE_V4_PROMPT, type Architecture } from "@/lib/editorial";
+import { boilerplateViolations, BOILERPLATE_PROMPT, VOICE_V4_PROMPT, editorialSystem, type Architecture } from "@/lib/editorial";
 
 export const BYLINE_STAFF = "The Pate State Staff";
 export const SERIES_VALUES = [
@@ -264,7 +264,9 @@ export async function draftCompanion(input: {
 }): Promise<CompanionDraft | null> {
   const c = client();
   if (!c) return null;
-  const system = `${prompt("global-preamble.md")}\n\n${prompt("companion-article.md")}`;
+  // Josh Show → Article inherits 00 Editorial Core (Josh's document,
+  // verbatim); the companion prompt is its own contract and first-person rail.
+  const system = editorialSystem("show-adaptation", prompt("companion-article.md"));
   // 1–2 quotes, not 2–4 (Isaac, 2026-08-20: scattered quotes with ramp at
   // the edges read disjointed) — each must anchor one of the article's
   // highest-value passages and sit beside the prose arguing the same point.

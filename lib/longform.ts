@@ -21,7 +21,7 @@ import { uploadHeroImage, setArticleHeroImage } from "@/lib/sanity";
 import { slugify } from "@/lib/slug";
 import { BYLINE_STAFF } from "@/lib/generate";
 import { JOSH_BRACKET_FIELD, JOSH_BRACKET_FINAL, JOSH_BRACKET_LABEL } from "@/lib/josh-bracket";
-import { pickArchitecture, boilerplateViolations, BOILERPLATE_PROMPT, VOICE_V4_PROMPT, scoreDraft } from "@/lib/editorial";
+import { pickArchitecture, boilerplateViolations, BOILERPLATE_PROMPT, VOICE_V4_PROMPT, scoreDraft, editorialSystem, type EditorialProduct } from "@/lib/editorial";
 import { hasFirstPersonProse } from "@/lib/wire";
 
 const MODEL = "claude-sonnet-5";
@@ -48,7 +48,16 @@ PE-03 Pressure index — coaching-seat analysis, trajectory + structure, never g
 PO-02 Paths & scenarios — a contender's playoff path in plain English
 TI-05 Injury impact — roster mechanics of a significant recent injury (replacement file + calendar)
 FA-02 Scheme explainer — one concept, cashed out in consequence at every step
-CC-06 History rhymes — "the last time this happened," event-triggered context`;
+CC-06 History rhymes — "the last time this happened," event-triggered context
+RI-01 Prospect fit (Recruiting Intelligence) — why a recent commitment or transfer makes football sense for THIS roster: the room, the timeline, who he affects
+RI-02 Class construction (Recruiting Intelligence) — what a program's class is actually built around, the position worth circling, what's still missing
+RI-03 Portal audit (Recruiting Intelligence) — did the program solve the problems it entered the portal with (proven snaps lost vs. added)`;
+
+/** Which of Josh's product documents governs a selected type: RI-* types
+ * are Recruiting Intelligence; everything else on the menu is Notebook. */
+export function productForType(typeId: string): EditorialProduct {
+  return /^RI-/i.test(typeId) ? "recruiting" : "notebook";
+}
 
 const SELECT_SCHEMA = {
   type: "object",
@@ -114,7 +123,7 @@ export async function generateLongformArticle(): Promise<string> {
       // Reasoning shares this budget with the JSON answer — 1024 truncated.
       max_tokens: 4096,
       output_config: { effort: "low", format: { type: "json_schema", schema: SELECT_SCHEMA } },
-      system: `You are the article selection engine for The Pate State (Article Playbook v3.0). Pick the ONE standalone long-form article a serious college football fan would most want to read today. Choose a type from the menu, a specific topic, and a sharp angle. Rules: never duplicate or closely overlap a recent article headline; prefer a big recent wire story angle (NR-01/NR-03/TI-05) when one is genuinely consequential, else an evergreen type on a prominent team or national question; the angle must be arguable from the wire coverage provided plus general mechanism reasoning (no facts the pack won't contain); teams are lowercase-hyphenated slugs. wireStoryIds: the _ids of the 1-4 provided stories most relevant to the topic (empty for pure evergreen). Output JSON only.`,
+      system: `You are the article selection engine for The Pate State (Article Playbook v3.0 + Josh's Notebook and Recruiting Intelligence documents). Pick the ONE standalone long-form article a serious college football fan would most want to read today. Choose a type from the menu, a specific topic, and a sharp angle. Rules: never duplicate or closely overlap a recent article headline; prefer a big recent wire story angle (NR-01/NR-03/TI-05) when one is genuinely consequential, else an evergreen type on a prominent team or national question; RI-* types only when the wire coverage supports roster-level recruiting analysis (a commitment, flip, or portal move with real roster context), never for a bare commitment brief; the angle must be arguable from the wire coverage provided plus general mechanism reasoning (no facts the pack won't contain); teams are lowercase-hyphenated slugs. wireStoryIds: the _ids of the 1-4 provided stories most relevant to the topic (empty for pure evergreen). Output JSON only.`,
       messages: [{
         role: "user",
         content: `TYPE MENU:\n${TYPE_MENU}\n\nRECENT WIRE COVERAGE (72h):\n${recentStories
@@ -163,6 +172,11 @@ export async function generateLongformArticle(): Promise<string> {
     ].join("\n\n");
 
     // --- Draft (one corrective retry on boilerplate/voice violations) ----
+    // System prompt = preamble → 00 Editorial Core → the product document
+    // (Notebook, or Recruiting Intelligence for RI-* types) → house
+    // overrides → the JSON contract in standalone-article.md.
+    const product = productForType(sel.typeId);
+    const system = editorialSystem(product, prompt("standalone-article.md"));
     let raw = "";
     let user = sourcePack;
     let draft!: {
@@ -171,7 +185,7 @@ export async function generateLongformArticle(): Promise<string> {
     };
     for (let attempt = 0; attempt < 2; attempt++) {
       raw = await writeJSON({
-        system: `${prompt("global-preamble.md")}\n\n${prompt("standalone-article.md")}`,
+        system,
         user,
         schema: LONGFORM_SCHEMA,
         schemaName: "longform_article",
@@ -233,7 +247,7 @@ export async function generateLongformArticle(): Promise<string> {
     const verdict = await scoreDraft(anthropic, { headline: draft.headline, dek: draft.dek, body: draft.bodyMarkdown });
     if (!verdict.pass) {
       const raw2 = await writeJSON({
-        system: `${prompt("global-preamble.md")}\n\n${prompt("standalone-article.md")}`,
+        system,
         user: `${user}\n\nEDITOR'S REWRITE NOTES (your previous draft failed the quality gate — fix these precisely, keep what works): ${verdict.notes}`,
         schema: LONGFORM_SCHEMA,
         schemaName: "longform_article",
@@ -263,7 +277,7 @@ export async function generateLongformArticle(): Promise<string> {
       lowConfidence: false,
       primaryTeam: draft.primaryTeam,
       teams: draft.teams,
-      tags: [...draft.tags, sel.typeId, `arch:${arch.key}`],
+      tags: [...draft.tags, sel.typeId, `arch:${arch.key}`, `product:${product}`],
       contentType: "Analysis",
       productionMethod: "ai-reviewed",
       seoTitle: draft.seo.title,
