@@ -125,7 +125,7 @@ export async function fetchFeeds(): Promise<FeedEntry[]> {
             title,
             link: tag(raw, "link") || tag(raw, "guid"),
             description: tag(raw, "description").slice(0, 500),
-            content: tag(raw, "content:encoded").slice(0, 2400),
+            content: tag(raw, "content:encoded").slice(0, 4000),
             pubDate: tag(raw, "pubDate"),
           });
         }
@@ -575,13 +575,25 @@ export function cleanTellSummary(summary: string): string {
   return stripped ? stripped.charAt(0).toUpperCase() + stripped.slice(1) : summary;
 }
 
+/** Wire §7 / triage rule, made deterministic (2026-08-23): the judge was
+ * failing every story that expanded a few hundred words of reporting into
+ * six sections, and a rewrite can't add facts that aren't there. Below this
+ * much grounding the writer is told to file a BRIEF. Exported for tests. */
+export const THIN_SOURCE_CHARS = 2200;
+export function isThinSource(sourceBlock: string): boolean {
+  // URLs and outlet tags are not reporting.
+  const text = sourceBlock.replace(/https?:\S+/g, "").replace(/^\s*-\s*\[[^\]]+\]/gm, "").replace(/\s+/g, " ").trim();
+  return text.length < THIN_SOURCE_CHARS;
+}
+
 export async function generateWireStory(
   anthropic: Anthropic,
   job: StoryJob,
 ): Promise<{ ok: true; fields: Record<string, unknown> } | { ok: false; reason: string }> {
   let receipt = await findReceipt(job.teams, job.receiptKeywords);
   if (receipt && !(await receiptIsRelevant(anthropic, receipt, job))) receipt = null;
-  const baseUser = `${VOICE_V4_PROMPT}\n\n${BOILERPLATE_PROMPT}\n\nSource cluster:\n${job.sourceBlock}${receipt ? `\n\nJosh's archived on-topic quote (verbatim; render as his receipt, do NOT alter): "${receipt.quote}"` : ""}`;
+  const thin = isThinSource(job.sourceBlock);
+  const baseUser = `${VOICE_V4_PROMPT}\n\n${BOILERPLATE_PROMPT}${thin ? `\n\nSOURCE MATERIAL IS THIN (a few hundred words of reporting): file a BRIEF per the triage rule. Headline, a one-sentence deck, whatHappened at 80–120 words saying exactly what is known, impact, category, teams; every other field "" or []. Never expand a handful of facts into six sections; a short story that says only what is known is the correct answer (Wire §7).` : ""}\n\nSource cluster:\n${job.sourceBlock}${receipt ? `\n\nJosh's archived on-topic quote (verbatim; render as his receipt, do NOT alter): "${receipt.quote}"` : ""}`;
   // One corrective retry when the draft names an outlet in the upper page
   // (guide §5) — the old pipeline REQUIRED that habit, so writers relapse.
   // System prompt = preamble → 00 Editorial Core → 01 Wire (Josh's documents,
@@ -661,12 +673,15 @@ export async function generateWireStory(
   // category) gets one shot at forcing a rewrite. Fail-open by design — the
   // Wire has to publish, and the hard gates above remain the floor; the
   // rewrite is only adopted when it passes those same gates plus fact-check.
-  const verdict = await scoreDraft(anthropic, { headline: story.headline, dek: story.deck, body: combined });
+  const isBrief = !story.whyBody && !story.missing && !story.readBody;
+  const verdict = isBrief
+    ? { scores: {}, notes: "", pass: true }
+    : await scoreDraft(anthropic, { headline: story.headline, dek: story.deck, body: combined, sources: job.sourceBlock });
   if (!verdict.pass) {
     try {
       const rewriteRaw = await writeJSON({
         system,
-        user: `${baseUser}\n\nYOUR PREVIOUS DRAFT FAILED the pre-publish quality judge. Judge notes (fix exactly these): ${verdict.notes}\n\nPrevious draft for reference:\n${storyRaw}\n\nRewrite the full story. Keep every verified fact; change the writing. The humanity standard is pass/fail: it must sound written by a person, never generated.`,
+        user: `${baseUser}\n\nYOUR PREVIOUS DRAFT FAILED the pre-publish quality judge. Judge notes (fix exactly these): ${verdict.notes}\n\nPrevious draft for reference:\n${storyRaw}\n\nRewrite the full story. Keep every verified fact; change the writing. If the notes ask for detail the sources do not contain, do NOT invent it: cut instead. Delete every paragraph that restates a fact already given, drop sections the sources can't fill (leave them ""), and let the story be shorter. The humanity standard is pass/fail: it must sound written by a person, never generated.`,
         schema: STORY_SCHEMA,
         schemaName: "wire_story",
         maxTokens: 8192,
@@ -763,7 +778,7 @@ export async function fetchSourceText(url: string): Promise<string> {
       .filter((t) => t.length > 60)
       .slice(0, 12)
       .join("\n");
-    return decodeEntities(`${ogDesc}\n${paras}`).slice(0, 2400);
+    return decodeEntities(`${ogDesc}\n${paras}`).slice(0, 4000);
   } catch {
     return "";
   }

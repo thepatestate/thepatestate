@@ -244,11 +244,11 @@ export async function generateLongformArticle(): Promise<string> {
 
     // Brief v2 Part 8: scored quality gate — one rewrite with the judge's
     // notes when the draft scores below 8 in two or more categories.
-    const verdict = await scoreDraft(anthropic, { headline: draft.headline, dek: draft.dek, body: draft.bodyMarkdown });
+    const verdict = await scoreDraft(anthropic, { headline: draft.headline, dek: draft.dek, body: draft.bodyMarkdown, sources: sourcePack });
     if (!verdict.pass) {
       const raw2 = await writeJSON({
         system,
-        user: `${user}\n\nEDITOR'S REWRITE NOTES (your previous draft failed the quality gate — fix these precisely, keep what works): ${verdict.notes}`,
+        user: `${user}\n\nEDITOR'S REWRITE NOTES (your previous draft failed the quality gate — fix these precisely, keep what works): ${verdict.notes}\n\nIf the notes ask for detail the source pack does not contain, do NOT invent it: cut instead. Delete paragraphs that restate, and let the piece be shorter.`,
         schema: LONGFORM_SCHEMA,
         schemaName: "longform_article",
         maxTokens: 8192,

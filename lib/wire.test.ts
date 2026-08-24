@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { titleKeywords, keywordOverlap, hasAttributionOpener, cleanHeadline, headlineNamesOutlet, splitSentences, scoreCallout, selectCallout, scrubDashes, resolveTeamSlug, narratesSourcing, hasFirstPersonProse, cleanSectionTitle, CALLOUT_BANNED } from "./wire";
+import { titleKeywords, keywordOverlap, hasAttributionOpener, cleanHeadline, headlineNamesOutlet, splitSentences, scoreCallout, selectCallout, scrubDashes, resolveTeamSlug, narratesSourcing, hasFirstPersonProse, cleanSectionTitle, isThinSource, THIN_SOURCE_CHARS, CALLOUT_BANNED } from "./wire";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
@@ -199,5 +199,17 @@ describe("cleanSectionTitle (Wire Editorial System §48 headers)", () => {
     expect(cleanSectionTitle("What On3 Reported")).toBe("");
     expect(cleanSectionTitle("")).toBe("");
     expect(cleanSectionTitle(undefined)).toBe("");
+  });
+});
+
+describe("isThinSource (Wire §7: thin reporting files a brief)", () => {
+  it("treats a few hundred words of reporting as thin, ignoring URLs and outlet tags", () => {
+    const block = `- [ESPN] Texas Tech coach reacts to scrimmage\n  ${"Coach said two safeties made picks. ".repeat(20)}\n  https://www.espn.com/college-football/story/_/id/123456789/some-very-long-url-that-should-not-count`;
+    expect(isThinSource(block)).toBe(true);
+  });
+  it("treats a full article of grounding as substantial", () => {
+    const block = `- [CBS Sports] Full report\n  ${"A real paragraph of reporting with names, numbers and dates in it. ".repeat(40)}\n  https://cbssports.com/x`;
+    expect(block.length).toBeGreaterThan(THIN_SOURCE_CHARS);
+    expect(isThinSource(block)).toBe(false);
   });
 });

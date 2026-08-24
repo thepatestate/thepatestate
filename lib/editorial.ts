@@ -213,7 +213,7 @@ export interface QualityVerdict {
  * blocks publication. */
 export async function scoreDraft(
   anthropic: import("@anthropic-ai/sdk").default,
-  input: { headline: string; dek?: string; body: string },
+  input: { headline: string; dek?: string; body: string; sources?: string },
 ): Promise<QualityVerdict> {
   try {
     const res = await anthropic.messages.create({
@@ -252,8 +252,9 @@ headline — would a serious CFB fan click, and does the dek add information?
 accuracy — any name, stat, or claim that smells unverified?
 humanity — the Editorial Core's AI-removal test: does this sound WRITTEN or GENERATED? Generated tells (score low for any): abstract nouns doing football's job ("roster strategy," "internal answer," "production profile"), consulting language, paragraphs that open by announcing their thesis ("The story is… The reality is… The question is…"), announced scaffolding ("the counterpoint is," "the mechanism is"), fake-profound sentences that inform nothing, every sentence auditioning for the pull quote, perfect logical symmetry in every section (thesis, evidence, counter, conclusion), five same-length declaratives in a row, spoken-performance devices stacked up ("Here's the thing… Look… If you're Georgia…"), corporate language a coach would never say aloud. Written tells (score high): named people over concepts, ordinary strong sentences making space around two to four memorable ones, varied temperature (reporting, then a scene, then football, then a human detail), a sentence a smart fan would actually say to a friend.
 discovery — the Core's three reactions: does the piece produce "I didn't know that" (a reported fact), "I hadn't thought about it that way" (a second-order insight), and "now I want to watch for that" (something observable on Saturday)? Something new every 150–250 words, or low.
+When SOURCES are supplied, evidence, valueAdded and discovery are judged relative to what the sources contain: a draft that says only what is known, briefly, scores WELL on pacing and valueAdded; a draft that pads beyond the sources (the same facts restated in new clothes, hypothetical scenarios standing in for reporting) scores LOW on pacing and humanity. Never penalize a draft for lacking reporting the sources do not contain; penalize it for pretending otherwise, and say in the notes when the right fix is to CUT rather than add.
 notes: 2-4 blunt sentences naming the weakest categories and exactly what to fix; when humanity scores low, QUOTE the two or three sentences that sound most generated so the rewrite can target them. Output JSON only.`,
-      messages: [{ role: "user", content: `HEADLINE: ${input.headline}\nDEK: ${input.dek ?? ""}\n\n${input.body}` }],
+      messages: [{ role: "user", content: `${input.sources ? `SOURCES:\n${input.sources.slice(0, 12000)}\n\n` : ""}DRAFT:\nHEADLINE: ${input.headline}\nDEK: ${input.dek ?? ""}\n\n${input.body}` }],
     });
     const block = res.content.find((b) => b.type === "text");
     const out = JSON.parse(block && block.type === "text" ? block.text : "{}") as { scores: Record<string, number>; notes: string };
