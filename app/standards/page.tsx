@@ -19,7 +19,7 @@ const SECTIONS = [
     title: "Editorial Standards",
     body: [
       "The Pate State publishes four kinds of content, and every page says which kind it is: News (verified, sourced reporting), Analysis (interpretation of things that happened), Opinion / Projection (Josh's takes and predictions, always labeled as such), and Community (from citizens, clearly marked).",
-      "News is attributed. Every reported item names its original source — ESPN, CBS Sports, Yahoo, an official program announcement — and links it. We do not claim other outlets' reporting as our own, and we do not publish \"sources tell The Pate State\" — we don't have insider sourcing, so you'll never see it implied.",
+      "News is attributed. Every reported story credits and links its original sources — ESPN, CBS Sports, Yahoo, On3, an official program announcement — in the sourcing footer at the end of the story, where the credit is complete rather than squeezed into a lede. Official sources and named reporters are credited in the text when they are the news. We do not claim other outlets' reporting as our own, and we do not publish \"sources tell The Pate State\" — we don't have insider sourcing, so you'll never see it implied.",
       "Rumors are never labeled confirmed. Projections are labeled projections. Records and standings only appear once real games produce them — nothing on this site presents an invented number as a live one.",
     ],
   },
@@ -29,7 +29,7 @@ const SECTIONS = [
     body: [
       "Pate State AI is built from Josh Pate's owned content archive: show transcripts, rankings philosophy, prediction history, football terminology, and these editorial guidelines. It helps The Pate State organize, draft, and personalize content. Published news and analysis are produced under these standards and monitored by The Pate State editorial team, which can correct or unpublish any piece at any time; drafts that fail the automated checks are held for human review instead of publishing.",
       "Hard rules the system enforces: it never invents an opinion attributed to Josh — every Josh opinion traces to a clip, transcript, article, or explicit approval, and every direct quote is machine-checked verbatim against the transcript, with a timestamp link to the moment it was said.",
-      "Wire stories drafted by AI pass an automated verification stack before publishing: attribution checks (the first sentence must credit the reporting outlet), banned-inference patterns, and a second-model fact check against the source material. Every published story stays under editorial monitoring, and sensitive subjects — injuries, eligibility, legal or disciplinary matters — carry their sourcing in the first sentence so readers always know whose reporting they're reading.",
+      "Wire stories drafted by AI pass an automated verification stack before publishing: sourcing checks (every story carries its original sources in the footer, and the prose never dresses up another outlet's report as our own), banned-inference patterns, a language gate against generated-sounding prose, and a second-model fact check against the source material. Every published story stays under editorial monitoring, and sensitive subjects — injuries, eligibility, legal or disciplinary matters — are labeled by what is confirmed, what is reported, and what is still unresolved, so readers always know how solid each claim is.",
     ],
   },
   {

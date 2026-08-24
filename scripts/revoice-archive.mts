@@ -14,7 +14,11 @@
 // own revision history is the second undo path.
 //
 // Run:  npx tsx scripts/revoice-archive.mts --dry-run
-//       npx tsx scripts/revoice-archive.mts [--limit N] [--only <articleId>]
+//       npx tsx scripts/revoice-archive.mts [--flagged] [--limit N] [--only <articleId>]
+//
+// --flagged (2026-08-23, Josh's MD files): only articles whose current body
+// trips the editorial gates (boilerplateViolations) — the clean ones stay.
+// A re-voice that still trips a gate is skipped, never published.
 import { readFileSync, existsSync, appendFileSync, mkdirSync } from "node:fs";
 import { join } from "node:path";
 
@@ -38,10 +42,12 @@ const { fetchTranscript, transcriptToPromptText } = await import("../lib/transcr
 const { draftCompanion, extractQuotes } = await import("../lib/generate.ts");
 const { storeQuotes } = await import("../lib/quotes.ts");
 const { WRITER_PROVIDER } = await import("../lib/writer.ts");
+const { boilerplateViolations, pickArchitecture } = await import("../lib/editorial.ts");
 
 const DRY_RUN = process.argv.includes("--dry-run");
 const limitArg = process.argv.indexOf("--limit");
 const LIMIT = limitArg !== -1 ? Number(process.argv[limitArg + 1]) : Infinity;
+const FLAGGED = process.argv.includes("--flagged");
 const onlyArg = process.argv.indexOf("--only");
 const ONLY = onlyArg !== -1 ? process.argv[onlyArg + 1] : null;
 
@@ -51,6 +57,8 @@ interface Row {
   slug: string;
   workflowState: string;
   byline?: string;
+  bodyMarkdown?: string;
+  tags?: string[];
   episode: {
     ytId: string;
     title: string;
@@ -63,25 +71,26 @@ interface Row {
 
 const rows = await writeClient.fetch<Row[]>(
   `*[_type == "article" && defined(episode._ref)] | order(publishedAt asc) {
-    _id, headline, "slug": slug.current, workflowState, byline,
+    _id, headline, "slug": slug.current, workflowState, byline, bodyMarkdown, tags,
     episode->{ ytId, title, description, publishedAt, series, transcriptStatus }
   }`
 );
 
 const targets = rows
   .filter((r) => r.episode?.ytId)
-  // Josh-byline articles are hand-approved pieces (e.g. the bracket) — the
-  // pipeline never rewrites what Josh signed. Staff/AI drafts only.
-  .filter((r) => r.byline !== "Josh Pate")
+  // Hand-approved pieces (the bracket) have no episode reference and never
+  // reach this list; every episode-backed article is a pipeline draft (all
+  // carry the "Josh Pate · Adapted from the show" byline since 2026-08-21).
+  .filter((r) => (FLAGGED ? boilerplateViolations(r.bodyMarkdown ?? "").length > 0 : true))
   .filter((r) => (ONLY ? r._id === ONLY : true))
   .slice(0, LIMIT);
 
 console.log(`writer provider: ${WRITER_PROVIDER} (${process.env.OPENAI_WRITER_MODEL ?? "default model"})`);
-console.log(`${rows.length} episode-backed articles found; processing ${targets.length}${DRY_RUN ? " (DRY RUN)" : ""}\n`);
+console.log(`${rows.length} episode-backed articles found; processing ${targets.length}${FLAGGED ? " (flagged only)" : ""}${DRY_RUN ? " (DRY RUN)" : ""}\n`);
 
 if (DRY_RUN) {
   for (const r of targets) {
-    console.log(`- [${r.workflowState}] ${r._id}  "${r.headline}"  (transcript: ${r.episode?.transcriptStatus ?? "?"})`);
+    console.log(`- [${r.workflowState}] ${r._id}  "${r.headline}"  (transcript: ${r.episode?.transcriptStatus ?? "?"})${FLAGGED ? `  gates: ${boilerplateViolations(r.bodyMarkdown ?? "").join(", ")}` : ""}`);
   }
   process.exit(0);
 }
@@ -91,8 +100,9 @@ mkdirSync(backupDir, { recursive: true });
 const backupPath = join(backupDir, `revoice-backup-${new Date().toISOString().slice(0, 10)}.jsonl`);
 
 let patched = 0, skippedNoTranscript = 0, skippedLowConfidence = 0, failed = 0;
+const recentArch: string[] = [];
 
-for (const r of targets) {
+for (const [i, r] of targets.entries()) {
   const ep = r.episode!;
   const label = `${r._id} "${r.headline.slice(0, 60)}"`;
   try {
@@ -104,6 +114,7 @@ for (const r of targets) {
       continue;
     }
 
+    const arch = pickArchitecture(recentArch, i);
     const quotes = await extractQuotes(transcriptText);
     if (quotes.length > 0) await storeQuotes(ep.ytId, quotes); // idempotent upsert
 
@@ -114,6 +125,7 @@ for (const r of targets) {
       series: ep.series ?? "general",
       transcriptText,
       extractedQuotes: quotes,
+      architecture: arch,
     });
 
     if (!draft || draft.lowConfidence === true) {
@@ -121,6 +133,13 @@ for (const r of targets) {
       skippedLowConfidence++;
       continue;
     }
+    const stillFlagged = boilerplateViolations(draft.bodyMarkdown);
+    if (stillFlagged.length > 0) {
+      console.log(`SKIP (still gated: ${stillFlagged.join(", ")}) ${label}`);
+      skippedLowConfidence++;
+      continue;
+    }
+    recentArch.unshift(arch.key);
 
     const original = await writeClient.fetch(`*[_id == $id][0]`, { id: r._id });
     appendFileSync(backupPath, JSON.stringify(original) + "\n");
@@ -134,6 +153,7 @@ for (const r of targets) {
         pullQuote: draft.pullQuote,
         seoTitle: draft.seo.title,
         seoDescription: draft.seo.description,
+        tags: [...(r.tags ?? []).filter((tg) => !tg.startsWith("arch:")), `arch:${arch.key}`],
       })
       .commit();
 
