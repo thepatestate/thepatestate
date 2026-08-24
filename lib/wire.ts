@@ -140,7 +140,7 @@ export async function fetchFeeds(): Promise<FeedEntry[]> {
 // National CFB feeds carry other sports (Yahoo's especially: wrestling
 // schedules, hoops recruiting, high-school previews). The Wire is college
 // football only — kill off-topic entries before they cost a scoring call.
-const OFF_TOPIC = /\b(wrestl\w*|basketball|hoops|baseball|softball|volleyball|gymnastics|hockey|lacrosse|soccer|golf|tennis|track and field|swimming|wnba|nba|nfl|mlb|nhl|high school|prep football|backcourt|frontcourt|point guard|shooting guard|power forward|nascar|indycar|formula one|motocross|real american freestyle|boxing|mma|ufc)\b/i;
+const OFF_TOPIC = /\b(wrestl\w*|basketball|hoops|baseball|softball|volleyball|gymnastics|hockey|lacrosse|soccer|golf|tennis|track and field|swimming|wnba|nba|nfl|mlb|nhl|high school|prep football|truck series|cup series|xfinity|backcourt|frontcourt|point guard|shooting guard|power forward|nascar|indycar|formula one|motocross|real american freestyle|boxing|mma|ufc)\b/i;
 
 /** True when an entry clearly isn't college football. Exported for tests.
  * 400 chars of body text — 160 missed sport mentions that arrive a sentence
@@ -594,7 +594,7 @@ export async function generateWireStory(
   let receipt = await findReceipt(job.teams, job.receiptKeywords);
   if (receipt && !(await receiptIsRelevant(anthropic, receipt, job))) receipt = null;
   const thin = isThinSource(job.sourceBlock);
-  const baseUser = `${VOICE_V4_PROMPT}\n\n${BOILERPLATE_PROMPT}${thin ? `\n\nSOURCE MATERIAL IS THIN (a few hundred words of reporting): file a BRIEF per the triage rule. Headline, a one-sentence deck, whatHappened at 80–120 words saying exactly what is known, impact, category, teams; every other field "" or []. Never expand a handful of facts into six sections; a short story that says only what is known is the correct answer (Wire §7).` : ""}\n\nSource cluster:\n${job.sourceBlock}${receipt ? `\n\nJosh's archived on-topic quote (verbatim; render as his receipt, do NOT alter): "${receipt.quote}"` : ""}`;
+  const baseUser = `${VOICE_V4_PROMPT}\n\n${BOILERPLATE_PROMPT}${thin ? `\n\nSOURCE MATERIAL IS THIN (a few hundred words of reporting): file a BRIEF per the triage rule. Headline, a one-sentence deck, whatHappened at 80–120 words saying exactly what is known, impact, category, teams; every other field "" or []. Never expand a handful of facts into six sections; a short story that says only what is known is the correct answer (Wire §7). Say what is unknown the way a person would ("Indiana hasn't said which injury," "no timetable yet"), never by pointing at the document ("the report does not identify," "was described as").` : ""}\n\nSource cluster:\n${job.sourceBlock}${receipt ? `\n\nJosh's archived on-topic quote (verbatim; render as his receipt, do NOT alter): "${receipt.quote}"` : ""}`;
   // One corrective retry when the draft names an outlet in the upper page
   // (guide §5) — the old pipeline REQUIRED that habit, so writers relapse.
   // System prompt = preamble → 00 Editorial Core → 01 Wire (Josh's documents,
