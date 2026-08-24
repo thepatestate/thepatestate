@@ -532,7 +532,8 @@ export function narratesSourcing(text: string): boolean {
     /\b(the|this) (source material|available information|available report(ing|s)?)\b/i.test(text) ||
     /\bbased on (the|this) report\b/i.test(text) ||
     /\bin the source(s| material)?\b/i.test(text) ||
-    /\bis (described|framed|characterized|listed|presented) as\b/i.test(text) ||
+    /\b(is|was|are|were|been|being|gets|got) (described|framed|characterized|listed|presented) as\b/i.test(text) ||
+    /\b(the|this|that) report(ing)? (does not|doesn'?t|did not|didn'?t|never|also|only|further)\b/i.test(text) ||
     /\b(provided|identified|named|listed) (here|in the report)\b/i.test(text) ||
     /\bper the (report|reporting)\b/i.test(text) ||
     /\bno [^.!?]{0,40} (is|are) (reported|provided|identified|named|listed)\b/i.test(text)

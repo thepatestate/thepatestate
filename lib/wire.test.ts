@@ -160,6 +160,8 @@ describe("narratesSourcing", () => {
     expect(narratesSourcing("The available information does not identify the players.")).toBe(true);
     expect(narratesSourcing("The rotation remains unsettled based on the available report.")).toBe(true);
     expect(narratesSourcing("Based on the report, the staff has not named a starter.")).toBe(true);
+    expect(narratesSourcing("He has put together what was described as a terrific camp.")).toBe(true);
+    expect(narratesSourcing("The report does not identify the injury or say how long he was away.")).toBe(true);
   });
   it("passes plain analyst prose and legal 'reported to be' phrasing", () => {
     expect(narratesSourcing("Washington is chasing a 2028 class headlined by the nation's No. 1 tight end.")).toBe(false);
