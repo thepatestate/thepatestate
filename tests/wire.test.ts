@@ -8,6 +8,8 @@ describe("isOffTopic (wire feed filter)", async () => {
     expect(isOffTopic("Five-star hoops recruit commits", "")).toBe(true);
     expect(isOffTopic("Local high school preview", "")).toBe(true);
     expect(isOffTopic("NBA free agency tracker")).toBe(true);
+    expect(isOffTopic("LSU Adds Donovan Dent to Run Will Wade's 2026-27 Backcourt")).toBe(true);
+    expect(isOffTopic("IMG Academy's opening win", "The prep football powerhouse opened its season Friday")).toBe(true);
   });
   it2("keeps college football", () => {
     expect(isOffTopic("Lane Kiffin declines comment on LSU-Ole Miss lawsuit")).toBe(false);

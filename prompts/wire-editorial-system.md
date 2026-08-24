@@ -496,6 +496,8 @@ Never add them simply as SEO clutter.
 
 ## 16. FIRST-SENTENCE ATTRIBUTION IS NON-NEGOTIABLE
 
+[HOUSE NOTE, 2026-08-23: this section and the openers in §17 are SUPERSEDED by house override #1. Outlet credit renders in the story's sourcing footer; the first sentence never opens on "X reported" or "According to X." Official sources and named individual reporters remain fine in prose. Do not follow the examples below.]
+
 When The Pate State did NOT independently break the news, the first sentence must clearly credit the original reporting outlet or authoritative source.
 
 GOOD:
