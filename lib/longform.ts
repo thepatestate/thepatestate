@@ -22,6 +22,7 @@ import { slugify } from "@/lib/slug";
 import { JOSH_BRACKET_FIELD, JOSH_BRACKET_FINAL, JOSH_BRACKET_LABEL } from "@/lib/josh-bracket";
 import { pickArchitecture, boilerplateViolations, BOILERPLATE_PROMPT, scoreDraft, editorialSystem, voiceMatch, type EditorialProduct } from "@/lib/editorial";
 import { hasFirstPersonProse } from "@/lib/wire";
+import { judgeJSON } from "@/lib/judge";
 
 const MODEL = "claude-sonnet-5";
 
@@ -143,20 +144,18 @@ export async function draftLongformArticle(
       .map((t) => t.replace(/^arch:/, ""));
     const arch = pickArchitecture(recentArch, recentArticles.length);
 
-    const selRes = await anthropic.messages.create({
-      model: MODEL,
+    const { text: selText } = await judgeJSON(anthropic, {
       // Reasoning shares this budget with the JSON answer — 1024 truncated.
-      max_tokens: 4096,
-      output_config: { effort: "low", format: { type: "json_schema", schema: SELECT_SCHEMA } },
+      maxTokens: 4096,
+      effort: "low",
+      schemaName: "article_selection",
+      schema: SELECT_SCHEMA,
       system: `You are the article selection engine for The Pate State (Article Playbook v3.1, autonomous lane). Pick the ONE standalone piece a serious college football fan would most want to read today, or decide that none is warranted. Selection rules from the Playbook: selective reaction, never aggregation (write because the news creates an argument the house can own, not because somebody said something); quality over volume (a T3 piece needs a fired trigger, never an idle slot); never duplicate or closely overlap a recent article headline; prefer NR-01 when a genuinely consequential wire story landed in the last 48h, else an evergreen type on a prominent team or national question; RC/TP types only when the wire coverage supports roster-level analysis, never for a bare commitment brief; the angle must be arguable from the wire coverage provided plus mechanism reasoning (no facts the pack won't contain); teams are lowercase-hyphenated slugs. wireStoryIds: the _ids of the 1-4 provided stories most relevant to the topic (empty for pure evergreen). Output JSON only.`,
-      messages: [{
-        role: "user",
-        content: `TYPE MENU:\n${TYPE_MENU}\n\nRECENT WIRE COVERAGE (72h):\n${recentStories
+      user: `TYPE MENU:\n${TYPE_MENU}\n\nRECENT WIRE COVERAGE (72h):\n${recentStories
           .map((s) => `[${s._id}] (${s.category}) ${s.headline} — ${(s.whatHappened ?? "").slice(0, 180)}`)
           .join("\n")}\n\nRECENT ARTICLE HEADLINES (do not duplicate):\n${[...recentArticles.map((a) => a.headline), ...(opts.avoidHeadlines ?? [])].map((h) => `- ${h}`).join("\n")}`,
-      }],
     });
-    const sel = JSON.parse(textOf(selRes)) as {
+    const sel = JSON.parse(selText) as {
       typeId: string; topic: string; angle: string; teams: string[]; wireStoryIds: string[];
     };
 
@@ -246,26 +245,21 @@ export async function draftLongformArticle(
     } else {
       draft.bodyMarkdown = draft.bodyMarkdown.replace(/\s*\[PULLQUOTE\]\s*/g, " ").replace(/ {2,}/g, " ");
     }
-    const checkRes = await anthropic.messages.create({
-      model: MODEL,
-      max_tokens: 512,
-      output_config: {
-        effort: "low",
-        format: {
-          type: "json_schema",
-          schema: {
-            type: "object",
-            properties: { verdict: { type: "string", enum: ["pass", "unsupported", "contradicted"] } },
-            required: ["verdict"],
-            additionalProperties: false,
-          },
-        },
+    const { text: checkText } = await judgeJSON(anthropic, {
+      maxTokens: 1024,
+      effort: "low",
+      schemaName: "factcheck",
+      schema: {
+        type: "object",
+        properties: { verdict: { type: "string", enum: ["pass", "unsupported", "contradicted"] } },
+        required: ["verdict"],
+        additionalProperties: false,
       },
       system:
         "Fact-check gate for a house-analysis article. SOURCES are the only permissible fact base; house ARGUMENT (mechanism, stakes, projections labeled as the house's case) is allowed freely. Verdict 'contradicted' if any stated FACT (a record, stat, date, result, injury, quote, ranking) conflicts with the sources or the on-record positions; 'unsupported' if a material stated fact appears in neither; else 'pass'. Output JSON only.",
-      messages: [{ role: "user", content: `SOURCES:\n${sourcePack}\n\nDRAFT:\n${draft.bodyMarkdown}` }],
+      user: `SOURCES:\n${sourcePack}\n\nDRAFT:\n${draft.bodyMarkdown}`,
     });
-    const check = JSON.parse(textOf(checkRes)) as { verdict: string };
+    const check = JSON.parse(checkText) as { verdict: string };
     if (check.verdict !== "pass") return { error: `factcheck-${check.verdict}` };
 
     // Brief v2 Part 8: scored quality gate — one rewrite with the judge's

@@ -3,6 +3,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { writeJSON } from "@/lib/writer";
 import { boilerplateViolations, BOILERPLATE_PROMPT, editorialSystem, voiceMatch, type Architecture } from "@/lib/editorial";
+import { judgeJSON } from "@/lib/judge";
 
 export const BYLINE_STAFF = "The Pate State Staff";
 export const SERIES_VALUES = [
@@ -195,28 +196,20 @@ export async function classifySeries(input: {
     const weekday = new Date(input.publishedAt).toLocaleDateString("en-US", {
       weekday: "long", timeZone: "America/New_York",
     });
-    const res = await c.messages.create({
-      model: MODEL,
-      max_tokens: 256,
-      output_config: {
-        effort: "low",
-        format: {
-          type: "json_schema",
-          schema: {
-            type: "object",
-            properties: { series: { type: "string", enum: [...SERIES_VALUES] } },
-            required: ["series"],
-            additionalProperties: false,
-          },
-        },
+    const { text } = await judgeJSON(c, {
+      maxTokens: 256,
+      effort: "low",
+      schemaName: "series",
+      schema: {
+        type: "object",
+        properties: { series: { type: "string", enum: [...SERIES_VALUES] } },
+        required: ["series"],
+        additionalProperties: false,
       },
       system: prompt("series-classifier.md"),
-      messages: [{
-        role: "user",
-        content: `Title: ${input.title}\nWeekday (ET): ${weekday}\nDescription:\n${input.description.slice(0, 1500)}`,
-      }],
+      user: `Title: ${input.title}\nWeekday (ET): ${weekday}\nDescription:\n${input.description.slice(0, 1500)}`,
     });
-    const parsed = JSON.parse(textOf(res)) as { series?: string };
+    const parsed = JSON.parse(text) as { series?: string };
     return SERIES_VALUES.includes(parsed.series as never) ? (parsed.series as string) : "general";
   } catch (err) {
     console.error("[generate:classifySeries]", err);
@@ -262,16 +255,16 @@ export async function extractQuotes(transcriptText: string): Promise<ExtractedQu
   const c = client();
   if (!c) return [];
   try {
-    const res = await c.messages.create({
-      model: MODEL,
+    const { text } = await judgeJSON(c, {
       // Reasoning shares this budget with the JSON; 4096 truncated mid-array
       // on long transcripts (2026-08-26).
-      max_tokens: 8192,
-      output_config: { format: { type: "json_schema", schema: QUOTES_SCHEMA } },
+      maxTokens: 8192,
+      schemaName: "quotes",
+      schema: QUOTES_SCHEMA,
       system: prompt("quote-extractor.md"),
-      messages: [{ role: "user", content: `Transcript (timestamped):\n${transcriptText}` }],
+      user: `Transcript (timestamped):\n${transcriptText}`,
     });
-    const parsed = JSON.parse(textOf(res)) as { quotes?: ExtractedQuote[] };
+    const parsed = JSON.parse(text) as { quotes?: ExtractedQuote[] };
     if (!Array.isArray(parsed.quotes)) return [];
     const normTranscript = normalizeForCompare(transcriptText);
     return parsed.quotes

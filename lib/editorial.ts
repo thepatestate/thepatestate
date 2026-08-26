@@ -14,6 +14,7 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { voiceExemplarBlock, exemplarProse, EXEMPLAR_FOR_LANE } from "@/lib/exemplars";
+import { judgeJSON } from "@/lib/judge";
 
 export function readPrompt(name: string): string {
   return readFileSync(join(process.cwd(), "prompts", name), "utf8");
@@ -65,20 +66,15 @@ export async function fanScore(
   input: { headline: string; dek?: string; body: string },
 ): Promise<FanVerdict> {
   try {
-    const res = await anthropic.messages.create({
-      model: "claude-sonnet-5",
-      max_tokens: 2048,
-      output_config: {
-        effort: "low",
-        format: {
-          type: "json_schema",
-          schema: {
+    const { text } = await judgeJSON(anthropic, {
+      maxTokens: 2048,
+      effort: "low",
+      schemaName: "fan_verdict",
+      schema: {
             type: "object",
             properties: { legibility: { type: "number" }, enjoyment: { type: "number" }, joshVoice: { type: "number" }, notes: { type: "string" } },
             required: ["legibility", "enjoyment", "joshVoice", "notes"],
             additionalProperties: false,
-          },
-        },
       },
       system: `You are a serious college football fan who reads a lot: message boards, the national writers, and you listen to Josh Pate's show. You are NOT an editor. Read the piece once at normal speed and score it 1-10 on three things, harshly.
 legibility: could you follow every sentence on the first pass with no decoding? Did you always know who was being talked about and why it mattered? Deduct for insider labels, koans, clever lines you had to re-read, paragraphs that restate the last one, abstractions where a name or a number should be, and anything that sounds like a memo instead of a person.
@@ -86,10 +82,9 @@ enjoyment: did you want to keep reading, and were you glad you did? Did you lear
 joshVoice: does it sound like Josh Pate talking to you on the porch: first person, plain, confident, dry, complete sentences, verdict first, the football reason right behind it, respect for every fanbase, zero performance? Deduct for anonymous-journalist prose, third-person "Pate says," clipped shorthand, or sounding like an AI doing an impression.
 Calibration: 10 = you'd send it to a friend unprompted; 8.5 = you'd finish it and remember one line; 7 = fine, forgettable; 5 = you skimmed; 3 = you closed the tab.
 notes: 3-5 blunt sentences from the fan's chair: what bored you, what confused you, what you liked, and QUOTE the two sentences that most made it feel written by a machine. Output JSON only.`,
-      messages: [{ role: "user", content: `HEADLINE: ${input.headline}\nDEK: ${input.dek ?? ""}\n\n${input.body}` }],
+      user: `HEADLINE: ${input.headline}\nDEK: ${input.dek ?? ""}\n\n${input.body}`,
     });
-    const block = res.content.find((b) => b.type === "text");
-    const out = JSON.parse(block && block.type === "text" ? block.text : "{}") as Partial<FanVerdict>;
+    const out = JSON.parse(text || "{}") as Partial<FanVerdict>;
     const legibility = out.legibility ?? 10, enjoyment = out.enjoyment ?? 10, joshVoice = out.joshVoice ?? 10;
     const score = Math.round(((legibility + enjoyment) / 2) * 10) / 10;
     return { legibility, enjoyment, joshVoice, score, notes: out.notes ?? "", pass: score >= 8.5 };
@@ -114,9 +109,25 @@ export const VOICE_CARD = `WHO IS WRITING: Josh Pate, to one smart fan, in his o
 8. The test: read the paragraph aloud on a porch. If it sounds like a memo, a lawyer, a press release, or a robot doing an impression of a podcaster, rewrite it.
 The approved column below is what "sounds like him" means. Match it.`;
 
+/** The short rulebook for the lean prompt: the laws that must never be
+ * broken, in one screen. The kit's full documents govern the judges. */
+export const LEAN_LAWS = `THE LAWS (never broken, whatever the voice does):
+1. Never fabricate: no invented quotes, stats, injury details, timelines, depth-chart decisions, motivations, sources, or Josh Pate positions. Facts come only from the supplied sources; unknown stays unknown, said once, plainly.
+2. Josh's on-record positions come only from the supplied archived quotes and on-record site positions. Where he hasn't spoken, extend his stated logic the way a show listener would recognize; never invent a specific new pick, a memory ("I've been saying for years"), a source, or a claim to have said something on the show. Never contradict an on-record position.
+3. Outlet credit lives in the site's footer: never name another website in prose; official sources and named individual reporters are fine. Never narrate the sourcing ("the report does not say," "was described as").
+4. Flaws belong to units and situations, never named kids. No "overrated," no betting-tout language, no exclamation points, no em dashes in prose.
+5. The site renders the chrome (chips, byline, video card, Pulse, sourcing box): never write it into prose.
+6. Output valid JSON matching the provided schema, nothing else.`;
+
 /** Builds a writer's system prompt: the voice card and the approved
- * article first, then the kit in its load order, then the JSON contract. */
+ * article first, then the kit in its load order, then the JSON contract.
+ * EDITORIAL_LEAN=1 (loop round 3, 2026-08-26): the writer sees only the
+ * voice card, the approved column, the laws, and the contract; the kit's
+ * documents govern the judges instead of the writer. */
 export function editorialSystem(product: EditorialProduct, taskPrompt: string): string {
+  if (process.env.EDITORIAL_LEAN === "1") {
+    return [VOICE_CARD, voiceExemplarBlock(exemplarLane(product)), LEAN_LAWS, taskPrompt].filter(Boolean).join("\n\n");
+  }
   return [
     VOICE_CARD,
     voiceExemplarBlock(exemplarLane(product)),
@@ -140,21 +151,15 @@ export async function voiceMatch(
   input: { lane: keyof typeof EXEMPLAR_FOR_LANE; draft: string },
 ): Promise<VoiceVerdict> {
   try {
-    const res = await anthropic.messages.create({
-      model: "claude-sonnet-5",
-      max_tokens: 2048,
-      output_config: {
-        effort: "low",
-        format: {
-          type: "json_schema",
-          schema: { type: "object", properties: { score: { type: "number" }, notes: { type: "string" } }, required: ["score", "notes"], additionalProperties: false },
-        },
-      },
+    const { text } = await judgeJSON(anthropic, {
+      maxTokens: 2048,
+      effort: "low",
+      schemaName: "voice_verdict",
+      schema: { type: "object", properties: { score: { type: "number" }, notes: { type: "string" } }, required: ["score", "notes"], additionalProperties: false },
       system: `You are a voice-match judge. EXEMPLAR is an article written and approved by the site's owner. DRAFT is a new piece on a different subject that must read as if the same person wrote it. Score 1-10 on register match ONLY, never on facts, topic, or length: grammatical person and address (first person "I" to a "you" reader, or the desk's third person), sentence construction and the rhythm of lengths, where the short hammer sentence lands, how a fact and a verdict share a paragraph, how numbers carry credibility, how rare and where the humor is, how sections open and close, paragraph length, warmth versus distance. 10 = indistinguishable; 8 = the same writer on a different day; 6 = the same building, a different desk; 4 = a competent stranger; 2 = generated. Penalize hard: a different grammatical person than the exemplar; announced structure ("the honest read is", "the counterpoint is"); clipped shorthand the exemplar doesn't use; runs of same-length sentences; clever lines the exemplar wouldn't attempt; consultant vocabulary; every sentence auditioning for a pull quote. notes: 2-4 sentences naming the specific mismatches and QUOTING the draft's two or three most off-voice sentences so a rewrite can target them. Output JSON only.`,
-      messages: [{ role: "user", content: `EXEMPLAR:\n${exemplarProse(EXEMPLAR_FOR_LANE[input.lane]).slice(0, 14000)}\n\nDRAFT:\n${input.draft}` }],
+      user: `EXEMPLAR:\n${exemplarProse(EXEMPLAR_FOR_LANE[input.lane]).slice(0, 14000)}\n\nDRAFT:\n${input.draft}`,
     });
-    const block = res.content.find((b) => b.type === "text");
-    const out = JSON.parse(block && block.type === "text" ? block.text : "{}") as { score?: number; notes?: string };
+    const out = JSON.parse(text || "{}") as { score?: number; notes?: string };
     const score = typeof out.score === "number" ? out.score : 10;
     return { score, notes: out.notes ?? "", pass: score >= 8 };
   } catch {
@@ -333,14 +338,11 @@ export async function scoreDraft(
   input: { headline: string; dek?: string; body: string; sources?: string },
 ): Promise<QualityVerdict> {
   try {
-    const res = await anthropic.messages.create({
-      model: "claude-sonnet-5",
-      max_tokens: 4096,
-      output_config: {
-        effort: "low",
-        format: {
-          type: "json_schema",
-          schema: {
+    const { text } = await judgeJSON(anthropic, {
+      maxTokens: 4096,
+      effort: "low",
+      schemaName: "quality_verdict",
+      schema: {
             type: "object",
             properties: {
               scores: {
@@ -353,8 +355,6 @@ export async function scoreDraft(
             },
             required: ["scores", "notes"],
             additionalProperties: false,
-          },
-        },
       },
       system: `You are the pre-publish quality judge for a college football site aiming at A+ national-caliber writing. Score the draft 1-10 on each category, harshly and honestly:
 voice — could this appear on any generic sports site? (generic = low)
@@ -371,10 +371,9 @@ humanity — the Editorial Core's AI-removal test: does this sound WRITTEN or GE
 discovery — the Core's three reactions: does the piece produce "I didn't know that" (a reported fact), "I hadn't thought about it that way" (a second-order insight), and "now I want to watch for that" (something observable on Saturday)? Something new every 150–250 words, or low.
 When SOURCES are supplied, evidence, valueAdded and discovery are judged relative to what the sources contain: a draft that says only what is known, briefly, scores WELL on pacing and valueAdded; a draft that pads beyond the sources (the same facts restated in new clothes, hypothetical scenarios standing in for reporting) scores LOW on pacing and humanity. Never penalize a draft for lacking reporting the sources do not contain; penalize it for pretending otherwise, and say in the notes when the right fix is to CUT rather than add.
 notes: 2-4 blunt sentences naming the weakest categories and exactly what to fix; when humanity scores low, QUOTE the two or three sentences that sound most generated so the rewrite can target them. Output JSON only.`,
-      messages: [{ role: "user", content: `${input.sources ? `SOURCES:\n${input.sources.slice(0, 12000)}\n\n` : ""}DRAFT:\nHEADLINE: ${input.headline}\nDEK: ${input.dek ?? ""}\n\n${input.body}` }],
+      user: `${input.sources ? `SOURCES:\n${input.sources.slice(0, 12000)}\n\n` : ""}DRAFT:\nHEADLINE: ${input.headline}\nDEK: ${input.dek ?? ""}\n\n${input.body}`,
     });
-    const block = res.content.find((b) => b.type === "text");
-    const out = JSON.parse(block && block.type === "text" ? block.text : "{}") as { scores: Record<string, number>; notes: string };
+    const out = JSON.parse(text || "{}") as { scores: Record<string, number>; notes: string };
     const low = Object.values(out.scores ?? {}).filter((v) => v < 8).length;
     return { scores: out.scores ?? {}, notes: out.notes ?? "", pass: low < 2 };
   } catch {

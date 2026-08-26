@@ -27,6 +27,13 @@ const outArg = process.argv.indexOf("--out");
 const OUT = outArg !== -1 ? process.argv[outArg + 1] : join(process.cwd(), ".superpowers", `review-pack-${new Date().toISOString().slice(0, 10)}.json`);
 
 const APPEND = process.argv.includes("--append");
+// Loop variants (2026-08-26): --lean drops the kit documents from the
+// writer prompt; --provider anthropic|openai and --model pick the writer.
+if (process.argv.includes("--lean")) process.env.EDITORIAL_LEAN = "1";
+const provArg = process.argv.indexOf("--provider");
+if (provArg !== -1) process.env.WRITER_PROVIDER = process.argv[provArg + 1];
+const modelArg = process.argv.indexOf("--model");
+if (modelArg !== -1) { process.env.ANTHROPIC_WRITER_MODEL = process.argv[modelArg + 1]; process.env.OPENAI_WRITER_MODEL = process.argv[modelArg + 1]; }
 const { default: Anthropic } = await import("@anthropic-ai/sdk");
 const { writeClient } = await import("../lib/sanity.ts");
 const { generateWireStory, fetchSourceText, titleKeywords, isThinSource } = await import("../lib/wire.ts");
@@ -153,4 +160,5 @@ if (scored.length) {
   const avg = (k: string) => (scored.reduce((s, p) => s + (p.fan as any)[k], 0) / scored.length).toFixed(2);
   console.log(`\nFAN AVERAGE over ${scored.length}: score ${avg("score")} · legibility ${avg("legibility")} · enjoyment ${avg("enjoyment")} · josh ${avg("joshVoice")} · voice-match ${(scored.reduce((s, p) => s + (p.voice as any).score, 0) / scored.length).toFixed(2)}`);
 }
+console.log(`variant: ${process.env.EDITORIAL_LEAN === "1" ? "lean" : "full"} prompt · writer ${process.env.WRITER_PROVIDER ?? "openai"}${process.env.ANTHROPIC_WRITER_MODEL || process.env.OPENAI_WRITER_MODEL ? ` (${process.env.ANTHROPIC_WRITER_MODEL ?? process.env.OPENAI_WRITER_MODEL})` : ""}`);
 console.log(`\ndone: ${pack.length} pieces → ${OUT}`);

@@ -16,7 +16,7 @@ export const WRITER_PROVIDER: "openai" | "anthropic" =
   process.env.OPENAI_API_KEY && process.env.WRITER_PROVIDER !== "anthropic" ? "openai" : "anthropic";
 
 const OPENAI_MODEL = process.env.OPENAI_WRITER_MODEL ?? "gpt-5.6-luna";
-const ANTHROPIC_MODEL = "claude-sonnet-5";
+const ANTHROPIC_MODEL = process.env.ANTHROPIC_WRITER_MODEL ?? "claude-sonnet-5";
 
 /** One structured-output writing call, provider-routed. Returns the raw JSON
  * string (callers keep their own JSON.parse + validation + retry loops). */

@@ -12,6 +12,7 @@ import { findReceipt } from "@/lib/quotes";
 import { slugify } from "@/lib/slug";
 import { writeJSON } from "@/lib/writer";
 import { boilerplateViolations, BOILERPLATE_PROMPT, scoreDraft, editorialSystem, voiceMatch } from "@/lib/editorial";
+import { judgeJSON } from "@/lib/judge";
 
 const MODEL = "claude-sonnet-5";
 // Client directive (2026-08-17): wire clicks must never leave the site, so
@@ -417,29 +418,16 @@ async function receiptIsRelevant(
   job: StoryJob,
 ): Promise<boolean> {
   try {
-    const res = await anthropic.messages.create({
-      model: MODEL,
-      max_tokens: 256,
-      output_config: {
-        effort: "low",
-        format: {
-          type: "json_schema",
-          schema: {
-            type: "object",
-            properties: { relevant: { type: "boolean" } },
-            required: ["relevant"],
-            additionalProperties: false,
-          },
-        },
-      },
+    const { text } = await judgeJSON(anthropic, {
+      maxTokens: 256,
+      effort: "low",
+      schemaName: "receipt_relevance",
+      schema: { type: "object", properties: { relevant: { type: "boolean" } }, required: ["relevant"], additionalProperties: false },
       system:
         'An archived spoken quote may be attached to a news story as "Josh said it first." Return relevant=true ONLY when the quote is clearly about the same specific subject as the news — the same player, hire, game, ranking argument, or storyline. Same team but different topic is NOT relevant. When unsure, false. Output JSON only.',
-      messages: [{
-        role: "user",
-        content: `NEWS:\n${job.sourceBlock.slice(0, 900)}\n\nARCHIVED QUOTE (topic: ${receipt.topic}):\n"${receipt.quote}"`,
-      }],
+      user: `NEWS:\n${job.sourceBlock.slice(0, 900)}\n\nARCHIVED QUOTE (topic: ${receipt.topic}):\n"${receipt.quote}"`,
     });
-    return JSON.parse(textOf(res)).relevant === true;
+    return JSON.parse(text).relevant === true;
   } catch {
     return false;
   }
@@ -658,16 +646,23 @@ export async function generateWireStory(
     return null;
   };
   const factCheck = async (c: string): Promise<{ verdict: string; detail: string }> => {
-    const checkRes = await anthropic.messages.create({
-      model: MODEL,
-      // A long `detail` truncated at 512 and crashed JSON.parse (2026-08-26).
-      max_tokens: 1024,
-      output_config: { effort: "low", format: { type: "json_schema", schema: FACTCHECK_SCHEMA } },
-      system: "You are an independent fact-check gate. You receive SOURCES and a DRAFT. Verdict 'contradicted' if any draft claim conflicts with the sources; 'unsupported' if any material factual claim (names, numbers, timelines, outcomes) does not appear in the sources; else 'pass'. Interpretation clearly labeled as analysis is allowed; invented facts are not. Output JSON only.",
-      messages: [{ role: "user", content: `SOURCES:\n${job.sourceBlock}\n\nDRAFT:\n${c}` }],
-    });
+    // Anthropic first, OpenAI when Anthropic is out (lib/judge.ts); a
+    // long `detail` truncated at 512 once, hence 1024.
+    let raw = "";
     try {
-      return JSON.parse(textOf(checkRes)) as { verdict: string; detail: string };
+      raw = (await judgeJSON(anthropic, {
+        maxTokens: 1024,
+        effort: "low",
+        schemaName: "factcheck",
+        schema: FACTCHECK_SCHEMA,
+        system: "You are an independent fact-check gate. You receive SOURCES and a DRAFT. Verdict 'contradicted' if any draft claim conflicts with the sources; 'unsupported' if any material factual claim (names, numbers, timelines, outcomes) does not appear in the sources; else 'pass'. Interpretation clearly labeled as analysis is allowed; invented facts are not. Output JSON only.",
+        user: `SOURCES:\n${job.sourceBlock}\n\nDRAFT:\n${c}`,
+      })).text;
+    } catch (err) {
+      return { verdict: "unsupported", detail: `fact-check unavailable: ${err instanceof Error ? err.message.slice(0, 80) : err}` };
+    }
+    try {
+      return JSON.parse(raw) as { verdict: string; detail: string };
     } catch {
       // An unreadable verdict is never a pass.
       return { verdict: "unsupported", detail: "fact-check response unreadable" };
