@@ -19,7 +19,10 @@ import {
 import { createClient as createServerClient, getCitizen } from "@/lib/supabase/server";
 import { getPublishedArticles, type SanityArticle } from "@/lib/sanity";
 import { getVideos, isEpisode, videoUrl } from "@/lib/youtube";
-import { JOSH_BRACKET_FIELD, JOSH_BRACKET_ARTICLE, JOSH_BRACKET_FINAL } from "@/lib/josh-bracket";
+import { JOSH_BRACKET_FIELD, JOSH_BRACKET_ARTICLE, JOSH_BRACKET_FINAL, joshBracketRounds } from "@/lib/josh-bracket";
+import TourneyBracket from "@/components/TourneyBracket";
+import { buildRounds, championOf, seedFromRanked } from "@/lib/bracket-rounds";
+import { getCompetitions, getBracketConsensus, getEntryCount, getMyEntry, compLocked, type PlayPick } from "@/lib/play";
 
 export const metadata: Metadata = {
   title: "The JP Poll — The People's Top 25",
@@ -66,7 +69,7 @@ function NatRow({ rank, logo, school, firstPlace, pts }: {
 
 export default async function PollPage() {
   // Every fetch guarded — a dead feed degrades a section, never the page.
-  const [videos, nationalPolls, latestBoard, currentBoard, dir, citizen, articles] = await Promise.all([
+  const [videos, allNationalPolls, latestBoard, currentBoard, dir, citizen, articles, comps] = await Promise.all([
     getVideos().catch(() => []),
     getNationalRankings().catch<NationalPoll[]>(() => []),
     getLatestPublished().catch(() => null),
@@ -74,6 +77,21 @@ export default async function PollPage() {
     getTeamDirectory().catch((): Awaited<ReturnType<typeof getTeamDirectory>> => ({})),
     getCitizen().catch(() => null),
     getPublishedArticles(24).catch<SanityArticle[]>(() => []),
+    getCompetitions().catch(() => []),
+  ]);
+  // Josh, 2026-08-26: the FCS poll comes off the rankings page.
+  const nationalPolls = allNationalPolls.filter((p) => !/\bFCS\b/i.test(p.name));
+
+  // The brackets at the bottom of the page (Josh, 2026-08-26): his on-record
+  // path, the field as it stands today, the Citizens' consensus, and the
+  // signed-in citizen's own entry when one exists.
+  const bracketComp = comps.find((c) => c.type === "bracket") ?? null;
+  const [consensus, bracketEntries, myBracket] = await Promise.all([
+    bracketComp ? getBracketConsensus(bracketComp.slug).catch(() => null) : Promise.resolve(null),
+    bracketComp ? getEntryCount(bracketComp.slug).catch(() => 0) : Promise.resolve(0),
+    bracketComp && citizen
+      ? getMyEntry(await createServerClient(), bracketComp.slug, citizen.id).catch(() => null)
+      : Promise.resolve(null),
   ]);
 
   // Live JP board results + ballot state. getBallotCount only runs when a
@@ -104,6 +122,32 @@ export default async function PollPage() {
   const cmpPoll = nationalPolls.find((p) => /\bAP\b/i.test(p.name)) ?? nationalPolls[0] ?? null;
   const cmpLabel = cmpPoll ? pollShortName(cmpPoll.name) : null;
   const cmpMap = new Map<string, number>(cmpPoll ? cmpPoll.ranks.map((r) => [r.slug, r.rank]) : []);
+
+  const joshRounds = joshBracketRounds();
+  // "The field today": the committee's rankings once they exist; until then
+  // the Coaches Poll top 12 (Josh's own suggestion), then the AP.
+  const fieldPoll =
+    allNationalPolls.find((p) => /playoff|CFP/i.test(p.name)) ??
+    allNationalPolls.find((p) => /coaches/i.test(p.name)) ??
+    allNationalPolls.find((p) => /\bAP\b/i.test(p.name)) ?? null;
+  const fieldRounds = fieldPoll && fieldPoll.ranks.length >= 12
+    ? buildRounds(seedFromRanked(fieldPoll.ranks.map((r) => ({ name: r.school, slug: r.slug }))))
+    : null;
+  const consensusRounds = consensus && consensus.entries > 0 && consensus.field.length >= 12
+    ? buildRounds(
+        seedFromRanked(consensus.field.map((f) => ({ name: dir[f.slug]?.school ?? f.slug.replace(/-/g, " "), slug: f.slug }))),
+        { champion: consensus.champions[0]?.slug ?? null },
+      )
+    : null;
+  const myPicks: PlayPick[] = myBracket?.picks ?? [];
+  const mySeeds = myPicks
+    .filter((pk) => pk.slot.startsWith("seed-"))
+    .map((pk) => ({ seed: Number(pk.slot.replace("seed-", "")), slug: (pk.value as { team?: string }).team ?? "" }))
+    .filter((s) => s.slug)
+    .map((s) => ({ ...s, name: dir[s.slug]?.school ?? s.slug.replace(/-/g, " ") }));
+  const myChampion = (myPicks.find((pk) => pk.slot === "champion")?.value as { team?: string } | undefined)?.team ?? null;
+  const myRounds = mySeeds.length > 0 ? buildRounds(mySeeds, { champion: myChampion }) : null;
+  const bracketLocked = bracketComp ? compLocked(bracketComp) : false;
 
   const heroRows = results.slice(0, 10);
   const totalBallots = results[0]?.ballots ?? 0;
@@ -447,6 +491,74 @@ export default async function PollPage() {
               )}
             </div>
           </div>
+      </section>
+
+      {/* ── THE BRACKETS — always at the bottom of the rankings page (Josh, 2026-08-26) ── */}
+      <section className="nat" id="brackets">
+        <div className="wrap">
+          <div className="sect-head">
+            <span className="eb">Every Bracket on the Record</span>
+            <h3>The Playoff Brackets</h3>
+            <span className="live">Josh · the field today · the Citizens</span>
+          </div>
+
+          <div className="bracket-title">
+            <div className="avatar" style={{ background: "var(--lamp)", color: "var(--navy)", borderColor: "var(--lamp)" }}>JP</div>
+            <h3>Josh&apos;s Bracket</h3>
+          </div>
+          <span className="note">
+            Projection, on the record since August. Final: {JOSH_BRACKET_FINAL} · <Link href={JOSH_BRACKET_ARTICLE}>read the column</Link>
+          </span>
+          <TourneyBracket rounds={joshRounds} champTitle="JOSH'S CHAMPION" champName={championOf(joshRounds)} />
+
+          {fieldRounds && fieldPoll && (
+            <>
+              <div className="bracket-title">
+                <div className="avatar">12</div>
+                <h3>The Field Today</h3>
+              </div>
+              <span className="note">
+                Seeded 1–12 straight from the {fieldPoll.name}{fieldPoll.week ? ` (${fieldPoll.week})` : ""}, higher seed advancing. When the committee publishes its first rankings in November, this bracket follows the official CFP positions.
+              </span>
+              <TourneyBracket rounds={fieldRounds} champTitle="IF THE SEASON ENDED TODAY" champName={championOf(fieldRounds)} />
+            </>
+          )}
+
+          {myRounds && bracketComp && (
+            <>
+              <div className="bracket-title">
+                <div className="avatar">You</div>
+                <h3>Your Bracket</h3>
+              </div>
+              <span className="note">
+                Your entry in the Citizens&apos; Bracket Challenge, as it stands. <Link href={`/play/${bracketComp.slug}`}>{bracketLocked ? "See the board →" : "Change any pick before the field locks →"}</Link>
+              </span>
+              <TourneyBracket rounds={myRounds} champTitle="YOUR CHAMPION" champName={championOf(myRounds)} />
+            </>
+          )}
+
+          <div className="bracket-title">
+            <div className="avatar">🗳</div>
+            <h3>The Citizens&apos; Bracket</h3>
+          </div>
+          {consensusRounds && consensus ? (
+            <>
+              <span className="note">
+                The State&apos;s consensus across {consensus.entries.toLocaleString()} brackets: the twelve most-picked teams, seeded by how often they were picked, with the most-picked champion winning it all.
+              </span>
+              <TourneyBracket rounds={consensusRounds} champTitle="THE CITIZENS' CHAMPION" champName={championOf(consensusRounds)} />
+              <p className="src">
+                Who the State has winning it all: {consensus.champions.slice(0, 8).map((c) => `${dir[c.slug]?.school ?? c.slug} ${c.pct}%`).join(" · ")}
+              </p>
+            </>
+          ) : (
+            <p className="src">
+              {bracketEntries > 0 ? `${bracketEntries.toLocaleString()} citizens have built a bracket so far.` : "The Citizens' Bracket Challenge is open."}{" "}
+              The community consensus, what percentage of the State picks each team to go each round, publishes here when the field locks.{" "}
+              <Link href={bracketComp ? `/play/${bracketComp.slug}` : "/play"}>Build yours →</Link>
+            </p>
+          )}
+        </div>
       </section>
 
       {/* ── CITIZENS LINE ── */}

@@ -5,6 +5,10 @@ import PreseasonChip from "@/components/PreseasonChip";
 import EmptyState from "@/components/EmptyState";
 import { DEMO_MODE } from "@/lib/demo";
 import { slugifyTeam, teamLogoUrl } from "@/lib/teams-meta";
+import TourneyBracket from "@/components/TourneyBracket";
+import type { BRound } from "@/lib/bracket-rounds";
+import { championOf } from "@/lib/bracket-rounds";
+import { joshBracketRounds, JOSH_BRACKET_ARTICLE } from "@/lib/josh-bracket";
 import { createArtPicker } from "@/lib/editorial-art";
 
 export const metadata: Metadata = {
@@ -18,10 +22,7 @@ export const metadata: Metadata = {
 // rankings) and the AI Playoff Predictor. Swap for live queries/API calls
 // when each engine ships; the JSX below only touches these arrays.
 
-type BGame = { seedA: number; teamA: string; winA: boolean; seedB: number; teamB: string; winB: boolean; tag: string };
-type BRound = { title: string; center?: boolean; games: readonly BGame[] };
-
-const DEMO_AI_BRACKET: readonly BRound[] = [
+const DEMO_AI_BRACKET: BRound[] = [
   { title: "First Round", games: [
     { seedA: 9, teamA: "Notre Dame", winA: false, seedB: 8, teamB: "LSU", winB: true, tag: "AT BATON ROUGE" },
     { seedA: 12, teamA: "Indiana", winA: false, seedB: 5, teamB: "Texas", winB: true, tag: "AT AUSTIN" },
@@ -47,80 +48,7 @@ const DEMO_AI_BRACKET: readonly BRound[] = [
     { seedA: 10, teamA: "Alabama", winA: false, seedB: 7, teamB: "Penn State", winB: true, tag: "AT STATE COLLEGE" },
     { seedA: 11, teamA: "Miami", winA: false, seedB: 6, teamB: "Oregon", winB: true, tag: "AT EUGENE" },
   ] },
-] as const;
-
-const DEMO_JOSH_BRACKET: readonly BRound[] = [
-  { title: "First Round", games: [
-    { seedA: 9, teamA: "Notre Dame", winA: false, seedB: 8, teamB: "LSU", winB: true, tag: "AT BATON ROUGE" },
-    { seedA: 12, teamA: "Indiana", winA: true, seedB: 5, teamB: "Texas", winB: false, tag: "AT AUSTIN" },
-  ] },
-  { title: "Quarterfinals", games: [
-    { seedA: 1, teamA: "Georgia", winA: true, seedB: 8, teamB: "LSU", winB: false, tag: "SUGAR" },
-    { seedA: 4, teamA: "Boise State", winA: false, seedB: 12, teamB: "Indiana", winB: true, tag: "FIESTA" },
-  ] },
-  { title: "Semifinal", games: [
-    { seedA: 1, teamA: "Georgia", winA: true, seedB: 12, teamB: "Indiana", winB: false, tag: "COTTON" },
-  ] },
-  { title: "National Championship", center: true, games: [
-    { seedA: 1, teamA: "Georgia", winA: true, seedB: 2, teamB: "Ohio State", winB: false, tag: "JAN 18 · MIAMI" },
-  ] },
-  { title: "Semifinal", games: [
-    { seedA: 2, teamA: "Ohio State", winA: true, seedB: 6, teamB: "Oregon", winB: false, tag: "ORANGE" },
-  ] },
-  { title: "Quarterfinals", games: [
-    { seedA: 2, teamA: "Ohio State", winA: true, seedB: 7, teamB: "Penn State", winB: false, tag: "ROSE" },
-    { seedA: 3, teamA: "Clemson", winA: false, seedB: 6, teamB: "Oregon", winB: true, tag: "PEACH" },
-  ] },
-  { title: "First Round", games: [
-    { seedA: 10, teamA: "Alabama", winA: false, seedB: 7, teamB: "Penn State", winB: true, tag: "AT STATE COLLEGE" },
-    { seedA: 11, teamA: "Miami", winA: false, seedB: 6, teamB: "Oregon", winB: true, tag: "AT EUGENE" },
-  ] },
-] as const;
-
-// Small circular logo thumbnail beside a bracket-row team name — official
-// logos per v2 brief §1.4 (helmets are exclusive to the scores Watch List);
-// renders nothing when the team has no mapped logo (the row layout is
-// unaffected either way since the .tm flex row already has a gap).
-function BracketHelmet({ team }: { team: string }) {
-  const logo = teamLogoUrl(slugifyTeam(team));
-  if (!logo) return null;
-  return (
-    <span className="bracket-helmet" style={{ background: "#fff" }}>
-      <Image src={logo} alt="" width={56} height={56} style={{ objectFit: "contain", padding: 4 }} />
-    </span>
-  );
-}
-
-function GameBox({ g }: { g: BGame }) {
-  return (
-    <div className="game">
-      <div className={g.winA ? "tm w" : "tm"}><span className="sd">{g.seedA}</span><BracketHelmet team={g.teamA} />{g.teamA}</div>
-      <div className={g.winB ? "tm w" : "tm"}><span className="sd">{g.seedB}</span><BracketHelmet team={g.teamB} />{g.teamB}</div>
-      <div className="tag2">{g.tag}</div>
-    </div>
-  );
-}
-
-function TourneyBracket({ rounds, champTitle, champName }: { rounds: readonly BRound[]; champTitle: string; champName: string }) {
-  return (
-    <div className="tourney-wrap">
-      <div className="tourney7">
-        {rounds.map((r, i) => (
-          <div className={r.center ? "round center" : "round"} key={`${r.title}-${i}`}>
-            <h5>{r.title}</h5>
-            {r.games.map((g, gi) => <GameBox g={g} key={gi} />)}
-            {r.center && (
-              <div className="champ">
-                <div className="t">{champTitle}</div>
-                <div className="n">{champName}</div>
-              </div>
-            )}
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
+];
 
 const DEMO_SEEDS_COL1 = [
   { seed: "01", team: "Georgia", note: "SEC champ · bye" },
@@ -211,6 +139,9 @@ const DEMO_PREDICTOR_WEEKS = ["Preseason — project from talent & schedules", "
 
 export default function PlayoffsPage() {
   const art = createArtPicker();
+  // Josh's bracket is built from his column's picks (lib/josh-bracket.ts),
+  // never from demo data — one source for every bracket on the site.
+  const joshRounds = joshBracketRounds();
   const readRoomLead = art.pick("playoffs", "Josh Pate breaking down his 2026 playoff bracket on the show");
   return (
     <main className="v5-lite">
@@ -257,8 +188,8 @@ export default function PlayoffsPage() {
             <div className="avatar" style={{ background: "var(--lamp)", color: "var(--navy)", borderColor: "var(--lamp)" }}>JP</div>
             <h3>Josh&apos;s Bracket</h3>
           </div>
-          <span className="note">Projection — Josh&apos;s picks, on the record since August · <Link href="/notebook/my-2026-playoff-bracket-on-the-record" style={{ color: "var(--lamp-deep)" }}>read the column</Link></span>
-          <TourneyBracket rounds={DEMO_JOSH_BRACKET} champTitle="JOSH'S CHAMPION" champName="Georgia" />
+          <span className="note">Projection — Josh&apos;s picks, on the record since August · <Link href={JOSH_BRACKET_ARTICLE} style={{ color: "var(--lamp-deep)" }}>read the column</Link></span>
+          <TourneyBracket rounds={joshRounds} champTitle="JOSH'S CHAMPION" champName={championOf(joshRounds)} />
 
           <div style={{ marginTop: 30 }}>
             <p className="eyebrow">The Committee of the Citizens</p>

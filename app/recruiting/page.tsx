@@ -279,7 +279,7 @@ export default async function RecruitingPage() {
                   <div className={t.rank <= 5 ? "crow top" : "crow"} key={t.rank}>
                     <span className="rk">{t.rank}</span>
                     {t.logo && <Image src={t.logo} alt="" width={20} height={20} />}
-                    <span className="tn">{t.team}</span>
+                    <Link className="tn" href={`/recruiting/${t.slug}`}>{t.team}</Link>
                     <span className="n"><b>{t.points.toFixed(1)}</b> 247 pts</span>
                   </div>
                 ))}
@@ -386,10 +386,10 @@ export default async function RecruitingPage() {
                 <tr key={r.rank}>
                   <td className="rk">{String(r.rank).padStart(2, "0")}</td>
                   <td>
-                    <span className="tcell">
+                    <Link className="tcell" href={`/recruiting/${r.slug}`}>
                       {r.logo && <Image src={r.logo} alt="" width={22} height={22} style={{ objectFit: "contain" }} />}
                       {r.team}
-                    </span>
+                    </Link>
                   </td>
                   <td className="conf">{r.conference || "—"}</td>
                   <td className="pts">{r.points.toFixed(2)}</td>

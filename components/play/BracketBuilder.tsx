@@ -4,6 +4,8 @@ import { useMemo, useState, useTransition } from "react";
 import Image from "next/image";
 import { saveBracket } from "@/app/play/actions";
 import type { BracketInput } from "@/lib/play-validate";
+import TourneyBracket from "@/components/TourneyBracket";
+import { buildRounds, championOf } from "@/lib/bracket-rounds";
 
 // Preseason Playoff Challenge entry (v2 brief §5.2 Window 1): seed the
 // 12-team field, crown a champion, call the championship total (tiebreak).
@@ -55,6 +57,20 @@ export default function BracketBuilder({
   const chosen = Object.values(seeds).filter(Boolean);
   const complete = chosen.length === fieldSize && champion && tiebreaker !== "";
 
+  // The citizen's picks drawn as the same two-sided bracket the rest of the
+  // site uses (Josh, 2026-08-26). Chalk fills the games the entry doesn't
+  // decide; the chosen champion wins every game on its path.
+  const previewRounds = useMemo(
+    () =>
+      buildRounds(
+        Object.entries(seeds)
+          .filter(([, slug]) => Boolean(slug))
+          .map(([seed, slug]) => ({ seed: Number(seed), slug, name: bySlug.get(slug)?.school ?? slug })),
+        { champion },
+      ),
+    [seeds, champion, bySlug],
+  );
+
   const setSeed = (seed: number, team: string) =>
     setSeeds((prev) => {
       const next = { ...prev };
@@ -80,6 +96,7 @@ export default function BracketBuilder({
 
   return (
     <div>
+      <TourneyBracket rounds={previewRounds} champTitle="YOUR CHAMPION" champName={championOf(previewRounds)} />
       <div className="seed-grid">
         {Array.from({ length: fieldSize }, (_, i) => i + 1).map((seed) => {
           const team = seeds[seed] ? bySlug.get(seeds[seed]) : null;

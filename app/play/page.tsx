@@ -13,7 +13,9 @@ import {
   type PlayEntry,
 } from "@/lib/play";
 import { teamLogoUrl } from "@/lib/teams-meta";
-import { JOSH_BRACKET_FIELD, JOSH_BRACKET_ARTICLE, JOSH_BRACKET_LABEL } from "@/lib/josh-bracket";
+import { JOSH_BRACKET_ARTICLE, JOSH_BRACKET_LABEL, joshBracketRounds } from "@/lib/josh-bracket";
+import TourneyBracket from "@/components/TourneyBracket";
+import { championOf } from "@/lib/bracket-rounds";
 
 export const metadata: Metadata = {
   title: "Play — Games & Competitions",
@@ -92,6 +94,7 @@ export default async function PlayPage() {
   const pickemLocked = pickem ? compLocked(pickem) : false;
   const bracketLocked = bracket ? compLocked(bracket) : false;
   const scoredRows = leaderboard.filter((e) => e.points != null);
+  const joshRounds = joshBracketRounds();
 
   return (
     <main className="v5 pg-play">
@@ -205,37 +208,16 @@ export default async function PlayPage() {
             </div>
             {/* Josh's on-the-record field renders until the real one exists
                 (Josh, 2026-08-19: "at least see a bracket somewhere"). */}
+            {/* Josh's on-the-record bracket, drawn as a real two-sided bracket
+                (Josh, 2026-08-26: "look like a playoff bracket that comes in
+                from both sides"). Built from his column's picks. */}
             <div className="jb-mini">
               <div className="jb-mini-h">
                 <span className="k">{JOSH_BRACKET_LABEL}</span>
                 <Link href={JOSH_BRACKET_ARTICLE}>The Full Argument →</Link>
               </div>
-              <div className="jb-byes">
-                {JOSH_BRACKET_FIELD.filter((t) => t.note === "bye").map((t) => {
-                  const logo = teamLogoUrl(t.slug);
-                  return (
-                    <span className="bye" key={t.slug}>
-                      {logo && <Image src={logo} alt="" width={20} height={20} />}
-                      {t.seed} {t.name} <em>BYE</em>
-                    </span>
-                  );
-                })}
-              </div>
-              <div className="jb-r1">
-                {[[12, 5], [11, 6], [10, 7], [9, 8]].map(([a, h]) => {
-                  const away = JOSH_BRACKET_FIELD.find((t) => t.seed === a)!;
-                  const home = JOSH_BRACKET_FIELD.find((t) => t.seed === h)!;
-                  const [al, hl] = [teamLogoUrl(away.slug), teamLogoUrl(home.slug)];
-                  return (
-                    <span className="g" key={h}>
-                      {al && <Image src={al} alt="" width={18} height={18} />}
-                      {away.seed} {away.name} <b>at</b> {home.seed} {home.name}
-                      {hl && <Image src={hl} alt="" width={18} height={18} />}
-                    </span>
-                  );
-                })}
-              </div>
-              <div className="jb-champ">Josh&apos;s champ, locked: <b>Georgia</b> · Think he&apos;s wrong? Build yours.</div>
+              <TourneyBracket rounds={joshRounds} champTitle="JOSH'S CHAMPION" champName={championOf(joshRounds)} />
+              <div className="jb-champ">Josh&apos;s champ, locked: <b>{championOf(joshRounds)}</b> · Think he&apos;s wrong? Build yours.</div>
             </div>
             <div className="brk-foot">
               <span className="brk-hint2">
