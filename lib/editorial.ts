@@ -119,7 +119,8 @@ export const LEAN_LAWS = `THE LAWS (never broken, whatever the voice does):
 3. Outlet credit lives in the site's footer: never name another website in prose; official sources and named individual reporters are fine. Never narrate the sourcing ("the report does not say," "was described as").
 4. Flaws belong to units and situations, never named kids. No "overrated," no betting-tout language, no exclamation points, no em dashes in prose.
 5. The site renders the chrome (chips, byline, video card, Pulse, sourcing box): never write it into prose.
-6. Output valid JSON matching the provided schema, nothing else.`;
+6. A list delivers what it promises: if the headline says ten games, ten games appear, each with its own football reason. Never skip a number, never pad one.
+7. Output valid JSON matching the provided schema, nothing else.`;
 
 /** Builds a writer's system prompt: the voice card and the approved
  * article first, then the kit in its load order, then the JSON contract.

@@ -43,8 +43,42 @@ const { fetchTranscript, transcriptToPromptText } = await import("../lib/transcr
 const { draftCompanion, extractQuotes, classifySeries } = await import("../lib/generate.ts");
 const { pickArchitecture, boilerplateViolations } = await import("../lib/editorial.ts");
 const { draftLongformArticle } = await import("../lib/longform.ts");
-const { fanScore, voiceMatch } = await import("../lib/editorial.ts");
+const { fanScore, voiceMatch, editorialSystem, readPrompt, BOILERPLATE_PROMPT } = await import("../lib/editorial.ts");
+const { writeJSON } = await import("../lib/writer.ts");
+const { DRAFT_SCHEMA, findNonVerbatimQuotes, placePullQuoteMarker, validateDraft } = await import("../lib/generate.ts");
 const SCORE = !process.argv.includes("--no-score");
+const REFINE = (() => { const i = process.argv.indexOf("--refine"); return i !== -1 ? Number(process.argv[i + 1]) : 0; })();
+const TARGET = 8.5;
+const epArg = process.argv.indexOf("--episode");
+const EPISODE = epArg !== -1 ? process.argv[epArg + 1].toLowerCase() : null;
+
+/** The per-piece critical loop (Isaac, 2026-08-26): rewrite with the fan
+ * judge's own notes, re-score, keep the best, until the target or the
+ * round cap. Show-derived columns only for now: the transcript is the
+ * fact base, so the verbatim gate is the only fact gate needed. */
+async function refineShow(piece: Record<string, any>, transcriptText: string, baseUser: string) {
+  const system = editorialSystem("show-adaptation", readPrompt("companion-article.md"));
+  let best = piece;
+  for (let round = 1; round <= REFINE && !(best.fan?.pass); round++) {
+    const notes = `FAN JUDGE (a serious fan read your draft; it scored ${best.fan.score}/10 — legibility ${best.fan.legibility}, enjoyment ${best.fan.enjoyment}, sounds-like-Josh ${best.fan.joshVoice}; the bar is ${TARGET}): ${best.fan.notes}\nVOICE JUDGE (${best.voice.score}/10 against THE VOICE TO MATCH): ${best.voice.notes}`;
+    const raw = await writeJSON({
+      system,
+      user: `${baseUser}\n\n${notes}\n\nRewrite the column so the same fan would score it ${TARGET} or better. Fix exactly what the notes name: cut every restated sentence, replace abstraction with the football reason and a name or a number, deliver everything the headline promises, put the take where a fan can argue with it, end on the specific thing to watch. Every claim still traceable to the transcript; quote blocks exact; first person throughout.\n\nPrevious draft:\n${best.bodyMarkdown}`,
+      schema: DRAFT_SCHEMA, schemaName: "companion_draft", maxTokens: 8192,
+    });
+    const d = validateDraft(placePullQuoteMarker(JSON.parse(raw)));
+    if (!d) { console.log(`   refine ${round}: invalid draft`); continue; }
+    d.bodyMarkdown = d.bodyMarkdown.replace(/\\(["'])/g, "$1");
+    const bad = findNonVerbatimQuotes(d.bodyMarkdown, transcriptText);
+    if (d.pullQuote.trim().split(/\s+/).length >= 5 && findNonVerbatimQuotes(`"${d.pullQuote}"`, transcriptText).length > 0) bad.push(d.pullQuote);
+    if (bad.length || boilerplateViolations(d.bodyMarkdown).length) { console.log(`   refine ${round}: gated (${bad.length ? "non-verbatim quote" : "language law"})`); continue; }
+    const candidate: Record<string, any> = { ...best, ...d, gates: [] };
+    await judge(candidate);
+    console.log(`   refine ${round}: ${candidate.fan.score} (was ${best.fan.score})`);
+    if (candidate.fan.score > best.fan.score) best = candidate;
+  }
+  return best;
+}
 
 /** The reader's judge + the voice judge on a finished piece (Isaac,
  * 2026-08-26: iterate until fan legibility and enjoyment average 8.5). */
@@ -114,7 +148,7 @@ for (const item of items) {
 }
 
 // ---- Show-derived columns ----------------------------------------------------
-const videos = (await getVideos().catch(() => [])).filter(isEpisode).slice(0, 8);
+const videos = (await getVideos().catch(() => [])).filter(isEpisode).filter((v) => !EPISODE || v.title.toLowerCase().includes(EPISODE)).slice(0, 8);
 let showDone = 0;
 for (const [i, v] of videos.entries()) {
   if (showDone >= SHOW) break;
@@ -133,9 +167,13 @@ for (const [i, v] of videos.entries()) {
   });
   if (!draft || draft.lowConfidence) { console.log(`HOLD (quote gate)  ${v.title.slice(0, 60)}`); continue; }
   showDone++;
-  const piece: Record<string, any> = { lane: "show", label: "Show-derived column · Josh Pate", episode: v.title, ytId: v.id, series, seconds: Math.round((Date.now() - t0) / 1000), gates: boilerplateViolations(draft.bodyMarkdown), ...draft };
+  let piece: Record<string, any> = { lane: "show", label: "Show-derived column · Josh Pate", episode: v.title, ytId: v.id, series, seconds: Math.round((Date.now() - t0) / 1000), gates: boilerplateViolations(draft.bodyMarkdown), ...draft };
   console.log(`OK show ${showDone}/${SHOW}   ${draft.headline.slice(0, 70)}`);
   await judge(piece);
+  if (REFINE > 0 && piece.fan && !piece.fan.pass) {
+    const baseUser = [BOILERPLATE_PROMPT, `Episode title: ${v.title}`, `Series: ${series}`, `Published: ${v.published}`, `Description:\n${(v.description ?? "").slice(0, 3000)}`, `Transcript (timestamped, AUTO-CAPTIONED: cross-check names against the title and description; where a name looks garbled and you cannot be certain, refer to the player by school and position; never guess a spelling):\n${transcriptText}`].join("\n\n");
+    piece = await refineShow(piece, transcriptText, baseUser);
+  }
   pack.push(piece);
   save();
 }

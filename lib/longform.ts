@@ -76,7 +76,7 @@ const SELECT_SCHEMA = {
   additionalProperties: false,
 } as const;
 
-const LONGFORM_SCHEMA = {
+export const LONGFORM_SCHEMA = {
   type: "object",
   properties: {
     headline: { type: "string" },

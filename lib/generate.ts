@@ -161,7 +161,7 @@ export function validateDraft(raw: unknown): CompanionDraft | null {
   };
 }
 
-const DRAFT_SCHEMA = {
+export const DRAFT_SCHEMA = {
   type: "object",
   properties: {
     headline: { type: "string" },
