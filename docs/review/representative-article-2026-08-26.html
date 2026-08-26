@@ -1,0 +1,105 @@
+<title>Kit Review Pack</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Public+Sans:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{--navy:#0E2240;--navy-deep:#0A1730;--gold:#C9A227;--gold-dk:#A8861B;--red:#C8102E;--ink:#151A22;--ink-dim:#4C5361;--paper:#FBF9F4;--card:#FFFFFF;--rule:#D9D3C4;--wash:#F1EDE2;--display:"Barlow Condensed",Impact,"Arial Narrow",sans-serif;--body:"Public Sans",system-ui,Helvetica,Arial,sans-serif;--mono:"IBM Plex Mono",ui-monospace,Menlo,monospace}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--paper:#0B1628;--card:#10203A;--ink:#EDE9DF;--ink-dim:#A9B1C2;--rule:#2A3A57;--wash:#16284A;--navy:#EDE9DF;--navy-deep:#F6F3EA;--gold:#D9B64A;--gold-dk:#C9A227}}
+:root[data-theme="dark"]{--paper:#0B1628;--card:#10203A;--ink:#EDE9DF;--ink-dim:#A9B1C2;--rule:#2A3A57;--wash:#16284A;--navy:#EDE9DF;--navy-deep:#F6F3EA;--gold:#D9B64A;--gold-dk:#C9A227}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.6}
+a{color:var(--gold-dk)}
+.wrap{max-width:1180px;margin:0 auto;padding:40px 24px 80px;display:grid;grid-template-columns:260px minmax(0,1fr);gap:48px}
+@media (max-width:900px){.wrap{grid-template-columns:1fr;gap:24px}}
+.rail{position:sticky;top:24px;align-self:start;font-size:13px}
+@media (max-width:900px){.rail{position:static}}
+.rail h1{font-family:var(--display);font-weight:800;font-size:38px;line-height:.95;text-transform:uppercase;margin:0 0 6px;color:var(--navy);text-wrap:balance}
+.rail .sub{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-dim);margin:0 0 18px}
+.rail ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.rail li a{display:flex;gap:8px;align-items:flex-start;color:var(--ink);text-decoration:none;line-height:1.35}
+.rail li a:hover span:last-child{text-decoration:underline}
+.dot{flex:0 0 8px;width:8px;height:8px;border-radius:50%;margin-top:6px;background:var(--gold)}
+.dot.house{background:var(--navy)}.dot.show{background:var(--red)}
+.legend{margin:18px 0 0;padding:14px 0 0;border-top:1px solid var(--rule);font-family:var(--mono);font-size:11px;color:var(--ink-dim);display:flex;flex-direction:column;gap:6px}
+.legend span{display:flex;gap:8px;align-items:center}
+.intro{max-width:68ch;margin-bottom:36px}
+.intro h2{font-family:var(--display);font-size:30px;font-weight:700;text-transform:uppercase;margin:0 0 8px;color:var(--navy)}
+.intro p{margin:0 0 10px;color:var(--ink)}
+.piece{background:var(--card);border:1px solid var(--rule);border-left:6px solid var(--gold);padding:28px 32px 24px;margin-bottom:36px;max-width:76ch}
+.piece.house{border-left-color:var(--navy)}.piece.show{border-left-color:var(--red)}
+.kick{display:flex;justify-content:space-between;font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-dim);margin-bottom:10px}
+.kick .lane{color:var(--gold-dk);font-weight:500}.house .kick .lane{color:var(--navy)}.show .kick .lane{color:var(--red)}
+.piece h2{font-family:var(--display);font-weight:800;font-size:34px;line-height:1.02;margin:0 0 10px;color:var(--navy);text-wrap:balance}
+.dek{font-size:18px;line-height:1.5;margin:0 0 8px;color:var(--ink)}
+.by{font-family:var(--mono);font-size:11.5px;color:var(--ink-dim);margin:0 0 18px;padding-bottom:14px;border-bottom:1px solid var(--rule)}
+.body{max-width:68ch}
+.body h3{font-family:var(--display);font-weight:700;font-size:22px;text-transform:uppercase;letter-spacing:.02em;margin:26px 0 8px;color:var(--navy);display:flex;gap:10px;align-items:baseline}
+.body p{margin:0 0 14px}
+.lbl{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-dim);font-weight:400}
+.nums{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:0 0 6px}
+.num{background:var(--wash);padding:12px 14px;border-radius:2px}
+.num b{font-family:var(--display);font-size:34px;line-height:1;color:var(--navy);display:block}
+.num.crit b{color:var(--red)}
+.num span{font-size:12.5px;color:var(--ink-dim);display:block;margin-top:4px;line-height:1.35}
+.missing,.chess,.read{background:var(--wash);padding:14px 18px;border-radius:2px;margin-bottom:14px}
+.missing p,.chess p,.read p{margin:0}
+.pull{border-top:2px solid var(--gold);border-bottom:2px solid var(--gold);padding:14px 4px;margin:18px 0}
+.pull p{font-family:var(--display);font-size:24px;line-height:1.15;font-weight:600;color:var(--navy);margin:0}
+blockquote.q{margin:16px 0;padding:14px 18px;border-left:3px solid var(--red);background:var(--wash)}
+blockquote.q p{margin:0 0 6px;font-style:italic}
+blockquote.q cite{font-family:var(--mono);font-size:11px;font-style:normal;color:var(--ink-dim)}
+blockquote.receipt{border-left-color:var(--gold)}
+.board{border:1px solid var(--rule);padding:12px 16px;margin:0 0 16px}
+.board .row{display:grid;grid-template-columns:1fr 1.4fr;gap:12px;padding:8px 0;border-top:1px solid var(--rule);font-size:15px}
+.board small{color:var(--ink-dim);display:block;font-family:var(--mono);font-size:11px}
+.board .tell{margin:10px 0 0;font-size:15px}
+ol.watch{padding-left:20px;margin:0 0 14px}ol.watch li{margin-bottom:8px}
+.embed{font-family:var(--mono);font-size:12px;color:var(--ink-dim)}
+.src{font-family:var(--mono);font-size:11.5px;color:var(--ink-dim);border-top:1px solid var(--rule);padding-top:12px;margin-top:20px}
+.review{margin-top:22px;background:var(--wash);padding:14px 18px;font-size:14px;border-radius:2px}
+.review b{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-dim);display:block;margin-bottom:6px}
+.review p{margin:0 0 6px}.review .gate{font-family:var(--mono);font-size:11.5px;color:var(--ink-dim);margin:0}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+</style>
+<div class="wrap">
+  <nav class="rail" aria-label="Contents">
+    <h1>Kit Review Pack</h1>
+    <p class="sub">Writing system v1.0 · drafted 2026-08-26</p>
+    <ol><li><a href="#p1"><span class="dot show"></span><span>2026 Season: Miami Owns the ACC, Oregon Can Break Through, and Michigan Made the Right Hire</span></a></li></ol>
+    <div class="legend"><span><i class="dot"></i>The Wire · 0</span><span><i class="dot house"></i>House analysis · 0</span><span><i class="dot show"></i>Show-derived · 1</span></div>
+  </nav>
+  <main>
+    <section class="intro">
+      <h2>Twelve pieces, written under the kit</h2>
+      <p>Every piece below came out of the live pipeline on 2026-08-26 with the writing system you sent (Constitution, Voice Bible v3.5, the Wire and Features specs) as the only instruction set, and passed every automated gate: the language law, no outlet in the upper page, no first person outside quote blocks, verbatim quotes checked against the tape, a second-model fact-check against the sources, and the quality judge. Nothing here is published. The sources are real recent news and real episodes.</p>
+      <p>What would help most: mark the sentences that still read generated, the module or structure you would cut, and anywhere the dial is wrong for the lane. A correction becomes a rule in the one kit file that owns it.</p>
+    </section>
+    
+<article id="p1" class="piece show">
+  <header>
+    <div class="kick"><span class="lane">Show-derived column</span><span class="n">1 of 1</span></div>
+    <h2>2026 Season: Miami Owns the ACC, Oregon Can Break Through, and Michigan Made the Right Hire</h2>
+    <p class="dek">Last season's results are being treated like permanent evidence, and that is where the public is getting this wrong. Miami's quarterback depth, Oregon's playoff history, and Michigan's unusual coaching search all point to a less settled season than the loudest predictions suggest.</p>
+    <p class="by">The Pate State Staff · 785 words · Episode · Why EVERYONE Is Wrong About The 2026 Season - Josh Pate's College Football Show · Series · poll-day</p>
+  </header>
+  <div class="body"><p>The popular predictions around the 2026 season are turning last year's results into permanent evidence. I don't buy that. Miami is still the best team by far in the ACC, Oregon can eventually win the playoff games people say it cannot, and Michigan did about as well as it could have in hiring Kyle Whittingham.</p>
+<p class="embed">▶ Watch the segment · <a href="https://www.youtube.com/watch?v=fx52TLhd8Cs&t=138s">00:02:18</a></p>
+<p>Start with Miami, because this is the call I am most comfortable making. Darien Mensah is the piece that separates the Hurricanes from the rest of the league. If he is healthy and the roster remains largely what it appears to be on paper, I do not see SMU, Louisville, Clemson, or another ACC team taking the league from Miami. That is an aggressive opinion after Miami failed to win the conference last year while carrying overwhelming expectations. It is still my opinion.</p>
+<blockquote class="q"><p>Miami is the best team by far in the ACC, and everyone's playing for second.</p><cite>Josh Pate on the show · <a href="https://www.youtube.com/watch?v=fx52TLhd8Cs&t=138s">00:02:18 ▶</a></cite></blockquote>
+<p>The part that keeps this from being a casual preseason coronation sits behind Mensah. Miami has a massive drop from QB1 to QB2, and nobody has a model that can forecast an injury to the starter. If Mensah is unavailable, the ACC picture changes immediately. With him available, I would have to buy into SMU, Louisville, Clemson, or somebody else before I could move off Miami. I can't do that yet.</p>
+<p>Oregon gets judged by a different kind of shortcut. The Ducks have been beaten in the Playoff, so the public has decided that choking is part of the program's identity. Oregon won the first playoff game ever, then shut out Texas Tech 23-0 last season before being beaten by the eventual national champion. Those losses happened. Dan Lanning's teams have been splattered before. That still does not prove Oregon cannot be the team doing the splattering one day.</p>
+<p>I tend to believe Oregon will eventually break through. Maybe it happens this season, and maybe it does not. The point is that a few losses to teams that went on to win the national title do not create a law of nature. Oregon has not finished the job yet. That is different from being incapable of finishing it.</p>
+<p>Indiana shows how quickly the measuring stick can move. If the Hoosiers went 8-4 after losing to Ohio State, Michigan, and USC, with Washington also in the mix, that would have been a phenomenal season for Indiana football until the last two years reset the standard. I can see the temperature around Curt Cignetti cooling if the team falls back, but I am not predicting that fall. Winning the national title was already a wild ascension. Nothing that comes after it would be crazier than getting there in the first place.</p>
+<p>Texas carries the most dangerous expectation in the sport. If the Longhorns go 9-3 and miss the Playoff, or go 10-2 and get bounced early, the reaction around Steve Sarkisian will be unlike anything college football has handled before. A national title favorite gets judged by a different standard. That does not mean Texas is going to collapse. It means the expectation has become its own pressure point, and even a strong regular season could be treated as a failure if the postseason ends too soon.</p>
+<p>Michigan deserves a pause before anybody grades the Whittingham hire. This was not a routine search after a coach was fired in the middle of a season for poor performance. The circumstances around the previous Michigan coach were unusual, and the instability at athletic director was already part of the market. I think Michigan did about as good as it could do given the circumstances.</p>
+<blockquote class="q"><p>I think they did about as good as they could do given the circumstances.</p><cite>Josh Pate on the show · <a href="https://www.youtube.com/watch?v=fx52TLhd8Cs&t=585s">09:45 ▶</a></cite></blockquote>
+<p>That does not promise a comfortable season in Ann Arbor. Bryce Underwood could show no improvement, and Michigan could finish 8-4. Those results would make the decision look worse later. They would not make the August decision unreasonable unless somebody can identify the obvious better hire Michigan passed over. The names offered so far do not make that case for me.</p>
+<p>When the season starts, I am watching Mensah's health before I watch the ACC standings. I am watching Oregon's next playoff appearance for evidence that the old label has finally run out of usefulness. And I am watching Bryce Underwood's first stretch at Michigan, because his development will tell us more than an August argument about an unusual coaching search.</p>
+<p>The 2026 season is not required to repeat the story people wrote about these programs last year. Miami can own the ACC, Oregon can finally break through, and Michigan can have made the right hire even if the record makes that decision uncomfortable to defend later.</p></div>
+  <aside class="review">
+    <b>For the review</b>
+    <p>Josh's argument reported by the house: third person, 2–4 verbatim timestamped quote blocks, his byline never auto-applied (Constitution §3). Facts only from the tape.</p>
+    <p class="gate">Drafted live through the pipeline in 52s; passed every gate: language law, verbatim quotes, fact-check. Not published.</p>
+  </aside>
+</article>
+  </main>
+</div>
