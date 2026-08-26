@@ -75,8 +75,12 @@ describe("editorialSystem (the kit's load order: 01 → 02 → spec → 07 → h
     const snap = sys.indexOf("CURRENT STATE — THE DATED SNAPSHOT");
     const notes = sys.indexOf("HOUSE NOTES (site mechanics");
     const task = sys.indexOf("TASK CONTRACT MARKER");
-    expect(con).toBeGreaterThanOrEqual(0);
-    expect(con).toBeLessThan(10);
+    // The voice card and the approved column now lead; the kit follows.
+    const card = sys.indexOf("WHO IS WRITING: Josh Pate");
+    const ex = sys.indexOf("THE VOICE TO MATCH");
+    expect(card).toBe(0);
+    expect(ex).toBeGreaterThan(card);
+    expect(con).toBeGreaterThan(ex);
     expect(bible).toBeGreaterThan(con);
     expect(spec).toBeGreaterThan(bible);
     expect(snap).toBeGreaterThan(spec);

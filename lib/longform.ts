@@ -270,23 +270,26 @@ export async function draftLongformArticle(
 
     // Brief v2 Part 8: scored quality gate — one rewrite with the judge's
     // notes when the draft scores below 8 in two or more categories.
-    const [quality, voice] = await Promise.all([
-      scoreDraft(anthropic, { headline: draft.headline, dek: draft.dek, body: draft.bodyMarkdown, sources: sourcePack }),
-      voiceMatch(anthropic, { lane: "feature", draft: draft.bodyMarkdown }),
-    ]);
-    if (!quality.pass || !voice.pass) {
+    for (let round = 0; round < 2; round++) {
+      const [quality, voice] = await Promise.all([
+        scoreDraft(anthropic, { headline: draft.headline, dek: draft.dek, body: draft.bodyMarkdown, sources: sourcePack }),
+        voiceMatch(anthropic, { lane: "feature", draft: draft.bodyMarkdown }),
+      ]);
+      if (quality.pass && voice.pass) break;
       const notes = [quality.pass ? "" : `Quality judge: ${quality.notes}`, voice.pass ? "" : `Voice judge (scored ${voice.score}/10 against the approved Three Boards column; it must read as the same writer): ${voice.notes}`].filter(Boolean).join("\n");
       const raw2 = await writeJSON({
         system,
-        user: `${user}\n\nEDITOR'S REWRITE NOTES (your previous draft failed the pre-publish judges — fix these precisely, keep what works):\n${notes}\n\nIf the notes ask for detail the source pack does not contain, do NOT invent it: cut instead. Delete paragraphs that restate, and let the piece be shorter.`,
+        user: `${user}\n\nEDITOR'S REWRITE NOTES (your previous draft failed the pre-publish judges — fix these precisely, keep what works):\n${notes}\n\nPrevious draft:\n${draft.bodyMarkdown}\n\nIf the notes ask for detail the source pack does not contain, do NOT invent it: cut instead. Delete paragraphs that restate, and let the piece be shorter.`,
         schema: LONGFORM_SCHEMA,
         schemaName: "longform_article",
         maxTokens: 8192,
       });
       const draft2 = JSON.parse(raw2) as typeof draft;
       draft2.bodyMarkdown = scrubDashes(draft2.bodyMarkdown).replace(/\[EMBED:[^\]]*\]\s*/g, "").replace(/\[\/PULLQUOTE\]/g, "");
-      if (boilerplateViolations(draft2.bodyMarkdown).length === 0 && hasFirstPersonProse(draft2.bodyMarkdown)) {
+      if (boilerplateViolations(draft2.bodyMarkdown).length === 0 && hasFirstPersonProse(draft2.bodyMarkdown) && !narratesSourcing(draft2.bodyMarkdown)) {
         Object.assign(draft, draft2);
+      } else {
+        break;
       }
     }
 

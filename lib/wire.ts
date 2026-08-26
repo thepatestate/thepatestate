@@ -685,21 +685,21 @@ export async function generateWireStory(
   // Wire has to publish, and the hard gates above remain the floor; the
   // rewrite is only adopted when it passes those same gates plus fact-check.
   const isBrief = !story.whyBody && !story.missing && !story.readBody;
-  const [quality, voice] = isBrief
-    ? [{ scores: {}, notes: "", pass: true }, { score: 10, notes: "", pass: true }]
-    : await Promise.all([
-        scoreDraft(anthropic, { headline: story.headline, dek: story.deck, body: combined, sources: job.sourceBlock }),
-        voiceMatch(anthropic, { lane: "feature", draft: combined }),
-      ]);
-  const verdict = {
-    pass: quality.pass && voice.pass,
-    notes: [quality.pass ? "" : `Quality judge: ${quality.notes}`, voice.pass ? "" : `Voice judge (the draft scored ${voice.score}/10 against Josh's approved column; it must read as Josh): ${voice.notes}`].filter(Boolean).join("\n"),
-  };
-  if (!verdict.pass) {
+  // The judges get up to two rewrite rounds (loop round 1, 2026-08-26: one
+  // pass wasn't closing a 3/10 voice score). A rewrite is adopted only when
+  // it clears the hard gates and the fact-check; the best-scoring draft wins.
+  let lastRaw = storyRaw;
+  for (let round = 0; round < 2 && !isBrief; round++) {
+    const [quality, voice] = await Promise.all([
+      scoreDraft(anthropic, { headline: story.headline, dek: story.deck, body: combined, sources: job.sourceBlock }),
+      voiceMatch(anthropic, { lane: "feature", draft: combined }),
+    ]);
+    if (quality.pass && voice.pass) break;
+    const notes = [quality.pass ? "" : `Quality judge: ${quality.notes}`, voice.pass ? "" : `Voice judge (the draft scored ${voice.score}/10 against Josh's approved column; it must read as Josh): ${voice.notes}`].filter(Boolean).join("\n");
     try {
       const rewriteRaw = await writeJSON({
         system,
-        user: `${baseUser}\n\nYOUR PREVIOUS DRAFT FAILED the pre-publish quality judge. Judge notes (fix exactly these): ${verdict.notes}\n\nPrevious draft for reference:\n${storyRaw}\n\nRewrite the full story. Keep every verified fact; change the writing. If the notes ask for detail the sources do not contain, do NOT invent it: cut instead. Delete every paragraph that restates a fact already given, drop sections the sources can't fill (leave them ""), and let the story be shorter. The humanity standard is pass/fail: it must sound written by a person, never generated.`,
+        user: `${baseUser}\n\nYOUR PREVIOUS DRAFT FAILED the pre-publish judges. Notes (fix exactly these): ${notes}\n\nPrevious draft for reference:\n${lastRaw}\n\nRewrite the full story. Keep every verified fact; change the writing. If the notes ask for detail the sources do not contain, do NOT invent it: cut instead. Delete every paragraph that restates a fact already given, drop sections the sources can't fill (leave them ""), and let the story be shorter. It must read as Josh talking to one fan, never as a memo and never as generated prose.`,
         schema: STORY_SCHEMA,
         schemaName: "wire_story",
         maxTokens: 8192,
@@ -707,9 +707,13 @@ export async function generateWireStory(
       const re = parseDraft(rewriteRaw);
       if (!proseGateFailure(re.story, re.combined) && (await factCheck(re.combined)).verdict === "pass") {
         ({ story, combined } = re);
+        lastRaw = rewriteRaw;
+      } else {
+        break;
       }
     } catch (err) {
       console.error("[wire:judge-rewrite]", job.clusterKey, err);
+      break;
     }
   }
 

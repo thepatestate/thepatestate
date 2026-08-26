@@ -21,6 +21,19 @@ const good = {
   seo: { title: "Week 1 Truths", description: "What mattered in week one." },
 };
 
+describe("placePullQuoteMarker", () => {
+  it("puts a missing marker after the paragraph that shares the most words with the pull quote", async () => {
+    const { placePullQuoteMarker } = await import("./generate");
+    const out = placePullQuoteMarker({ pullQuote: "Georgia is built to survive a season.", bodyMarkdown: "Opening thought about Texas.\n\nGeorgia is built to survive a whole season and that is the point.\n\nClosing line." }) as { bodyMarkdown: string };
+    expect(out.bodyMarkdown.split(/\n{2,}/)[2]).toBe("[PULLQUOTE]");
+  });
+  it("strips a marker when the pull quote is empty", async () => {
+    const { placePullQuoteMarker } = await import("./generate");
+    const out = placePullQuoteMarker({ pullQuote: "", bodyMarkdown: "One.\n\n[PULLQUOTE]\n\nTwo." }) as { bodyMarkdown: string };
+    expect(out.bodyMarkdown).toBe("One.\n\nTwo.");
+  });
+});
+
 describe("validateDraft", () => {
   it("accepts a complete draft", () => {
     expect(validateDraft(good)).toEqual(good);

@@ -127,6 +127,29 @@ export function draftProblem(raw: unknown): string {
   return "";
 }
 
+/** The writer often returns a pull quote without placing its marker. Put
+ * the marker after the body paragraph that shares the most words with it,
+ * so the draft passes instead of failing on furniture. Exported for tests. */
+export function placePullQuoteMarker(raw: unknown): unknown {
+  if (typeof raw !== "object" || raw === null) return raw;
+  const d = raw as Record<string, unknown>;
+  if (typeof d.pullQuote !== "string" || typeof d.bodyMarkdown !== "string") return raw;
+  const body = d.bodyMarkdown;
+  if (!d.pullQuote.trim()) return { ...d, bodyMarkdown: body.replace(/\s*\[PULLQUOTE\]\s*/g, "\n\n").trim() };
+  if (body.includes("[PULLQUOTE]")) return raw;
+  const words = new Set(d.pullQuote.toLowerCase().split(/\W+/).filter((w) => w.length > 3));
+  const paras = body.split(/\n{2,}/);
+  let best = -1, bestScore = 0;
+  paras.forEach((p, i) => {
+    if (/^\[(EMBED|QUOTE)/.test(p.trim()) || p.trim().startsWith("## ")) return;
+    const score = p.toLowerCase().split(/\W+/).filter((w) => words.has(w)).length;
+    if (score > bestScore) { bestScore = score; best = i; }
+  });
+  if (best === -1) best = Math.min(1, paras.length - 1);
+  paras.splice(best + 1, 0, "[PULLQUOTE]");
+  return { ...d, bodyMarkdown: paras.join("\n\n") };
+}
+
 export function validateDraft(raw: unknown): CompanionDraft | null {
   if (draftProblem(raw)) return null;
   const d = raw as Record<string, unknown> & { seo: { title: string; description: string } };
@@ -305,7 +328,7 @@ export async function draftCompanion(input: {
     `Published: ${input.publishedAt}`,
     `Description:\n${input.description.slice(0, 3000)}`,
     input.transcriptText
-      ? `Transcript (timestamped):\n${input.transcriptText}`
+      ? `Transcript (timestamped, AUTO-CAPTIONED: the captioner misspells names and sometimes garbles a word into nonsense. Cross-check every player and coach name against the episode title and description; where a name looks garbled and you cannot be certain of the real spelling, refer to the player by school and position instead. Never publish a garbled name and never guess a spelling; never carry a nonsense word into prose):\n${input.transcriptText}`
       : `NO TRANSCRIPT AVAILABLE — draft from the title and description only, per your instructions.`,
     ...(quotesBlock ? [quotesBlock] : []),
   ].join("\n\n");
@@ -327,7 +350,7 @@ export async function draftCompanion(input: {
         schemaName: "companion_draft",
         maxTokens: 8192,
       });
-      const parsed = JSON.parse(raw);
+      const parsed = placePullQuoteMarker(JSON.parse(raw));
       const draft = validateDraft(parsed);
       if (!draft) { console.warn(`[generate:draftCompanion] attempt ${attempt}: invalid draft (${draftProblem(parsed)})`); continue; }
       // Stray JSON escapes in prose render as literal backslashes.
@@ -356,28 +379,31 @@ export async function draftCompanion(input: {
         // Voice judge against the approved Three Boards column: one rewrite
         // with the judge's notes, adopted only if it still passes the gates.
         if (process.env.VITEST) return draft;
-        const voice = await voiceMatch(c, { lane: "feature", draft: draft.bodyMarkdown });
-        if (voice.pass) return draft;
-        try {
-          const raw2 = await writeJSON({
-            system,
-            user: `${user}\n\nVOICE JUDGE (your previous draft scored ${voice.score}/10 against THE VOICE TO MATCH; it must read as the same writer): ${voice.notes}\n\nRewrite in the voice. Keep every claim traceable to the transcript; keep the quote blocks exact.\n\nPrevious draft:\n${JSON.stringify(draft)}`,
-            schema: DRAFT_SCHEMA,
-            schemaName: "companion_draft",
-            maxTokens: 8192,
-          });
-          const parsed2 = JSON.parse(raw2);
-          const d2 = validateDraft(parsed2);
-          if (d2) {
+        let current = draft;
+        for (let round = 0; round < 2; round++) {
+          const voice = await voiceMatch(c, { lane: "feature", draft: current.bodyMarkdown });
+          if (voice.pass) break;
+          try {
+            const raw2 = await writeJSON({
+              system,
+              user: `${user}\n\nVOICE JUDGE (your previous draft scored ${voice.score}/10 against THE VOICE TO MATCH; it must read as the same writer): ${voice.notes}\n\nRewrite in the voice. Keep every claim traceable to the transcript; keep the quote blocks exact.\n\nPrevious draft:\n${current.bodyMarkdown}`,
+              schema: DRAFT_SCHEMA,
+              schemaName: "companion_draft",
+              maxTokens: 8192,
+            });
+            const d2 = validateDraft(placePullQuoteMarker(JSON.parse(raw2)));
+            if (!d2) break;
             d2.bodyMarkdown = d2.bodyMarkdown.replace(/\\(["'])/g, "$1");
             const bad2 = findNonVerbatimQuotes(d2.bodyMarkdown, input.transcriptText);
             if (d2.pullQuote.trim().split(/\s+/).length >= 5 && findNonVerbatimQuotes(`"${d2.pullQuote}"`, input.transcriptText).length > 0) bad2.push(d2.pullQuote);
-            if (bad2.length === 0 && boilerplateViolations(d2.bodyMarkdown).length === 0) return d2;
+            if (bad2.length === 0 && boilerplateViolations(d2.bodyMarkdown).length === 0) current = d2;
+            else break;
+          } catch (err) {
+            console.error("[generate:draftCompanion] voice rewrite", err);
+            break;
           }
-        } catch (err) {
-          console.error("[generate:draftCompanion] voice rewrite", err);
         }
-        return draft;
+        return current;
       }
       console.warn(`[generate:draftCompanion] attempt ${attempt}: ${badQuotes.length} non-verbatim span(s):`, badQuotes.map((q) => q.slice(0, 120)));
 
