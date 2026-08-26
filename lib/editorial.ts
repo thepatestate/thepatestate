@@ -106,7 +106,9 @@ export const VOICE_CARD = `WHO IS WRITING: Josh Pate, to one smart fan, in his o
 5. Say the uncertainty like a person, once: "Nobody has said how long he's out." Never narrate your own rules: no "that is a projection, not a confirmed policy," no "I can't speculate on," no "the sources don't say," no "what we can and can't say." You are not filling out a form; you are telling a friend what you know and what you think.
 6. Credit the opponent, then swing. Respect every fanbase. Humor is rare, dry, and comes from regular life, never from a joke slot.
 7. Give the reader something to watch on Saturday, specific: a player, a down, a formation, a date.
-8. The test: read the paragraph aloud on a porch. If it sounds like a memo, a lawyer, a press release, or a robot doing an impression of a podcaster, rewrite it.
+8. Have a take. Somewhere in the piece is the sentence a fan would argue with at a bar; say it plainly and defend it. Caveat once, in the same breath, then move on. A piece with no take is a memo.
+9. Structure follows the argument, the way the approved column does: say the thing, prove it with the football and the numbers, tell the reader what it means and what to watch. No mandated beats, no counterpoint slot, no closing restatement of the opening, no "quickly" sweep, no section that exists to fill a template.
+10. The test: read the paragraph aloud on a porch. If it sounds like a memo, a lawyer, a press release, or a robot doing an impression of a podcaster, rewrite it.
 The approved column below is what "sounds like him" means. Match it.`;
 
 /** The short rulebook for the lean prompt: the laws that must never be
@@ -290,6 +292,32 @@ export function exemplarParroting(text: string): string[] {
   if (EXEMPLAR_LINES.some((re) => re.test(text))) hits.push("exemplar line");
   if (EXEMPLAR_PEOPLE.test(text) && !EXEMPLAR_TEAMS.test(text)) hits.push("exemplar name out of context");
   return hits;
+}
+
+/** The reader's judge kept failing pieces for restating one point four
+ * ways (loop rounds 1–3, 2026-08-26). Deterministic check: sentences that
+ * share four or more content words with an earlier sentence are restating
+ * it. Returns the restating sentences; a piece with more than 12% of its
+ * sentences restating is circling. Exported for the gates and tests. */
+export function restatements(text: string): string[] {
+  const STOP = new Set(["about", "after", "again", "against", "before", "being", "between", "could", "every", "first", "going", "their", "there", "these", "those", "three", "through", "under", "until", "where", "which", "while", "would", "still", "other", "since", "because", "should", "might", "season", "football", "state", "team", "teams", "game", "games", "year", "years", "week", "weeks"]);
+  const sentences = text.replace(/\[[^\]]*\]/g, " ").split(/(?<=[.!?])\s+/).map((s) => s.trim()).filter((s) => s.split(/\s+/).length >= 6);
+  const seen: Set<string>[] = [];
+  const hits: string[] = [];
+  for (const s of sentences) {
+    const words = new Set(s.toLowerCase().replace(/[^a-z0-9\s'-]/g, " ").split(/\s+/).filter((w) => w.length > 4 && !STOP.has(w)));
+    if (words.size < 4) { seen.push(words); continue; }
+    const restates = seen.some((prev) => { let n = 0; for (const w of words) if (prev.has(w)) n++; return n >= 4 && n / words.size >= 0.5; });
+    if (restates) hits.push(s);
+    seen.push(words);
+  }
+  return hits;
+}
+
+/** True when the piece circles: more than 12% of its sentences restate an earlier one. */
+export function circles(text: string): boolean {
+  const total = text.split(/(?<=[.!?])\s+/).filter((s) => s.split(/\s+/).length >= 6).length;
+  return total >= 8 && restatements(text).length / total > 0.12;
 }
 
 /** Returns the names of banned-boilerplate violations in a draft: any

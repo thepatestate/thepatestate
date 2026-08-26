@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import {
   boilerplateViolations, pickArchitecture, ARCHITECTURES, exemplarParroting, editorialSystem,
-  HOUSE_NOTES, QUALITY_CATEGORIES,
+  HOUSE_NOTES, QUALITY_CATEGORIES, restatements, circles,
 } from "./editorial";
 
 describe("Editorial Core gates (Josh's MD files, 2026-08-23)", () => {
@@ -193,5 +193,18 @@ describe("pickArchitecture", () => {
     for (let seed = 0; seed < 12; seed++) seen.add(pickArchitecture([], seed).key);
     expect(seen.size).toBeGreaterThan(4);
     expect(ARCHITECTURES.length).toBe(12);
+  });
+});
+
+describe("restatements / circles (the reader's #1 complaint)", () => {
+  it("flags sentences that repeat an earlier sentence's content words", () => {
+    const text = "Frazier is the closer because receiver asks less of a freshman than running back does. Walton has more to prove in protection before the staff trusts him. The staff can trust Frazier sooner because receiver asks less of a freshman than running back. Protection is where Walton still has the most to prove before the staff trusts him.";
+    const hits = restatements(text);
+    expect(hits.length).toBe(2);
+  });
+  it("does not flag a piece that keeps adding new information", () => {
+    const text = "Rowe will miss four to six weeks with a high ankle sprain. He made the coverage checks on a defense that allowed 9.3 points per game. The four projected starters around him have no starts in this scheme. Texas arrives in Columbus in 17 days. Bowling Green will not stress a coverage check. Watch which safety wears the green dot against Texas. Day has not named the replacement. The transfer from Tulane played 40 snaps at nickel last season.";
+    expect(restatements(text)).toEqual([]);
+    expect(circles(text)).toBe(false);
   });
 });

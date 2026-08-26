@@ -11,7 +11,7 @@ import { getTeamDirectory } from "@/lib/cfbd";
 import { findReceipt } from "@/lib/quotes";
 import { slugify } from "@/lib/slug";
 import { writeJSON } from "@/lib/writer";
-import { boilerplateViolations, BOILERPLATE_PROMPT, scoreDraft, editorialSystem, voiceMatch } from "@/lib/editorial";
+import { boilerplateViolations, BOILERPLATE_PROMPT, scoreDraft, editorialSystem, voiceMatch, circles, restatements } from "@/lib/editorial";
 import { judgeJSON } from "@/lib/judge";
 
 const MODEL = "claude-sonnet-5";
@@ -585,7 +585,10 @@ export async function generateWireStory(
   // (guide §5) — the old pipeline REQUIRED that habit, so writers relapse.
   // System prompt = preamble → 00 Editorial Core → 01 Wire (Josh's documents,
   // verbatim) → house overrides → the JSON contract in wire-story.md.
-  const system = editorialSystem("wire", prompt("wire-story.md"));
+  // Column form (loop round 5): one continuous read instead of five parallel
+  // modules, which the reader's judge kept scoring as repetition.
+  const columnForm = process.env.WIRE_COLUMN === "1";
+  const system = editorialSystem("wire", prompt(columnForm ? "wire-story-column.md" : "wire-story.md"));
   let storyRaw = "";
   let user = baseUser;
   for (let attempt = 0; attempt < 2; attempt++) {
@@ -603,13 +606,14 @@ export async function generateWireStory(
     const boiler = boilerplateViolations(allProse);
     // A full-source story filed as a brief is the writer under-treating the
     // news (six of six review-pack stories came back at ~100 words, 2026-08-26).
-    const underTreated = !thin && !(draft.whyBody && draft.readBody);
+    const underTreated = !thin && !(columnForm ? (draft.readBody ?? "").split(/\s+/).length >= 250 : Boolean(draft.whyBody && draft.readBody));
+    const circling = !thin && circles(allProse);
     // Josh, 2026-08-26: the Wire is written as Josh too. A full story with
     // no first person in its analysis modules missed the voice.
     const analysis = ["whyBody", "missing", "section04Body", "chessboard", "readBody"].map((k) => draft[k] ?? "").join("\n");
     const noVoice = !thin && analysis.trim().length > 0 && !hasFirstPersonProse(analysis);
-    if (!headlineNamesOutlet(upper) && !hasAttributionOpener(draft.whatHappened ?? "") && !narratesSourcing(allProse) && !noVoice && boiler.length === 0 && !underTreated && !/\*{2,}/.test(allProse)) break;
-    user = `${baseUser}\n\nYOUR PREVIOUS DRAFT VIOLATED the writing standard${boiler.length ? ` (gated language found: ${boiler.join("; ")})` : ""}${underTreated ? " (you filed a brief on a full-source story: the sources support a full Wire story, so write whyBody, section04, readBody and watching, and missing, board, chessboard where earned, 600–1,100 words per 04 §5)" : ""}${noVoice ? " (the analysis modules are not in Josh's first person: this is Josh telling the reader what the news means, \"I\" to \"you\", matching THE VOICE TO MATCH)" : ""}. Never name an outlet or use in-prose attribution in the deck or the opening section (official source or a NAMED individual reporter only; unconfirmed details are "reported to be…"). And NEVER narrate your own sourcing anywhere — no "the source material," "the available information," "is described as," "no names are provided," "per the report." Write what IS known directly, the way an analyst explains news to a friend; where something is unknown, say what we don't know yet in plain speech ("Washington hasn't said who") without pointing at documents. Never include censored profanity from a source quote ("a lot of good *** can happen") — trim the quote at a word boundary before the censored word, or paraphrase the sentiment without quoting. Never reuse the editorial documents' example sentences or people. Rewrite the full story.`;
+    if (!headlineNamesOutlet(upper) && !hasAttributionOpener(draft.whatHappened ?? "") && !narratesSourcing(allProse) && !noVoice && boiler.length === 0 && !underTreated && !circling && !/\*{2,}/.test(allProse)) break;
+    user = `${baseUser}\n\nYOUR PREVIOUS DRAFT VIOLATED the writing standard${boiler.length ? ` (gated language found: ${boiler.join("; ")})` : ""}${underTreated ? " (you filed a brief on a full-source story: the sources support a full Wire story, so write whyBody, section04, readBody and watching, and missing, board, chessboard where earned, 600–1,100 words per 04 §5)" : ""}${noVoice ? " (the analysis modules are not in Josh's first person: this is Josh telling the reader what the news means, \"I\" to \"you\", matching THE VOICE TO MATCH)" : ""}${circling ? ` (the piece restates itself; these sentences repeat a point already made and must go or become new information: ${restatements(allProse).slice(0, 4).map((s) => `"${s.slice(0, 110)}"`).join(" · ")})` : ""}. Never name an outlet or use in-prose attribution in the deck or the opening section (official source or a NAMED individual reporter only; unconfirmed details are "reported to be…"). And NEVER narrate your own sourcing anywhere — no "the source material," "the available information," "is described as," "no names are provided," "per the report." Write what IS known directly, the way an analyst explains news to a friend; where something is unknown, say what we don't know yet in plain speech ("Washington hasn't said who") without pointing at documents. Never include censored profanity from a source quote ("a lot of good *** can happen") — trim the quote at a word boundary before the censored word, or paraphrase the sentiment without quoting. Never reuse the editorial documents' example sentences or people. Rewrite the full story.`;
   }
   type StoryDraft = {
     headline: string; deck: string; verification: "confirmed" | "reported" | "developing";

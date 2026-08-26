@@ -2,7 +2,7 @@ import Anthropic from "@anthropic-ai/sdk";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { writeJSON } from "@/lib/writer";
-import { boilerplateViolations, BOILERPLATE_PROMPT, editorialSystem, voiceMatch, type Architecture } from "@/lib/editorial";
+import { boilerplateViolations, BOILERPLATE_PROMPT, editorialSystem, voiceMatch, circles, restatements, type Architecture } from "@/lib/editorial";
 import { judgeJSON } from "@/lib/judge";
 
 export const BYLINE_STAFF = "The Pate State Staff";
@@ -312,7 +312,7 @@ export async function draftCompanion(input: {
         .join("\n")}`
     : null;
   const baseUser = [
-    ...(input.architecture
+    ...(input.architecture && process.env.EDITORIAL_LEAN !== "1"
       ? [`ARCHITECTURE FOR THIS PIECE (Brief v2 Rule 2 — the structure was chosen for this story; commit to it fully): ${input.architecture.name} — ${input.architecture.brief}`]
       : []),
     BOILERPLATE_PROMPT,
@@ -355,9 +355,10 @@ export async function draftCompanion(input: {
       const boiler = boilerplateViolations(draft.bodyMarkdown);
       const prose = draft.bodyMarkdown.replace(/\[QUOTE:[\d:]+\][\s\S]*?\[\/QUOTE\]/g, "");
       const noFirstPerson = !/(?:^|[\s“"(])(I|I'm|I've|I'd|I'll|my)(?=[\s,.!?'’])/.test(prose);
-      if ((boiler.length > 0 || noFirstPerson) && attempt === 0) {
+      const circling = circles(prose);
+      if ((boiler.length > 0 || noFirstPerson || circling) && attempt === 0) {
         lastDraft = draft;
-        user = `${baseUser}\n\nYour previous draft violated house style${noFirstPerson ? " — it is not in Josh's first person; this column is written as \"I\" to \"you\", matching THE VOICE TO MATCH exactly" : ""}${boiler.length ? ` — banned language: ${boiler.join("; ")}` : ""}. Keep the analysis, rewrite in the voice.`;
+        user = `${baseUser}\n\nYour previous draft violated house style${noFirstPerson ? " — it is not in Josh's first person; this column is written as \"I\" to \"you\", matching THE VOICE TO MATCH exactly" : ""}${boiler.length ? ` — banned language: ${boiler.join("; ")}` : ""}${circling ? ` — it restates itself; these sentences repeat a point already made and must go or become new information: ${restatements(prose).slice(0, 4).map((s) => `"${s.slice(0, 110)}"`).join(" · ")}` : ""}. Keep the analysis, rewrite in the voice, shorter.`;
         continue;
       }
       const badQuotes = findNonVerbatimQuotes(draft.bodyMarkdown, input.transcriptText);

@@ -20,7 +20,7 @@ import { generateArticleHero } from "@/lib/hero-image";
 import { uploadHeroImage, setArticleHeroImage } from "@/lib/sanity";
 import { slugify } from "@/lib/slug";
 import { JOSH_BRACKET_FIELD, JOSH_BRACKET_FINAL, JOSH_BRACKET_LABEL } from "@/lib/josh-bracket";
-import { pickArchitecture, boilerplateViolations, BOILERPLATE_PROMPT, scoreDraft, editorialSystem, voiceMatch, type EditorialProduct } from "@/lib/editorial";
+import { pickArchitecture, boilerplateViolations, BOILERPLATE_PROMPT, scoreDraft, editorialSystem, voiceMatch, circles, restatements, type EditorialProduct } from "@/lib/editorial";
 import { hasFirstPersonProse } from "@/lib/wire";
 import { judgeJSON } from "@/lib/judge";
 
@@ -179,7 +179,7 @@ export async function draftLongformArticle(
     }
     const standing = `ON-RECORD SITE POSITIONS (never contradict silently): ${JOSH_BRACKET_LABEL} — field: ${JOSH_BRACKET_FIELD.map((t) => `${t.seed} ${t.name}`).join(", ")}; final on record: ${JOSH_BRACKET_FINAL}. The JP Poll shown on the show is the MODEL's power ratings (Ohio State No. 1 preseason), not a ranking.`;
     const sourcePack = [
-      `ASSIGNMENT: type ${sel.typeId} — ${sel.topic}\nANGLE: ${sel.angle}\nARCHITECTURE FOR THIS PIECE (commit to it fully; it is the structural-variety rotation): ${arch.name} — ${arch.brief}`,
+      `ASSIGNMENT: type ${sel.typeId} — ${sel.topic}\nANGLE: ${sel.angle}${process.env.EDITORIAL_LEAN === "1" ? "" : `\nARCHITECTURE FOR THIS PIECE (commit to it fully; it is the structural-variety rotation): ${arch.name} — ${arch.brief}`}`,
       BOILERPLATE_PROMPT,
       fullStories.length
         ? `WIRE COVERAGE (verified facts — the fact base):\n${fullStories
@@ -219,8 +219,9 @@ export async function draftLongformArticle(
       // Josh, 2026-08-26: every column is in his first person, matching the
       // approved Three Boards column. A draft with no "I" in it missed the lane.
       const noFirstPerson = !hasFirstPersonProse(draft.bodyMarkdown);
-      if (boiler.length === 0 && !noFirstPerson) break;
-      user = `${sourcePack}\n\nYOUR PREVIOUS DRAFT VIOLATED house style${noFirstPerson ? " — it is not written in Josh's first person; this is Josh's Read, written as \"I\" to \"you\", matching THE VOICE TO MATCH exactly" : ""}${boiler.length ? ` — banned language: ${boiler.join("; ")}` : ""}. Keep the analysis; rewrite in the voice.`;
+      const circling = circles(draft.bodyMarkdown);
+      if (boiler.length === 0 && !noFirstPerson && !circling) break;
+      user = `${sourcePack}\n\nYOUR PREVIOUS DRAFT VIOLATED house style${noFirstPerson ? " — it is not written in Josh's first person; this is Josh's Read, written as \"I\" to \"you\", matching THE VOICE TO MATCH exactly" : ""}${boiler.length ? ` — banned language: ${boiler.join("; ")}` : ""}${circling ? ` — it restates itself; these sentences repeat a point already made and must go or become new information: ${restatements(draft.bodyMarkdown).slice(0, 4).map((s) => `"${s.slice(0, 110)}"`).join(" · ")}` : ""}. Keep the analysis; rewrite in the voice, shorter.`;
     }
     draft.bodyMarkdown = scrubDashes(draft.bodyMarkdown).replace(/\[EMBED:[^\]]*\]\s*/g, "").replace(/\[\/PULLQUOTE\]/g, "");
     draft.dek = scrubDashes(draft.dek);
