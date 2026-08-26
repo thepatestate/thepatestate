@@ -43,6 +43,7 @@ const { fetchTranscript, transcriptToPromptText } = await import("../lib/transcr
 const { draftCompanion, extractQuotes, classifySeries } = await import("../lib/generate.ts");
 const { pickArchitecture, boilerplateViolations } = await import("../lib/editorial.ts");
 const { draftLongformArticle } = await import("../lib/longform.ts");
+const { teamFactSheet } = await import("../lib/fact-sheet.ts");
 const { fanScore, voiceMatch, editorialSystem, readPrompt, BOILERPLATE_PROMPT, abstractParagraphs, restatements } = await import("../lib/editorial.ts");
 const { writeJSON } = await import("../lib/writer.ts");
 const { DRAFT_SCHEMA, findNonVerbatimQuotes, placePullQuoteMarker, validateDraft } = await import("../lib/generate.ts");
@@ -162,9 +163,10 @@ for (const [i, v] of videos.entries()) {
     extractQuotes(transcriptText),
   ]);
   const t0 = Date.now();
+  const factSheet = await teamFactSheet(quotes.flatMap((q) => q.teams)).catch(() => "");
   const draft = await draftCompanion({
     title: v.title, description: v.description ?? "", publishedAt: v.published, series,
-    transcriptText, extractedQuotes: quotes, architecture: pickArchitecture([], i),
+    transcriptText, extractedQuotes: quotes, architecture: pickArchitecture([], i), factSheet,
   });
   if (!draft || draft.lowConfidence) { console.log(`HOLD (quote gate)  ${v.title.slice(0, 60)}`); continue; }
   showDone++;
@@ -172,7 +174,7 @@ for (const [i, v] of videos.entries()) {
   console.log(`OK show ${showDone}/${SHOW}   ${draft.headline.slice(0, 70)}`);
   await judge(piece);
   if (REFINE > 0 && piece.fan && !piece.fan.pass) {
-    const baseUser = [BOILERPLATE_PROMPT, `Episode title: ${v.title}`, `Series: ${series}`, `Published: ${v.published}`, `Description:\n${(v.description ?? "").slice(0, 3000)}`, `Transcript (timestamped, AUTO-CAPTIONED: cross-check names against the title and description; where a name looks garbled and you cannot be certain, refer to the player by school and position; never guess a spelling):\n${transcriptText}`].join("\n\n");
+    const baseUser = [BOILERPLATE_PROMPT, `Episode title: ${v.title}`, `Series: ${series}`, `Published: ${v.published}`, `Description:\n${(v.description ?? "").slice(0, 3000)}`, `Transcript (timestamped, AUTO-CAPTIONED: cross-check names against the title and description; where a name looks garbled and you cannot be certain, refer to the player by school and position; never guess a spelling):\n${transcriptText}`, factSheet].filter(Boolean).join("\n\n");
     piece = await refineShow(piece, transcriptText, baseUser);
   }
   pack.push(piece);

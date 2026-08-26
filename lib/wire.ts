@@ -13,6 +13,7 @@ import { slugify } from "@/lib/slug";
 import { writeJSON } from "@/lib/writer";
 import { boilerplateViolations, BOILERPLATE_PROMPT, scoreDraft, editorialSystem, voiceMatch, circles, restatements } from "@/lib/editorial";
 import { judgeJSON } from "@/lib/judge";
+import { teamFactSheet } from "@/lib/fact-sheet";
 
 const MODEL = "claude-sonnet-5";
 // Client directive (2026-08-17): wire clicks must never leave the site, so
@@ -580,7 +581,8 @@ export async function generateWireStory(
   let receipt = await findReceipt(job.teams, job.receiptKeywords);
   if (receipt && !(await receiptIsRelevant(anthropic, receipt, job))) receipt = null;
   const thin = isThinSource(job.sourceBlock);
-  const baseUser = `${BOILERPLATE_PROMPT}${thin ? `\n\nSOURCE MATERIAL IS THIN (a few hundred words of reporting): file a BRIEF per the triage rule. Headline, a one-sentence deck, whatHappened at 80–120 words saying exactly what is known, impact, category, teams; every other field "" or []. Never expand a handful of facts into six sections; a short story that says only what is known is the correct answer (Wire §7). Say what is unknown the way a person would ("Indiana hasn't said which injury," "no timetable yet"), never by pointing at the document ("the report does not identify," "was described as").` : ""}\n\nSource cluster:\n${job.sourceBlock}${receipt ? `\n\nJosh's archived on-topic quote (verbatim; render as his receipt, do NOT alter): "${receipt.quote}"` : ""}`;
+  const factSheet = thin ? "" : await teamFactSheet(job.teams, { games: 6 }).catch(() => "");
+  const baseUser = `${BOILERPLATE_PROMPT}${factSheet ? `\n\n${factSheet}` : ""}${thin ? `\n\nSOURCE MATERIAL IS THIN (a few hundred words of reporting): file a BRIEF per the triage rule. Headline, a one-sentence deck, whatHappened at 80–120 words saying exactly what is known, impact, category, teams; every other field "" or []. Never expand a handful of facts into six sections; a short story that says only what is known is the correct answer (Wire §7). Say what is unknown the way a person would ("Indiana hasn't said which injury," "no timetable yet"), never by pointing at the document ("the report does not identify," "was described as").` : ""}\n\nSource cluster:\n${job.sourceBlock}${receipt ? `\n\nJosh's archived on-topic quote (verbatim; render as his receipt, do NOT alter): "${receipt.quote}"` : ""}`;
   // One corrective retry when the draft names an outlet in the upper page
   // (guide §5) — the old pipeline REQUIRED that habit, so writers relapse.
   // System prompt = preamble → 00 Editorial Core → 01 Wire (Josh's documents,

@@ -296,6 +296,8 @@ export async function draftCompanion(input: {
   extractedQuotes?: ExtractedQuote[];
   /** Editorial Brief v2 Rule 2: the pre-selected architecture for this piece. */
   architecture?: Architecture;
+  /** Verified team facts (lib/fact-sheet.ts) so claims can be cashed out. */
+  factSheet?: string;
 }): Promise<CompanionDraft | null> {
   const c = client();
   if (!c) return null;
@@ -324,6 +326,7 @@ export async function draftCompanion(input: {
       ? `Transcript (timestamped, AUTO-CAPTIONED: the captioner misspells names and sometimes garbles a word into nonsense. Cross-check every player and coach name against the episode title and description; where a name looks garbled and you cannot be certain of the real spelling, refer to the player by school and position instead. Never publish a garbled name and never guess a spelling; never carry a nonsense word into prose):\n${input.transcriptText}`
       : `NO TRANSCRIPT AVAILABLE — draft from the title and description only, per your instructions.`,
     ...(quotesBlock ? [quotesBlock] : []),
+    ...(input.factSheet ? [input.factSheet] : []),
   ].join("\n\n");
 
   // Two attempts total. A schema/parse miss just retries with the same prompt (loop

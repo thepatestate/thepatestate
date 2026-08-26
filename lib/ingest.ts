@@ -3,6 +3,7 @@ import { writeClient, isSanityWriteConfigured, articleExistsForEpisode, uploadHe
 import { fetchTranscript, transcriptToPromptText } from "@/lib/transcript";
 import { classifySeries, draftCompanion, extractQuotes } from "@/lib/generate";
 import { pickArchitecture } from "@/lib/editorial";
+import { teamFactSheet } from "@/lib/fact-sheet";
 import { storeQuotes } from "@/lib/quotes";
 import { generateArticleHero } from "@/lib/hero-image";
 import { slugify } from "@/lib/slug";
@@ -91,10 +92,11 @@ export async function ingestEpisode(v: IngestVideo): Promise<IngestResult> {
       `*[_type == "article"] | order(_createdAt desc) [0...6].tags[@ match "arch:*"]`
     ).catch(() => [] as string[]);
     const arch = pickArchitecture((recentArch ?? []).map((t) => t.replace(/^arch:/, "")), weekCount + dayCount);
+    const factSheet = await teamFactSheet(quotes.flatMap((q) => q.teams)).catch(() => "");
     const draft = await draftCompanion({
       title: v.title, description: v.description ?? "", publishedAt: v.published,
       series: series ?? "general", transcriptText, extractedQuotes: quotes,
-      architecture: arch,
+      architecture: arch, factSheet,
     });
     if (!draft) return "episode-only"; // poll cycle retries later
 

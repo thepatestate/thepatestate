@@ -23,6 +23,7 @@ import { JOSH_BRACKET_FIELD, JOSH_BRACKET_FINAL, JOSH_BRACKET_LABEL } from "@/li
 import { pickArchitecture, boilerplateViolations, BOILERPLATE_PROMPT, scoreDraft, editorialSystem, voiceMatch, circles, restatements, type EditorialProduct } from "@/lib/editorial";
 import { hasFirstPersonProse } from "@/lib/wire";
 import { judgeJSON } from "@/lib/judge";
+import { teamFactSheet } from "@/lib/fact-sheet";
 
 const MODEL = "claude-sonnet-5";
 
@@ -177,6 +178,7 @@ export async function draftLongformArticle(
         .limit(6);
       quotes = data ?? [];
     }
+    const factSheet = await teamFactSheet(sel.teams).catch(() => "");
     const standing = `ON-RECORD SITE POSITIONS (never contradict silently): ${JOSH_BRACKET_LABEL} — field: ${JOSH_BRACKET_FIELD.map((t) => `${t.seed} ${t.name}`).join(", ")}; final on record: ${JOSH_BRACKET_FINAL}. The JP Poll shown on the show is the MODEL's power ratings (Ohio State No. 1 preseason), not a ranking.`;
     const sourcePack = [
       `ASSIGNMENT: type ${sel.typeId} — ${sel.topic}\nANGLE: ${sel.angle}${process.env.EDITORIAL_LEAN === "1" ? "" : `\nARCHITECTURE FOR THIS PIECE (commit to it fully; it is the structural-variety rotation): ${arch.name} — ${arch.brief}`}`,
@@ -191,8 +193,9 @@ export async function draftLongformArticle(
             .map((q, i) => `${i + 1}. "${q.quote}" (${q.topic})`)
             .join("\n")}`
         : "ARCHIVED JOSH QUOTES: none — pullQuote must be \"\".",
+      factSheet,
       standing,
-    ].join("\n\n");
+    ].filter(Boolean).join("\n\n");
 
     // --- Draft (one corrective retry on boilerplate/voice violations) ----
     // System prompt = preamble → 00 Editorial Core → the product document
