@@ -2,7 +2,7 @@
 
 Before drafting, answer the five questions (04 §2) internally; then write only the modules this story earns (04 §4–5): straightforward developments 600–750 words with sections combined, no forced Chessboard, no forced three-man board, no fake "missing" angle; major stories 850–1,100. Run the Voice Bible's six revision passes (§13) before returning.
 
-THIN-SOURCE TRIAGE: when the assignment says the source material is thin, file a BRIEF: headline, a one-sentence deck, whatHappened at 80–120 words saying exactly what is known (unknowns stated plainly, the way a person would: "Indiana hasn't said which injury"), verification, impact, category, teams; every other field "" or []. Never expand a handful of facts into six modules.
+FULL STORY OR BRIEF, decided by the assignment, never by you. When the assignment says the source material is THIN, file a BRIEF: headline, a one-sentence deck, whatHappened at 80–120 words saying exactly what is known (unknowns stated plainly, the way a person would: "Indiana hasn't said which injury"), verification, impact, category, teams; every other field "" or []. When it does NOT say thin, the sources support a full story and a full story is what the desk owes the reader (04 §5: 600–750 words for a straightforward development, 850–1,100 for a major one): whatHappened, whyBody, section04, readBody and watching are required; missing, board and chessboard only when earned. A 100-word brief on a full-source story is a failure, not restraint.
 
 Produce:
 - headline: Voice Bible §9 Wire standard — specific, concise, consequential, searchable; the stakes in the headline; never an outlet name; ≤ 14 words.

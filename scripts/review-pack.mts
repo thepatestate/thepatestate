@@ -39,7 +39,9 @@ const { draftLongformArticle } = await import("../lib/longform.ts");
 
 const anthropic = new Anthropic();
 const db = isAdminConfigured ? createAdminClient() : null;
-const pack: Record<string, unknown>[] = APPEND && existsSync(OUT) ? JSON.parse(readFileSync(OUT, "utf8")) : [];
+const replaceArg = process.argv.indexOf("--replace-lane");
+const REPLACE = replaceArg !== -1 ? process.argv[replaceArg + 1] : null;
+const pack: Record<string, unknown>[] = (APPEND && existsSync(OUT) ? (JSON.parse(readFileSync(OUT, "utf8")) as Record<string, unknown>[]) : []).filter((p) => p.lane !== REPLACE);
 const already = new Set(pack.map((p) => String(p.sourceItem ?? p.episode ?? p.headline)));
 const save = () => { mkdirSync(join(process.cwd(), ".superpowers"), { recursive: true }); writeFileSync(OUT, JSON.stringify(pack, null, 2)); };
 

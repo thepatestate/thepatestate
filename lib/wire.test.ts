@@ -161,6 +161,8 @@ describe("narratesSourcing", () => {
     expect(narratesSourcing("The rotation remains unsettled based on the available report.")).toBe(true);
     expect(narratesSourcing("Based on the report, the staff has not named a starter.")).toBe(true);
     expect(narratesSourcing("The supplied report confirms the location change.")).toBe(true);
+    expect(narratesSourcing("Syracuse has not been assigned a win total in the information available here.")).toBe(true);
+    expect(narratesSourcing("The ranking does not identify which parts of the roster drove the number.")).toBe(true);
     expect(narratesSourcing("The matchup is set, but it does not provide a reason for the move.")).toBe(true);
     expect(narratesSourcing("He has put together what was described as a terrific camp.")).toBe(true);
     expect(narratesSourcing("The report does not identify the injury or say how long he was away.")).toBe(true);

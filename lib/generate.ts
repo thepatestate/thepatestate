@@ -105,25 +105,35 @@ export function findNonVerbatimQuotes(body: string, transcript: string): string[
   return bad;
 }
 
-export function validateDraft(raw: unknown): CompanionDraft | null {
-  if (typeof raw !== "object" || raw === null) return null;
+/** Why a draft fails validation ("" when it passes). Exported for the logs
+ * and tests. */
+export function draftProblem(raw: unknown): string {
+  if (typeof raw !== "object" || raw === null) return "not an object";
   const d = raw as Record<string, unknown>;
   const isStr = (v: unknown): v is string => typeof v === "string" && v.trim().length > 0;
   const isStrArr = (v: unknown): v is string[] => Array.isArray(v) && v.every((x) => typeof x === "string");
   const seo = d.seo as Record<string, unknown> | undefined;
-  if (
-    !isStr(d.headline) || !isStr(d.dek) || !isStr(d.bodyMarkdown) || typeof d.pullQuote !== "string" ||
-    typeof d.primaryTeam !== "string" || !isStrArr(d.teams) || !isStrArr(d.tags) ||
-    !seo || !isStr(seo.title) || !isStr(seo.description)
-  ) return null;
+  if (!isStr(d.headline)) return "headline";
+  if (!isStr(d.dek)) return "dek";
+  if (!isStr(d.bodyMarkdown)) return "bodyMarkdown";
+  if (typeof d.pullQuote !== "string") return "pullQuote";
+  if (typeof d.primaryTeam !== "string" || !isStrArr(d.teams) || !isStrArr(d.tags)) return "teams/tags";
+  if (!seo || !isStr(seo.title) || !isStr(seo.description)) return "seo";
   // Voice Bible §5: no pull quote manufactured for the slot. A pull quote
   // needs its marker in the body; an empty pull quote needs no marker.
   const hasMarker = d.bodyMarkdown.includes("[PULLQUOTE]");
-  if (d.pullQuote.trim() ? !hasMarker : hasMarker) return null;
+  if (d.pullQuote.trim() && !hasMarker) return "pullQuote without [PULLQUOTE] marker";
+  if (!d.pullQuote.trim() && hasMarker) return "[PULLQUOTE] marker with empty pullQuote";
+  return "";
+}
+
+export function validateDraft(raw: unknown): CompanionDraft | null {
+  if (draftProblem(raw)) return null;
+  const d = raw as Record<string, unknown> & { seo: { title: string; description: string } };
   return {
-    headline: d.headline, dek: d.dek, bodyMarkdown: d.bodyMarkdown, pullQuote: d.pullQuote,
-    primaryTeam: d.primaryTeam, teams: d.teams, tags: d.tags,
-    seo: { title: seo.title, description: seo.description },
+    headline: d.headline as string, dek: d.dek as string, bodyMarkdown: d.bodyMarkdown as string, pullQuote: d.pullQuote as string,
+    primaryTeam: d.primaryTeam as string, teams: d.teams as string[], tags: d.tags as string[],
+    seo: { title: d.seo.title, description: d.seo.description },
   };
 }
 
@@ -317,8 +327,9 @@ export async function draftCompanion(input: {
         schemaName: "companion_draft",
         maxTokens: 8192,
       });
-      const draft = validateDraft(JSON.parse(raw));
-      if (!draft) continue; // schema/parse miss — retry with the same prompt
+      const parsed = JSON.parse(raw);
+      const draft = validateDraft(parsed);
+      if (!draft) { console.warn(`[generate:draftCompanion] attempt ${attempt}: invalid draft (${draftProblem(parsed)})`); continue; }
       // Stray JSON escapes in prose render as literal backslashes.
       draft.bodyMarkdown = draft.bodyMarkdown.replace(/\\(["'])/g, "$1");
       draft.pullQuote = draft.pullQuote.replace(/\\(["'])/g, "$1");

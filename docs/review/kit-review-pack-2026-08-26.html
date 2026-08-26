@@ -1,0 +1,458 @@
+<title>Kit Review Pack</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Public+Sans:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{--navy:#0E2240;--navy-deep:#0A1730;--gold:#C9A227;--gold-dk:#A8861B;--red:#C8102E;--ink:#151A22;--ink-dim:#4C5361;--paper:#FBF9F4;--card:#FFFFFF;--rule:#D9D3C4;--wash:#F1EDE2;--display:"Barlow Condensed",Impact,"Arial Narrow",sans-serif;--body:"Public Sans",system-ui,Helvetica,Arial,sans-serif;--mono:"IBM Plex Mono",ui-monospace,Menlo,monospace}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--paper:#0B1628;--card:#10203A;--ink:#EDE9DF;--ink-dim:#A9B1C2;--rule:#2A3A57;--wash:#16284A;--navy:#EDE9DF;--navy-deep:#F6F3EA;--gold:#D9B64A;--gold-dk:#C9A227}}
+:root[data-theme="dark"]{--paper:#0B1628;--card:#10203A;--ink:#EDE9DF;--ink-dim:#A9B1C2;--rule:#2A3A57;--wash:#16284A;--navy:#EDE9DF;--navy-deep:#F6F3EA;--gold:#D9B64A;--gold-dk:#C9A227}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.6}
+a{color:var(--gold-dk)}
+.wrap{max-width:1180px;margin:0 auto;padding:40px 24px 80px;display:grid;grid-template-columns:260px minmax(0,1fr);gap:48px}
+@media (max-width:900px){.wrap{grid-template-columns:1fr;gap:24px}}
+.rail{position:sticky;top:24px;align-self:start;font-size:13px}
+@media (max-width:900px){.rail{position:static}}
+.rail h1{font-family:var(--display);font-weight:800;font-size:38px;line-height:.95;text-transform:uppercase;margin:0 0 6px;color:var(--navy);text-wrap:balance}
+.rail .sub{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-dim);margin:0 0 18px}
+.rail ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.rail li a{display:flex;gap:8px;align-items:flex-start;color:var(--ink);text-decoration:none;line-height:1.35}
+.rail li a:hover span:last-child{text-decoration:underline}
+.dot{flex:0 0 8px;width:8px;height:8px;border-radius:50%;margin-top:6px;background:var(--gold)}
+.dot.house{background:var(--navy)}.dot.show{background:var(--red)}
+.legend{margin:18px 0 0;padding:14px 0 0;border-top:1px solid var(--rule);font-family:var(--mono);font-size:11px;color:var(--ink-dim);display:flex;flex-direction:column;gap:6px}
+.legend span{display:flex;gap:8px;align-items:center}
+.intro{max-width:68ch;margin-bottom:36px}
+.intro h2{font-family:var(--display);font-size:30px;font-weight:700;text-transform:uppercase;margin:0 0 8px;color:var(--navy)}
+.intro p{margin:0 0 10px;color:var(--ink)}
+.piece{background:var(--card);border:1px solid var(--rule);border-left:6px solid var(--gold);padding:28px 32px 24px;margin-bottom:36px;max-width:76ch}
+.piece.house{border-left-color:var(--navy)}.piece.show{border-left-color:var(--red)}
+.kick{display:flex;justify-content:space-between;font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-dim);margin-bottom:10px}
+.kick .lane{color:var(--gold-dk);font-weight:500}.house .kick .lane{color:var(--navy)}.show .kick .lane{color:var(--red)}
+.piece h2{font-family:var(--display);font-weight:800;font-size:34px;line-height:1.02;margin:0 0 10px;color:var(--navy);text-wrap:balance}
+.dek{font-size:18px;line-height:1.5;margin:0 0 8px;color:var(--ink)}
+.by{font-family:var(--mono);font-size:11.5px;color:var(--ink-dim);margin:0 0 18px;padding-bottom:14px;border-bottom:1px solid var(--rule)}
+.body{max-width:68ch}
+.body h3{font-family:var(--display);font-weight:700;font-size:22px;text-transform:uppercase;letter-spacing:.02em;margin:26px 0 8px;color:var(--navy);display:flex;gap:10px;align-items:baseline}
+.body p{margin:0 0 14px}
+.lbl{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-dim);font-weight:400}
+.nums{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:0 0 6px}
+.num{background:var(--wash);padding:12px 14px;border-radius:2px}
+.num b{font-family:var(--display);font-size:34px;line-height:1;color:var(--navy);display:block}
+.num.crit b{color:var(--red)}
+.num span{font-size:12.5px;color:var(--ink-dim);display:block;margin-top:4px;line-height:1.35}
+.missing,.chess,.read{background:var(--wash);padding:14px 18px;border-radius:2px;margin-bottom:14px}
+.missing p,.chess p,.read p{margin:0}
+.pull{border-top:2px solid var(--gold);border-bottom:2px solid var(--gold);padding:14px 4px;margin:18px 0}
+.pull p{font-family:var(--display);font-size:24px;line-height:1.15;font-weight:600;color:var(--navy);margin:0}
+blockquote.q{margin:16px 0;padding:14px 18px;border-left:3px solid var(--red);background:var(--wash)}
+blockquote.q p{margin:0 0 6px;font-style:italic}
+blockquote.q cite{font-family:var(--mono);font-size:11px;font-style:normal;color:var(--ink-dim)}
+blockquote.receipt{border-left-color:var(--gold)}
+.board{border:1px solid var(--rule);padding:12px 16px;margin:0 0 16px}
+.board .row{display:grid;grid-template-columns:1fr 1.4fr;gap:12px;padding:8px 0;border-top:1px solid var(--rule);font-size:15px}
+.board small{color:var(--ink-dim);display:block;font-family:var(--mono);font-size:11px}
+.board .tell{margin:10px 0 0;font-size:15px}
+ol.watch{padding-left:20px;margin:0 0 14px}ol.watch li{margin-bottom:8px}
+.embed{font-family:var(--mono);font-size:12px;color:var(--ink-dim)}
+.src{font-family:var(--mono);font-size:11.5px;color:var(--ink-dim);border-top:1px solid var(--rule);padding-top:12px;margin-top:20px}
+.review{margin-top:22px;background:var(--wash);padding:14px 18px;font-size:14px;border-radius:2px}
+.review b{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-dim);display:block;margin-bottom:6px}
+.review p{margin:0 0 6px}.review .gate{font-family:var(--mono);font-size:11.5px;color:var(--ink-dim);margin:0}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+</style>
+<div class="wrap">
+  <nav class="rail" aria-label="Contents">
+    <h1>Kit Review Pack</h1>
+    <p class="sub">Writing system v1.0 · drafted 2026-08-26</p>
+    <ol><li><a href="#p1"><span class="dot show"></span><span>Josh Pate's 2026 Predictions: A Conference Title Game Miss Could Lead to the Final, Three Top CFP Seeds Could Come From One League, and Miami Could Beat Notre Dame by 14</span></a></li><li><a href="#p2"><span class="dot house"></span><span>Thomas Castellanos at Texas Tech: Why the Run-First Quarterback Must Change the Offense Before He Changes the Depth Chart</span></a></li><li><a href="#p3"><span class="dot house"></span><span>Alabama Loses Jeremiah Beaman to a Torn ACL for 2026, Removing a 301-Pound Defensive Lineman and Forcing Early Rotation Decisions</span></a></li><li><a href="#p4"><span class="dot house"></span><span>Florida Football Under Jon Sumrall: Five Questions About DJ Lagway, Defensive Identity, Transfers, Discipline, and September</span></a></li><li><a href="#p5"><span class="dot show"></span><span>Josh Pate's Revised 2026 Predictions: Clemson Rises, Texas Tech Takes the Big 12, and Miami Wins the National Championship</span></a></li><li><a href="#p6"><span class="dot show"></span><span>Josh Pate's 2026 Top 10 Games: Miami at Notre Dame Leads a List Built on Rivalry, Setting, and Stakes</span></a></li><li><a href="#p7"><span class="dot wire"></span><span>Thomas Castellanos Reportedly Commits to Texas Tech for a Fifth College Season</span></a></li><li><a href="#p8"><span class="dot wire"></span><span>Four-Star 2028 Edge Antonio Thomas Jr. Plans Florida State Visit for Clemson Game</span></a></li><li><a href="#p9"><span class="dot wire"></span><span>Boise State’s First Pac-12 Home Game Tests Maddux Madsen Against Memphis</span></a></li><li><a href="#p10"><span class="dot wire"></span><span>Colorado’s 3-9 Projection Puts Deion Sanders’ Future Under More Pressure</span></a></li><li><a href="#p11"><span class="dot wire"></span><span>South Carolina Adds Ethan Johnson to Reinforce Defensive Depth Behind Collier and Swain</span></a></li><li><a href="#p12"><span class="dot wire"></span><span>Oklahoma Projected to Finish 10-2 in 2026 With Texas Playoff Game in Forecast</span></a></li></ol>
+    <div class="legend"><span><i class="dot"></i>The Wire · 6</span><span><i class="dot house"></i>House analysis · 3</span><span><i class="dot show"></i>Show-derived · 3</span></div>
+  </nav>
+  <main>
+    <section class="intro">
+      <h2>Twelve pieces, written under the kit</h2>
+      <p>Every piece below came out of the live pipeline on 2026-08-26 with the writing system you sent (Constitution, Voice Bible v3.5, the Wire and Features specs) as the only instruction set, and passed every automated gate: the language law, no outlet in the upper page, no first person outside quote blocks, verbatim quotes checked against the tape, a second-model fact-check against the sources, and the quality judge. Nothing here is published. The sources are real recent news and real episodes.</p>
+      <p>What would help most: mark the sentences that still read generated, the module or structure you would cut, and anywhere the dial is wrong for the lane. A correction becomes a rule in the one kit file that owns it.</p>
+    </section>
+    
+<article id="p1" class="piece show">
+  <header>
+    <div class="kick"><span class="lane">Show-derived column</span><span class="n">1 of 12</span></div>
+    <h2>Josh Pate's 2026 Predictions: A Conference Title Game Miss Could Lead to the Final, Three Top CFP Seeds Could Come From One League, and Miami Could Beat Notre Dame by 14</h2>
+    <p class="dek">Pate rates a third straight finalist missing its conference championship game at 8.75, but gives three other predictions at 9.5 or higher. The boldest call requires Miami and Notre Dame to enter South Bend as the top two teams in the country before Miami wins by at least two touchdowns.</p>
+    <p class="by">The Pate State Staff · 876 words · Episode · Boldest CFB Predictions For 2026 - Josh Pate's College Football Show · Series · poll-day</p>
+  </header>
+  <div class="body"><p>Josh Pate's boldest 2026 predictions are really about the shape of the College Football Playoff. He sees a bracket where conference title games do not automatically identify the best team, one league could control the top three seeds, and Miami could turn a preseason six-and-a-half-point underdog position into a 14-point win at Notre Dame.</p>
+<aside class="pull"><p>The top three seeds in the college football playoff all belong to the same conference.</p></aside>
+<blockquote class="q"><p>The top three seeds in the college football playoff all belong to the same conference.</p><cite>Josh Pate on the show · <a href="https://www.youtube.com/watch?v=sKO19CnxhJ0&t=156s">00:02:36 ▶</a></cite></blockquote>
+<h3>Which teams can reach the playoff without playing for a conference title?</h3>
+<p>Pate puts the prediction that a third straight national championship participant will miss its conference title game at 8.75. Ohio State did it in 2024, and Miami did it last season. The structure makes another example possible because the SEC and Big Ten each send only two teams into their league championship game while carrying several teams capable of reaching the playoff.</p>
+<blockquote class="q"><p>Only two teams can make the conference title game in the SEC. They got like half a dozen teams that could threaten to make the playoff. The Big 10 kind of the same way.</p><cite>Josh Pate on the show · <a href="https://www.youtube.com/watch?v=sKO19CnxhJ0&t=38s">00:00:38 ▶</a></cite></blockquote>
+<p>A team that falls short of that conference game can still arrive in December playing its best football, then avoid the extra league championship contest before the bracket begins. That matters because the playoff rewards late-season form and gives top-four seeds a first-round bye. Missing one game can cost a trophy, or it can preserve a roster for the games that decide the season.</p>
+<p>The related prediction is much harder to survive. Pate says no team with State, Tech, A&amp;M, or Notre Dame in its name will make the playoff quarterfinal. An undefeated Notre Dame would already be a top-four seed and would therefore reach that stage without playing a first-round game, so the prediction immediately needs Notre Dame to lose somewhere before the bracket is set. Texas Tech creates another problem because Pate cites the team at minus-200 to reach the quarterfinals, with Notre Dame at minus-290 and Ohio State at minus-185 in the FanDuel prices mentioned on the Aug. 25 episode.</p>
+<h3>Can one conference put three teams among the top four seeds?</h3>
+<p>Pate rates that call 9.75 and favors the Big Ten over the SEC. Indiana, Ohio State, and Oregon are all part of the same crowded picture, with USC adding another team capable of affecting the standings. The difficulty is obvious: those teams have to win enough games while also taking wins from one another.</p>
+<blockquote class="q"><p>But the problem is a lot of them play each other. Like Indiana, Ohio State, Oregon mostly play each other and then there's USC mixed in there.</p><cite>Josh Pate on the show · <a href="https://www.youtube.com/watch?v=sKO19CnxhJ0&t=169s">00:02:49 ▶</a></cite></blockquote>
+<p>That schedule collision is what makes the prediction bold rather than routine. A league can have four playoff-level teams and still leave only one or two with records clean enough for the top three. The path becomes more believable if the losses distribute cleanly and the strongest teams win the games outside that cluster. It becomes much less likely if the contenders trade multiple losses before the selection committee compares résumés.</p>
+<p>A Big Ten sweep of the top three would also change the first-round math for everyone beneath it. The league would hold more byes and home-field advantages, while teams from the SEC, ACC, and Big 12 would need to win on the road or face a harder opening assignment.</p>
+<h3>What would it take for Miami to beat Notre Dame by 14 in South Bend?</h3>
+<p class="embed">▶ Watch the segment · <a href="https://www.youtube.com/watch?v=sKO19CnxhJ0&t=211s">00:03:31</a></p>
+<p>Pate gives Miami and Notre Dame meeting as the No. 1 and No. 2 teams a 9.5, then adds the 14-plus-point Miami win as another 9.5. The prediction needs several unlikely events before the game even begins: both teams must stay near the top, Notre Dame must remain a six-and-a-half-point preseason favorite, and Miami must win by two touchdowns in a venue where the market expects the Irish to control the game.</p>
+<blockquote class="q"><p>You got to have Notre Dame as a 6 and a half point favorite, which they are right now. You can go bet this game at FanDuel right now.</p><cite>Josh Pate on the show · <a href="https://www.youtube.com/watch?v=sKO19CnxhJ0&t=231s">00:03:51 ▶</a></cite></blockquote>
+<p>The football path for Miami would require more than a single upset moment. A two-touchdown result means the Hurricanes would need to turn Notre Dame's favorite status into a repeated problem, likely by making the Irish offense play from behind and forcing the quarterback into more difficult decisions than the preseason price anticipates. Notre Dame would need to lose control of the game early enough that its home-field advantage could not settle the matchup.</p>
+<p>Pate's final call carries the largest chain of prerequisites, which is why he still assigns it a 9.5 rather than dismissing it. The 2026 record for all four predictions is dated Aug. 25, 2026. The quarterfinal bracket, conference championship results, and the South Bend matchup, if it forms, will supply the receipts when those events arrive.</p>
+<p>Three questions, then, with three different answers. The playoff can reward a team that misses its conference title game. One league can crowd the top of the bracket. Miami beating Notre Dame by 14 requires the entire season to arrange the matchup first, then asks Miami to overturn the number once it gets there. Citizens can cast a Pulse ballot on which prediction is boldest, then log the choice against the 2026 Ledger.</p></div>
+  <aside class="review">
+    <b>For the review</b>
+    <p>Josh's argument reported by the house: third person, 2–4 verbatim timestamped quote blocks, his byline never auto-applied (Constitution §3). Facts only from the tape.</p>
+    <p class="gate">Drafted live through the pipeline in 50s; passed every gate: language law, verbatim quotes, fact-check. Not published.</p>
+  </aside>
+</article>
+
+<article id="p2" class="piece house">
+  <header>
+    <div class="kick"><span class="lane">House analysis</span><span class="n">2 of 12</span></div>
+    <h2>Thomas Castellanos at Texas Tech: Why the Run-First Quarterback Must Change the Offense Before He Changes the Depth Chart</h2>
+    <p class="dek">Castellanos arrives from Florida State with starting experience and a skillset that asks Texas Tech to do more than add another name to the room. The Red Raiders have to decide whether their offense can make room for what he does best without unsettling Will Hammond's current position.</p>
+    <p class="by">The Pate State Staff · 790 words · Type · TP-05 · Thomas Castellanos' fit at Texas Tech · Architecture · magazine-feature</p>
+  </header>
+  <div class="body"><p>Thomas Castellanos arrives in Lubbock with a quarterback argument already attached to him. He is a former Florida State starter, he brings a run-first skillset, and Texas Tech has not announced whether he is joining the room as competition, insurance, or something in between.</p>
+<p>That uncertainty isn't a flaw in the story. It is the story.</p>
+<p>Will Hammond currently leads the Texas Tech quarterback room. Castellanos gives the Red Raiders another Power Four option behind him, but the value of that addition depends on whether Texas Tech is willing to build around Castellanos's strengths instead of asking him to operate as a duplicate of the quarterback already in place.</p>
+<p>Josh Pate has described the pressure around Texas Tech this way: “A lot of folks could go 10 and two and have a ticker tape parade. That's not what would happen in Lubbock, Texas.”</p>
+<p>That standard makes the quarterback decision heavier than a depth-chart update. Texas Tech needs answers that hold up when the offense has to stay on schedule, when a drive stalls, and when the opponent takes away the first thing the quarterback wants to do.</p>
+<h3>The offense has to make a choice</h3>
+<p>A run-first quarterback changes the questions an offense asks before the snap. Can the quarterback keep the ball on a read-option look? Can the offense create a numbers advantage by making the defense account for him in the run game? Can the passing structure give him throws that arrive quickly enough that the defense can't sit on the quarterback run?</p>
+<p>Those choices are connected. If Texas Tech adds designed quarterback runs but leaves the rest of the offense untouched, the change can become a small package instead of a real answer. The defense can treat Castellanos as a specialty option, load the box when he enters, and force the Red Raiders to win with the part of the offense they were trying to avoid asking him to carry.</p>
+<p>That doesn't mean the entire playbook has to be rebuilt around one player. It means the staff has to decide which parts of the existing offense survive when Castellanos is on the field and which parts need to move. Protection rules may change. Run-pass options may become more central. The quarterback's running threat may create room for a receiver, but only if the formation and timing make the defense honor both possibilities.</p>
+<p>None of that has been announced as Texas Tech's plan. The point is narrower. Castellanos's value cannot be measured only by whether he can execute the current offense. Texas Tech has to measure what the current offense can become with him in it.</p>
+<h3>Hammond makes the decision more delicate</h3>
+<p>Hammond's standing matters because Castellanos isn't entering an empty room. Texas Tech already has a quarterback who leads the group, so the staff isn't choosing between a known starter and no answer. It is deciding how much of the offense belongs to the quarterback at the front of the room and how much flexibility the newcomer deserves.</p>
+<p>There are two bad ways to handle that. Texas Tech can preserve the existing structure so completely that Castellanos becomes an emergency name on a depth chart. Or it can reshape too much before Castellanos has established that the new version works, creating uncertainty where the program previously had a plan.</p>
+<p>The useful answer lives in the football, not the announcement. If Castellanos's presence gives Texas Tech a credible way to add a quarterback run without sacrificing its passing answers, he becomes more than insurance. If his role requires a separate offense that the staff only trusts in isolated situations, the room starts moving toward controversy because the roster will contain two different ideas about how the position should be played.</p>
+<p>Texas Tech has not announced Castellanos's eligibility, his role, or whether Hammond will remain the starter. No public timetable or additional roster details have been provided. Those are not small omissions. They leave the most important football decision open: whether the staff sees Castellanos as a player to fit into the offense or a reason to alter it.</p>
+<p>Texas Tech should adapt enough to use Castellanos's running threat, but not so much that it abandons the quarterback who currently leads the room. The Red Raiders need one offense with enough flexibility for both possibilities, not two separate systems competing for Saturday snaps.</p>
+<p>The next public checkpoint is Texas Tech's official decision on the quarterback room. No date has been announced, so there is no result to grade yet in The Ledger. When that decision arrives, the evidence will be whether Castellanos receives a real part of the offense or only a backup label.</p>
+<p>Read the Texas Tech team page and log your quarterback prediction in The Ledger.</p></div>
+  <aside class="review">
+    <b>For the review</b>
+    <p>Autonomous lane, staff byline, first person dialed to zero. Descriptive title (claim, claim, claim). Claim inside 150 words, mechanism over adjective, a test close with a date, one flywheel action.</p>
+    <p class="gate">Drafted live through the pipeline in 77s; passed every gate: language law, verbatim quotes, fact-check. Not published.</p>
+  </aside>
+</article>
+
+<article id="p3" class="piece house">
+  <header>
+    <div class="kick"><span class="lane">House analysis</span><span class="n">3 of 12</span></div>
+    <h2>Alabama Loses Jeremiah Beaman to a Torn ACL for 2026, Removing a 301-Pound Defensive Lineman and Forcing Early Rotation Decisions</h2>
+    <p class="dek">Beaman was expected to enter his third year after starting Alabama’s 2025 opener against Florida State. His second season-ending ACL injury in two years leaves the Crimson Tide with a defensive line snap plan that must be rebuilt before the season begins.</p>
+    <p class="by">The Pate State Staff · 733 words · Type · TI-05 · Alabama loses DL Jeremiah Beaman for 2026 season to torn ACL · Architecture · magazine-feature</p>
+  </header>
+  <div class="body"><p>Jeremiah Beaman's second Alabama season ended before it began.</p>
+<p>Kalen DeBoer confirmed Monday that Beaman injured his knee during Sunday practice. Further testing found a torn ACL in his left knee, and Beaman underwent surgery Tuesday at UAB St. Vincent’s with Dr. Lyle Cain performing the procedure. He is expected to miss the entire 2026 season.</p>
+<p>The Birmingham native is 6-foot-4 and 301 pounds. He started Alabama’s 2025 opener against Florida State, then suffered a season-ending ACL injury in practice the following week. This is now his second season-ending ACL injury in two years.</p>
+<p>That timeline matters because Beaman never got the ordinary stretch of Saturdays that turns a young defensive lineman into a dependable part of a rotation. Alabama had already seen enough to start him in an opener. It has not seen enough of him over a full season to know what his workload, stamina, and late-season role would have become.</p>
+<h3>The defensive line has lost more than one name</h3>
+<p>A 301-pound lineman affects how a defense parcels out snaps. He can occupy space inside, absorb double teams, and allow the rest of the front to play with fresher legs. Beaman's absence does not automatically tell Alabama who replaces him. It tells the staff that one expected part of the weekly distribution is gone before the first game.</p>
+<p>The available reporting does not identify a confirmed replacement or provide a new depth chart. That matters. Naming a substitute now would turn an open roster question into a fact that has not been established.</p>
+<p>Alabama will have to decide whether the answer comes from a player already prepared for a larger role, a different combination of bodies, or a rotation that changes from opponent to opponent. Those choices will show up in ordinary downs before they show up in any season summary. Who handles first and second down inside. Who remains available when the game reaches the fourth quarter. Who can stay on the field without forcing the defense to protect the replacement.</p>
+<h3>Two injuries have changed the evaluation</h3>
+<p>Beaman's first ACL injury came after he started the Florida State opener in 2025. The new injury came during Sunday practice, before he could build on that return. The football cost is immediate, but the evaluation problem is longer lasting.</p>
+<p>Alabama now has to judge its defensive line without the player who was supposed to supply evidence about his own development. Coaches cannot evaluate how Beaman would have handled a full schedule, how his snaps might have changed against different fronts, or whether his 2025 starting role would have expanded. Those answers are unavailable because the season is unavailable to him.</p>
+<p>That is a difficult roster problem without making it a verdict on the entire defense. Alabama still has time before September to establish the order behind him. It simply has less time to experiment with the expectation that Beaman would stabilize part of the rotation.</p>
+<h3>Alabama’s early practices now carry more weight</h3>
+<p>The next useful information will come from personnel decisions, not broad assurances. A new starter would show that one player has earned the staff’s trust quickly. A deeper rotation would show Alabama prefers to divide Beaman’s work rather than hand it to one replacement. Neither choice should be treated as settled until the program identifies it.</p>
+<p>Beaman’s absence also makes communication between the defensive line and the linebackers more important. A front can survive one missing body more easily when the remaining players know their assignments, play with consistent pad level, and avoid creating clean running lanes while chasing fresh pass-rush snaps. Those details are not visible in a preseason roster graphic. They appear when the offense runs the same concept twice and the defense handles it correctly the second time.</p>
+<p>The staff does not need a dramatic answer. It needs a group that can make the same decision repeatedly, through the opening month, without asking one unproven player to solve every down Beaman would have played.</p>
+<p>Alabama’s defensive line will be judged by how well it distributes Beaman’s missing snaps before anyone can judge the replacement by name.</p>
+<p>By Alabama’s September 2026 opener, the depth chart and the first rotation should show whether the unit found a dependable way to divide that work. That is the grading point for this piece.</p>
+<p>Use the Alabama team page to track the updated defensive line roles and roster changes.</p></div>
+  <aside class="review">
+    <b>For the review</b>
+    <p>Autonomous lane, staff byline, first person dialed to zero. Descriptive title (claim, claim, claim). Claim inside 150 words, mechanism over adjective, a test close with a date, one flywheel action.</p>
+    <p class="gate">Drafted live through the pipeline in 81s; passed every gate: language law, verbatim quotes, fact-check. Not published.</p>
+  </aside>
+</article>
+
+<article id="p4" class="piece house">
+  <header>
+    <div class="kick"><span class="lane">House analysis</span><span class="n">4 of 12</span></div>
+    <h2>Florida Football Under Jon Sumrall: Five Questions About DJ Lagway, Defensive Identity, Transfers, Discipline, and September</h2>
+    <p class="dek">Jon Sumrall inherits a Florida roster assembled for a different staff and a different set of answers. The Gators’ first season under him will turn on whether those answers can be rebuilt before the calendar starts charging interest.</p>
+    <p class="by">The Pate State Staff · 1421 words · Type · PS-05 · Florida's biggest questions entering Jon Sumrall's first season · Architecture · magazine-feature</p>
+  </header>
+  <div class="body"><p>A new coach gets introduced with a handshake, a press conference, and several months of people telling him the roster is talented. Then September arrives and asks whether the roster fits what he wants to run.</p>
+<p>Jon Sumrall’s first Florida season begins in that space. The Gators are changing leadership, and the roster was built around the previous staff’s plans. Nobody outside the building can responsibly name the depth-chart answers yet. The useful way to judge the transition is more specific: five questions, five fall checkpoints, and five places where the football will tell us whether Florida is settling or still searching.</p>
+<h3>1. Can DJ Lagway play the position Sumrall needs</h3>
+<p>Quarterback fit comes before quarterback talent. Florida needs to determine whether DJ Lagway’s best answers match the demands Sumrall places on the offense, especially when a defense changes the picture after the snap.</p>
+<p>That means more than counting strong throws in warmups. It means seeing whether Lagway gets the ball out on time when the first read is covered, whether he protects the offense on early downs, and whether his feet keep the protection problem from becoming the whole afternoon. A quarterback can possess every attractive trait in the catalog and still make an offense work too hard if the decisions arrive late. &gt; "DJ Lagway will ball out in 2026. Baylor wins the Big 12 and DJ Lagway wins the Heisman. Okay, well, that's a 10. That's a 10."</p>
+<p>Pate has already put a loud prediction on Lagway’s 2026 season. Sumrall does not need Lagway to perform a prediction. He needs him to make the offense predictable for his own teammates and difficult for the defense.</p>
+<p>The first checkpoint comes in Florida’s opening September game. By the end of September, the useful evidence will be third-down decisions, red-zone possessions, and how often the offense stays on schedule after the defense removes the first option. If those possessions are clean, the transition has a quarterback to build around. If they are chaotic, every other offensive decision gets harder.</p>
+<h3>2. What will Florida’s defense be known for</h3>
+<p>A new staff does not need a slogan. It needs eleven players making the same decision quickly.</p>
+<p>Florida’s defensive identity will show up in ordinary snaps. Safeties will communicate a coverage adjustment before the snap. Linebackers will pass routes across the formation without leaving space behind them. The front will know who owns the quarterback when pressure changes late. Those details decide whether a defense plays fast or spends the afternoon correcting itself.</p>
+<p>Sumrall inherited players who learned football through another staff’s language. The issue is not whether those players are capable. The issue is how much of their old training transfers when the calls, leverage points, and run fits change.</p>
+<p>The first September games should reveal the direction. By mid-October, Florida should have a recognizable answer on third down. Does the defense force quarterbacks to hold the ball, or does it need pressure to cover for confusion? Does it tackle well enough to finish ordinary plays, or does one missed fit turn a short gain into a drive? Those are observable traits, not preseason branding.</p>
+<p>The Gators can survive a defense that is still growing. They cannot survive one that makes the offense defend short fields every week.</p>
+<h3>3. Can the transfers become teammates before they become names</h3>
+<p>Transfer additions arrive with résumés. They become useful when the left guard knows how the center will handle a stunt, when a safety understands the corner’s help, and when a receiver adjusts his route without waiting for the sideline to explain the picture.</p>
+<p>That learning happens under speed. A player can know the playbook and still be late to the right spot because he has not yet learned how a new teammate communicates under pressure. Florida’s roster transition makes that timing especially important. Sumrall is not simply adding players to an established structure. He is asking inherited players and newcomers to form one football vocabulary while the season is already counting.</p>
+<p>The first September checkpoint should be simple: are new pieces helping Florida play faster, or are they creating extra hesitation around them? By the end of October, the evidence should be visible in substitution clarity, protection communication, and third-and-medium execution. If the same errors keep appearing with different players involved, the problem belongs to the structure around the unit, not one kid.</p>
+<p>This is where talent gets converted into football. Until then, it is just a promising list of names.</p>
+<h3>4. Does discipline become part of the program’s daily life</h3>
+<p>Discipline is not a speech delivered after a penalty. It is whether players line up correctly when tired, finish a play without giving away fifteen yards, and understand the difference between aggression and freelancing.</p>
+<p>For a first-year staff, that standard has to survive the moments when the game becomes uncomfortable. A false start after a long drive, a late hit after a stop, or a missed assignment following a substitution tells us more than a clean opening series. Those are the snaps where a team reveals whether it knows what it is doing or is relying on adrenaline.</p>
+<p>Florida’s first meaningful read on this should come during the opening month, when opponents have enough film to test communication and enough confidence to make the Gators play through mistakes. A September penalty count alone will not settle the matter. The better measure is whether errors repeat in the same situations and whether the next possession shows a correction.</p>
+<p>By the middle of October, discipline should look less like a coach’s demand and more like a player’s default. If Florida keeps losing downs to alignment errors, procedure penalties, and emotional decisions, the transition is not smooth no matter how attractive the roster looks.</p>
+<p>Talent gives a team options. Discipline keeps those options available on third down.</p>
+<h3>5. How much time does the schedule give the transition</h3>
+<p>The schedule is not merely a list of opponents. It decides how long Florida can learn in public before a difficult game turns every unfinished answer into a national conversation.</p>
+<p>The early tests matter because they stress different parts of the change. One game may ask whether Lagway handles pressure. Another may expose communication in the secondary. A road setting can turn protection checks into a problem before the ball is snapped. A physical opponent can tell us whether Florida’s front can hold its gaps when the offense is not generating easy possessions.</p>
+<p>There is no supplied game-by-game calendar here to dress up with invented certainty, so the dates should remain honest. Kickoff arrives in early September. The first September stretch will show whether the new language travels from practice to Saturday. The end of September should reveal whether the staff is correcting recurring problems or merely surviving them. Mid-October is the point at which a team should begin looking like itself, even if the record has not answered every question.</p>
+<p>Florida does not need to be finished by the first Saturday. It does need to be recognizable by October. If the same protection confusion, coverage busts, substitution mistakes, or discipline errors survive into that window, the schedule has stopped giving the transition room to grow.</p>
+<h3>A Florida season that can be read in real time</h3>
+<p>Sumrall’s first year will not be judged by one preseason impression. It will be judged by whether the Gators improve in the exact places that change first exposes: quarterback timing, defensive communication, newcomer coordination, daily discipline, and performance when the schedule applies pressure.</p>
+<p>Pate has Florida in a broader preseason conversation because the roster contains talent. That makes the transition more consequential, not less. A talented roster can give a new staff enough answers to win early. It can also hide poor fit until the opponent finds the weakest communication point.</p>
+<p>Florida’s direction should be clear by mid-October. If Lagway is on time, the defense is communicating, transfers are playing without hesitation, and penalties are shrinking in the situations that matter, Sumrall has made the change functional. If those problems remain connected across units, the Gators are still carrying the previous structure into the new era.</p>
+<p>Florida’s first season under Jon Sumrall will turn on how quickly the roster becomes one football team, especially in protection, defensive communication, and situational discipline.</p>
+<p>The Ledger checkpoint is mid-October 2026. Grade the five answers there against the opening-month tape, not against August optimism. Then take the Florida transition to the Citizen Pulse and log which answer citizens expect to settle first.</p></div>
+  <aside class="review">
+    <b>For the review</b>
+    <p>Autonomous lane, staff byline, first person dialed to zero. Descriptive title (claim, claim, claim). Claim inside 150 words, mechanism over adjective, a test close with a date, one flywheel action.</p>
+    <p class="gate">Drafted live through the pipeline in 117s; passed every gate: language law, verbatim quotes, fact-check. Not published.</p>
+  </aside>
+</article>
+
+<article id="p5" class="piece show">
+  <header>
+    <div class="kick"><span class="lane">Show-derived column</span><span class="n">5 of 12</span></div>
+    <h2>Josh Pate's Revised 2026 Predictions: Clemson Rises, Texas Tech Takes the Big 12, and Miami Wins the National Championship</h2>
+    <p class="dek">Pate changed several of his conference and playoff picks after August camp reports, injury concerns, and conversations around the sport. Notre Dame remains his No. 1 seed, but Miami's improved standing now carries all the way to a title-game victory over Oregon.</p>
+    <p class="by">The Pate State Staff · 977 words · Episode · Final 2026 CFP &amp;amp; Conference Title Predictions - Josh Pate's College Football Show · Series · poll-day</p>
+  </header>
+  <div class="body"><p>A month ago, Josh Pate thought the bracket was finished. Then August supplied camp reports, injury concerns, and enough new information to make him reopen the whole thing before a single game had started.</p>
+<p>The biggest change came at the top. Pate kept Notre Dame as the No. 1 overall seed, but he moved Miami from a strong ACC team to the national champion. The conference picks changed in smaller places first, and those changes assembled the final bracket one decision at a time.</p>
+<h3>Clemson changes the ACC picture</h3>
+<p>Pate began with Clemson, a team he had not previously placed at the center of the ACC race. His view shifted because he liked the team's internal dynamic and thought the public had moved too far in the other direction.</p>
+<blockquote class="q"><p>I have either willingly or through force been talked into Clemson being a little bit better slash a lot better than what most of America expects from them.</p><cite>Josh Pate on the show · <a href="https://www.youtube.com/watch?v=3f58dSytoSA&t=65s">00:01:05 ▶</a></cite></blockquote>
+<p>That belief matters because Clemson opens against LSU, which Pate described as a healthy favorite. A Clemson win would change the feel of the Week 5 meeting with Miami before the season had settled into its normal rhythm. A loss could give Dabo Swinney an immediate us-against-the-world argument, but Pate still projected Miami to beat Clemson twice, once in the regular season and again in the ACC Championship Game.</p>
+<blockquote class="q"><p>Don't let Clemson win that game. Don't do it because if Clemson wins that game, Miami at Clemson in week five becomes a huge marquee spotlight game out of the blue.</p><cite>Josh Pate on the show · <a href="https://www.youtube.com/watch?v=3f58dSytoSA&t=155s">00:02:35 ▶</a></cite></blockquote>
+<p>Pate ultimately kept Miami as the ACC champion. In his bracket, the Hurricanes lose only to Notre Dame during the regular season, then remain strong enough elsewhere to earn the No. 4 seed and a first-round bye.</p>
+<h3>The picks that stayed put</h3>
+<p>The SEC and Big Ten required no revision. Pate retained Georgia over Texas in the SEC Championship Game and projected Georgia, Texas, and Alabama to finish the regular season at 10-2. He also kept Ohio State over Indiana in the Big Ten title game, with the rematch moving from Bloomington to Indianapolis.</p>
+<blockquote class="q"><p>Until further notice, Texas is incapable of beating Georgia. And so, I will take Georgia over Texas like I did a month ago.</p><cite>Josh Pate on the show · <a href="https://www.youtube.com/watch?v=3f58dSytoSA&t=219s">00:03:39 ▶</a></cite></blockquote>
+<p>Those choices put Georgia at No. 3 and Ohio State at No. 2 in the playoff field. Texas became the No. 7 seed, while Indiana fell to No. 5 as the Big Ten runner-up. Oregon occupied No. 6 as another projected one-loss team.</p>
+<h3>Texas Tech takes the opening</h3>
+<p>The Big 12 supplied the clearest conference change. Pate had previously selected Brigham Young over Texas Tech, even while acknowledging that picking anyone other than Texas Tech required a bold argument. Over the next month, his view of Texas Tech's defense improved, especially its depth and overall athletic quality.</p>
+<blockquote class="q"><p>I feel good enough about Will Hammond and what he will eventually become that I am going to shift here and I will take Texas Tech to win the Big 12 over Brigham Young.</p><cite>Josh Pate on the show · <a href="https://www.youtube.com/watch?v=3f58dSytoSA&t=299s">00:04:59 ▶</a></cite></blockquote>
+<p>Pate did not project an undefeated regular season for Texas Tech. He did project a record good enough to reach Arlington, where he expected the defense to decide the championship. His example was a 13-9 kind of game, the sort of afternoon where the defense can win without asking the offense to be perfect.</p>
+<p>That choice gave Texas Tech the No. 10 seed as a one-loss Big 12 champion. BYU moved outside the title-game pick but remained part of the wider playoff conversation in the disaster scenario Pate introduced later.</p>
+<h3>The bracket turns on Miami</h3>
+<p>Notre Dame stayed unbeaten in the projection and earned the top seed. Alabama entered at No. 8, USC at No. 9 behind Pate's continued belief in Lincoln Riley, Oklahoma at No. 11 with three regular-season losses, and Boise State at No. 12 as the Group of Six representative.</p>
+<p>The opening round sent Alabama past USC, Indiana past Boise State, Texas past Texas Tech in Austin, and Oregon past Oklahoma. The second round then produced Notre Dame against Alabama, Miami against Indiana, Texas against Ohio State, and Oregon against Georgia. Pate selected Notre Dame, Miami, Texas, and Oregon to reach the semifinal.</p>
+<p class="embed">▶ Watch the segment · <a href="https://www.youtube.com/watch?v=3f58dSytoSA&t=873s">00:14:33</a></p>
+<p>At that point, the change from a month earlier became decisive. Pate's belief in Notre Dame did not weaken. His rising opinion of Miami simply moved the Hurricanes past the Irish in the national title argument. Miami then faced Oregon, creating a championship matchup between Mario Cristobal and the program he previously led.</p>
+<p>[QUOTE:00:14:33]Ladies and gentlemen, I am picking the Miami Hurricanes to win the national championship.[/QUOTE]</p>
+<p>Miami is Pate's champion because the new information around the Hurricanes raised his view of the team enough to alter the final game, not because Notre Dame fell apart in his projection. That distinction explains why the bracket changed without changing its No. 1 seed.</p>
+<p>The bracket also left room for disorder. Pate described a path in which Texas Tech loses the Big 12 title game to BYU, Miami loses the ACC title game to Clemson, Penn State goes 11-1 before losing the Big Ten title game, and nine teams compete for the final three playoff spots. That picture would create a committee argument without changing his support for a 12-team field.</p>
+<p>The revised prediction is Miami over Oregon for the national championship, with Notre Dame still first in the seeding order. The first receipt arrives in Week 1, when Clemson visits LSU. If Clemson performs well against a heavily favored opponent, Pate's new ACC view gains an early piece of evidence. If LSU controls the game, Miami's path still runs through the Week 5 meeting with Clemson and the ACC title game.</p>
+<p>Cast a Citizen Pulse ballot on Miami's title chances, then log the pick in The Ledger before the season begins.</p></div>
+  <aside class="review">
+    <b>For the review</b>
+    <p>Josh's argument reported by the house: third person, 2–4 verbatim timestamped quote blocks, his byline never auto-applied (Constitution §3). Facts only from the tape.</p>
+    <p class="gate">Drafted live through the pipeline in 21s; passed every gate: language law, verbatim quotes, fact-check. Not published.</p>
+  </aside>
+</article>
+
+<article id="p6" class="piece show">
+  <header>
+    <div class="kick"><span class="lane">Show-derived column</span><span class="n">6 of 12</span></div>
+    <h2>Josh Pate's 2026 Top 10 Games: Miami at Notre Dame Leads a List Built on Rivalry, Setting, and Stakes</h2>
+    <p class="dek">The list is not a ranking of the season's most important games. It is a guide to the ten places, matchups, and Saturdays that could make a first-time fan understand college football in person, from a whiteout at Penn State to a new chapter in Indiana.</p>
+    <p class="by">The Pate State Staff · 924 words · Episode · Biggest Games Of The Season...TOP 10 - Josh Pate's College Football Show · Series · sit-down</p>
+  </header>
+  <div class="body"><p class="embed">▶ Watch the segment · <a href="https://www.youtube.com/watch?v=seRM0BbQgVM&t=750s">00:12:30</a></p>
+<p>Josh Pate's list of the 10 games to attend in 2026 answers a different question than a standard schedule ranking. He isn't sorting games by playoff impact alone. He is choosing where to take someone who has barely seen college football, then asking which combination of rivalry, setting, history, and football stakes could make the sport understandable before the first quarter ends.</p>
+<p>[QUOTE:00:12:22]The number one game in the country that I'd want to take anyone to this year, though, is Miami at Notre Dame.[/QUOTE]</p>
+<h3>The game that carries the whole sport</h3>
+<p>Miami at Notre Dame in Week 10 gets the top spot because the matchup works on every level at once. Notre Dame is bringing the memory of a national championship appearance, Miami is bringing its own recent championship-stage history, and the return trip to South Bend arrives late enough for the season to have weight. Pate expects a prime-time game in temperatures that could be in the 40s at kickoff, but he doesn't treat the cold as a one-sided advantage. Miami's late-season trips to Virginia Tech and Pittsburgh have already changed that assumption.</p>
+<p>The contrast is part of the ticket. Notre Dame offers the Golden Dome, the campus, and the touchdown statue. Miami offers a practice field where graduate assistants have reportedly had to chase iguanas away before practice.</p>
+<blockquote class="q"><p>Do you people understand that they have to send grad assistants out on the practice field to chase iguanas away sometimes before Miami practices?</p><cite>Josh Pate on the show · <a href="https://www.youtube.com/watch?v=seRM0BbQgVM&t=862s">00:14:22 ▶</a></cite></blockquote>
+<p>That detail works because it is more than a joke. It gives a first-time fan two football cultures that can be recognized before anyone explains a coverage shell or a third down. The game still carries playoff consequences, but the setting makes the argument visible.</p>
+<h3>The Saturdays that already come with a story</h3>
+<p>LSU at Ole Miss in Week 3 ranks second because the buildup does not require a graduate seminar in the sport. Both programs see themselves as playoff and SEC contenders, and Pate connects the game to what happened the previous December. That combination gives Ole Miss a night that could become the biggest in school history.</p>
+<blockquote class="q"><p>I don't remember a bigger game in Old Miss history.</p><cite>Josh Pate on the show · <a href="https://www.youtube.com/watch?v=seRM0BbQgVM&t=709s">00:11:49 ▶</a></cite></blockquote>
+<p>The game could feel enormous even if the teams arrive with different records or unresolved questions. LSU could look like a top-five team, or it could already be trying to repair a season. Ole Miss still gets Lane Kiffin's LSU in Oxford under the lights, and that is enough atmosphere to carry a newcomer through the explanation.</p>
+<p>The same logic puts Georgia at Alabama fourth. The recent meetings have been decided late, Alabama won both regular-season matchups, and Kirby Smart is 0-2 against Nick Saban in regular-season games before beating Alabama in last year's SEC Championship Game. That history gives the October meeting a personal edge without requiring a traditional rivalry label.</p>
+<blockquote class="q"><p>I think this has been the most important rivalry in the SEC.</p><cite>Josh Pate on the show · <a href="https://www.youtube.com/watch?v=seRM0BbQgVM&t=517s">00:08:37 ▶</a></cite></blockquote>
+<h3>New history and familiar electricity</h3>
+<p>Ohio State at Indiana in Week 7 may have the most room to change what a stadium means. Pate expects Indiana to be undefeated when Ohio State arrives on October 17, while Ohio State will already have traveled to Texas and Iowa and hosted Illinois. If Indiana holds up its side of that setup, the Hoosiers won't be borrowing a big-game identity for the afternoon. They will be writing one in real time.</p>
+<p>Oregon at Ohio State in Week 10 carries a different kind of pressure. The teams played a memorable game in Eugene two years ago, and this return meeting could either be a top-three matchup or a must-win game for one or both teams. Oregon will have already played at USC, while Ohio State faces what Pate calls the toughest schedule in the league. The environment is obvious. The record each team brings into it will decide how heavy the afternoon feels.</p>
+<p>The Red River Shootout, as Pate calls it, stays seventh despite the later 2:30 Central kickoff. Texas and Oklahoma bring the State Fair, the Cotton Bowl, metal bleachers, and a rivalry that makes the football feel inseparable from the place. USC at Penn State, also in Week 6, offers a different spectacle: the official whiteout, Matt Campbell's first experience with it, and an early-October setting in central Pennsylvania with falling temperatures and changing leaves.</p>
+<blockquote class="q"><p>I think it's become my favorite rivalry game in college football.</p><cite>Josh Pate on the show · <a href="https://www.youtube.com/watch?v=seRM0BbQgVM&t=238s">00:03:58 ▶</a></cite></blockquote>
+<p>That leaves Ohio State at Texas fifth, Alabama at Tennessee 10th, and the rest of the list's central idea intact. Texas and Ohio State bring two top-five teams and prime-time football in Week 2. Alabama and Tennessee bring the third Saturday in October, a rivalry Tennessee has won in its own stadium the last two times. Neither game needs help from a slogan.</p>
+<p>The list works because its order is personal without being random. Pate is choosing the game that teaches a newcomer something: a rivalry can outlive a lopsided decade, a stadium can become history while you are sitting in it, and a football game can matter because of what the teams carry into the building.</p>
+<p>The answer will be visible on the Saturdays themselves. On October 17, Indiana will show whether its new home-stage identity can survive Ohio State. In Week 10, Miami at Notre Dame will show whether the sport's most complete visitor experience also produces the season's most consequential atmosphere. Citizens can compare Pate's ten selections with their own list, then vote in Citizen Pulse and make the Pick'Em choice before the games arrive.</p></div>
+  <aside class="review">
+    <b>For the review</b>
+    <p>Josh's argument reported by the house: third person, 2–4 verbatim timestamped quote blocks, his byline never auto-applied (Constitution §3). Facts only from the tape.</p>
+    <p class="gate">Drafted live through the pipeline in 21s; passed every gate: language law, verbatim quotes, fact-check. Not published.</p>
+  </aside>
+</article>
+
+<article id="p7" class="piece wire">
+  <header>
+    <div class="kick"><span class="lane">The Wire</span><span class="n">7 of 12</span></div>
+    <h2>Thomas Castellanos Reportedly Commits to Texas Tech for a Fifth College Season</h2>
+    <p class="dek">The former Florida State, Boston College and UCF quarterback gives Texas Tech another experienced option at the position. His role, playing-time status and fit within the Red Raiders’ quarterback plans have not been announced.</p>
+    <p class="by">The Pate State Wire Desk · 640 words · Category · transfer · Status · reported · Impact · moderate (Adding a quarterback with experience at three previous programs changes the depth chart conversation, but Texas Tech has not assigned Castellanos a role.)</p>
+  </header>
+  <div class="body"><div class="nums"><div class="num crit"><b>5th</b><span>College season</span></div><div class="num"><b>3</b><span>Previous programs</span></div></div>
+<h3>What Happened</h3><p>Thomas Castellanos is reported to have committed to Texas Tech for a fifth college season. The quarterback previously played at Florida State, Boston College and UCF, giving him a résumé built across multiple programs and offensive settings. Texas Tech has not announced whether Castellanos will enter the season as its starter, compete for the job or serve in another role. That distinction matters because a commitment adds a player to the room, not a finished depth chart. The Red Raiders’ quarterback plans remain unsettled in the information currently available. Castellanos’ move also extends a college career that has already included stops in three different programs, each with its own terminology, coaching structure and expectations.</p>
+<h3>Why This One Matters</h3><p>Quarterback experience has value, but it does not transfer cleanly from one campus to another. Castellanos has played college football in three places. That means Texas Tech is adding a player who has already handled the speed, preparation and pressure of the position, while also asking him to learn a new offense and build timing with a new group of teammates. The important detail is not simply the number of previous stops. It is how quickly he can make the new operation feel familiar. Quarterback play depends on shared answers: the passer identifying pressure, the center confirming the protection and the receiver breaking at the same time the ball comes out. Texas Tech gains experience in the room. The staff still has to determine whether that experience fits what the offense requires.</p>
+<h3>What Most People Are Missing</h3><div class="missing"><p>The fifth-season label changes the calendar around this addition. Texas Tech is not bringing in a quarterback for a long developmental runway. The staff has one season to decide how Castellanos fits, how much of the offense he can absorb and whether his experience improves the room immediately. That urgency can help a veteran compete, but it can also make the installation process unforgiving. Texas Tech has not identified the quarterback order, so the roster addition should not be treated as a starting announcement.</p></div>
+<aside class="pull"><p>Castellanos still has to establish timing with the receivers, communicate with the line and show that his decision speed fits the Red Raiders’ system.</p></aside>
+<h3>Where This Leaves the Roster</h3><p>Castellanos joins a Texas Tech quarterback room that now has another experienced player and another set of decisions for the staff. The immediate question is not whether he has played college football. It is whether his command of Texas Tech’s offense develops quickly enough to affect the opening lineup. A quarterback moving between programs must learn the language of the playbook, the protection rules and the timing of the passing game. Those details show up before the ball is snapped. They also show up when a defense changes the picture after the snap. The staff could use Castellanos as competition for the starting job, as experienced depth or in a role that becomes clearer during preseason work. None of those outcomes has been confirmed. The next roster update that names the quarterback order will matter more than the commitment itself.</p>
+
+
+
+<h3>The Pate State Read <span class="lbl">Desk analysis · Josh has not yet commented on today's news</span></h3><div class="read"><p>Texas Tech deserves credit for adding a quarterback who has already faced college-level competition at multiple programs. That experience can make the position room steadier, particularly when a defense changes its pressure look and the quarterback has to make a protection adjustment without losing the play. The limitation is just as clear. Experience at one school does not prove command of another school’s offense. Castellanos still has to establish timing with the receivers, communicate with the line and show that his decision speed fits the Red Raiders’ system. Until Texas Tech identifies his place in the competition, the move should be read as a meaningful addition to the room rather than a confirmed answer at quarterback. The first public depth-chart decision will tell fans whether the staff sees him as the solution, a challenger or insurance.</p></div>
+<h3>What to Watch Next</h3><ol class="watch"><li><b>The next Texas Tech quarterback update</b> Before the 2026 season begins, a depth-chart announcement or coach comment that names Castellanos’ role will separate a roster addition from a starting competition.</li><li><b>Preseason practice reports</b> The useful detail will be whether Castellanos is taking first-team repetitions and handling the full protection menu, not simply whether he is present in drills.</li><li><b>Texas Tech’s September opener</b> The opening game will show whether the offense changes its passing volume, protection plan or quarterback usage around Castellanos’ skill set.</li></ol>
+<p class="src">Sourcing: <a href="https://www.espn.com/college-football/story/_/id/49734136/veteran-qb-castellanos-commits-texas-tech-5th-season">ESPN</a></p></div>
+  <aside class="review">
+    <b>For the review</b>
+    <p>Wire dial (~50% porch): the news itself in the lede, official source or named reporter, no outlet in the upper page. Locked plain module titles. No first person, no predictions, no grades. The Read is house analysis; the receipt is Josh's only voice.</p>
+    <p class="gate">Drafted live through the pipeline in 71s; passed every gate: attribution, source narration, first person, language law, second-model fact-check, quality judge. Not published.</p>
+  </aside>
+</article>
+
+<article id="p8" class="piece wire">
+  <header>
+    <div class="kick"><span class="lane">The Wire</span><span class="n">8 of 12</span></div>
+    <h2>Four-Star 2028 Edge Antonio Thomas Jr. Plans Florida State Visit for Clemson Game</h2>
+    <p class="dek">Antonio Thomas Jr. is scheduled to be in Tallahassee on Halloween for Florida State’s matchup with Clemson. The visit gives the Seminoles an early opportunity to make an impression on a highly regarded edge prospect before his recruitment develops further.</p>
+    <p class="by">The Pate State Wire Desk · 583 words · Category · recruiting · Status · reported · Impact · moderate (The visit does not signal a commitment, but it gives Florida State an important home setting with a four-star edge prospect in the 2028 class.)</p>
+  </header>
+  <div class="body"><div class="nums"><div class="num crit"><b>2028</b><span>Recruiting class</span></div><div class="num"><b>4-star</b><span>Prospect rating</span></div><div class="num"><b>Oct. 31</b><span>Visit date</span></div></div>
+<h3>What Happened</h3><p>Antonio Thomas Jr. plans to visit Florida State on Oct. 31 for the Seminoles’ home matchup with Clemson, according to a report published Wednesday. Thomas is a four-star edge prospect in the 2028 recruiting class. The visit places him in Tallahassee for one of Florida State’s most prominent home games of the season and gives the program an early chance to build a relationship around an ACC rivalry setting. No commitment has been reported, and Thomas’ complete list of contenders has not been established. The visit itself is the news. The decision will come much later, after more evaluations, conversations and campus stops.</p>
+<h3>Why This One Matters</h3><p>Edge prospects matter because they can change how an offense calls a game. A defensive end who can threaten the quarterback without extra pressure allows the rest of the defense to keep more players in coverage. Florida State is getting an opportunity to show Thomas the people and plan behind that position, not just a collection of facilities and recruiting graphics. The Clemson game also gives the visit a natural football backdrop. Thomas can see how the Seminoles handle an ACC opponent, how the edge players are used and what kind of role the staff presents to him. For a prospect this early in the cycle, that introduction may matter more than any single ranking number.</p>
+<h3>What Most People Are Missing</h3><div class="missing"><p>The date matters less than the setting. A home game against Clemson gives Florida State a chance to connect Thomas with the program’s biggest regular-season environments while the recruitment is still taking shape. That does not make the Seminoles the favorite, and it does not turn a visit into a pledge. It does give the staff a real conversation starter: show the player how the edge position fits into the team’s defensive identity and what development could look like over time.</p></div>
+<aside class="pull"><p>Florida State deserves credit for getting a prospect of Thomas’ caliber onto its campus for Clemson.</p></aside>
+<h3>Where This Leaves the Roster</h3><p>Florida State’s immediate roster does not change because a 2028 prospect has scheduled a visit. The value is further down the calendar. Recruiting staffs build future edge groups by identifying players early, then giving those players enough reasons to return before a decision becomes urgent. Thomas’ visit gives Florida State one of those early checkpoints. The staff can introduce its coaches, defensive structure and academic plan, while Thomas gets a direct look at the program on a high-profile Saturday. The next step is not a commitment watch. It is whether the relationship produces another visit, a public narrowing of his options or continued contact into the next recruiting season. Until one of those events occurs, Florida State has a scheduled visit and nothing more.</p>
+
+
+
+<h3>The Pate State Read <span class="lbl">Desk analysis · Josh has not yet commented on today's news</span></h3><div class="read"><p>Florida State deserves credit for getting a prospect of Thomas’ caliber onto its campus for Clemson. The setting gives the Seminoles a better sales pitch than a quiet weekend because the player will see the program in front of an important home crowd and against a familiar conference opponent. The limit of the news is just as clear. A visit is an introduction, not a recruiting victory, especially in a class with several years remaining before signing day. Florida State’s staff now has to turn one weekend into a relationship that lasts beyond the scoreboard. The useful measure will be whether Thomas keeps Florida State in his plans after the visit, not how loudly the visit is celebrated beforehand.</p></div>
+<h3>What to Watch Next</h3><ol class="watch"><li><b>Oct. 31, 2026 visit</b> Thomas’ presence in Tallahassee will confirm that the scheduled visit took place. The useful details will be which coaches spend time with him and whether he receives a clear explanation of the edge position.</li><li><b>Post-visit recruiting activity</b> A return visit, a public reaction from Thomas or continued Florida State involvement would show that the weekend created momentum. None of those developments should be assumed before they occur.</li><li><b>Future school list</b> Any later list of finalists will show whether Florida State turned an early campus visit into a lasting place in the recruitment.</li></ol>
+<p class="src">Sourcing: <a href="https://sports.yahoo.com/articles/elite-edge-visit-florida-state-191515889.html">Yahoo Sports</a></p></div>
+  <aside class="review">
+    <b>For the review</b>
+    <p>Wire dial (~50% porch): the news itself in the lede, official source or named reporter, no outlet in the upper page. Locked plain module titles. No first person, no predictions, no grades. The Read is house analysis; the receipt is Josh's only voice.</p>
+    <p class="gate">Drafted live through the pipeline in 77s; passed every gate: attribution, source narration, first person, language law, second-model fact-check, quality judge. Not published.</p>
+  </aside>
+</article>
+
+<article id="p9" class="piece wire">
+  <header>
+    <div class="kick"><span class="lane">The Wire</span><span class="n">9 of 12</span></div>
+    <h2>Boise State’s First Pac-12 Home Game Tests Maddux Madsen Against Memphis</h2>
+    <p class="dek">Memphis visits Boise State on September 12 for the first meeting at Albertsons Stadium and the Broncos’ first Pac-12 home game. The matchup puts Boise State’s returning rushing strength against a quarterback record and receiver room that have not yet answered tougher opponents.</p>
+    <p class="by">The Pate State Wire Desk · 649 words · Category · general · Status · reported · Impact · significant (The game is Boise State’s home opener after Oregon and places its new conference identity alongside its unresolved passing-game questions.)</p>
+  </header>
+  <div class="body"><div class="nums"><div class="num crit"><b>0-4</b><span>Madsen vs. Power Four</span></div><div class="num"><b>1,125</b><span>Riley rushing yards</span></div><div class="num"><b>38</b><span>Points in 2025 losses</span></div></div>
+<h3>What Happened</h3><p>Memphis is scheduled to visit Boise State on September 12 for the second meeting between the programs and the first at Albertsons Stadium. The Tigers won the previous matchup, 35-32, after trailing 17-0 in 2023. Boise State will open its season at Oregon before hosting Memphis in its first Pac-12 home game. The Broncos went 9-5 last season and won their third consecutive Mountain West title before moving conferences. Spencer Danielson enters his fourth season with a 24-8 record and a conference championship in each of his first three seasons. Zak Hill was promoted to co-offensive coordinator after Matt Miller left for Washington State, while Terrance Brown joined the staff as co-defensive coordinator after Tyler Stockton departed for Michigan.</p>
+<h3>Why This One Matters</h3><p>Boise State returns the part of its offense that gave it the clearest identity last season. Junior Dylan Riley ran for 1,125 yards and 10 touchdowns, and sophomore Sire Gaines added 811 yards and nine scores. Both were named preseason first-team all-Pac-12 selections. Three starting offensive linemen return, including fifth-year guard Roger Carreon, another preseason all-conference pick. The left tackle position must be replaced after Kage Casey left for the Denver Broncos. That change matters because Boise State’s rushing output has tracked closely with its results under Madsen. In his career wins, the Broncos have averaged 238.9 rushing yards. In his losses, that figure has fallen to 116.7. Memphis has a clear way to make the quarterback carry more of the afternoon.</p>
+<h3>What Most People Are Missing</h3><div class="missing"><p>The backfield can be the best unit on the field and still leave Boise State vulnerable if the game moves away from the run. The Broncos lost their top four pass-catchers from last season. Junior Cameron Bates returns after 17 receptions for 302 yards and a touchdown, but the other prominent options are transfers whose roles in Boise’s offense have not been established. The 2025 losses show why that matters: Boise State scored 38 points across five defeats and failed to score in the second half in four of them. The passing room has to keep stalled drives from becoming the team’s identity against stronger opponents.</p></div>
+<aside class="pull"><p>Boise State owns the stronger returning foundation in the backfield and along most of the offensive line.</p></aside>
+<h3>What Changes Going Forward</h3><p>Boise State enters the Pac-12 as the preseason favorite after building its recent success in the Mountain West. That reputation is supported by Danielson’s record, the returning running backs, and a coaching staff that has retained most of its pieces. It is not fully supported by Madsen’s record outside conference play. He is 0-4 as a starter against Power Four teams, with two touchdowns and nine interceptions in those games. His completion rate also dropped from 62 percent in 2024 to 58 percent last season, when he missed three games with a lower-leg injury. Madsen did show a different version of himself against Memphis in 2023, completing 11 of 14 passes for 175 yards and two touchdowns as a redshirt freshman. The new meeting will show whether that performance was a useful preview or an isolated afternoon.</p>
+
+
+
+<h3>The Pate State Read <span class="lbl">Desk analysis · Josh has not yet commented on today's news</span></h3><div class="read"><p>Memphis deserves credit for taking this game into Boise, where the Broncos will be opening a new conference chapter in front of their home crowd. The Tigers also have recent evidence that this matchup can become uncomfortable, although a three-year-old comeback cannot decide the next meeting. Boise State owns the stronger returning foundation in the backfield and along most of the offensive line. The uncertainty sits at left tackle, at receiver, and in Madsen’s history against better competition. That combination gives the game real value for Boise State beyond the result. The Broncos need their familiar strengths to travel into the Pac-12, and Memphis is the first opponent positioned to ask whether those strengths can survive when the preferred running lanes disappear.</p></div>
+<h3>What to Watch Next</h3><ol class="watch"><li><b>September 5 at Oregon</b> Boise State’s opener will establish how the offense functions when it cannot rely on an early lead. The way the Broncos protect Madsen and sustain drives against Oregon will give the Memphis matchup more context than preseason labels can provide.</li><li><b>The left tackle replacement</b> The first home game will reveal whether Boise State can keep the new left side from disrupting its run game. Protection problems there would put more responsibility on Madsen and the unsettled receiver group.</li><li><b>The second half on September 12</b> Boise State’s 2025 losses repeatedly faded after halftime. A sustained third-quarter drive against Memphis would show that the offense can adjust when an opponent takes away its preferred running game.</li></ol>
+<p class="src">Sourcing: <a href="https://www.on3.com/sites/tiger-sports-report/news/inside-boise-state-ahead-of-memphis-week-two-matchup/">On3</a></p></div>
+  <aside class="review">
+    <b>For the review</b>
+    <p>Wire dial (~50% porch): the news itself in the lede, official source or named reporter, no outlet in the upper page. Locked plain module titles. No first person, no predictions, no grades. The Read is house analysis; the receipt is Josh's only voice.</p>
+    <p class="gate">Drafted live through the pipeline in 88s; passed every gate: attribution, source narration, first person, language law, second-model fact-check, quality judge. Not published.</p>
+  </aside>
+</article>
+
+<article id="p10" class="piece wire">
+  <header>
+    <div class="kick"><span class="lane">The Wire</span><span class="n">10 of 12</span></div>
+    <h2>Colorado’s 3-9 Projection Puts Deion Sanders’ Future Under More Pressure</h2>
+    <p class="dek">A second straight losing season would make Colorado’s roster overhaul harder to separate from the direction of the program. The forecast matters because Sanders has already been given time to produce both a sharp rise and a disappointing reset in Boulder.</p>
+    <p class="by">The Pate State Wire Desk · 713 words · Category · coaching · Status · reported · Impact · significant (Another losing season would intensify questions about Sanders’ record and whether the program’s repeated roster changes are producing lasting progress.)</p>
+  </header>
+  <div class="body"><div class="nums"><div class="num crit"><b>3-9</b><span>2026 projection</span></div><div class="num"><b>16-21</b><span>Sanders at Colorado</span></div><div class="num"><b>1</b><span>Bowl appearance</span></div></div>
+<h3>What Happened</h3><p>Colorado is projected to finish 3-9 in 2026, putting another losing season beside the question of Deion Sanders’ future as head coach. The forecast follows a 3-9 season in 2025 and arrives as Colorado tries to reshape its roster through another heavy transfer-portal effort. The prediction is not a school announcement, and Colorado has not announced any decision about Sanders’ job. It is an outside expectation attached to a program that has moved sharply in both directions since his arrival. Colorado went 4-8 in Sanders’ first season and then reached 9-4 in 2024 before last year’s slide. That history gives the projection more weight than a routine preseason lowball. It points directly at whether the program can turn another roster reset into a stable team.</p>
+<h3>Why This One Matters</h3><p>The pressure comes from the distance between the high point and the current record. Sanders has gone 16-21 at Colorado, with one bowl appearance, and the program has not yet built consecutive winning seasons under his direction. A 3-9 forecast would make the 2025 result look less like an isolated collapse and more like the latest entry in an unresolved pattern. Colorado’s transfer work creates an additional layer. New players can change a roster quickly, but they also have to become a functioning offensive line, a reliable protection unit, and a defense that communicates when the first plan breaks. Those answers do not arrive because a player entered the portal. They show up in September and October when opponents attack the weak spots repeatedly. That is why the projection reaches beyond a win total.</p>
+<h3>What Most People Are Missing</h3><div class="missing"><p>The number does not only measure Colorado’s expected record. It also measures how little room another rebuild may leave for patience. Sanders has already produced a 9-4 season, so the program knows a fast climb is possible. The harder part is making that climb durable after the roster changes again. A team can look improved in August and still lack the blocking, tackling, and third-down execution needed to carry that improvement through a conference schedule. The forecast puts those details at the center of the season. If Colorado is competitive early but cannot close games, the record may tell one story while the film tells another. The reverse would be true if the wins arrive without a clear improvement in how the roster functions.</p></div>
+<aside class="pull"><p>Sanders has gone 16-21 at Colorado, with one bowl appearance, and the program has not yet built consecutive winning seasons under his direction.</p></aside>
+<h3>What Changes Now</h3><p>The projection changes the way every early result will be read. A close loss will not automatically ease the pressure, and a win over a lower-rated opponent will not settle it. Colorado needs evidence that the roster work has improved the team’s weekly operation. That means fewer protection breakdowns, more dependable short-yardage offense, and a defense that can get off the field without relying on a turnover. Those are projections about what the team must show, not a confirmed depth chart or installed plan. Sanders’ first season at Colorado showed that a roster can change quickly. The 2024 season showed that the program can reach a bowl level. The next step is harder because the improvement has to survive opponents who know where Colorado is vulnerable. The pressure will rise fastest if the Buffaloes lose games in the same ways they lost them last year.</p>
+
+
+
+<h3>The Pate State Read <span class="lbl">Desk analysis · Josh has not yet commented on today's news</span></h3><div class="read"><p>Colorado deserves credit for trying to address a 3-9 season rather than treating it as a cosmetic problem. Sanders has used the transfer portal to reshape the roster, and that gives the Buffaloes a path to look different quickly. The concern is that change can solve one position while creating a communication problem across the entire unit. New linemen have to recognize the same fronts. New defensive backs have to pass routes off at the same speed. A quarterback and his receivers have to make the same decision when a defense changes after the snap. A 3-9 projection is therefore a warning about team function, not just talent. If Colorado looks more connected and more reliable in close games, the forecast will age badly. If the same breakdowns return, the forecast will look less like a preseason insult and more like a program judgment.</p></div>
+<h3>What to Watch Next</h3><ol class="watch"><li><b>August 26 projection</b> Treat the forecast as a baseline, not a verdict. Colorado’s first official availability and depth-chart information should show which parts of the transfer-heavy roster have firm roles and which remain unsettled.</li><li><b>Before the 2026 opener</b> Track whether the offensive line and quarterback operation appear settled enough to handle pressure. Early protection communication will say more than a single highlight play about whether the roster changes fit together.</li><li><b>First close game</b> The next one-score finish will provide a useful check on the forecast. Watch third down, red-zone possessions, and the final two drives. Those moments will show whether Colorado’s problems have changed or merely moved.</li><li><b>After the first month</b> Compare the team’s record with how it is losing or winning. A competitive month with cleaner execution would challenge the projection. Repeated protection, tackling, or late-game errors would strengthen it.</li></ol>
+<p class="src">Sourcing: <a href="https://sports.yahoo.com/articles/usa-today-sports-predicts-another-184221835.html">Yahoo Sports</a></p></div>
+  <aside class="review">
+    <b>For the review</b>
+    <p>Wire dial (~50% porch): the news itself in the lede, official source or named reporter, no outlet in the upper page. Locked plain module titles. No first person, no predictions, no grades. The Read is house analysis; the receipt is Josh's only voice.</p>
+    <p class="gate">Drafted live through the pipeline in 70s; passed every gate: attribution, source narration, first person, language law, second-model fact-check, quality judge. Not published.</p>
+  </aside>
+</article>
+
+<article id="p11" class="piece wire">
+  <header>
+    <div class="kick"><span class="lane">The Wire</span><span class="n">11 of 12</span></div>
+    <h2>South Carolina Adds Ethan Johnson to Reinforce Defensive Depth Behind Collier and Swain</h2>
+    <p class="dek">Defensive coordinator Clayton White said the Gamecocks wanted another usable body at a position where an absence could quickly change the rotation. Johnson first has to rebuild his conditioning after joining the program late in preseason camp.</p>
+    <p class="by">The Pate State Wire Desk · 499 words · Category · general · Status · reported · Impact · moderate (Johnson gives South Carolina another defensive option, but the staff has not announced his position, role, or playing-time plan.)</p>
+  </header>
+  <div class="body"><div class="nums"><div class="num"><b>2</b><span>Preseason scrimmages</span></div></div>
+<h3>What Happened</h3><p>South Carolina has added Ethan Johnson during preseason camp, defensive coordinator Clayton White said. White explained that the staff reviewed the roster and wanted more depth behind Judge Collier and Vicari Swain in case the defense needed another player. Johnson learned of the opportunity last week after a period of searching for work, then returned to training. White said Johnson will spend a week working on conditioning with the strength staff before taking on a full football workload. He described Johnson as smart, a good person, and highly regarded by people who previously knew him. South Carolina has not announced a defensive position or a playing-time role for Johnson.</p>
+<h3>Why This One Matters</h3><p>This move gives South Carolina protection at a spot where the first group can look fine until one absence changes the math. White said the players behind Collier and Swain are doing a good job. The staff still wanted another option because preseason depth is not the same thing as a dependable game rotation. Johnson's experience may help him learn the football, but he still has to join a defense that has spent the offseason building its calls and communication together. The value of the addition will be measured by whether he becomes part of that rotation, not by the decision to bring him in.</p>
+<h3>What Most People Are Missing</h3><div class="missing"><p>Johnson's arrival says more about how South Carolina is preparing for the season than about a change to its starting lineup. The staff is trying to address a possible shortage before it becomes an in-game problem. White also said the defense is building toward veteran-level consistency after two preseason scrimmages, which gives Johnson a standard to meet when he begins defensive work.</p></div>
+<aside class="pull"><p>South Carolina deserves credit for adding depth before an absence forces the staff to search for it.</p></aside>
+<h3>Next Man Up</h3><p>Johnson enters a defense that White said wants to operate like a veteran group. In the first preseason scrimmage, White said the opening five plays fell below the standard before the next 70 or so met it. He liked how the defense began the second scrimmage and said young players were given chances to make plays. Johnson now has to join that process without a confirmed role. His first defensive work will show how quickly he can handle the calls and fit beside the players already competing for snaps.</p>
+
+
+
+<h3>The Pate State Read <span class="lbl">Desk analysis · Josh has not yet commented on today's news</span></h3><div class="read"><p>South Carolina deserves credit for adding depth before an absence forces the staff to search for it. White's explanation was practical, not dramatic. The Gamecocks believe the current players behind Collier and Swain are doing their jobs, while still recognizing that a defense needs more than its preferred rotation over a full season. Johnson's late arrival limits what can be known today. Until he works with the unit, the addition is roster coverage rather than a solved personnel issue. Saturday's opener will provide the first public evidence of whether he is ready to enter the defensive rotation.</p></div>
+<h3>What to Watch Next</h3><ol class="watch"><li><b>Johnson's first defensive work</b> The next practice update should establish whether Johnson has moved into drills with the defense. Participation with the unit will say more than general praise about his background.</li><li><b>White's next availability</b> A position or defined responsibility from White would provide the first clear indication that Johnson has moved beyond general depth coverage.</li><li><b>Saturday's opener</b> Johnson's presence on defense, or his absence from the rotation, will show how quickly South Carolina believes he can contribute after joining camp.</li></ol>
+<p class="src">Sourcing: <a href="https://www.on3.com/teams/south-carolina-gamecocks/news/everything-south-carolina-dc-clayton-white-said-in-his-first-press-conference-of-2026-season/">On3</a></p></div>
+  <aside class="review">
+    <b>For the review</b>
+    <p>Wire dial (~50% porch): the news itself in the lede, official source or named reporter, no outlet in the upper page. Locked plain module titles. No first person, no predictions, no grades. The Read is house analysis; the receipt is Josh's only voice.</p>
+    <p class="gate">Drafted live through the pipeline in 59s; passed every gate: attribution, source narration, first person, language law, second-model fact-check, quality judge. Not published.</p>
+  </aside>
+</article>
+
+<article id="p12" class="piece wire">
+  <header>
+    <div class="kick"><span class="lane">The Wire</span><span class="n">12 of 12</span></div>
+    <h2>Oklahoma Projected to Finish 10-2 in 2026 With Texas Playoff Game in Forecast</h2>
+    <p class="dek">The forecast also places Oklahoma in a projected College Football Playoff game against Texas in Austin and sends Nebraska to a mid-tier bowl projection, though the two regular-season losses are unspecified.</p>
+    <p class="by">The Pate State Wire Desk · 115 words · Category · general · Status · reported · Impact · low (This is a preseason forecast, not an announced schedule result, depth-chart decision, or postseason outcome.)</p>
+  </header>
+  <div class="body"><div class="nums"><div class="num crit"><b>10-2</b><span>Projected record</span></div></div>
+<h3>What Happened</h3><p>Oklahoma is projected to finish 10-2 in 2026, according to a preseason forecast published Aug. 26. The same projection places the Sooners in a College Football Playoff game against Texas in Austin and includes Nebraska in a mid-tier bowl projection. Oklahoma's two projected regular-season losses are not identified. The forecast does not establish a depth chart or guarantee any postseason result. It provides an expectation for the Sooners' season and a possible postseason meeting with Texas, while placing Nebraska in a different bowl tier.</p>
+
+
+
+
+
+
+
+
+
+<p class="src">Sourcing: <a href="https://sports.yahoo.com/articles/usa-today-sports-predicts-oklahoma-200053868.html">Yahoo Sports</a></p></div>
+  <aside class="review">
+    <b>For the review</b>
+    <p>Wire dial (~50% porch): the news itself in the lede, official source or named reporter, no outlet in the upper page. Locked plain module titles. No first person, no predictions, no grades. The Read is house analysis; the receipt is Josh's only voice.</p>
+    <p class="gate">Drafted live through the pipeline in 87s; passed every gate: attribution, source narration, first person, language law, second-model fact-check, quality judge. Not published.</p>
+  </aside>
+</article>
+  </main>
+</div>

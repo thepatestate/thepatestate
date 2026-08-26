@@ -526,9 +526,10 @@ export function hasFirstPersonProse(text: string): boolean {
 export function narratesSourcing(text: string): boolean {
   return (
     /\b(the|this) (source material|available information|available report(ing|s)?)\b/i.test(text) ||
+    /\b(information|details?|reporting) available (here|to us|at this time)\b/i.test(text) ||
     /\bbased on (the|this) report\b/i.test(text) ||
     /\b(supplied|provided) (report|reporting|material|sources?|information)\b/i.test(text) ||
-    /\b(the )?(report|reporting|material|sources?|it) (does not|doesn'?t|did not|didn'?t) (provide|include|identify|establish|name|say|specify|offer|give)\b/i.test(text) ||
+    /\b(the )?(report|reporting|material|sources?|ranking|list|release|announcement|it) (does not|doesn'?t|did not|didn'?t) (provide|include|identify|establish|name|say|specify|offer|give)\b/i.test(text) ||
     /\bin the source(s| material)?\b/i.test(text) ||
     /\b(is|was|are|were|been|being|gets|got) (described|framed|characterized|listed|presented) as\b/i.test(text) ||
     /\b(the|this|that) report(ing)? (does not|doesn'?t|did not|didn'?t|never|also|only|further)\b/i.test(text) ||
@@ -613,8 +614,11 @@ export async function generateWireStory(
     const allProse = ["deck", "whatHappened", "whyBody", "missing", "section04Body", "chessboard", "readBody"]
       .map((k) => draft[k] ?? "").join("\n");
     const boiler = boilerplateViolations(allProse);
-    if (!headlineNamesOutlet(upper) && !hasAttributionOpener(draft.whatHappened ?? "") && !narratesSourcing(allProse) && !hasFirstPersonProse(allProse) && boiler.length === 0 && !/\*{2,}/.test(allProse)) break;
-    user = `${baseUser}\n\nYOUR PREVIOUS DRAFT VIOLATED the writing standard${boiler.length ? ` (gated language found: ${boiler.join("; ")})` : ""}. The desk NEVER speaks in first person — no "I," "my," or "we've" anywhere in prose (the desk has no self; Josh's voice exists only in the receipt module). Never name an outlet or use in-prose attribution in the deck or the opening section (official source or a NAMED individual reporter only; unconfirmed details are "reported to be…"). And NEVER narrate your own sourcing anywhere — no "the source material," "the available information," "is described as," "no names are provided," "per the report." Write what IS known directly, the way an analyst explains news to a friend; where something is unknown, say what we don't know yet in plain speech ("Washington hasn't said who") without pointing at documents. Never include censored profanity from a source quote ("a lot of good *** can happen") — trim the quote at a word boundary before the censored word, or paraphrase the sentiment without quoting. Never reuse the editorial documents' example sentences or people. Rewrite the full story.`;
+    // A full-source story filed as a brief is the writer under-treating the
+    // news (six of six review-pack stories came back at ~100 words, 2026-08-26).
+    const underTreated = !thin && !(draft.whyBody && draft.readBody);
+    if (!headlineNamesOutlet(upper) && !hasAttributionOpener(draft.whatHappened ?? "") && !narratesSourcing(allProse) && !hasFirstPersonProse(allProse) && boiler.length === 0 && !underTreated && !/\*{2,}/.test(allProse)) break;
+    user = `${baseUser}\n\nYOUR PREVIOUS DRAFT VIOLATED the writing standard${boiler.length ? ` (gated language found: ${boiler.join("; ")})` : ""}${underTreated ? " (you filed a brief on a full-source story: the sources support a full Wire story, so write whyBody, section04, readBody and watching, and missing, board, chessboard where earned, 600–1,100 words per 04 §5)" : ""}. The desk NEVER speaks in first person — no "I," "my," or "we've" anywhere in prose (the desk has no self; Josh's voice exists only in the receipt module). Never name an outlet or use in-prose attribution in the deck or the opening section (official source or a NAMED individual reporter only; unconfirmed details are "reported to be…"). And NEVER narrate your own sourcing anywhere — no "the source material," "the available information," "is described as," "no names are provided," "per the report." Write what IS known directly, the way an analyst explains news to a friend; where something is unknown, say what we don't know yet in plain speech ("Washington hasn't said who") without pointing at documents. Never include censored profanity from a source quote ("a lot of good *** can happen") — trim the quote at a word boundary before the censored word, or paraphrase the sentiment without quoting. Never reuse the editorial documents' example sentences or people. Rewrite the full story.`;
   }
   type StoryDraft = {
     headline: string; deck: string; verification: "confirmed" | "reported" | "developing";
@@ -654,12 +658,18 @@ export async function generateWireStory(
   const factCheck = async (c: string): Promise<{ verdict: string; detail: string }> => {
     const checkRes = await anthropic.messages.create({
       model: MODEL,
-      max_tokens: 512,
+      // A long `detail` truncated at 512 and crashed JSON.parse (2026-08-26).
+      max_tokens: 1024,
       output_config: { effort: "low", format: { type: "json_schema", schema: FACTCHECK_SCHEMA } },
       system: "You are an independent fact-check gate. You receive SOURCES and a DRAFT. Verdict 'contradicted' if any draft claim conflicts with the sources; 'unsupported' if any material factual claim (names, numbers, timelines, outcomes) does not appear in the sources; else 'pass'. Interpretation clearly labeled as analysis is allowed; invented facts are not. Output JSON only.",
       messages: [{ role: "user", content: `SOURCES:\n${job.sourceBlock}\n\nDRAFT:\n${c}` }],
     });
-    return JSON.parse(textOf(checkRes)) as { verdict: string; detail: string };
+    try {
+      return JSON.parse(textOf(checkRes)) as { verdict: string; detail: string };
+    } catch {
+      // An unreadable verdict is never a pass.
+      return { verdict: "unsupported", detail: "fact-check response unreadable" };
+    }
   };
 
   let { story, combined } = parseDraft(storyRaw);
