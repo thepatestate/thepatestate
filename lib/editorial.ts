@@ -54,6 +54,17 @@ export function exemplarLane(_product: EditorialProduct): keyof typeof EXEMPLAR_
   return "feature";
 }
 
+/** What a reader sees: markers become the furniture the site renders.
+ * Judges score this, never the raw markup. Exported for tests. */
+export function renderedForJudge(body: string): string {
+  return body
+    .replace(/\[EMBED:[\d:]+\]\s*/g, "")
+    .replace(/\[QUOTE:[\d:]+\]([\s\S]*?)\[\/QUOTE\]/g, (_m, q: string) => `“${q.trim()}” (Josh, on the show)`)
+    .replace(/\s*\[PULLQUOTE\]\s*/g, "\n\n")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+}
+
 export interface FanVerdict { legibility: number; enjoyment: number; joshVoice: number; score: number; notes: string; pass: boolean }
 
 /** The reader's judge (Isaac, 2026-08-26: "until articles are coming out at
@@ -82,7 +93,7 @@ enjoyment: did you want to keep reading, and were you glad you did? Did you lear
 joshVoice: does it sound like Josh Pate talking to you on the porch: first person, plain, confident, dry, complete sentences, verdict first, the football reason right behind it, respect for every fanbase, zero performance? Deduct for anonymous-journalist prose, third-person "Pate says," clipped shorthand, or sounding like an AI doing an impression.
 Calibration: 10 = you'd send it to a friend unprompted; 8.5 = you'd finish it and remember one line; 7 = fine, forgettable; 5 = you skimmed; 3 = you closed the tab.
 notes: 3-5 blunt sentences from the fan's chair: what bored you, what confused you, what you liked, and QUOTE the two sentences that most made it feel written by a machine. Output JSON only.`,
-      user: `HEADLINE: ${input.headline}\nDEK: ${input.dek ?? ""}\n\n${input.body}`,
+      user: `HEADLINE: ${input.headline}\nDEK: ${input.dek ?? ""}\n\n${renderedForJudge(input.body)}`,
     });
     const out = JSON.parse(text || "{}") as Partial<FanVerdict>;
     const legibility = out.legibility ?? 10, enjoyment = out.enjoyment ?? 10, joshVoice = out.joshVoice ?? 10;
@@ -161,7 +172,7 @@ export async function voiceMatch(
       schemaName: "voice_verdict",
       schema: { type: "object", properties: { score: { type: "number" }, notes: { type: "string" } }, required: ["score", "notes"], additionalProperties: false },
       system: `You are a voice-match judge. EXEMPLAR is an article written and approved by the site's owner. DRAFT is a new piece on a different subject that must read as if the same person wrote it. Score 1-10 on register match ONLY, never on facts, topic, or length: grammatical person and address (first person "I" to a "you" reader, or the desk's third person), sentence construction and the rhythm of lengths, where the short hammer sentence lands, how a fact and a verdict share a paragraph, how numbers carry credibility, how rare and where the humor is, how sections open and close, paragraph length, warmth versus distance. 10 = indistinguishable; 8 = the same writer on a different day; 6 = the same building, a different desk; 4 = a competent stranger; 2 = generated. Penalize hard: a different grammatical person than the exemplar; announced structure ("the honest read is", "the counterpoint is"); clipped shorthand the exemplar doesn't use; runs of same-length sentences; clever lines the exemplar wouldn't attempt; consultant vocabulary; every sentence auditioning for a pull quote. notes: 2-4 sentences naming the specific mismatches and QUOTING the draft's two or three most off-voice sentences so a rewrite can target them. Output JSON only.`,
-      user: `EXEMPLAR:\n${exemplarProse(EXEMPLAR_FOR_LANE[input.lane]).slice(0, 14000)}\n\nDRAFT:\n${input.draft}`,
+      user: `EXEMPLAR:\n${exemplarProse(EXEMPLAR_FOR_LANE[input.lane]).slice(0, 14000)}\n\nDRAFT:\n${renderedForJudge(input.draft)}`,
     });
     const out = JSON.parse(text || "{}") as { score?: number; notes?: string };
     const score = typeof out.score === "number" ? out.score : 10;
