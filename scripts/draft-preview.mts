@@ -23,7 +23,7 @@ loadDotEnvLocal();
 
 const { writeClient } = await import("../lib/sanity.ts");
 const { writeJSON, WRITER_PROVIDER } = await import("../lib/writer.ts");
-const { editorialSystem, readPrompt, VOICE_V4_PROMPT, BOILERPLATE_PROMPT, boilerplateViolations } = await import("../lib/editorial.ts");
+const { editorialSystem, readPrompt, BOILERPLATE_PROMPT, boilerplateViolations } = await import("../lib/editorial.ts");
 const { STORY_SCHEMA, fetchSourceText, headlineNamesOutlet, hasAttributionOpener, narratesSourcing, hasFirstPersonProse, selectCallout, cleanSectionTitle, isThinSource } = await import("../lib/wire.ts");
 const { createAdminClient, isAdminConfigured } = await import("../lib/supabase/admin.ts");
 
@@ -63,7 +63,7 @@ console.log(`writer: ${WRITER_PROVIDER}\nstory: ${row._id}\ngrounding: ${texts.f
 const system = editorialSystem("wire", readPrompt("wire-story.md"));
 const thin = isThinSource(sourceBlock);
 console.log(`thin source: ${thin} (brief mode ${thin ? "ON" : "off"})\n`);
-const user = `${VOICE_V4_PROMPT}\n\n${BOILERPLATE_PROMPT}${thin ? `\n\nSOURCE MATERIAL IS THIN (a few hundred words of reporting): file a BRIEF per the triage rule. Headline, a one-sentence deck, whatHappened at 80–120 words saying exactly what is known, impact, category, teams; every other field "" or []. Never expand a handful of facts into six sections; a short story that says only what is known is the correct answer (Wire §7).` : ""}\n\nSource cluster:\n${sourceBlock}`;
+const user = `${BOILERPLATE_PROMPT}${thin ? `\n\nSOURCE MATERIAL IS THIN (a few hundred words of reporting): file a BRIEF per the triage rule. Headline, a one-sentence deck, whatHappened at 80–120 words saying exactly what is known, impact, category, teams; every other field "" or []. Never expand a handful of facts into six sections; a short story that says only what is known is the correct answer (Wire §7).` : ""}\n\nSource cluster:\n${sourceBlock}`;
 const t0 = Date.now();
 const raw = await writeJSON({ system, user, schema: STORY_SCHEMA, schemaName: "wire_story", maxTokens: 8192 });
 const d = JSON.parse(raw) as Record<string, any>;
@@ -74,11 +74,11 @@ const wc = (s: string) => (s ?? "").split(/\s+/).filter(Boolean).length;
 console.log(`drafted in ${Math.round((Date.now() - t0) / 1000)}s — ${wc(prose)} prose words\n`);
 console.log(`HEADLINE: ${d.headline}\nDECK (${wc(d.deck)}w): ${d.deck}\nverification=${d.verification} impact=${d.impact} category=${d.category} teams=${JSON.stringify(d.teams)}\n`);
 const sections: [string, string, string][] = [
-  [cleanSectionTitle(d.openTitle) || "(default) What Happened", "whatHappened", d.whatHappened],
-  [cleanSectionTitle(d.whyTitle) || "(default) Why This One Matters", "whyBody", d.whyBody],
-  [cleanSectionTitle(d.missingTitle) || "(default) What Most People Are Missing", "missing", d.missing],
+  ["What Happened", "whatHappened", d.whatHappened],
+  ["Why This One Matters", "whyBody", d.whyBody],
+  ["What Most People Are Missing", "missing", d.missing],
   [cleanSectionTitle(d.section04Title) || "(default) What Changes Now", "section04Body", d.section04Body],
-  [cleanSectionTitle(d.chessboardTitle) || "(default) The Chessboard", "chessboard", d.chessboard],
+  ["The Chessboard", "chessboard", d.chessboard],
   ["The Pate State Read", "readBody", d.readBody],
 ];
 for (const [title, key, body] of sections) {

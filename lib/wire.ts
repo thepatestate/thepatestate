@@ -11,7 +11,7 @@ import { getTeamDirectory } from "@/lib/cfbd";
 import { findReceipt } from "@/lib/quotes";
 import { slugify } from "@/lib/slug";
 import { writeJSON } from "@/lib/writer";
-import { boilerplateViolations, BOILERPLATE_PROMPT, VOICE_V4_PROMPT, scoreDraft, editorialSystem } from "@/lib/editorial";
+import { boilerplateViolations, BOILERPLATE_PROMPT, scoreDraft, editorialSystem } from "@/lib/editorial";
 
 const MODEL = "claude-sonnet-5";
 // Client directive (2026-08-17): wire clicks must never leave the site, so
@@ -199,8 +199,9 @@ const ITEM_SCHEMA = {
   additionalProperties: false,
 } as const;
 
-// Production Guide v1.2 architecture (prompts/wire-production-guide.md,
-// reference build docs/content/wire-kansas-state-pastore-v3.html).
+// Story architecture per the kit (prompts/kit/04-spec-wire.md §4; reference
+// builds docs/reference-builds/wire-ohio-state-rowe-safety.html and
+// wire-article-page-v2.html).
 export const STORY_SCHEMA = {
   type: "object",
   properties: {
@@ -218,18 +219,13 @@ export const STORY_SCHEMA = {
         additionalProperties: false,
       },
     },
-    // Wire Editorial System v2.0 §47–48: the visible architecture adapts to
-    // the story — each section carries its own descriptive header ("" = the
-    // page's default). Never the same six headers on every story.
-    openTitle: { type: "string" },
+    // Kit 04 §4: module titles are locked plain reader language; only the
+    // personnel module retitles by story type (section04Title).
     whatHappened: { type: "string" },
-    whyTitle: { type: "string" },
     whyBody: { type: "string" },
-    missingTitle: { type: "string" },
     missing: { type: "string" },
     section04Title: { type: "string" },
     section04Body: { type: "string" },
-    chessboardTitle: { type: "string" },
     chessboard: { type: "string" },
     readBody: { type: "string" },
     board: {
@@ -271,7 +267,7 @@ export const STORY_SCHEMA = {
     teams: { type: "array", items: { type: "string" } },
     category: { type: "string" },
   },
-  required: ["headline", "deck", "verification", "impact", "impactRationale", "stats", "openTitle", "whatHappened", "whyTitle", "whyBody", "missingTitle", "missing", "section04Title", "section04Body", "chessboardTitle", "chessboard", "readBody", "board", "watching", "facts", "teams", "category"],
+  required: ["headline", "deck", "verification", "impact", "impactRationale", "stats", "whatHappened", "whyBody", "missing", "section04Title", "section04Body", "chessboard", "readBody", "board", "watching", "facts", "teams", "category"],
   additionalProperties: false,
 } as const;
 
@@ -594,7 +590,7 @@ export async function generateWireStory(
   let receipt = await findReceipt(job.teams, job.receiptKeywords);
   if (receipt && !(await receiptIsRelevant(anthropic, receipt, job))) receipt = null;
   const thin = isThinSource(job.sourceBlock);
-  const baseUser = `${VOICE_V4_PROMPT}\n\n${BOILERPLATE_PROMPT}${thin ? `\n\nSOURCE MATERIAL IS THIN (a few hundred words of reporting): file a BRIEF per the triage rule. Headline, a one-sentence deck, whatHappened at 80–120 words saying exactly what is known, impact, category, teams; every other field "" or []. Never expand a handful of facts into six sections; a short story that says only what is known is the correct answer (Wire §7). Say what is unknown the way a person would ("Indiana hasn't said which injury," "no timetable yet"), never by pointing at the document ("the report does not identify," "was described as").` : ""}\n\nSource cluster:\n${job.sourceBlock}${receipt ? `\n\nJosh's archived on-topic quote (verbatim; render as his receipt, do NOT alter): "${receipt.quote}"` : ""}`;
+  const baseUser = `${BOILERPLATE_PROMPT}${thin ? `\n\nSOURCE MATERIAL IS THIN (a few hundred words of reporting): file a BRIEF per the triage rule. Headline, a one-sentence deck, whatHappened at 80–120 words saying exactly what is known, impact, category, teams; every other field "" or []. Never expand a handful of facts into six sections; a short story that says only what is known is the correct answer (Wire §7). Say what is unknown the way a person would ("Indiana hasn't said which injury," "no timetable yet"), never by pointing at the document ("the report does not identify," "was described as").` : ""}\n\nSource cluster:\n${job.sourceBlock}${receipt ? `\n\nJosh's archived on-topic quote (verbatim; render as his receipt, do NOT alter): "${receipt.quote}"` : ""}`;
   // One corrective retry when the draft names an outlet in the upper page
   // (guide §5) — the old pipeline REQUIRED that habit, so writers relapse.
   // System prompt = preamble → 00 Editorial Core → 01 Wire (Josh's documents,
@@ -622,8 +618,8 @@ export async function generateWireStory(
     headline: string; deck: string; verification: "confirmed" | "reported" | "developing";
     impact: string; impactRationale: string;
     stats: { value: string; label: string; critical: boolean }[];
-    openTitle: string; whatHappened: string; whyTitle: string; whyBody: string; missingTitle: string; missing: string;
-    section04Title: string; section04Body: string; chessboardTitle: string; chessboard: string; readBody: string;
+    whatHappened: string; whyBody: string; missing: string;
+    section04Title: string; section04Body: string; chessboard: string; readBody: string;
     board: { title: string; rows: { name: string; meta: string; note: string }[]; summary: string };
     watching: { title: string; body: string }[];
     facts: { label: string; value: string }[];
@@ -709,15 +705,11 @@ export async function generateWireStory(
     impact: story.impact,
     impactRationale: story.impactRationale,
     stats: (story.stats ?? []).slice(0, 3).map((st, i) => ({ _key: `stat${i}`, ...st })),
-    openTitle: cleanSectionTitle(story.openTitle),
     whatHappened: story.whatHappened,
-    whyTitle: cleanSectionTitle(story.whyTitle),
     whyBody: story.whyBody,
-    missingTitle: cleanSectionTitle(story.missingTitle),
     missing: story.missing,
     section04Title: cleanSectionTitle(story.section04Title),
     section04Body: story.section04Body,
-    chessboardTitle: cleanSectionTitle(story.chessboardTitle),
     chessboard: story.chessboard,
     ...(story.board?.rows?.length
       ? { board: { title: story.board.title, summary: cleanTellSummary(story.board.summary), rows: story.board.rows.slice(0, 3).map((r, i) => ({ _key: `row${i}`, ...r })) } }
@@ -728,7 +720,9 @@ export async function generateWireStory(
     ...(receipt
       ? { joshReceipt: { quote: receipt.quote, ytId: receipt.yt_id, tsSeconds: receipt.ts_seconds } }
       : {}),
-    readLabel: "THE PATE STATE READ",
+    // Kit 04 §4 module 12: the Read carries a small label when Josh has not
+    // spoken on today's news (a label, never a closer).
+    readLabel: receipt ? "The Pate State Read" : "Desk analysis · Josh has not yet commented on today's news",
     readBody: story.readBody.replace(/^\s*THE PATE STATE READ:?\s*/i, ""),
     sources: job.sources.slice(0, 6),
     },

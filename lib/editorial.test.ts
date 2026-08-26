@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import {
   boilerplateViolations, pickArchitecture, ARCHITECTURES, exemplarParroting, editorialSystem,
-  HOUSE_OVERRIDES, VOICE_V4_PROMPT, QUALITY_CATEGORIES,
+  HOUSE_NOTES, QUALITY_CATEGORIES,
 } from "./editorial";
 
 describe("Editorial Core gates (Josh's MD files, 2026-08-23)", () => {
@@ -66,36 +66,54 @@ describe("exemplarParroting (the documents' examples are not templates)", () => 
   });
 });
 
-describe("editorialSystem (Core → product MD → house overrides → task contract)", () => {
-  it("stacks the Editorial Core, the product document, the overrides, and the task prompt in order", () => {
+describe("editorialSystem (the kit's load order: 01 → 02 → spec → 07 → house notes → contract)", () => {
+  it("stacks the Constitution, the Voice Bible, the spec, the snapshot, the notes, and the task prompt in order", () => {
     const sys = editorialSystem("wire", "TASK CONTRACT MARKER");
-    const core = sys.indexOf("THE PATE STATE EDITORIAL CORE");
-    const wire = sys.indexOf("MASTER EDITORIAL + WRITING SYSTEM");
-    const over = sys.indexOf("HOUSE OVERRIDES (current site policy");
+    const con = sys.indexOf("THE PATE STATE CONSTITUTION");
+    const bible = sys.indexOf("THE PATE STATE VOICE BIBLE");
+    const spec = sys.indexOf("SPEC: THE WIRE");
+    const snap = sys.indexOf("CURRENT STATE — THE DATED SNAPSHOT");
+    const notes = sys.indexOf("HOUSE NOTES (site mechanics");
     const task = sys.indexOf("TASK CONTRACT MARKER");
-    expect(core).toBeGreaterThan(0);
-    expect(wire).toBeGreaterThan(core);
-    expect(over).toBeGreaterThan(wire);
-    expect(task).toBeGreaterThan(over);
+    expect(con).toBeGreaterThanOrEqual(0);
+    expect(con).toBeLessThan(10);
+    expect(bible).toBeGreaterThan(con);
+    expect(spec).toBeGreaterThan(bible);
+    expect(snap).toBeGreaterThan(spec);
+    expect(notes).toBeGreaterThan(snap);
+    expect(task).toBeGreaterThan(notes);
   });
-  it("routes each product to its own document", () => {
-    expect(editorialSystem("notebook", "")).toContain("THE PATE STATE NOTEBOOK");
-    expect(editorialSystem("recruiting", "")).toContain("RECRUITING INTELLIGENCE");
-    expect(editorialSystem("game-week", "")).toContain("GAME WEEK");
-    const show = editorialSystem("show-adaptation", "");
-    expect(show).toContain("THE PATE STATE EDITORIAL CORE");
-    expect(show).not.toContain("MASTER EDITORIAL + WRITING SYSTEM");
+  it("routes each lane to its spec and never loads a retired file", () => {
+    expect(editorialSystem("news-reaction", "")).toContain("SPEC: THE WIRE");
+    expect(editorialSystem("feature", "")).toContain("SPEC: FEATURES, FRANCHISES");
+    expect(editorialSystem("show-adaptation", "")).toContain("SPEC: FEATURES, FRANCHISES");
+    expect(editorialSystem("annual", "")).toContain("SPEC: THE PRESEASON ANNUAL");
+    for (const p of ["wire", "feature", "show-adaptation"] as const) {
+      const sys = editorialSystem(p, "");
+      expect(sys).not.toContain("EDITORIAL CORE");
+      expect(sys).not.toContain("MASTER EDITORIAL + WRITING SYSTEM");
+      expect(sys).not.toContain("Article Updates 4.0");
+    }
   });
-  it("overrides keep attribution in the footer and ration spoken devices", () => {
-    expect(HOUSE_OVERRIDES).toMatch(/ATTRIBUTION LIVES IN THE FOOTER/);
-    expect(HOUSE_OVERRIDES).toMatch(/EXAMPLES ARE NOT TEMPLATES/);
-  });
-  it("the distilled voice layer no longer hands the writer stock spoken transitions", () => {
-    expect(VOICE_V4_PROMPT).not.toMatch(/That's the bet\./);
-    expect(VOICE_V4_PROMPT).not.toMatch(/where this gets interesting/);
+  it("house notes keep the site's mechanics out of the prose and the examples out of the stories", () => {
+    expect(HOUSE_NOTES).toMatch(/SITE RENDERS THE FURNITURE/);
+    expect(HOUSE_NOTES).toMatch(/EXAMPLES ARE NOT TEMPLATES/);
   });
   it("the judge scores discovery", () => {
     expect(QUALITY_CATEGORIES).toContain("discovery");
+  });
+});
+
+describe("Voice Bible §6 gates (the kit)", () => {
+  it("flags announced candor, 'the machine', internal craft vocabulary, and overrated", () => {
+    expect(boilerplateViolations("The honest read is that Texas is fine.")).toContain("announcing candor");
+    expect(boilerplateViolations("The machine has Ohio State first.")).toContain("the-machine as the Predictor");
+    expect(boilerplateViolations("That left tackle is load-bearing for the season.")).toContain("internal craft vocabulary");
+    expect(boilerplateViolations("Alabama is overrated this year.")).toContain("overrated dunk-framing");
+    expect(boilerplateViolations("The Wildcats will look to bounce back.")).toContain("generic AI transition (kit)");
+  });
+  it("passes the Predictor named properly and plain football", () => {
+    expect(boilerplateViolations("The AI Predictor has Ohio State 2.1 rating points clear of the field. Georgia is the market's favorite.")).toEqual([]);
   });
 });
 

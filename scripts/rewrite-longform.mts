@@ -29,7 +29,7 @@ loadDotEnvLocal();
 const { default: Anthropic } = await import("@anthropic-ai/sdk");
 const { writeClient } = await import("../lib/sanity.ts");
 const { writeJSON } = await import("../lib/writer.ts");
-const { editorialSystem, readPrompt, boilerplateViolations, VOICE_V4_PROMPT, BOILERPLATE_PROMPT, scoreDraft } = await import("../lib/editorial.ts");
+const { editorialSystem, readPrompt, boilerplateViolations, BOILERPLATE_PROMPT, scoreDraft } = await import("../lib/editorial.ts");
 const { narratesSourcing, hasFirstPersonProse, scrubDashes } = await import("../lib/wire.ts");
 const { productForType } = await import("../lib/longform.ts");
 
@@ -74,8 +74,7 @@ for (const r of targets) {
     const system = editorialSystem(productForType(typeId), readPrompt("standalone-article.md"));
     const original = `HEADLINE: ${r.headline}\nDEK: ${r.dek ?? ""}\nPULL QUOTE: ${r.pullQuote ?? ""}\n\n${r.bodyMarkdown ?? ""}`;
     const baseUser = [
-      `EDIT PASS, NOT A NEW ARTICLE. Below is a published Pate State article that predates the current editorial standard. Rewrite it to the standard: run the Editorial Core's AI-removal pass (§43), the boring-paragraph pass (§44) and the Notebook's post-draft passes on it. KEEP EVERY FACT, NAME, NUMBER, DATE, RESULT, RANKING AND PREDICTION EXACTLY AS STATED; the article is its own only source, so add nothing that is not already in it. Change the writing: kill announced scaffolding ("the failure condition is," "the real question is," "the counterpoint is"), consulting language, thesis-announcing openers, fake profundity, symmetrical sections; put people before concepts; vary rhythm and temperature; hide the framework; end without a summary. Keep the [PULLQUOTE] marker where it is and keep pullQuote CHARACTER-FOR-CHARACTER identical (or "" if the original was empty); never write the quote's text into the body. Keep any [EMBED:…] marker exactly where it is. Headline may be sharpened per Notebook §49 but must make the same claims.`,
-      VOICE_V4_PROMPT,
+      `EDIT PASS, NOT A NEW ARTICLE. Below is a published Pate State article that predates the current editorial standard. Rewrite it to the standard: run the Voice Bible's six revision passes (§13) on it. KEEP EVERY FACT, NAME, NUMBER, DATE, RESULT, RANKING AND PREDICTION EXACTLY AS STATED; the article is its own only source, so add nothing that is not already in it. Change the writing: kill announced scaffolding ("the failure condition is," "the real question is," "the counterpoint is"), consulting language, thesis-announcing openers, fake profundity, symmetrical sections; put people before concepts; vary rhythm and temperature; hide the framework; end without a summary. Keep the [PULLQUOTE] marker where it is and keep pullQuote CHARACTER-FOR-CHARACTER identical (or "" if the original was empty); never write the quote's text into the body. Keep any [EMBED:…] marker exactly where it is. Headline may be sharpened per Notebook §49 but must make the same claims.`,
       BOILERPLATE_PROMPT,
       `ORIGINAL ARTICLE:\n${original}`,
     ].join("\n\n");

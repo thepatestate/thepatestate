@@ -35,8 +35,15 @@ describe("validateDraft", () => {
   it("rejects empty body", () => {
     expect(validateDraft({ ...good, bodyMarkdown: " " })).toBeNull();
   });
-  it("rejects a body with no PULLQUOTE marker", () => {
+  it("rejects a pull quote whose marker is missing from the body", () => {
     expect(validateDraft({ ...good, bodyMarkdown: "words only" })).toBeNull();
+  });
+  it("accepts an empty pull quote with no marker (no quote manufactured for the slot)", () => {
+    const d = { ...good, pullQuote: "", bodyMarkdown: "Josh opened with the point. [EMBED:00:14:22] More." };
+    expect(validateDraft(d)).toEqual(d);
+  });
+  it("rejects an empty pull quote that still leaves a marker behind", () => {
+    expect(validateDraft({ ...good, pullQuote: "" })).toBeNull();
   });
 });
 

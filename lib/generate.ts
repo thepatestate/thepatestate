@@ -2,7 +2,7 @@ import Anthropic from "@anthropic-ai/sdk";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { writeJSON } from "@/lib/writer";
-import { boilerplateViolations, BOILERPLATE_PROMPT, VOICE_V4_PROMPT, editorialSystem, type Architecture } from "@/lib/editorial";
+import { boilerplateViolations, BOILERPLATE_PROMPT, editorialSystem, type Architecture } from "@/lib/editorial";
 
 export const BYLINE_STAFF = "The Pate State Staff";
 export const SERIES_VALUES = [
@@ -108,11 +108,14 @@ export function validateDraft(raw: unknown): CompanionDraft | null {
   const isStrArr = (v: unknown): v is string[] => Array.isArray(v) && v.every((x) => typeof x === "string");
   const seo = d.seo as Record<string, unknown> | undefined;
   if (
-    !isStr(d.headline) || !isStr(d.dek) || !isStr(d.bodyMarkdown) || !isStr(d.pullQuote) ||
+    !isStr(d.headline) || !isStr(d.dek) || !isStr(d.bodyMarkdown) || typeof d.pullQuote !== "string" ||
     typeof d.primaryTeam !== "string" || !isStrArr(d.teams) || !isStrArr(d.tags) ||
     !seo || !isStr(seo.title) || !isStr(seo.description)
   ) return null;
-  if (!d.bodyMarkdown.includes("[PULLQUOTE]")) return null;
+  // Voice Bible §5: no pull quote manufactured for the slot. A pull quote
+  // needs its marker in the body; an empty pull quote needs no marker.
+  const hasMarker = d.bodyMarkdown.includes("[PULLQUOTE]");
+  if (d.pullQuote.trim() ? !hasMarker : hasMarker) return null;
   return {
     headline: d.headline, dek: d.dek, bodyMarkdown: d.bodyMarkdown, pullQuote: d.pullQuote,
     primaryTeam: d.primaryTeam, teams: d.teams, tags: d.tags,
@@ -264,14 +267,15 @@ export async function draftCompanion(input: {
 }): Promise<CompanionDraft | null> {
   const c = client();
   if (!c) return null;
-  // Josh Show → Article inherits 00 Editorial Core (Josh's document,
-  // verbatim); the companion prompt is its own contract and first-person rail.
+  // Kit: a show-derived column in the autonomous lane — staff byline, third
+  // person, Josh present only through verbatim timestamped quotes
+  // (Constitution §3, Voice Bible §10, features spec §1).
   const system = editorialSystem("show-adaptation", prompt("companion-article.md"));
   // 1–2 quotes, not 2–4 (Isaac, 2026-08-20: scattered quotes with ramp at
   // the edges read disjointed) — each must anchor one of the article's
   // highest-value passages and sit beside the prose arguing the same point.
   const quotesBlock = input.extractedQuotes?.length
-    ? `Extracted verbatim quotes. Weave in AT MOST 1–2 — only the ones that anchor the article's highest-value argument — as [QUOTE:timestamp]…[/QUOTE], each placed immediately beside the paragraph making the same point (a quote whose neighbors argue something else is a defect; skip quotes rather than scatter them). Trim each to the take: no ramp opener, no trailing fragment — edge trims are free, interior cuts use " … ", never change a word inside. The pullQuote follows its own rail.\n${input.extractedQuotes
+    ? `Extracted verbatim quotes (Voice Bible §10: third-person pieces weave 2–4 verbatim Josh takes, attributed naturally, each deep-linked to its timestamp; the strongest renders as the pull quote). Use 2–4 as [QUOTE:timestamp]…[/QUOTE] blocks, each placed immediately beside the paragraph making the same point (a quote whose neighbors argue something else is a defect). Blockquotes are exact: trim only at the edges (no ramp opener, no trailing fragment), interior cuts use " … ", never change a word inside. The pullQuote follows its own rail.\n${input.extractedQuotes
         .map((q, i) => `${i + 1}. [${q.timestamp}] "${q.quote}" (${q.topic}, heat ${q.heat})`)
         .join("\n")}`
     : null;
@@ -279,7 +283,6 @@ export async function draftCompanion(input: {
     ...(input.architecture
       ? [`ARCHITECTURE FOR THIS PIECE (Brief v2 Rule 2 — the structure was chosen for this story; commit to it fully): ${input.architecture.name} — ${input.architecture.brief}`]
       : []),
-    VOICE_V4_PROMPT,
     BOILERPLATE_PROMPT,
     `Episode title: ${input.title}`,
     `Series: ${input.series}`,
@@ -314,9 +317,10 @@ export async function draftCompanion(input: {
       if (!input.transcriptText) return draft; // nothing to verify quotes against
 
       const boiler = boilerplateViolations(draft.bodyMarkdown);
-      if (boiler.length > 0 && attempt === 0) {
+      const firstPerson = /(?:^|[\s“"(])(I|I'm|I've|I'd|I'll|my)(?=[\s,.!?'’])/.test(draft.bodyMarkdown.replace(/\[QUOTE:[\d:]+\][\s\S]*?\[\/QUOTE\]/g, ""));
+      if ((boiler.length > 0 || firstPerson) && attempt === 0) {
         lastDraft = draft;
-        user = `${baseUser}\n\nYour previous draft used banned house boilerplate: ${boiler.join("; ")}. Keep the analysis, rewrite those passages in fresh concrete prose per the banned-boilerplate rules, and vary the section anchors.`;
+        user = `${baseUser}\n\nYour previous draft violated house style${firstPerson ? " — it used first person outside a verbatim quote block; this is a staff-byline piece, Josh is \"Pate\" in third person and speaks only inside [QUOTE] blocks" : ""}${boiler.length ? ` — banned language: ${boiler.join("; ")}` : ""}. Keep the analysis, rewrite the offending passages in fresh concrete prose.`;
         continue;
       }
       const badQuotes = findNonVerbatimQuotes(draft.bodyMarkdown, input.transcriptText);

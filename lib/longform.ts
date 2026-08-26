@@ -21,7 +21,7 @@ import { uploadHeroImage, setArticleHeroImage } from "@/lib/sanity";
 import { slugify } from "@/lib/slug";
 import { BYLINE_STAFF } from "@/lib/generate";
 import { JOSH_BRACKET_FIELD, JOSH_BRACKET_FINAL, JOSH_BRACKET_LABEL } from "@/lib/josh-bracket";
-import { pickArchitecture, boilerplateViolations, BOILERPLATE_PROMPT, VOICE_V4_PROMPT, scoreDraft, editorialSystem, type EditorialProduct } from "@/lib/editorial";
+import { pickArchitecture, boilerplateViolations, BOILERPLATE_PROMPT, scoreDraft, editorialSystem, type EditorialProduct } from "@/lib/editorial";
 import { hasFirstPersonProse } from "@/lib/wire";
 
 const MODEL = "claude-sonnet-5";
@@ -35,28 +35,32 @@ function textOf(res: Anthropic.Message): string {
   return block && block.type === "text" ? block.text : "";
 }
 
-// Compact menu of playbook types feasible without a game slate to react to.
-// The selector is told to pick what a serious fan would most want TODAY.
+// Compact menu of Playbook v3.1 types feasible without a game slate to react
+// to, all in the autonomous lane (staff byline). NR/TI types write from the
+// Wire spec §7; the rest from the features spec under the staff byline.
 const TYPE_MENU = `
-NR-01 What It Means — flagship reaction to consequential recent news (pick the biggest wire story of the last 48h)
+NR-01 What It Means — the flagship reaction to consequential recent news (pick the biggest wire story of the last 48h; links back to it)
 NR-03 Five Consequences — second-order implications of a major event
-RK-10 Market-gap — "the market is too high/low on <team>" (mechanism-mandatory, never "overrated")
+NR-04 Who Benefits / Who Gets Hurt — conference, playoff, recruiting, or roster ripples
+NR-05 What Happens Next — the forward-looking decision tree
+TI-05 Injury impact — roster mechanics of a significant recent injury (replacement file + calendar collision)
+RK-10 Market-gap — "the market is too high/low on <team>" (mechanism-mandatory, never "overrated"; logged to the Ledger with a grading date)
 PS-04 Ceiling/Floor/Most-likely — three scenarios for one prominent team, each with its mechanism
-PS-05 Biggest Questions — 5–7 falsifiable questions for one team, each with a named answer date
+PS-05 Biggest Questions — 5–7 questions for one team, each falsifiable by a named date
 PE-01 Breakout list — breakout players with the mechanism (role, matchup, leverage)
-PE-03 Pressure index — coaching-seat analysis, trajectory + structure, never glee
+PE-03 Pressure index — coaching-seat analysis, buyout math in plain English, trajectory + structure, never glee
 PO-02 Paths & scenarios — a contender's playoff path in plain English
-TI-05 Injury impact — roster mechanics of a significant recent injury (replacement file + calendar)
 FA-02 Scheme explainer — one concept, cashed out in consequence at every step
 CC-06 History rhymes — "the last time this happened," event-triggered context
-RI-01 Prospect fit (Recruiting Intelligence) — why a recent commitment or transfer makes football sense for THIS roster: the room, the timeline, who he affects
-RI-02 Class construction (Recruiting Intelligence) — what a program's class is actually built around, the position worth circling, what's still missing
-RI-03 Portal audit (Recruiting Intelligence) — did the program solve the problems it entered the portal with (proven snaps lost vs. added)`;
+RC-01 Commitment impact report — snap economics and rival cost of a recent commitment (analysis lane, never a scoop)
+RC-04 Class rankings + trajectory — construction logic, not star math
+TP-05 Portal fit analysis — scheme + supporting cast + snap math for a recent transfer`;
 
-/** Which of Josh's product documents governs a selected type: RI-* types
- * are Recruiting Intelligence; everything else on the menu is Notebook. */
+/** Kit routing (Playbook commissioning rule 3): NR/TI/SD types write from
+ * the Wire spec's autonomous news-reaction lane; every other menu type is
+ * a staff-byline piece in the features register. */
 export function productForType(typeId: string): EditorialProduct {
-  return /^RI-/i.test(typeId) ? "recruiting" : "notebook";
+  return /^(NR|TI|SD)-/i.test(typeId) ? "news-reaction" : "feature";
 }
 
 const SELECT_SCHEMA = {
@@ -123,7 +127,7 @@ export async function generateLongformArticle(): Promise<string> {
       // Reasoning shares this budget with the JSON answer — 1024 truncated.
       max_tokens: 4096,
       output_config: { effort: "low", format: { type: "json_schema", schema: SELECT_SCHEMA } },
-      system: `You are the article selection engine for The Pate State (Article Playbook v3.0 + Josh's Notebook and Recruiting Intelligence documents). Pick the ONE standalone long-form article a serious college football fan would most want to read today. Choose a type from the menu, a specific topic, and a sharp angle. Rules: never duplicate or closely overlap a recent article headline; prefer a big recent wire story angle (NR-01/NR-03/TI-05) when one is genuinely consequential, else an evergreen type on a prominent team or national question; RI-* types only when the wire coverage supports roster-level recruiting analysis (a commitment, flip, or portal move with real roster context), never for a bare commitment brief; the angle must be arguable from the wire coverage provided plus general mechanism reasoning (no facts the pack won't contain); teams are lowercase-hyphenated slugs. wireStoryIds: the _ids of the 1-4 provided stories most relevant to the topic (empty for pure evergreen). Output JSON only.`,
+      system: `You are the article selection engine for The Pate State (Article Playbook v3.1, autonomous lane). Pick the ONE standalone piece a serious college football fan would most want to read today, or decide that none is warranted. Selection rules from the Playbook: selective reaction, never aggregation (write because the news creates an argument the house can own, not because somebody said something); quality over volume (a T3 piece needs a fired trigger, never an idle slot); never duplicate or closely overlap a recent article headline; prefer NR-01 when a genuinely consequential wire story landed in the last 48h, else an evergreen type on a prominent team or national question; RC/TP types only when the wire coverage supports roster-level analysis, never for a bare commitment brief; the angle must be arguable from the wire coverage provided plus mechanism reasoning (no facts the pack won't contain); teams are lowercase-hyphenated slugs. wireStoryIds: the _ids of the 1-4 provided stories most relevant to the topic (empty for pure evergreen). Output JSON only.`,
       messages: [{
         role: "user",
         content: `TYPE MENU:\n${TYPE_MENU}\n\nRECENT WIRE COVERAGE (72h):\n${recentStories
@@ -155,8 +159,7 @@ export async function generateLongformArticle(): Promise<string> {
     }
     const standing = `ON-RECORD SITE POSITIONS (never contradict silently): ${JOSH_BRACKET_LABEL} — field: ${JOSH_BRACKET_FIELD.map((t) => `${t.seed} ${t.name}`).join(", ")}; final on record: ${JOSH_BRACKET_FINAL}. The JP Poll shown on the show is the MODEL's power ratings (Ohio State No. 1 preseason), not a ranking.`;
     const sourcePack = [
-      `ASSIGNMENT: type ${sel.typeId} — ${sel.topic}\nANGLE: ${sel.angle}\nARCHITECTURE FOR THIS PIECE (Brief v2 Rule 2 — commit to it fully): ${arch.name} — ${arch.brief}`,
-      VOICE_V4_PROMPT,
+      `ASSIGNMENT: type ${sel.typeId} — ${sel.topic}\nANGLE: ${sel.angle}\nARCHITECTURE FOR THIS PIECE (commit to it fully; it is the structural-variety rotation): ${arch.name} — ${arch.brief}`,
       BOILERPLATE_PROMPT,
       fullStories.length
         ? `WIRE COVERAGE (verified facts — the fact base):\n${fullStories

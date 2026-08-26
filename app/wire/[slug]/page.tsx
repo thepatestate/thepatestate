@@ -235,7 +235,9 @@ export default async function WireStoryPage({ params }: { params: Promise<{ slug
 
             {story.readBody && (
               <>
-                <SectionHead n={next()} kicker="The Thesis" title="The Pate State Read" />
+                {/* Kit 04 §4 module 12: a small label when Josh hasn't spoken on today's
+                    news — never a closer. */}
+                <SectionHead n={next()} kicker={story.joshReceipt?.quote ? "The Thesis" : "Desk Analysis · Josh Has Not Yet Commented on Today's News"} title="The Pate State Read" />
                 <div className="readcard">
                   <p>{story.readBody}</p>
                 </div>

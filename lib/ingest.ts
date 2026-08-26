@@ -1,7 +1,7 @@
 import type { Video } from "@/lib/youtube";
 import { writeClient, isSanityWriteConfigured, articleExistsForEpisode, uploadHeroImage, setArticleHeroImage } from "@/lib/sanity";
 import { fetchTranscript, transcriptToPromptText } from "@/lib/transcript";
-import { classifySeries, draftCompanion, extractQuotes } from "@/lib/generate";
+import { classifySeries, draftCompanion, extractQuotes, BYLINE_STAFF } from "@/lib/generate";
 import { pickArchitecture } from "@/lib/editorial";
 import { storeQuotes } from "@/lib/quotes";
 import { generateArticleHero } from "@/lib/hero-image";
@@ -109,10 +109,10 @@ export async function ingestEpisode(v: IngestVideo): Promise<IngestResult> {
       bodyMarkdown: draft.bodyMarkdown,
       pullQuote: draft.pullQuote,
       episode: { _type: "reference", _ref: episodeId },
-      // Editorial Brief v2 Rule 1: a faithful first-person adaptation of
-      // Josh's argument carries HIS byline with the "Adapted from The Josh
-      // Pate Show" label — never a Staff byline speaking as "I."
-      byline: "Josh Pate",
+      // Kit, Constitution §3 (2026-08-26): the byline "Josh Pate" is NEVER
+      // auto-applied. A show-derived column in the autonomous lane is a
+      // staff piece in third person; Josh speaks only in verbatim quotes.
+      byline: BYLINE_STAFF,
       // Auto-publish (owner call, 08-11): clean drafts go live immediately;
       // Josh's team can unpublish or correct any piece in Studio. Drafts
       // with no transcript grounding or self-flagged low confidence still

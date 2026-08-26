@@ -4,12 +4,13 @@
 // reverse; the condition ladder that used to be every article's skeleton
 // is now one architecture among twelve, capped at ~1 in 5.
 //
-// Josh's MD files (2026-08-23, "Pate State MD files 1 million.0"): the
-// editorial system is now modular — 00 Editorial Core (universal) plus one
-// product document per article family — and every writer's system prompt
-// is assembled by editorialSystem() below from those documents verbatim.
-// The Core's banned-language lists are installed as lint gates here so the
-// prompts and the gates can never drift apart.
+// THE KIT (Josh, 2026-08-26, "Pate from scratch adjustments"): the writing
+// system is prompts/kit/ — 01 Constitution (always), 02 Voice Bible (any
+// prose), one product spec, 07 current-state, then the JSON task contract.
+// Every earlier instruction file is retired (prompts/retired/) and never
+// loaded; the kit's own rule is that old files carry no authority. The Voice
+// Bible's ban lists are installed as lint gates here so prompts and gates
+// can never drift apart.
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
@@ -17,37 +18,39 @@ export function readPrompt(name: string): string {
   return readFileSync(join(process.cwd(), "prompts", name), "utf8");
 }
 
-export type EditorialProduct = "wire" | "notebook" | "recruiting" | "game-week" | "show-adaptation";
+/** The kit's lanes. wire + news-reaction are the autonomous lane (04);
+ * feature = staff-byline house analysis in the features register (06);
+ * show-adaptation = a show-derived column under the staff byline (06 §1);
+ * annual = the magazine (05). */
+export type EditorialProduct = "wire" | "news-reaction" | "feature" | "show-adaptation" | "annual";
 
-const PRODUCT_DOCUMENT: Record<EditorialProduct, string | null> = {
-  wire: "wire-editorial-system.md",
-  notebook: "notebook.md",
-  recruiting: "recruiting-intelligence.md",
-  "game-week": "game-week.md",
-  // Josh Show → Article inherits the Core; its own contract is the companion prompt.
-  "show-adaptation": null,
+const SPEC_FOR_PRODUCT: Record<EditorialProduct, string> = {
+  wire: "kit/04-spec-wire.md",
+  "news-reaction": "kit/04-spec-wire.md",
+  feature: "kit/06-spec-features.md",
+  "show-adaptation": "kit/06-spec-features.md",
+  annual: "kit/05-spec-annual.md",
 };
 
-/** Current site policy, appended AFTER Josh's documents so that where a
- * document line conflicts with a standing directive, the directive wins.
- * Each item names what it supersedes so the next editor can lift it. */
-export const HOUSE_OVERRIDES = `HOUSE OVERRIDES (current site policy; where any line in the editorial documents above conflicts with these, these win):
-1. ATTRIBUTION LIVES IN THE FOOTER. Never open a story with "X reported…", "According to X…", or "Per X…", and never name another website in the deck or the opening section. The site renders outlet credit in the story's sourcing footer automatically. Official sources ("Kansas State announced…", "the head coach said Thursday…") and NAMED individual reporters are fine in prose; unconfirmed specifics are "reported to be…". (Standing policy, confirmed 2026-08-23: it supersedes the Wire document's first-sentence-attribution rule.)
-2. THE DESK HAS NO SELF. Wire, Notebook, Recruiting Intelligence and Game Week prose never uses first person. Josh's positions are third person and attributed ("Pate expects…"); his exact words enter only through supplied archived verbatim quotes. Show adaptations are the one exception: those are Josh's own argument in his own first person by his directive, which is adapting his show, not imitating a personality.
-3. NO EM DASHES OR EN DASHES anywhere in prose (write two sentences instead). Zero exclamation points.
-4. THE EXAMPLES ARE NOT TEMPLATES. Every illustration in the documents above (Fleming, Pastore, Szymanski, Howard, Trickett, Maryland's tight ends, Kansas State's line, Georgia's edge rushers, Mateer, Notre Dame's admissions calendar, "restore May," "has its No. 1 … now it needs a No. 2," "the pressure behind it isn't," "depth always looks better in August") exists to show a register. Never reuse their wording, people, numbers, or sentence constructions in a story about anything else. A sentence that echoes an example's shape is a defect and will be rejected.
-5. SPOKEN DEVICES ARE RATIONED. "Here's the thing," "Look," "Let's be clear," "Think about this," "That's the deal," "That's the bet," "If you're [team]…": at most one such device per article, usually none. Transitions come from the facts.
-6. OUTPUT IS JSON. The documents describe editorial content; the task contract below defines the fields. Where a document's output format lists sections, express them through the schema's fields and leave unearned fields empty.`;
+/** Site facts the kit's files don't carry. On any WRITING rule the kit
+ * wins; these only tell the writer what the site does for it. */
+export const HOUSE_NOTES = `HOUSE NOTES (site mechanics the kit's files don't carry; on any writing rule the kit wins):
+1. OUTPUT IS JSON. The kit describes editorial content; the task contract below defines the fields. Modules the story hasn't earned stay "" or [].
+2. THE SITE RENDERS THE FURNITURE. The Sourcing & Standards box, the video card, the Citizen Pulse, forward links, status and impact chips, and the byline row are page chrome: never write them into prose fields. Outlet credit therefore never appears in prose (Voice Bible §4); the site prints it in the footer automatically. Named individual reporters and official sources are fine in prose.
+3. ON-RECORD SITE POSITIONS, when supplied in the assignment, are the consistency ledger's current state and are the arbiter of picks (07-current-state.md says so itself). Where the snapshot and the ledger disagree, the ledger wins; never resolve the disagreement silently in prose.
+4. THE EXAMPLES ARE NOT TEMPLATES. Every illustration in the kit (Fleming, Pastore, Maryland's tight ends, Kansas State's line, "restore May," "the pressure behind it isn't," "Decision day.") shows a register. Never reuse their people, wording, numbers, or sentence shapes in a story about anything else.
+5. NO EM DASHES and NO EXCLAMATION POINTS in any prose field. The site scrubs dashes as a backstop; do not rely on it.`;
 
-/** Builds a writer's system prompt: shared preamble → 00 Editorial Core →
- * the product document → house overrides → the JSON task contract. */
+const SNAPSHOT_NOTE = `[The file below is the kit's dated snapshot. It orients; it does not license a fact. Nothing in it may be stated in an article unless the assignment's source material carries it, and its picks yield to the on-record site positions supplied with the assignment.]`;
+
+/** Builds a writer's system prompt in the kit's load order. */
 export function editorialSystem(product: EditorialProduct, taskPrompt: string): string {
-  const doc = PRODUCT_DOCUMENT[product];
   return [
-    readPrompt("global-preamble.md"),
-    readPrompt("editorial-core.md"),
-    doc ? readPrompt(doc) : "",
-    HOUSE_OVERRIDES,
+    readPrompt("kit/01-constitution.md"),
+    readPrompt("kit/02-voice-bible.md"),
+    readPrompt(SPEC_FOR_PRODUCT[product]),
+    `${SNAPSHOT_NOTE}\n\n${readPrompt("kit/07-current-state.md")}`,
+    HOUSE_NOTES,
     taskPrompt,
   ].filter(Boolean).join("\n\n");
 }
@@ -123,6 +126,13 @@ const BOILERPLATE: { name: string; re: RegExp }[] = [
   { name: "coaching cliché", re: /\b(throw (out )?the records( out)?|statement game|(battle|won|win|decided) in the trenches|whoever wants it more|impose (their|its) will|complementary football|survive and advance|bend but don'?t break|win the turnover battle|first real test)\b/i },
   // Recruiting Intelligence §73 + §85: hype in place of roster analysis.
   { name: "recruiting hype", re: /\b(rich get richer|recruiting heater|statement commitment|(massive|huge|big-time|major) (get|pickup)|loaded class|stacked room|making waves|pipeline continues|recruiting battle is heating up)\b/i },
+  // The kit (Voice Bible v3.5 §6, Constitution law 8):
+  { name: "announcing candor", re: /\b(the honest (read|truth|answer|version|take) is|if i'?m being honest|to be (perfectly )?honest|in all honesty)\b/i },
+  { name: "the-machine as the Predictor", re: /\bthe machine('s)?\b/i },
+  { name: "internal craft vocabulary", re: /\b(load-bearing|fair[- ]witness|tripwire|the multiplier|can'?t price|price the|priced in|the ecosystem|layer three|the dial)\b/i },
+  { name: "generic AI transition (kit)", re: /\b(will look to|will now turn (its|their) attention|something to monitor|in the world of college football|it'?s important to note)\b/i },
+  { name: "overrated dunk-framing", re: /\boverrated\b/i },
+  { name: "BREAKING in body copy", re: /\bBREAKING:/ },
 ];
 
 // Thesis-announcing paragraph openers (Updates 4.0 rule 2): one is fine,
@@ -250,7 +260,7 @@ structuralVariety — does the shape feel like a template? (formulaic = low)
 valueAdded — would someone who already watched the source video still learn something?
 headline — would a serious CFB fan click, and does the dek add information?
 accuracy — any name, stat, or claim that smells unverified?
-humanity — the Editorial Core's AI-removal test: does this sound WRITTEN or GENERATED? Generated tells (score low for any): abstract nouns doing football's job ("roster strategy," "internal answer," "production profile"), consulting language, paragraphs that open by announcing their thesis ("The story is… The reality is… The question is…"), announced scaffolding ("the counterpoint is," "the mechanism is"), fake-profound sentences that inform nothing, every sentence auditioning for the pull quote, perfect logical symmetry in every section (thesis, evidence, counter, conclusion), five same-length declaratives in a row, spoken-performance devices stacked up ("Here's the thing… Look… If you're Georgia…"), corporate language a coach would never say aloud. Written tells (score high): named people over concepts, ordinary strong sentences making space around two to four memorable ones, varied temperature (reporting, then a scene, then football, then a human detail), a sentence a smart fan would actually say to a friend.
+humanity — the Editorial Core's AI-removal test: does this sound WRITTEN or GENERATED? Generated tells (score low for any): abstract nouns doing football's job ("roster strategy," "internal answer," "production profile"), consulting language, paragraphs that open by announcing their thesis ("The story is… The reality is… The question is…"), announced scaffolding ("the counterpoint is," "the mechanism is"), fake-profound sentences that inform nothing, every sentence auditioning for the pull quote, perfect logical symmetry in every section (thesis, evidence, counter, conclusion), five same-length declaratives in a row, spoken-performance devices stacked up ("Here's the thing… Look… If you're Georgia…"), corporate language a coach would never say aloud, metaphor stacking, over-compressed shorthand that assumes the reader shares the writer's context, prose admiring its own device, announced candor ("the honest read is"), kickers that need decoding. Written tells (score high): named people over concepts, ordinary strong sentences making space around two to four memorable ones, varied temperature (reporting, then a scene, then football, then a human detail), a sentence a smart fan would actually say to a friend.
 discovery — the Core's three reactions: does the piece produce "I didn't know that" (a reported fact), "I hadn't thought about it that way" (a second-order insight), and "now I want to watch for that" (something observable on Saturday)? Something new every 150–250 words, or low.
 When SOURCES are supplied, evidence, valueAdded and discovery are judged relative to what the sources contain: a draft that says only what is known, briefly, scores WELL on pacing and valueAdded; a draft that pads beyond the sources (the same facts restated in new clothes, hypothetical scenarios standing in for reporting) scores LOW on pacing and humanity. Never penalize a draft for lacking reporting the sources do not contain; penalize it for pretending otherwise, and say in the notes when the right fix is to CUT rather than add.
 notes: 2-4 blunt sentences naming the weakest categories and exactly what to fix; when humanity scores low, QUOTE the two or three sentences that sound most generated so the rewrite can target them. Output JSON only.`,
@@ -264,23 +274,3 @@ notes: 2-4 blunt sentences naming the weakest categories and exactly what to fix
     return { scores: {}, notes: "", pass: true };
   }
 }
-
-// Article Updates 4.0 (Josh via ChatGPT, 2026-08-22) — the distilled
-// human-voice layer injected into EVERY writer call. Full document:
-// prompts/article-updates-v4.md. This is deliberately long; voice is the
-// product.
-export const VOICE_V4_PROMPT = `HUMAN VOICE RULES (Article Updates 4.0 — the standard is "written, not generated"):
-- CONCRETE BEFORE ABSTRACT. Players, coaches, positions, games, decisions — never abstract nouns. Not "the roster strategy raises the value of every internal answer" but "with Williams out, somebody who expected to be the fourth edge rusher may need real snaps in September." When an abstract sentence can be translated into actual football, translate it.
-- STOP ANNOUNCING THESES. Never open paragraphs repeatedly with "The story is / The reality is / The question is / The key is / The clean read is / What matters here is." Tell the reader what happened and let the meaning emerge. Transitions come from the facts (a new number, a new name, a date), never from stock spoken devices; "Here's the thing," "Look," "That's the bet," "If you're [team]" are rationed to at most one per piece and usually zero (Editorial Core §15).
-- NEVER corporate football: roster strategy, internal/usable/dependable "answers" (name what's needed: a tight end who can catch, someone who can play 30 snaps), production profile, personnel solution, competitive landscape, program trajectory. If it could appear in a strategy memo, rewrite it.
-- NO FAKE PROFUNDITY ("the season has to prove what the preseason can only assume") and NO FAKE DRAMA on routine stories ("carries the burden," "the season hinges on"). Simple beats manufactured: "Georgia looks deep in August. Williams' injury gives us an early chance to find out how deep."
-- ONE memorable short line beats six attempted ones. Punchy landing sentences only after the information earns them.
-- PEOPLE OVER CONCEPTS. Name the person; allow warmth without sentimentality ("Szymanski has spent most of his Maryland career waiting for exactly this kind of opening"). Never invent emotions.
-- VARY RHYTHM: a short sentence, a normal one, occasionally a long one connecting ideas. If five consecutive sentences share length and shape, rewrite. Vary temperature too: reporting, then observation, then football analysis, then a touch of personality ("Defenses can live with one problem. Two gets annoying.").
-- WRITE TO ONE SMART FAN across the table — no lecturing, no over-explaining, forward pull every few paragraphs ("But Fleming isn't actually the most interesting part of this"). Lead with the interesting sentence, not the comprehensive one: "Fleming caught 40 passes last year. Every other Maryland tight end combined caught nine."
-- CONTRAST when the facts support it: "Georgia doesn't have a talent problem. It has a January problem." Never manufacture false binaries.
-- ONE CENTRAL QUESTION per story, revealed progressively — each section advances it, never restates it; the concluding read RESOLVES it like the writer finally putting cards on the table, and the ending leaves the reader something specific to watch on Saturday ("Watch who stays on the field next to Fleming when Maryland has to throw"), never "time will tell."
-- LET THE WRITER NOTICE THINGS: one player with nearly all of a group's production, the freshman suddenly in the two-deep, the schedule stretch that changes the urgency. The reader should feel someone is noticing things on his behalf, and at least once think "I hadn't considered that."
-- THE READ-ALOUD TEST governs every sentence: would a knowledgeable college football person actually SAY this on a podcast? Nobody says "the roster's 2026 answer is expected to come from players already in the program." Someone says "Georgia is betting that most of the answers are already on the roster." Before finishing, find the five sentences that sound most like AI and rewrite all five.
-Every example sentence above is an illustration from OTHER stories (Georgia, Maryland, Fleming, Williams) — never reuse their wording, teams, players, or lines in your story; they show the register, not phrases to copy.
-The voice in one sentence: a smart, curious college football obsessive who did more homework than everyone else, talking to a friend on the front porch — not a professor at a podium, not an algorithm delivering a thesis.`;
