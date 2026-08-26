@@ -99,10 +99,32 @@ const LONGFORM_SCHEMA = {
 
 const normalize = (s: string) => s.toLowerCase().replace(/[^a-z0-9\s]/g, " ").replace(/\s+/g, " ").trim();
 
+export interface LongformDraft {
+  typeId: string;
+  topic: string;
+  angle: string;
+  product: EditorialProduct;
+  archKey: string;
+  headline: string; dek: string; bodyMarkdown: string; pullQuote: string;
+  primaryTeam: string; teams: string[]; tags: string[]; seo: { title: string; description: string };
+}
+
 /** Generates and publishes one standalone long-form article. Returns a
  * result label for the route/cron log. Never throws. */
 export async function generateLongformArticle(): Promise<string> {
   if (!isSanityWriteConfigured || !process.env.ANTHROPIC_API_KEY) return "not-configured";
+  const out = await draftLongformArticle();
+  if ("error" in out) return out.error;
+  return publishLongformDraft(out.draft);
+}
+
+/** Selects a topic and drafts one standalone piece through every gate
+ * WITHOUT publishing — the review pack and the cron share this. `avoidHeadlines`
+ * adds to the dedup list so a batch never writes the same piece twice. */
+export async function draftLongformArticle(
+  opts: { avoidHeadlines?: string[] } = {},
+): Promise<{ draft: LongformDraft } | { error: string }> {
+  if (!process.env.ANTHROPIC_API_KEY) return { error: "not-configured" };
   try {
     const anthropic = new Anthropic();
 
@@ -132,7 +154,7 @@ export async function generateLongformArticle(): Promise<string> {
         role: "user",
         content: `TYPE MENU:\n${TYPE_MENU}\n\nRECENT WIRE COVERAGE (72h):\n${recentStories
           .map((s) => `[${s._id}] (${s.category}) ${s.headline} — ${(s.whatHappened ?? "").slice(0, 180)}`)
-          .join("\n")}\n\nRECENT ARTICLE HEADLINES (do not duplicate):\n${recentArticles.map((a) => `- ${a.headline}`).join("\n")}`,
+          .join("\n")}\n\nRECENT ARTICLE HEADLINES (do not duplicate):\n${[...recentArticles.map((a) => a.headline), ...(opts.avoidHeadlines ?? [])].map((h) => `- ${h}`).join("\n")}`,
       }],
     });
     const sel = JSON.parse(textOf(selRes)) as {
@@ -204,8 +226,8 @@ export async function generateLongformArticle(): Promise<string> {
     draft.dek = scrubDashes(draft.dek);
 
     // --- Gates ----------------------------------------------------------
-    if (narratesSourcing(draft.bodyMarkdown)) return "gate-sourcenarration";
-    if (/!\s|\bguaranteed\b/i.test(draft.bodyMarkdown)) return "gate-banned";
+    if (narratesSourcing(draft.bodyMarkdown)) return { error: "gate-sourcenarration" };
+    if (/!\s|\bguaranteed\b/i.test(draft.bodyMarkdown)) return { error: "gate-banned" };
     // Pull quote must be verbatim from a SUPPLIED archived quote (or empty),
     // and must not ALSO be written into the body — writers sometimes quote
     // inline and drop the marker mid-sentence, rendering the quote twice
@@ -243,7 +265,7 @@ export async function generateLongformArticle(): Promise<string> {
       messages: [{ role: "user", content: `SOURCES:\n${sourcePack}\n\nDRAFT:\n${draft.bodyMarkdown}` }],
     });
     const check = JSON.parse(textOf(checkRes)) as { verdict: string };
-    if (check.verdict !== "pass") return `factcheck-${check.verdict}`;
+    if (check.verdict !== "pass") return { error: `factcheck-${check.verdict}` };
 
     // Brief v2 Part 8: scored quality gate — one rewrite with the judge's
     // notes when the draft scores below 8 in two or more categories.
@@ -263,7 +285,22 @@ export async function generateLongformArticle(): Promise<string> {
       }
     }
 
-    // --- Publish --------------------------------------------------------
+    return {
+      draft: {
+        typeId: sel.typeId, topic: sel.topic, angle: sel.angle, product, archKey: arch.key,
+        headline: draft.headline, dek: draft.dek, bodyMarkdown: draft.bodyMarkdown, pullQuote: draft.pullQuote,
+        primaryTeam: draft.primaryTeam, teams: draft.teams, tags: draft.tags, seo: draft.seo,
+      },
+    };
+  } catch (err) {
+    console.error("[longform]", err);
+    return { error: "error" };
+  }
+}
+
+/** Publishes a gated draft with a generated hero. Returns the cron label. */
+export async function publishLongformDraft(draft: LongformDraft): Promise<string> {
+  try {
     const slug = slugify(draft.headline);
     const articleId = `article-lf-${slug.slice(0, 60)}`;
     await writeClient.createIfNotExists({
@@ -280,7 +317,7 @@ export async function generateLongformArticle(): Promise<string> {
       lowConfidence: false,
       primaryTeam: draft.primaryTeam,
       teams: draft.teams,
-      tags: [...draft.tags, sel.typeId, `arch:${arch.key}`, `product:${product}`],
+      tags: [...draft.tags, draft.typeId, `arch:${draft.archKey}`, `product:${draft.product}`],
       contentType: "Analysis",
       productionMethod: "ai-reviewed",
       seoTitle: draft.seo.title,
@@ -298,7 +335,7 @@ export async function generateLongformArticle(): Promise<string> {
     }
     return `ok:${articleId}`;
   } catch (err) {
-    console.error("[longform]", err);
+    console.error("[longform:publish]", err);
     return "error";
   }
 }
