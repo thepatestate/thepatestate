@@ -139,10 +139,10 @@ export default async function WireStoryPage({ params }: { params: Promise<{ slug
           {story.deck && <p className="a-dek">{story.deck}</p>}
 
           <div className="a-by">
-            <div className="av">WD</div>
+            <div className="av">JP</div>
             <div className="who">
-              <b>The Pate State Wire Desk</b>
-              <span>Verified reporting · full source list below · monitored by an editor</span>
+              <b>Josh Pate</b>
+              <span>The Wire · drafted from the cited sources in Josh&apos;s voice · verified and monitored by an editor</span>
             </div>
             <div className="upd"><b>● {status}</b><br />{formatDate(story.publishedAt ?? "")}</div>
           </div>

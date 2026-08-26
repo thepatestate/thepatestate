@@ -11,7 +11,7 @@ import { getTeamDirectory } from "@/lib/cfbd";
 import { findReceipt } from "@/lib/quotes";
 import { slugify } from "@/lib/slug";
 import { writeJSON } from "@/lib/writer";
-import { boilerplateViolations, BOILERPLATE_PROMPT, scoreDraft, editorialSystem } from "@/lib/editorial";
+import { boilerplateViolations, BOILERPLATE_PROMPT, scoreDraft, editorialSystem, voiceMatch } from "@/lib/editorial";
 
 const MODEL = "claude-sonnet-5";
 // Client directive (2026-08-17): wire clicks must never leave the site, so
@@ -345,7 +345,6 @@ export function scoreCallout(sentence: string): number {
   if (CALLOUT_BANNED.some((re) => re.test(s))) return -Infinity;
   // Ramp openers read as mid-paragraph fragments, not standalone lines.
   if (/^(speaking|according to|talking|appearing|in an interview|asked about|when asked)\b/i.test(s)) return -Infinity;
-  if (/(?:^|[\s“"(])(I|I'm|I've|I'd|my)\b/.test(s)) return -Infinity;
   if (headlineNamesOutlet(s) || /\breport(s|ed|ing)?\b/i.test(s)) return -Infinity;
   const hedges = s.match(HEDGES)?.length ?? 0;
   if (hedges >= 2) return -Infinity;
@@ -617,8 +616,12 @@ export async function generateWireStory(
     // A full-source story filed as a brief is the writer under-treating the
     // news (six of six review-pack stories came back at ~100 words, 2026-08-26).
     const underTreated = !thin && !(draft.whyBody && draft.readBody);
-    if (!headlineNamesOutlet(upper) && !hasAttributionOpener(draft.whatHappened ?? "") && !narratesSourcing(allProse) && !hasFirstPersonProse(allProse) && boiler.length === 0 && !underTreated && !/\*{2,}/.test(allProse)) break;
-    user = `${baseUser}\n\nYOUR PREVIOUS DRAFT VIOLATED the writing standard${boiler.length ? ` (gated language found: ${boiler.join("; ")})` : ""}${underTreated ? " (you filed a brief on a full-source story: the sources support a full Wire story, so write whyBody, section04, readBody and watching, and missing, board, chessboard where earned, 600–1,100 words per 04 §5)" : ""}. The desk NEVER speaks in first person — no "I," "my," or "we've" anywhere in prose (the desk has no self; Josh's voice exists only in the receipt module). Never name an outlet or use in-prose attribution in the deck or the opening section (official source or a NAMED individual reporter only; unconfirmed details are "reported to be…"). And NEVER narrate your own sourcing anywhere — no "the source material," "the available information," "is described as," "no names are provided," "per the report." Write what IS known directly, the way an analyst explains news to a friend; where something is unknown, say what we don't know yet in plain speech ("Washington hasn't said who") without pointing at documents. Never include censored profanity from a source quote ("a lot of good *** can happen") — trim the quote at a word boundary before the censored word, or paraphrase the sentiment without quoting. Never reuse the editorial documents' example sentences or people. Rewrite the full story.`;
+    // Josh, 2026-08-26: the Wire is written as Josh too. A full story with
+    // no first person in its analysis modules missed the voice.
+    const analysis = ["whyBody", "missing", "section04Body", "chessboard", "readBody"].map((k) => draft[k] ?? "").join("\n");
+    const noVoice = !thin && analysis.trim().length > 0 && !hasFirstPersonProse(analysis);
+    if (!headlineNamesOutlet(upper) && !hasAttributionOpener(draft.whatHappened ?? "") && !narratesSourcing(allProse) && !noVoice && boiler.length === 0 && !underTreated && !/\*{2,}/.test(allProse)) break;
+    user = `${baseUser}\n\nYOUR PREVIOUS DRAFT VIOLATED the writing standard${boiler.length ? ` (gated language found: ${boiler.join("; ")})` : ""}${underTreated ? " (you filed a brief on a full-source story: the sources support a full Wire story, so write whyBody, section04, readBody and watching, and missing, board, chessboard where earned, 600–1,100 words per 04 §5)" : ""}${noVoice ? " (the analysis modules are not in Josh's first person: this is Josh telling the reader what the news means, \"I\" to \"you\", matching THE VOICE TO MATCH)" : ""}. Never name an outlet or use in-prose attribution in the deck or the opening section (official source or a NAMED individual reporter only; unconfirmed details are "reported to be…"). And NEVER narrate your own sourcing anywhere — no "the source material," "the available information," "is described as," "no names are provided," "per the report." Write what IS known directly, the way an analyst explains news to a friend; where something is unknown, say what we don't know yet in plain speech ("Washington hasn't said who") without pointing at documents. Never include censored profanity from a source quote ("a lot of good *** can happen") — trim the quote at a word boundary before the censored word, or paraphrase the sentiment without quoting. Never reuse the editorial documents' example sentences or people. Rewrite the full story.`;
   }
   type StoryDraft = {
     headline: string; deck: string; verification: "confirmed" | "reported" | "developing";
@@ -652,7 +655,6 @@ export async function generateWireStory(
     if (BANNED_PATTERNS.some((re) => re.test(c))) return "banned";
     if (hasAttributionOpener(d.whatHappened) || headlineNamesOutlet(`${d.deck}\n${d.whatHappened}`)) return "attribution";
     if (narratesSourcing(c)) return "sourcenarration";
-    if (hasFirstPersonProse(c)) return "firstperson";
     return null;
   };
   const factCheck = async (c: string): Promise<{ verdict: string; detail: string }> => {
@@ -683,9 +685,16 @@ export async function generateWireStory(
   // Wire has to publish, and the hard gates above remain the floor; the
   // rewrite is only adopted when it passes those same gates plus fact-check.
   const isBrief = !story.whyBody && !story.missing && !story.readBody;
-  const verdict = isBrief
-    ? { scores: {}, notes: "", pass: true }
-    : await scoreDraft(anthropic, { headline: story.headline, dek: story.deck, body: combined, sources: job.sourceBlock });
+  const [quality, voice] = isBrief
+    ? [{ scores: {}, notes: "", pass: true }, { score: 10, notes: "", pass: true }]
+    : await Promise.all([
+        scoreDraft(anthropic, { headline: story.headline, dek: story.deck, body: combined, sources: job.sourceBlock }),
+        voiceMatch(anthropic, { lane: "feature", draft: combined }),
+      ]);
+  const verdict = {
+    pass: quality.pass && voice.pass,
+    notes: [quality.pass ? "" : `Quality judge: ${quality.notes}`, voice.pass ? "" : `Voice judge (the draft scored ${voice.score}/10 against Josh's approved column; it must read as Josh): ${voice.notes}`].filter(Boolean).join("\n"),
+  };
   if (!verdict.pass) {
     try {
       const rewriteRaw = await writeJSON({

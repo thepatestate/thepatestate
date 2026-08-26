@@ -90,9 +90,8 @@ describe("ingestEpisode", () => {
     );
     expect(articleCall).toBeTruthy();
     const articleDoc = articleCall![0] as Record<string, unknown>;
-    // Kit, Constitution §3 (2026-08-26): the byline "Josh Pate" is never
-    // auto-applied; the autonomous show-derived column is a staff piece.
-    expect(articleDoc.byline).toBe("The Pate State Staff");
+    // Josh, 2026-08-26: his show columns carry his byline in his voice.
+    expect(articleDoc.byline).toBe("Josh Pate");
     expect(articleDoc.workflowState).toBe("ai-drafted");
   });
 

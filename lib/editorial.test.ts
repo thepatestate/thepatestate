@@ -95,6 +95,13 @@ describe("editorialSystem (the kit's load order: 01 → 02 → spec → 07 → h
       expect(sys).not.toContain("Article Updates 4.0");
     }
   });
+  it("closes every lane with the approved article it must sound like", () => {
+    expect(editorialSystem("feature", "")).toContain("=== feature-three-boards-josh.html ===");
+    expect(editorialSystem("show-adaptation", "")).toContain("I picked three of them");
+    expect(editorialSystem("news-reaction", "")).toContain("=== feature-three-boards-josh.html ===");
+    // Josh, 2026-08-26: "Everything needs to be written like it's written by Josh" — the Wire too.
+    expect(editorialSystem("wire", "")).toContain("=== feature-three-boards-josh.html ===");
+  });
   it("house notes keep the site's mechanics out of the prose and the examples out of the stories", () => {
     expect(HOUSE_NOTES).toMatch(/SITE RENDERS THE FURNITURE/);
     expect(HOUSE_NOTES).toMatch(/EXAMPLES ARE NOT TEMPLATES/);

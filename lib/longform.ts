@@ -19,9 +19,8 @@ import { narratesSourcing, scrubDashes } from "@/lib/wire";
 import { generateArticleHero } from "@/lib/hero-image";
 import { uploadHeroImage, setArticleHeroImage } from "@/lib/sanity";
 import { slugify } from "@/lib/slug";
-import { BYLINE_STAFF } from "@/lib/generate";
 import { JOSH_BRACKET_FIELD, JOSH_BRACKET_FINAL, JOSH_BRACKET_LABEL } from "@/lib/josh-bracket";
-import { pickArchitecture, boilerplateViolations, BOILERPLATE_PROMPT, scoreDraft, editorialSystem, type EditorialProduct } from "@/lib/editorial";
+import { pickArchitecture, boilerplateViolations, BOILERPLATE_PROMPT, scoreDraft, editorialSystem, voiceMatch, type EditorialProduct } from "@/lib/editorial";
 import { hasFirstPersonProse } from "@/lib/wire";
 
 const MODEL = "claude-sonnet-5";
@@ -218,9 +217,11 @@ export async function draftLongformArticle(
       });
       draft = JSON.parse(raw) as typeof draft;
       const boiler = boilerplateViolations(draft.bodyMarkdown);
-      const firstPerson = hasFirstPersonProse(draft.bodyMarkdown);
-      if (boiler.length === 0 && !firstPerson) break;
-      user = `${sourcePack}\n\nYOUR PREVIOUS DRAFT VIOLATED house style${firstPerson ? " — it used first person under a Staff byline (Josh's positions are third person: \"Pate expects…\")" : ""}${boiler.length ? ` — banned boilerplate: ${boiler.join("; ")}` : ""}. Keep the analysis; rewrite the offending passages in fresh concrete prose.`;
+      // Josh, 2026-08-26: every column is in his first person, matching the
+      // approved Three Boards column. A draft with no "I" in it missed the lane.
+      const noFirstPerson = !hasFirstPersonProse(draft.bodyMarkdown);
+      if (boiler.length === 0 && !noFirstPerson) break;
+      user = `${sourcePack}\n\nYOUR PREVIOUS DRAFT VIOLATED house style${noFirstPerson ? " — it is not written in Josh's first person; this is Josh's Read, written as \"I\" to \"you\", matching THE VOICE TO MATCH exactly" : ""}${boiler.length ? ` — banned language: ${boiler.join("; ")}` : ""}. Keep the analysis; rewrite in the voice.`;
     }
     draft.bodyMarkdown = scrubDashes(draft.bodyMarkdown).replace(/\[EMBED:[^\]]*\]\s*/g, "").replace(/\[\/PULLQUOTE\]/g, "");
     draft.dek = scrubDashes(draft.dek);
@@ -269,18 +270,22 @@ export async function draftLongformArticle(
 
     // Brief v2 Part 8: scored quality gate — one rewrite with the judge's
     // notes when the draft scores below 8 in two or more categories.
-    const verdict = await scoreDraft(anthropic, { headline: draft.headline, dek: draft.dek, body: draft.bodyMarkdown, sources: sourcePack });
-    if (!verdict.pass) {
+    const [quality, voice] = await Promise.all([
+      scoreDraft(anthropic, { headline: draft.headline, dek: draft.dek, body: draft.bodyMarkdown, sources: sourcePack }),
+      voiceMatch(anthropic, { lane: "feature", draft: draft.bodyMarkdown }),
+    ]);
+    if (!quality.pass || !voice.pass) {
+      const notes = [quality.pass ? "" : `Quality judge: ${quality.notes}`, voice.pass ? "" : `Voice judge (scored ${voice.score}/10 against the approved Three Boards column; it must read as the same writer): ${voice.notes}`].filter(Boolean).join("\n");
       const raw2 = await writeJSON({
         system,
-        user: `${user}\n\nEDITOR'S REWRITE NOTES (your previous draft failed the quality gate — fix these precisely, keep what works): ${verdict.notes}\n\nIf the notes ask for detail the source pack does not contain, do NOT invent it: cut instead. Delete paragraphs that restate, and let the piece be shorter.`,
+        user: `${user}\n\nEDITOR'S REWRITE NOTES (your previous draft failed the pre-publish judges — fix these precisely, keep what works):\n${notes}\n\nIf the notes ask for detail the source pack does not contain, do NOT invent it: cut instead. Delete paragraphs that restate, and let the piece be shorter.`,
         schema: LONGFORM_SCHEMA,
         schemaName: "longform_article",
         maxTokens: 8192,
       });
       const draft2 = JSON.parse(raw2) as typeof draft;
       draft2.bodyMarkdown = scrubDashes(draft2.bodyMarkdown).replace(/\[EMBED:[^\]]*\]\s*/g, "").replace(/\[\/PULLQUOTE\]/g, "");
-      if (boilerplateViolations(draft2.bodyMarkdown).length === 0 && !hasFirstPersonProse(draft2.bodyMarkdown)) {
+      if (boilerplateViolations(draft2.bodyMarkdown).length === 0 && hasFirstPersonProse(draft2.bodyMarkdown)) {
         Object.assign(draft, draft2);
       }
     }
@@ -311,7 +316,8 @@ export async function publishLongformDraft(draft: LongformDraft): Promise<string
       dek: draft.dek,
       bodyMarkdown: draft.bodyMarkdown,
       ...(draft.pullQuote ? { pullQuote: draft.pullQuote } : {}),
-      byline: BYLINE_STAFF,
+      // Josh, 2026-08-26: his columns carry his byline, in his voice.
+      byline: "Josh Pate",
       workflowState: "published",
       publishedAt: new Date().toISOString(),
       lowConfidence: false,

@@ -36,6 +36,24 @@ const { fetchTranscript, transcriptToPromptText } = await import("../lib/transcr
 const { draftCompanion, extractQuotes, classifySeries } = await import("../lib/generate.ts");
 const { pickArchitecture, boilerplateViolations } = await import("../lib/editorial.ts");
 const { draftLongformArticle } = await import("../lib/longform.ts");
+const { fanScore, voiceMatch } = await import("../lib/editorial.ts");
+const SCORE = !process.argv.includes("--no-score");
+
+/** The reader's judge + the voice judge on a finished piece (Isaac,
+ * 2026-08-26: iterate until fan legibility and enjoyment average 8.5). */
+async function judge(piece: Record<string, any>) {
+  if (!SCORE) return;
+  const body = piece.lane === "wire"
+    ? [piece.whatHappened, piece.whyBody, piece.missing, piece.section04Body, piece.chessboard, piece.readBody, ...(piece.watching ?? []).map((w: any) => `${w.title} ${w.body}`)].filter(Boolean).join("\n\n")
+    : String(piece.bodyMarkdown ?? "");
+  const [fan, voice] = await Promise.all([
+    fanScore(anthropic, { headline: String(piece.headline), dek: String(piece.dek ?? piece.deck ?? ""), body }),
+    voiceMatch(anthropic, { lane: "feature", draft: body }),
+  ]);
+  piece.fan = fan;
+  piece.voice = { score: voice.score, notes: voice.notes };
+  console.log(`   fan ${fan.score} (legibility ${fan.legibility} · enjoyment ${fan.enjoyment} · josh ${fan.joshVoice}) · voice ${voice.score}\n   ${fan.notes.replace(/\n/g, " ").slice(0, 600)}`);
+}
 
 const anthropic = new Anthropic();
 const db = isAdminConfigured ? createAdminClient() : null;
@@ -81,9 +99,11 @@ for (const item of items) {
   if (!gen.ok) { console.log(`HOLD (${gen.reason.split(":")[0]})  ${item.headline.slice(0, 60)}`); continue; }
   usedCategories[item.category ?? "general"] = (usedCategories[item.category ?? "general"] ?? 0) + 1;
   wireDone++;
-  pack.push({ lane: "wire", label: "The Wire", sourceItem: item.headline, category: item.category, outlets, seconds: Math.round((Date.now() - t0) / 1000), ...gen.fields });
-  save();
+  const piece: Record<string, any> = { lane: "wire", label: "The Wire", sourceItem: item.headline, category: item.category, outlets, seconds: Math.round((Date.now() - t0) / 1000), ...gen.fields };
   console.log(`OK wire ${wireDone}/${WIRE}   ${(gen.fields.headline as string).slice(0, 70)}`);
+  await judge(piece);
+  pack.push(piece);
+  save();
 }
 
 // ---- Show-derived columns ----------------------------------------------------
@@ -106,9 +126,11 @@ for (const [i, v] of videos.entries()) {
   });
   if (!draft || draft.lowConfidence) { console.log(`HOLD (quote gate)  ${v.title.slice(0, 60)}`); continue; }
   showDone++;
-  pack.push({ lane: "show", label: "Show-derived column · The Pate State Staff", episode: v.title, ytId: v.id, series, seconds: Math.round((Date.now() - t0) / 1000), gates: boilerplateViolations(draft.bodyMarkdown), ...draft });
-  save();
+  const piece: Record<string, any> = { lane: "show", label: "Show-derived column · Josh Pate", episode: v.title, ytId: v.id, series, seconds: Math.round((Date.now() - t0) / 1000), gates: boilerplateViolations(draft.bodyMarkdown), ...draft };
   console.log(`OK show ${showDone}/${SHOW}   ${draft.headline.slice(0, 70)}`);
+  await judge(piece);
+  pack.push(piece);
+  save();
 }
 
 // ---- House analysis ------------------------------------------------------------
@@ -118,10 +140,17 @@ for (let n = 0; n < HOUSE * 2 && pack.filter((p) => p.lane === "house").length <
   const out = await draftLongformArticle({ avoidHeadlines: avoid });
   if ("error" in out) { console.log(`HOLD (${out.error})  house analysis attempt ${n + 1}`); continue; }
   avoid.push(out.draft.headline);
-  pack.push({ lane: "house", label: `House analysis · ${out.draft.typeId} · ${out.draft.product}`, seconds: Math.round((Date.now() - t0) / 1000), gates: boilerplateViolations(out.draft.bodyMarkdown), ...out.draft });
+  const piece: Record<string, any> = { lane: "house", label: `Josh's Read · ${out.draft.typeId}`, seconds: Math.round((Date.now() - t0) / 1000), gates: boilerplateViolations(out.draft.bodyMarkdown), ...out.draft };
+  console.log(`OK house ${pack.filter((p) => p.lane === "house").length + 1}/${HOUSE}   ${out.draft.headline.slice(0, 70)}`);
+  await judge(piece);
+  pack.push(piece);
   save();
-  console.log(`OK house ${pack.filter((p) => p.lane === "house").length}/${HOUSE}   ${out.draft.headline.slice(0, 70)}`);
 }
 
 save();
+const scored = pack.filter((p) => p.fan);
+if (scored.length) {
+  const avg = (k: string) => (scored.reduce((s, p) => s + (p.fan as any)[k], 0) / scored.length).toFixed(2);
+  console.log(`\nFAN AVERAGE over ${scored.length}: score ${avg("score")} · legibility ${avg("legibility")} · enjoyment ${avg("enjoyment")} · josh ${avg("joshVoice")} · voice-match ${(scored.reduce((s, p) => s + (p.voice as any).score, 0) / scored.length).toFixed(2)}`);
+}
 console.log(`\ndone: ${pack.length} pieces → ${OUT}`);

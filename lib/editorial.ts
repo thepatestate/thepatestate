@@ -13,6 +13,7 @@
 // can never drift apart.
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
+import { voiceExemplarBlock, exemplarProse, EXEMPLAR_FOR_LANE } from "@/lib/exemplars";
 
 export function readPrompt(name: string): string {
   return readFileSync(join(process.cwd(), "prompts", name), "utf8");
@@ -43,7 +44,62 @@ export const HOUSE_NOTES = `HOUSE NOTES (site mechanics the kit's files don't ca
 
 const SNAPSHOT_NOTE = `[The file below is the kit's dated snapshot. It orients; it does not license a fact. Nothing in it may be stated in an article unless the assignment's source material carries it, and its picks yield to the on-record site positions supplied with the assignment.]`;
 
-/** Builds a writer's system prompt in the kit's load order. */
+/** Which approved build a lane's prose must match. Josh, 2026-08-26, after
+ * the second look: "Everything needs to be written like it's written by
+ * Josh." Every lane, the Wire included, matches his Three Boards column;
+ * the Wire keeps its modules and its facts discipline and drops the desk
+ * voice. (The desk-voice Wire builds stay as structure references only.) */
+export function exemplarLane(_product: EditorialProduct): keyof typeof EXEMPLAR_FOR_LANE {
+  return "feature";
+}
+
+export interface FanVerdict { legibility: number; enjoyment: number; joshVoice: number; score: number; notes: string; pass: boolean }
+
+/** The reader's judge (Isaac, 2026-08-26: "until articles are coming out at
+ * 8.5 out of 10 in terms of FAN legibility and enjoyment"). A college
+ * football fan, not an editor: could I follow it at speed, did I want to
+ * keep reading, did it sound like Josh talking to me. score = the mean of
+ * legibility and enjoyment; pass at 8.5. Fail-open. */
+export async function fanScore(
+  anthropic: import("@anthropic-ai/sdk").default,
+  input: { headline: string; dek?: string; body: string },
+): Promise<FanVerdict> {
+  try {
+    const res = await anthropic.messages.create({
+      model: "claude-sonnet-5",
+      max_tokens: 2048,
+      output_config: {
+        effort: "low",
+        format: {
+          type: "json_schema",
+          schema: {
+            type: "object",
+            properties: { legibility: { type: "number" }, enjoyment: { type: "number" }, joshVoice: { type: "number" }, notes: { type: "string" } },
+            required: ["legibility", "enjoyment", "joshVoice", "notes"],
+            additionalProperties: false,
+          },
+        },
+      },
+      system: `You are a serious college football fan who reads a lot: message boards, the national writers, and you listen to Josh Pate's show. You are NOT an editor. Read the piece once at normal speed and score it 1-10 on three things, harshly.
+legibility: could you follow every sentence on the first pass with no decoding? Did you always know who was being talked about and why it mattered? Deduct for insider labels, koans, clever lines you had to re-read, paragraphs that restate the last one, abstractions where a name or a number should be, and anything that sounds like a memo instead of a person.
+enjoyment: did you want to keep reading, and were you glad you did? Did you learn something, hear a take you could argue with, get a line you'd text a friend, and get something to watch for on Saturday? Deduct for padding, hedging, throat-clearing, fake drama, and endings that trail off.
+joshVoice: does it sound like Josh Pate talking to you on the porch: first person, plain, confident, dry, complete sentences, verdict first, the football reason right behind it, respect for every fanbase, zero performance? Deduct for anonymous-journalist prose, third-person "Pate says," clipped shorthand, or sounding like an AI doing an impression.
+Calibration: 10 = you'd send it to a friend unprompted; 8.5 = you'd finish it and remember one line; 7 = fine, forgettable; 5 = you skimmed; 3 = you closed the tab.
+notes: 3-5 blunt sentences from the fan's chair: what bored you, what confused you, what you liked, and QUOTE the two sentences that most made it feel written by a machine. Output JSON only.`,
+      messages: [{ role: "user", content: `HEADLINE: ${input.headline}\nDEK: ${input.dek ?? ""}\n\n${input.body}` }],
+    });
+    const block = res.content.find((b) => b.type === "text");
+    const out = JSON.parse(block && block.type === "text" ? block.text : "{}") as Partial<FanVerdict>;
+    const legibility = out.legibility ?? 10, enjoyment = out.enjoyment ?? 10, joshVoice = out.joshVoice ?? 10;
+    const score = Math.round(((legibility + enjoyment) / 2) * 10) / 10;
+    return { legibility, enjoyment, joshVoice, score, notes: out.notes ?? "", pass: score >= 8.5 };
+  } catch {
+    return { legibility: 10, enjoyment: 10, joshVoice: 10, score: 10, notes: "", pass: true };
+  }
+}
+
+/** Builds a writer's system prompt in the kit's load order, closing with
+ * the approved article the piece must sound like. */
 export function editorialSystem(product: EditorialProduct, taskPrompt: string): string {
   return [
     readPrompt("kit/01-constitution.md"),
@@ -52,7 +108,41 @@ export function editorialSystem(product: EditorialProduct, taskPrompt: string): 
     `${SNAPSHOT_NOTE}\n\n${readPrompt("kit/07-current-state.md")}`,
     HOUSE_NOTES,
     taskPrompt,
+    voiceExemplarBlock(exemplarLane(product)),
   ].filter(Boolean).join("\n\n");
+}
+
+export interface VoiceVerdict { score: number; notes: string; pass: boolean }
+
+/** Scores a draft's REGISTER against the lane's approved article (Josh,
+ * 2026-08-26: "the exact same voice as those articles"). Facts and topic
+ * are ignored; person, rhythm, placement of verdicts and numbers, humor
+ * and warmth are what's judged. Fail-open. Pass = 8 or better. */
+export async function voiceMatch(
+  anthropic: import("@anthropic-ai/sdk").default,
+  input: { lane: keyof typeof EXEMPLAR_FOR_LANE; draft: string },
+): Promise<VoiceVerdict> {
+  try {
+    const res = await anthropic.messages.create({
+      model: "claude-sonnet-5",
+      max_tokens: 2048,
+      output_config: {
+        effort: "low",
+        format: {
+          type: "json_schema",
+          schema: { type: "object", properties: { score: { type: "number" }, notes: { type: "string" } }, required: ["score", "notes"], additionalProperties: false },
+        },
+      },
+      system: `You are a voice-match judge. EXEMPLAR is an article written and approved by the site's owner. DRAFT is a new piece on a different subject that must read as if the same person wrote it. Score 1-10 on register match ONLY, never on facts, topic, or length: grammatical person and address (first person "I" to a "you" reader, or the desk's third person), sentence construction and the rhythm of lengths, where the short hammer sentence lands, how a fact and a verdict share a paragraph, how numbers carry credibility, how rare and where the humor is, how sections open and close, paragraph length, warmth versus distance. 10 = indistinguishable; 8 = the same writer on a different day; 6 = the same building, a different desk; 4 = a competent stranger; 2 = generated. Penalize hard: a different grammatical person than the exemplar; announced structure ("the honest read is", "the counterpoint is"); clipped shorthand the exemplar doesn't use; runs of same-length sentences; clever lines the exemplar wouldn't attempt; consultant vocabulary; every sentence auditioning for a pull quote. notes: 2-4 sentences naming the specific mismatches and QUOTING the draft's two or three most off-voice sentences so a rewrite can target them. Output JSON only.`,
+      messages: [{ role: "user", content: `EXEMPLAR:\n${exemplarProse(EXEMPLAR_FOR_LANE[input.lane]).slice(0, 14000)}\n\nDRAFT:\n${input.draft}` }],
+    });
+    const block = res.content.find((b) => b.type === "text");
+    const out = JSON.parse(block && block.type === "text" ? block.text : "{}") as { score?: number; notes?: string };
+    const score = typeof out.score === "number" ? out.score : 10;
+    return { score, notes: out.notes ?? "", pass: score >= 8 };
+  } catch {
+    return { score: 10, notes: "", pass: true };
+  }
 }
 
 export interface Architecture {

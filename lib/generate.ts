@@ -2,7 +2,7 @@ import Anthropic from "@anthropic-ai/sdk";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { writeJSON } from "@/lib/writer";
-import { boilerplateViolations, BOILERPLATE_PROMPT, editorialSystem, type Architecture } from "@/lib/editorial";
+import { boilerplateViolations, BOILERPLATE_PROMPT, editorialSystem, voiceMatch, type Architecture } from "@/lib/editorial";
 
 export const BYLINE_STAFF = "The Pate State Staff";
 export const SERIES_VALUES = [
@@ -283,15 +283,15 @@ export async function draftCompanion(input: {
 }): Promise<CompanionDraft | null> {
   const c = client();
   if (!c) return null;
-  // Kit: a show-derived column in the autonomous lane — staff byline, third
-  // person, Josh present only through verbatim timestamped quotes
-  // (Constitution §3, Voice Bible §10, features spec §1).
+  // Josh's own argument from his show, in his first person under his byline
+  // (Josh, 2026-08-26: every column in his voice, matching the approved
+  // Three Boards column supplied as the exemplar).
   const system = editorialSystem("show-adaptation", prompt("companion-article.md"));
   // 1–2 quotes, not 2–4 (Isaac, 2026-08-20: scattered quotes with ramp at
   // the edges read disjointed) — each must anchor one of the article's
   // highest-value passages and sit beside the prose arguing the same point.
   const quotesBlock = input.extractedQuotes?.length
-    ? `Extracted verbatim quotes (Voice Bible §10: third-person pieces weave 2–4 verbatim Josh takes, attributed naturally, each deep-linked to its timestamp; the strongest renders as the pull quote). Use 2–4 as [QUOTE:timestamp]…[/QUOTE] blocks, each placed immediately beside the paragraph making the same point (a quote whose neighbors argue something else is a defect). Blockquotes are exact: trim only at the edges (no ramp opener, no trailing fragment), interior cuts use " … ", never change a word inside. The pullQuote follows its own rail.\n${input.extractedQuotes
+    ? `Extracted verbatim quotes. This column is in Josh's own first person, so it does not quote him in running prose; you MAY set off 1–2 of these as [QUOTE:timestamp]…[/QUOTE] blocks (his spoken words at that moment, per Voice Bible §10), each beside the paragraph making the same point. Blockquotes are exact: trim only at the edges (no ramp opener, no trailing fragment), interior cuts use " … ", never change a word inside. The pullQuote follows its own rail.\n${input.extractedQuotes
         .map((q, i) => `${i + 1}. [${q.timestamp}] "${q.quote}" (${q.topic}, heat ${q.heat})`)
         .join("\n")}`
     : null;
@@ -337,10 +337,11 @@ export async function draftCompanion(input: {
       if (!input.transcriptText) return draft; // nothing to verify quotes against
 
       const boiler = boilerplateViolations(draft.bodyMarkdown);
-      const firstPerson = /(?:^|[\s“"(])(I|I'm|I've|I'd|I'll|my)(?=[\s,.!?'’])/.test(draft.bodyMarkdown.replace(/\[QUOTE:[\d:]+\][\s\S]*?\[\/QUOTE\]/g, ""));
-      if ((boiler.length > 0 || firstPerson) && attempt === 0) {
+      const prose = draft.bodyMarkdown.replace(/\[QUOTE:[\d:]+\][\s\S]*?\[\/QUOTE\]/g, "");
+      const noFirstPerson = !/(?:^|[\s“"(])(I|I'm|I've|I'd|I'll|my)(?=[\s,.!?'’])/.test(prose);
+      if ((boiler.length > 0 || noFirstPerson) && attempt === 0) {
         lastDraft = draft;
-        user = `${baseUser}\n\nYour previous draft violated house style${firstPerson ? " — it used first person outside a verbatim quote block; this is a staff-byline piece, Josh is \"Pate\" in third person and speaks only inside [QUOTE] blocks" : ""}${boiler.length ? ` — banned language: ${boiler.join("; ")}` : ""}. Keep the analysis, rewrite the offending passages in fresh concrete prose.`;
+        user = `${baseUser}\n\nYour previous draft violated house style${noFirstPerson ? " — it is not in Josh's first person; this column is written as \"I\" to \"you\", matching THE VOICE TO MATCH exactly" : ""}${boiler.length ? ` — banned language: ${boiler.join("; ")}` : ""}. Keep the analysis, rewrite in the voice.`;
         continue;
       }
       const badQuotes = findNonVerbatimQuotes(draft.bodyMarkdown, input.transcriptText);
@@ -351,7 +352,33 @@ export async function draftCompanion(input: {
       ) {
         badQuotes.push(draft.pullQuote.trim());
       }
-      if (badQuotes.length === 0) return draft;
+      if (badQuotes.length === 0) {
+        // Voice judge against the approved Three Boards column: one rewrite
+        // with the judge's notes, adopted only if it still passes the gates.
+        if (process.env.VITEST) return draft;
+        const voice = await voiceMatch(c, { lane: "feature", draft: draft.bodyMarkdown });
+        if (voice.pass) return draft;
+        try {
+          const raw2 = await writeJSON({
+            system,
+            user: `${user}\n\nVOICE JUDGE (your previous draft scored ${voice.score}/10 against THE VOICE TO MATCH; it must read as the same writer): ${voice.notes}\n\nRewrite in the voice. Keep every claim traceable to the transcript; keep the quote blocks exact.\n\nPrevious draft:\n${JSON.stringify(draft)}`,
+            schema: DRAFT_SCHEMA,
+            schemaName: "companion_draft",
+            maxTokens: 8192,
+          });
+          const parsed2 = JSON.parse(raw2);
+          const d2 = validateDraft(parsed2);
+          if (d2) {
+            d2.bodyMarkdown = d2.bodyMarkdown.replace(/\\(["'])/g, "$1");
+            const bad2 = findNonVerbatimQuotes(d2.bodyMarkdown, input.transcriptText);
+            if (d2.pullQuote.trim().split(/\s+/).length >= 5 && findNonVerbatimQuotes(`"${d2.pullQuote}"`, input.transcriptText).length > 0) bad2.push(d2.pullQuote);
+            if (bad2.length === 0 && boilerplateViolations(d2.bodyMarkdown).length === 0) return d2;
+          }
+        } catch (err) {
+          console.error("[generate:draftCompanion] voice rewrite", err);
+        }
+        return draft;
+      }
       console.warn(`[generate:draftCompanion] attempt ${attempt}: ${badQuotes.length} non-verbatim span(s):`, badQuotes.map((q) => q.slice(0, 120)));
 
       lastDraft = draft;
