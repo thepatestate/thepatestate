@@ -2,7 +2,7 @@ import Anthropic from "@anthropic-ai/sdk";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { writeJSON } from "@/lib/writer";
-import { boilerplateViolations, BOILERPLATE_PROMPT, editorialSystem, voiceMatch, circles, restatements, type Architecture } from "@/lib/editorial";
+import { boilerplateViolations, BOILERPLATE_PROMPT, editorialSystem, voiceMatch, circles, restatements, abstractParagraphs, type Architecture } from "@/lib/editorial";
 import { judgeJSON } from "@/lib/judge";
 
 export const BYLINE_STAFF = "The Pate State Staff";
@@ -356,9 +356,11 @@ export async function draftCompanion(input: {
       const prose = draft.bodyMarkdown.replace(/\[QUOTE:[\d:]+\][\s\S]*?\[\/QUOTE\]/g, "");
       const noFirstPerson = !/(?:^|[\s“"(])(I|I'm|I've|I'd|I'll|my)(?=[\s,.!?'’])/.test(prose);
       const circling = circles(prose);
-      if ((boiler.length > 0 || noFirstPerson || circling) && attempt === 0) {
+      const abstract = abstractParagraphs(prose);
+      const tooAbstract = abstract.length >= 2;
+      if ((boiler.length > 0 || noFirstPerson || circling || tooAbstract) && attempt === 0) {
         lastDraft = draft;
-        user = `${baseUser}\n\nYour previous draft violated house style${noFirstPerson ? " — it is not in Josh's first person; this column is written as \"I\" to \"you\", matching THE VOICE TO MATCH exactly" : ""}${boiler.length ? ` — banned language: ${boiler.join("; ")}` : ""}${circling ? ` — it restates itself; these sentences repeat a point already made and must go or become new information: ${restatements(prose).slice(0, 4).map((s) => `"${s.slice(0, 110)}"`).join(" · ")}` : ""}. Keep the analysis, rewrite in the voice, shorter.`;
+        user = `${baseUser}\n\nYour previous draft violated house style${noFirstPerson ? " — it is not in Josh's first person; this column is written as \"I\" to \"you\", matching THE VOICE TO MATCH exactly" : ""}${boiler.length ? ` — banned language: ${boiler.join("; ")}` : ""}${circling ? ` — it restates itself; these sentences repeat a point already made and must go or become new information: ${restatements(prose).slice(0, 4).map((s) => `"${s.slice(0, 110)}"`).join(" · ")}` : ""}${tooAbstract ? ` — these paragraphs argue in the abstract with no player, number, play or date in them; put the football from the transcript in or cut them: ${abstract.slice(0, 3).map((p) => `"${p.slice(0, 90)}…"`).join(" · ")}` : ""}. Keep the analysis, rewrite in the voice, shorter.`;
         continue;
       }
       const badQuotes = findNonVerbatimQuotes(draft.bodyMarkdown, input.transcriptText);

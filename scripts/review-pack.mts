@@ -43,7 +43,7 @@ const { fetchTranscript, transcriptToPromptText } = await import("../lib/transcr
 const { draftCompanion, extractQuotes, classifySeries } = await import("../lib/generate.ts");
 const { pickArchitecture, boilerplateViolations } = await import("../lib/editorial.ts");
 const { draftLongformArticle } = await import("../lib/longform.ts");
-const { fanScore, voiceMatch, editorialSystem, readPrompt, BOILERPLATE_PROMPT } = await import("../lib/editorial.ts");
+const { fanScore, voiceMatch, editorialSystem, readPrompt, BOILERPLATE_PROMPT, abstractParagraphs, restatements } = await import("../lib/editorial.ts");
 const { writeJSON } = await import("../lib/writer.ts");
 const { DRAFT_SCHEMA, findNonVerbatimQuotes, placePullQuoteMarker, validateDraft } = await import("../lib/generate.ts");
 const SCORE = !process.argv.includes("--no-score");
@@ -60,7 +60,8 @@ async function refineShow(piece: Record<string, any>, transcriptText: string, ba
   const system = editorialSystem("show-adaptation", readPrompt("companion-article.md"));
   let best = piece;
   for (let round = 1; round <= REFINE && !(best.fan?.pass); round++) {
-    const notes = `FAN JUDGE (a serious fan read your draft; it scored ${best.fan.score}/10 — legibility ${best.fan.legibility}, enjoyment ${best.fan.enjoyment}, sounds-like-Josh ${best.fan.joshVoice}; the bar is ${TARGET}): ${best.fan.notes}\nVOICE JUDGE (${best.voice.score}/10 against THE VOICE TO MATCH): ${best.voice.notes}`;
+    const abs = abstractParagraphs(best.bodyMarkdown), rep = restatements(best.bodyMarkdown);
+    const notes = `FAN JUDGE (a serious fan read your draft; it scored ${best.fan.score}/10 — legibility ${best.fan.legibility}, enjoyment ${best.fan.enjoyment}, sounds-like-Josh ${best.fan.joshVoice}; the bar is ${TARGET}): ${best.fan.notes}\nVOICE JUDGE (${best.voice.score}/10 against THE VOICE TO MATCH): ${best.voice.notes}${abs.length ? `\nABSTRACT PARAGRAPHS (no player, number, play or date in them; put the football in or cut): ${abs.map((p) => `"${p.slice(0, 90)}…"`).join(" · ")}` : ""}${rep.length ? `\nRESTATED SENTENCES (cut or make new): ${rep.slice(0, 4).map((s) => `"${s.slice(0, 100)}"`).join(" · ")}` : ""}`;
     const raw = await writeJSON({
       system,
       user: `${baseUser}\n\n${notes}\n\nRewrite the column so the same fan would score it ${TARGET} or better. Fix exactly what the notes name: cut every restated sentence, replace abstraction with the football reason and a name or a number, deliver everything the headline promises, put the take where a fan can argue with it, end on the specific thing to watch. Every claim still traceable to the transcript; quote blocks exact; first person throughout.\n\nPrevious draft:\n${best.bodyMarkdown}`,

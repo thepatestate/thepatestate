@@ -107,8 +107,9 @@ export const VOICE_CARD = `WHO IS WRITING: Josh Pate, to one smart fan, in his o
 6. Credit the opponent, then swing. Respect every fanbase. Humor is rare, dry, and comes from regular life, never from a joke slot.
 7. Give the reader something to watch on Saturday, specific: a player, a down, a formation, a date.
 8. Have a take. Somewhere in the piece is the sentence a fan would argue with at a bar; say it plainly and defend it. Caveat once, in the same breath, then move on. A piece with no take is a memo.
-9. Structure follows the argument, the way the approved column does: say the thing, prove it with the football and the numbers, tell the reader what it means and what to watch. No mandated beats, no counterpoint slot, no closing restatement of the opening, no "quickly" sweep, no section that exists to fill a template.
-10. The test: read the paragraph aloud on a porch. If it sounds like a memo, a lawyer, a press release, or a robot doing an impression of a podcaster, rewrite it.
+9. Every paragraph carries a specific: a player, a coach, a number, a play, a game, a date. A paragraph that argues in the abstract ("last year's results don't define this team") without the football that proves it is a paragraph a fan skims. Dictate it the way you'd say it out loud to the friend, then clean the delivery; don't compose it like an essay. One line per section a fan would text somebody.
+10. Structure follows the argument, the way the approved column does: say the thing, prove it with the football and the numbers, tell the reader what it means and what to watch. No mandated beats, no counterpoint slot, no closing restatement of the opening, no "quickly" sweep, no section that exists to fill a template.
+11. The test: read the paragraph aloud on a porch. If it sounds like a memo, a lawyer, a press release, or a robot doing an impression of a podcaster, rewrite it.
 The approved column below is what "sounds like him" means. Match it.`;
 
 /** The short rulebook for the lean prompt: the laws that must never be
@@ -313,6 +314,22 @@ export function restatements(text: string): string[] {
     seen.push(words);
   }
   return hits;
+}
+
+/** Paragraphs of 35+ words with no specific in them: no digit and no proper
+ * noun beyond sentence starts (and "I"). The reader's judge calls these
+ * "a lawyer's brief." Exported for the gates and tests. */
+export function abstractParagraphs(text: string): string[] {
+  return text
+    .replace(/\[[^\]]*\]/g, " ")
+    .split(/\n{2,}/)
+    .map((p) => p.trim())
+    .filter((p) => p.split(/\s+/).length >= 35 && !p.startsWith("## "))
+    .filter((p) => {
+      if (/\d/.test(p)) return false;
+      const proper = p.replace(/(^|[.!?]\s+)([A-Z])/g, "$1").match(/\b[A-Z][a-z]{2,}\b/g) ?? [];
+      return proper.filter((w) => w !== "I" && !/^(The|And|But|That|This|There|Those|These|When|Where|What|Why|How|If|In|On|For|With|From|So|Now|Then|Here|You|Your|His|Their|Our|My|We|They|He|She|It|Not|No|Yes|Nobody|Somebody|Every|Some|Most|All|Just|Still|Even|Only|Maybe|Sometimes|Because|Until|Unless|While|After|Before|Since|Once|Also|Again|Instead|Rather|Whether|Either|Neither|Nor|Or|Saturday|Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|January|February|March|April|May|June|July|August|September|October|November|December)$/.test(w)).length === 0;
+    });
 }
 
 /** True when the piece circles: more than 12% of its sentences restate an earlier one. */

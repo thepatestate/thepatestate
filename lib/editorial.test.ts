@@ -208,3 +208,12 @@ describe("restatements / circles (the reader's #1 complaint)", () => {
     expect(circles(text)).toBe(false);
   });
 });
+
+describe("abstractParagraphs", () => {
+  it("flags a long paragraph with no name, number, play, or date", async () => {
+    const { abstractParagraphs } = await import("./editorial");
+    const abstract = "The popular read on this season is treating last year's results as permanent evidence about what these programs are, and that is where I think the conversation goes wrong, because a result is a snapshot of one afternoon and not a verdict on a program, and the difference between those two things is the whole argument here.";
+    const concrete = "Ohio State returns three starters from a defense that allowed 9.3 points per game, and Rowe was the only one of them behind the front, which is why the Texas game on September 12 is the first real look at the four new starters around him and the one I have circled.";
+    expect(abstractParagraphs(`${abstract}\n\n${concrete}`)).toHaveLength(1);
+  });
+});
