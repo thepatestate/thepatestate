@@ -26,6 +26,7 @@ const WIRE = arg("wire", 6), SHOW = arg("show", 3), HOUSE = arg("house", 3);
 const outArg = process.argv.indexOf("--out");
 const OUT = outArg !== -1 ? process.argv[outArg + 1] : join(process.cwd(), ".superpowers", `review-pack-${new Date().toISOString().slice(0, 10)}.json`);
 
+const APPEND = process.argv.includes("--append");
 const { default: Anthropic } = await import("@anthropic-ai/sdk");
 const { writeClient } = await import("../lib/sanity.ts");
 const { generateWireStory, fetchSourceText, titleKeywords, isThinSource } = await import("../lib/wire.ts");
@@ -38,18 +39,21 @@ const { draftLongformArticle } = await import("../lib/longform.ts");
 
 const anthropic = new Anthropic();
 const db = isAdminConfigured ? createAdminClient() : null;
-const pack: Record<string, unknown>[] = [];
+const pack: Record<string, unknown>[] = APPEND && existsSync(OUT) ? JSON.parse(readFileSync(OUT, "utf8")) : [];
+const already = new Set(pack.map((p) => String(p.sourceItem ?? p.episode ?? p.headline)));
 const save = () => { mkdirSync(join(process.cwd(), ".superpowers"), { recursive: true }); writeFileSync(OUT, JSON.stringify(pack, null, 2)); };
 
 // ---- Wire ------------------------------------------------------------------
 interface Item { _id: string; headline: string; sub?: string; category?: string; teams?: string[]; sourceUrls?: string[]; sourceOutlets?: string[]; publishedAt?: string }
 const items = await writeClient.fetch<Item[]>(
-  `*[_type == "wireItem"] | order(publishedAt desc)[0...40]{ _id, headline, sub, category, teams, sourceUrls, sourceOutlets, publishedAt }`,
+  `*[_type == "wireItem"] | order(publishedAt desc)[0...90]{ _id, headline, sub, category, teams, sourceUrls, sourceOutlets, publishedAt }`,
 );
 const usedCategories: Record<string, number> = {};
+for (const p of pack) if (p.lane === "wire") usedCategories[String(p.category ?? "general")] = (usedCategories[String(p.category ?? "general")] ?? 0) + 1;
 let wireDone = 0;
 for (const item of items) {
   if (wireDone >= WIRE) break;
+  if (already.has(item.headline)) continue;
   // Spread across categories so the pack shows range.
   if ((usedCategories[item.category ?? "general"] ?? 0) >= 2) continue;
   const outlets = item.sourceOutlets?.length ? item.sourceOutlets : ["the original report"];
@@ -85,6 +89,7 @@ const videos = (await getVideos().catch(() => [])).filter(isEpisode).slice(0, 8)
 let showDone = 0;
 for (const [i, v] of videos.entries()) {
   if (showDone >= SHOW) break;
+  if (already.has(v.title)) continue;
   const segs = await fetchTranscript(v.id).catch(() => null);
   const transcriptText = segs ? transcriptToPromptText(segs) : null;
   if (!transcriptText) { console.log(`skip (no transcript) ${v.title.slice(0, 60)}`); continue; }
@@ -105,7 +110,7 @@ for (const [i, v] of videos.entries()) {
 }
 
 // ---- House analysis ------------------------------------------------------------
-const avoid: string[] = [];
+const avoid: string[] = pack.filter((p) => p.lane === "house").map((p) => String(p.headline));
 for (let n = 0; n < HOUSE * 2 && pack.filter((p) => p.lane === "house").length < HOUSE; n++) {
   const t0 = Date.now();
   const out = await draftLongformArticle({ avoidHeadlines: avoid });

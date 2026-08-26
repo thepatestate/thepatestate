@@ -49,6 +49,10 @@ function normalizeForCompare(s: string): string {
     .replace(/\[[^\]]*\]/g, " ")
     .replace(/[‘’]/g, "'")
     .replace(/[“”]/g, '"')
+    // Writers occasionally leave a JSON-escaped quote mark inside a quote
+    // block ("…Notre Dame.\\"") — punctuation, not words; drop it from both sides.
+    .replace(/\\+/g, " ")
+    .replace(/["]/g, " ")
     .replace(/[,.]/g, "")
     // Quote hygiene (Brief v2 Part 6): ASR garble tolerance — "0 and2"
     // matches a cleaned "0 and 2"; ums/uhs removed from comparison so
@@ -227,7 +231,9 @@ export async function extractQuotes(transcriptText: string): Promise<ExtractedQu
   try {
     const res = await c.messages.create({
       model: MODEL,
-      max_tokens: 4096,
+      // Reasoning shares this budget with the JSON; 4096 truncated mid-array
+      // on long transcripts (2026-08-26).
+      max_tokens: 8192,
       output_config: { format: { type: "json_schema", schema: QUOTES_SCHEMA } },
       system: prompt("quote-extractor.md"),
       messages: [{ role: "user", content: `Transcript (timestamped):\n${transcriptText}` }],
@@ -313,6 +319,9 @@ export async function draftCompanion(input: {
       });
       const draft = validateDraft(JSON.parse(raw));
       if (!draft) continue; // schema/parse miss — retry with the same prompt
+      // Stray JSON escapes in prose render as literal backslashes.
+      draft.bodyMarkdown = draft.bodyMarkdown.replace(/\\(["'])/g, "$1");
+      draft.pullQuote = draft.pullQuote.replace(/\\(["'])/g, "$1");
 
       if (!input.transcriptText) return draft; // nothing to verify quotes against
 
@@ -332,6 +341,7 @@ export async function draftCompanion(input: {
         badQuotes.push(draft.pullQuote.trim());
       }
       if (badQuotes.length === 0) return draft;
+      console.warn(`[generate:draftCompanion] attempt ${attempt}: ${badQuotes.length} non-verbatim span(s):`, badQuotes.map((q) => q.slice(0, 120)));
 
       lastDraft = draft;
       user = `${baseUser}\n\nYour previous draft put quotation marks around text that is not a verbatim match to the transcript. Every quotation-marked phrase must be an exact substring of the transcript text. Fix this by quoting the exact transcript wording, or by removing the quotation marks and paraphrasing instead. Non-verbatim quoted spans from your last draft: ${badQuotes.map((q) => `"${q}"`).join("; ")}`;

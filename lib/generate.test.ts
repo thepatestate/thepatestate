@@ -99,6 +99,10 @@ describe("findNonVerbatimQuotes", () => {
     expect(findNonVerbatimQuotes(body, captionedTranscript)).toEqual([]);
   });
 
+  it("ignores a stray JSON-escaped quote mark left inside a quote block", () => {
+    const transcript = "[12:23] the number one game in the country that I'd want to take anyone to this year though is Miami at Notre Dame";
+    expect(findNonVerbatimQuotes('[QUOTE:00:12:23]The number one game in the country that I\'d want to take anyone to this year, though, is Miami at Notre Dame.\\"[/QUOTE]', transcript)).toEqual([]);
+  });
   it("exempts short scare-quotes under 5 words", () => {
     const body = 'Pate called it a "total mess" on air.';
     expect(findNonVerbatimQuotes(body, transcript)).toEqual([]);
