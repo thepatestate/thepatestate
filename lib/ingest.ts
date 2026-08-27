@@ -7,6 +7,8 @@ import { teamFactSheet } from "@/lib/fact-sheet";
 import { storeQuotes } from "@/lib/quotes";
 import { generateArticleHero } from "@/lib/hero-image";
 import { slugify } from "@/lib/slug";
+import { editorialV2Flags } from "@/lib/editorial-v2/flags";
+import { shadowRunShowColumn } from "@/lib/editorial-v2/shadow";
 
 export interface IngestVideo extends Video {
   description?: string;
@@ -127,6 +129,18 @@ export async function ingestEpisode(v: IngestVideo): Promise<IngestResult> {
       seoTitle: draft.seo.title,
       seoDescription: draft.seo.description,
     });
+
+    // 5b. Editorial Engine V2 shadow (brief §25 Phase 1): flag-guarded, runs
+    // AFTER the V1 held draft exists, stores a run record only, never writes
+    // an article, and can never change this function's result.
+    if (editorialV2Flags().show) {
+      try {
+        const recentHeadlines = await writeClient.fetch<string[]>(`*[_type == "article"] | order(coalesce(publishedAt, _createdAt) desc) [0...15].headline`).catch(() => [] as string[]);
+        await shadowRunShowColumn({ ytId: v.id, title: v.title, description: v.description ?? "", publishedAt: v.published, series: series ?? "general", transcriptText: transcriptText ?? "", quotes, factSheet, recentHeadlines });
+      } catch (err) {
+        console.error("[ingest:v2-shadow]", v.id, err);
+      }
+    }
 
     // 6. Hero image — best-effort only. Wrapped in its own try/catch (on top
     // of generateArticleHero already being fail-soft) so a bug in the upload
