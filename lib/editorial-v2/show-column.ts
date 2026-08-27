@@ -16,6 +16,7 @@ import { factCheck, factRepair } from "./fact-check";
 import { hardPolicyGates } from "./policy-gates";
 import { styleDiagnostics } from "./diagnostics";
 import { finalEvaluation, fanMean } from "./final-eval";
+import type { FinalEvaluation } from "./types";
 import { finalDecision, DEFAULT_BUDGET, type LoopBudget, type Spent } from "./failure-router";
 import { newRunId, recordRun } from "./telemetry";
 import type { ArticleDraft, EditorialDecision, EditorialRun, StageCall, StoryAngle } from "./types";
@@ -124,15 +125,37 @@ export async function runShowColumnV2(input: ShowColumnInput): Promise<Editorial
       sel = await editDrafts(run.artifacts.drafts!, blueprint, decision.finalThesis ?? angle!.thesis); add(sel.call); run.artifacts.selection = sel.selection;
     }
 
+    // Loop 4 (replays 2026-08-27): the writers' best draft beat the rewrite
+    // and the audience edit every time, so nothing downstream is trusted
+    // on faith. Every candidate in the room is judged and the best clean
+    // one is the piece; later stages must EARN adoption by scoring higher.
+    type Cand = { label: string; draft: ArticleDraft; evaluation: FinalEvaluation };
+    const judged: Cand[] = [];
+    const judge = async (label: string, d: ArticleDraft): Promise<Cand> => {
+      const policy = hardPolicyGates({ draft: d, lane: "show", transcriptText: input.material.transcriptText });
+      const ev = await finalEvaluation(d, { lane: "show", product: "josh-column", includeLegacy: true }); add(...ev.calls);
+      const c = { label: policy.pass ? label : `${label} [policy: ${policy.violations[0]?.slice(0, 40)}]`, draft: d, evaluation: ev.evaluation };
+      if (policy.pass) judged.push(c);
+      log(`  judged ${label}: fan ${fanMean(ev.evaluation)} · send ${((ev.evaluation.fanA.sendability + ev.evaluation.fanB.sendability) / 2).toFixed(1)} · humanity ${ev.evaluation.humanity.humanity} · voice ${ev.evaluation.voice.score}${policy.pass ? "" : ` · POLICY: ${policy.violations.join("; ")}`}`);
+      return c;
+    };
+    const best = () => [...judged].sort((x, y) => fanMean(y.evaluation) - fanMean(x.evaluation) || y.evaluation.voice.score - x.evaluation.voice.score)[0];
+    const record = (chosen?: Cand) => { run.artifacts.candidateScores = judged.map((c) => ({ label: c.label, words: c.draft.bodyMarkdown.split(/\s+/).length, fanMean: fanMean(c.evaluation), sendability: Math.round(((c.evaluation.fanA.sendability + c.evaluation.fanB.sendability) / 2) * 10) / 10, humanity: c.evaluation.humanity.humanity, voice: c.evaluation.voice.score, chosen: c === chosen })); };
+    for (const w of run.artifacts.drafts!) await judge(`writer ${w.writer} (${w.model})`, w.draft);
+
     // 10–15. rewrite → audience edit → fact → policy → judges → EIC, with routing
     let instructions: string[] = [];
     let draft: ArticleDraft | undefined;
     for (;;) {
       spent.cycles++;
       const rw = await developmentalRewrite(pack, run.artifacts.drafts!, sel.selection, { instructions, previous: draft }); add(rw.call); run.artifacts.rewrite = rw.draft; spent.rewrite++;
+      await judge(`rewrite ${spent.cycles} (${rw.call.model})`, rw.draft);
       const ae = await audienceEdit(rw.draft, { lane: "show", product: "josh-column", fragments, diagnostics: styleDiagnostics(rw.draft.bodyMarkdown) }); add(ae.call); run.artifacts.audienceEdit = ae.edit;
-      draft = ae.edit.draft;
-      log(`cycle ${spent.cycles}: rewrite ${rw.call.model} (${draft.bodyMarkdown.split(/\s+/).length}w) · audience edit ${ae.edit.verdict}`);
+      if (ae.edit.verdict === "revised") await judge(`audience edit ${spent.cycles} (${ae.call.model})`, ae.edit.draft);
+      const top = best();
+      if (!top) return finish({ decision: "hold", failureClass: "policy", reason: "no candidate passed the hard policy gates", routeTo: "human", instructions: [] });
+      draft = top.draft;
+      log(`cycle ${spent.cycles}: best in the room = ${top.label} (${draft.bodyMarkdown.split(/\s+/).length}w, fan ${fanMean(top.evaluation)})`);
       let fc = await factCheck(draft, d.dossier, raw); add(fc.call); run.artifacts.factCheck = fc.result;
       if (fc.result.verdict !== "pass" && spent.factRepair < budget.factRepair) {
         spent.factRepair++;
@@ -142,7 +165,10 @@ export async function runShowColumnV2(input: ShowColumnInput): Promise<Editorial
       }
       const policy = hardPolicyGates({ draft, lane: "show", transcriptText: input.material.transcriptText }); run.artifacts.policy = policy;
       const diagnostics = styleDiagnostics(draft.bodyMarkdown); run.artifacts.diagnostics = diagnostics;
-      const ev = await finalEvaluation(draft, { lane: "show", product: "josh-column", includeLegacy: true }); add(...ev.calls); run.artifacts.evaluation = ev.evaluation;
+      // The chosen draft was judged when it entered the room; a fact repair changed it, so judge again.
+      const already = judged.find((c) => c.draft === draft);
+      const ev = already ? { evaluation: already.evaluation, calls: [] as StageCall[] } : await finalEvaluation(draft, { lane: "show", product: "josh-column", includeLegacy: true }); add(...ev.calls); run.artifacts.evaluation = ev.evaluation;
+      record(already ?? undefined);
       log(`judges: fan ${ev.evaluation.fanA.overall}/${ev.evaluation.fanB.overall} · humanity ${ev.evaluation.humanity.humanity} · voice ${ev.evaluation.voice.score} · fact ${fc.result.verdict} · policy ${policy.pass ? "pass" : policy.violations.join("; ")}`);
       const fd = await finalDecision({ draft, lane: "show", product: "josh-column", evaluation: ev.evaluation, fact: fc.result, policy, diagnostics, spent, budget }); add(fd.call);
       run.artifacts.history!.push({ cycle: spent.cycles, decision: fd.decision });

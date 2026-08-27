@@ -18,7 +18,7 @@ export function keptPassages(selection: DraftSelection, drafts: WriterOutput[]):
 }
 
 export async function developmentalRewrite(pack: ContextPack, drafts: WriterOutput[], selection: DraftSelection, opts: { instructions?: string[]; previous?: ArticleDraft }): Promise<{ draft: ArticleDraft; call: StageCall; prompt: string }> {
-  const winner = selection.winner === "A" || selection.winner === "B" ? drafts.find((d) => d.writer === selection.winner) : drafts[0];
+  const winner = selection.winner === "A" || selection.winner === "B" || selection.winner === "C" ? drafts.find((d) => d.writer === selection.winner) : drafts[0];
   const authorVendor = winner?.model.startsWith("claude") ? "anthropic" : "openai";
   const plan = [
     `THE EDITOR'S DEVELOPMENTAL PLAN (follow it precisely):`,

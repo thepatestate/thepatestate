@@ -2,7 +2,7 @@
 // Both receive the identical context pack (hard policy, voice card, angle,
 // blueprint, dossier, retrieved fragments, relevant Josh positions, output
 // contract) and never each other's prose. Neither sees the gold standard.
-import { callJSON } from "./models";
+import { callJSON, modelForRole } from "./models";
 import { v2Prompt, hardPolicyForLane, voiceCardForLane, outputContractForProduct } from "./context-pack";
 import { dossierBlock } from "./dossier";
 import { angleBlock, blueprintBlock } from "./blueprint";
@@ -52,14 +52,18 @@ export async function writeDrafts(pack: ContextPack): Promise<{ drafts: WriterOu
   const context = writerContext(pack);
   const promptA = v2Prompt("writer-argument");
   const promptB = v2Prompt("writer-reader");
+  // Loop 4 (2026-08-27 replays): the strongest Anthropic model produced the
+  // best draft in the room every time; a third writer gives the selector
+  // two of them on different briefs plus the cross-family alternative.
   const settled = await Promise.allSettled([
     callJSON<ArticleDraft>({ stage: "writer-A", role: "writerA", maxTokens: 9000, schemaName: "article", schema: ARTICLE_SCHEMA as unknown as Record<string, unknown>, system: promptA, user: context }),
     callJSON<ArticleDraft>({ stage: "writer-B", role: "writerB", maxTokens: 9000, schemaName: "article", schema: ARTICLE_SCHEMA as unknown as Record<string, unknown>, system: promptB, user: context }),
+    callJSON<ArticleDraft>({ stage: "writer-C", role: "writerB", choice: modelForRole("writerB"), maxTokens: 9000, schemaName: "article", schema: ARTICLE_SCHEMA as unknown as Record<string, unknown>, system: promptA, user: context }),
   ]);
   const drafts: WriterOutput[] = [];
   const calls: StageCall[] = [];
   settled.forEach((r, i) => {
-    const w = i === 0 ? "A" : "B";
+    const w = (["A", "B", "C"] as const)[i];
     if (r.status === "fulfilled") { drafts.push({ writer: w, model: r.value.call.model, draft: cleanDraft(r.value.data) }); calls.push(r.value.call); }
     else console.warn(`[v2:writer-${w}] failed`, r.reason instanceof Error ? r.reason.message.slice(0, 160) : r.reason);
   });

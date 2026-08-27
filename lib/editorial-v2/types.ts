@@ -182,17 +182,18 @@ export interface ArticleDraft {
   seo: { title: string; description: string };
 }
 
-export interface WriterOutput { writer: "A" | "B"; model: string; draft: ArticleDraft }
+export type WriterId = "A" | "B" | "C";
+export interface WriterOutput { writer: WriterId; model: string; draft: ArticleDraft }
 
 // ------------------------------------------------------- stage 9: selector
 export interface DraftSelection {
-  winner: "A" | "B" | "hybrid" | "neither";
-  opening: { winner: "A" | "B" | "neither"; reason: string };
-  argument: { winner: "A" | "B" | "neither"; reason: string };
-  football: { winner: "A" | "B" | "neither"; reason: string };
-  audienceConnection: { winner: "A" | "B" | "neither"; reason: string };
-  bestParagraphs: { draft: "A" | "B"; paragraphIndex: number; reason: string }[];
-  cut: { draft: "A" | "B"; paragraphIndex: number; reason: string }[];
+  winner: WriterId | "hybrid" | "neither";
+  opening: { winner: WriterId | "neither"; reason: string };
+  argument: { winner: WriterId | "neither"; reason: string };
+  football: { winner: WriterId | "neither"; reason: string };
+  audienceConnection: { winner: WriterId | "neither"; reason: string };
+  bestParagraphs: { draft: WriterId; paragraphIndex: number; reason: string }[];
+  cut: { draft: WriterId; paragraphIndex: number; reason: string }[];
   structuralProblems: string[];
   voiceProblems: string[];
   generatedTells: string[];
@@ -318,6 +319,8 @@ export interface EditorialRun {
     voiceFragmentIds?: string[];
     writerPrompts?: { A: string; B: string };
     drafts?: WriterOutput[];
+    /** Loop 4: every candidate in the room is judged; the best clean one wins. */
+    candidateScores?: { label: string; words: number; fanMean: number; sendability: number; humanity: number; voice: number; chosen: boolean }[];
     selection?: DraftSelection;
     rewrite?: ArticleDraft;
     audienceEdit?: AudienceEdit;
