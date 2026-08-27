@@ -1,5 +1,5 @@
 # FOR ISAAC — DEPLOYING THE PATE STATE WRITING SYSTEM
-### Kit v4.0 · Aug 26, 2026 · From Josh
+### Kit v4.2 · Aug 27, 2026 · From Josh
 
 This folder is the complete, self-contained editorial and build system for thepatestate.com. It is not a patch, not an update to anything, and depends on nothing you don't have in your hands right now. Treat it as day one.
 

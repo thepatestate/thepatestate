@@ -4,7 +4,7 @@
 import { readFileSync, writeFileSync } from "node:fs";
 const [,, inPath, outPath] = process.argv;
 const a = (JSON.parse(readFileSync(inPath, "utf8")) as Record<string, any>[])[0];
-const t = readFileSync("prompts/pate-state-kit/reference-builds/feature-three-boards-v3.html", "utf8");
+const t = readFileSync("prompts/pate-state-kit/reference-builds/feature-three-boards-v3_1.html", "utf8");
 const esc = (s: string) => String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 const ts = (s: string) => { const p = s.split(":").map(Number); return p.length === 3 ? p[0] * 3600 + p[1] * 60 + p[2] : p[0] * 60 + (p[1] ?? 0); };
 const yt = a.ytId as string | undefined;

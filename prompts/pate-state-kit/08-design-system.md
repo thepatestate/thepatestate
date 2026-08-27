@@ -17,7 +17,7 @@ Navy `#0E2240` (deep `#0A1730`, mast `#0D1321`) · Gold `#C9A227` (dark `#A8861B
 4. **Visual budget:** max three major modules per column beyond the hero (spec 06 §4).
 5. **Drop-cap scoping:** the drop-cap style is scoped to the opening paragraph selector only — the unscoped giant-numeral bug is a known trap; the validator checks for it.
 
-## 4. THE MODULE INVENTORY (reference renders in `feature-three-boards-v3.html`)
+## 4. THE MODULE INVENTORY (reference renders in `feature-three-boards-v3_1.html`)
 
 - **The three-chip board:** logo chips on the dark gradient card, gold eyebrow, white value, muted descriptor.
 - **The compact data strip:** single row, hairline border, red condensed-caps eyebrow + value pairs, optional Ledger footer. The sanctioned "restate the facts without a second module" pattern.

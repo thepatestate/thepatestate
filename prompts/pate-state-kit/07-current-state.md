@@ -1,5 +1,5 @@
 # CURRENT STATE — THE DATED SNAPSHOT
-### Stamped: August 26, 2026. If today is more than 7 days past the stamp, refresh before writing anything that states a season fact.
+### Stamped: August 27, 2026. If today is more than 7 days past the stamp, refresh before writing anything that states a season fact.
 
 ## Josh's public positions (on the record)
 
@@ -11,7 +11,8 @@
 
 ## Production state
 
-- **Gold standard column:** `feature-three-boards-v3.html` (signed off Aug 26 — the best voice yet, and the ceiling).
+- **Gold standard column:** `feature-three-boards-v3_1.html` (signed off Aug 26, corrected Aug 27 — the best voice yet, and the ceiling).
+- **Second approved column:** `article-miami-acc-favorite-v2.html` (Miami ACC favorite, Aug 27) — the reference for the v4.2 rules in practice. Miami: ACC favorite call live on the Ledger, graded the night the ACC championship is decided; Clemson Oct 3 named as the reopening result.
 - **Full Annuals live to the 06A spec:** Ohio State, Oregon, Notre Dame, Georgia. Scaling continues per the three-tier architecture toward all ~130 FBS pages.
 - **Known open items:** homepage dedup pass (featured content repeating across modules; Wire links must route internal, now law in spec 04); consistency-ledger automation before the next annual wave; React/Sanity implementation of the visual system (Isaac).
 
@@ -20,4 +21,4 @@
 Any agent writing season facts checks this stamp first. To refresh: update positions only from Josh's on-record outputs (poll drops, prediction versions, aired segments), restamp, and log the change here in one line. Never infer a Josh position from anything other than his public record. Established facts here outrank an agent's memory; a conflict means this file wins or gets refreshed — never silently overridden.
 
 ---
-*Stamped Aug 26, 2026 (kit v4.0).*
+*Stamped Aug 27, 2026 (kit v4.2).*

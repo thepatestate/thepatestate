@@ -1,7 +1,7 @@
 # SPEC: JOSH-VOICE FEATURES & THE APPROVAL LANE — v2.0
 ### Josh's Read, the Notebook, game breakdowns, rankings, predictions, mailbags. Everything with the byline.
 
-**Load with:** `01-constitution.md` + `02-voice-bible.md` (Josh register, §0B, §3, §12). Reference build: **`feature-three-boards-v3.html` — the gold standard. Open it before writing; calibrate to it, not past it.**
+**Load with:** `01-constitution.md` + `02-voice-bible.md` (Josh register, §0B, §3, §12). Reference build: **`feature-three-boards-v3_1.html` — the gold standard. Open it before writing; calibrate to it, not past it.**
 
 ## 1. THE LANE
 
@@ -13,7 +13,7 @@ Cold open → claim early → 2–4 blended case sections → brisk sweep → un
 
 ## 3. THE ACCOUNTABILITY FURNITURE (mandatory where applicable)
 
-- **Ledger logging:** every pick timestamped in prose with its named grading date ("graded the same January weekend"); the Ledger receipts module present; misses printed first, Josh's included.
+- **Ledger logging:** every pick timestamped with its named grading date — **in the receipt module and Ledger footer, never as a narrated prose sentence** (Voice Bible §0B: the Ledger is furniture, not narration). Prose accountability stays human ("graded the night the ACC championship is decided"); misses printed first, Josh's included.
 - **The Line Worth Keeping:** one standalone pullquote per the pullquote law, with its Ledger log line.
 - **The honest concession with a date:** every case section names what would make it wrong and when we'll know.
 - **Companion-episode card** for show-derived pieces, timestamped to the segment ("starts at 22:41").
