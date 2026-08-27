@@ -23,14 +23,6 @@
 
 **The cash-out rule (hard rule).** Every abstract football claim is cashed out in actual football. "Continuity matters" is not a sentence. Safeties communicating a coverage adjustment before the snap, a linebacker passing off a route, a corner knowing where his help is when the formation changes — that is the sentence.
 
-**The banal-contingency ban (Aug 27, 2026).** Never build an argument on a contingency that is true of every team in America: "if the quarterback gets hurt they won't be as good," "if they stay healthy," "turnovers will matter." That is not analysis; the reader already owns it. An injury contingency earns its place only when a specific documented fact makes it particular — a QB with an actual injury history, a nagging camp injury on the record, a proven backup gap with named evidence. No documented fact, no contingency thread. Conditions on a flag plant attach to *results and dates* ("Clemson on October 3 is the result that reopens it"), not to generic health.
-
-**No meta-analytical framing.** Never narrate the analysis instead of making it: "the calendar is doing more work than the roster gap," "that number deserves an honest footnote," "here's the part that gets missed." State the actual thing: "Miami's only ACC game against a ranked league opponent is at Clemson on October 3." If a sentence describes what the argument is doing rather than arguing it, cut it and let the fact stand.
-
-**The Ledger is furniture, not narration.** Timestamps and grading dates live in the receipt module and the Ledger footer — never as a robotic prose sentence ("I logged this on August 27, 2026, and it will be graded when…"). Accountability in prose stays human: "This one gets graded the night the ACC championship is decided." The module carries the machinery; the prose carries the promise.
-
-**Vocabulary notes (Aug 27):** never "card" for a schedule — say the year, the schedule, the slate ("the toughest game on Miami's whole year"). "Card" reads as betting vocabulary and violates the tout ban by association.
-
 **The closing law, verbatim:** *Never sacrifice clarity to sound more like Josh. Never sacrifice Josh's point of view to sound more formal.*
 
 ## 1. THE THREE REGISTERS AND THE DIAL
@@ -76,7 +68,7 @@ Cold open → claim early → two to four blended case sections → brisk sweep 
 
 ## 12. THE GOLD STANDARD AND THE CEILING
 
-**`feature-three-boards-v3_1.html` (The Three Boards column, hybrid build) — the gold standard for Josh's Read and show-derived Notebook pieces. This is the best voice yet; calibrate to it, not past it.** The benchmark for prose density, voice balance, paragraph construction, personality, explanation, and reader connection. The formula it demonstrates: the paragraph is written like a great national college football journalist; the observation often feels like Josh; the football explanation feels like someone who understands what happens on Saturdays; and the memorable line arrives after the reporting has earned it. The hybrid's specific lessons: transitional one-liners folded into their paragraphs, isolated kickers rationed to accountability and stakes beats only, and the numbers kept everywhere a vague quantifier could have lived. **The ceiling rule: do not make future articles more shorthand, more performative, or more "Josh-like" than this one.** This is the maximum conversational setting — any further and the national-journalist layer that makes the writing premium starts to dissolve.
+**`feature-three-boards-v3.html` (The Three Boards column, hybrid build) — the gold standard for Josh's Read and show-derived Notebook pieces. This is the best voice yet; calibrate to it, not past it.** The benchmark for prose density, voice balance, paragraph construction, personality, explanation, and reader connection. The formula it demonstrates: the paragraph is written like a great national college football journalist; the observation often feels like Josh; the football explanation feels like someone who understands what happens on Saturdays; and the memorable line arrives after the reporting has earned it. The hybrid's specific lessons: transitional one-liners folded into their paragraphs, isolated kickers rationed to accountability and stakes beats only, and the numbers kept everywhere a vague quantifier could have lived. **The ceiling rule: do not make future articles more shorthand, more performative, or more "Josh-like" than this one.** This is the maximum conversational setting — any further and the national-journalist layer that makes the writing premium starts to dissolve.
 
 **Micro-examples (flat → house):**
 
@@ -85,9 +77,6 @@ Cold open → claim early → two to four blended case sections → brisk sweep 
 
 **Flat:** "Ohio State's defense has to replace a lot and continuity matters."
 **House:** "Ohio State is replacing eight of the eleven starters from the No. 1 scoring defense in the country. Defensive continuity is not a talent calculation. It is safeties communicating a coverage adjustment before the snap. It is a linebacker passing off a route correctly."
-
-**Flat (meta-framing):** "That last number deserves one honest footnote."
-**House:** State the caveat directly — "A 9.4 average is partly Carr's arm and partly a run game so dangerous that defenses spent the year conceding space just to slow it down."
 
 **Flat:** "The model clearly loves Ohio State."
 **House:** "The AI Predictor has Ohio State ranked No. 1 outright, by 2.1 rating points, a bigger gap than it gave anyone last preseason."
@@ -102,9 +91,6 @@ Cold open → claim early → two to four blended case sections → brisk sweep 
 - [ ] Every abstract football claim cashed out in actual football; credit before consequence; one honest concession with a date
 - [ ] Zero exclamation points; em dash only in sign-off; "elite" ≤ 1; zero banned words (§2.6–2.8); "the AI Predictor" named correctly with inputs where cited
 - [ ] Pullquote stands alone; every prediction timestamped with a named grading date; internal links + one plain CTA present
-- [ ] Zero banal contingencies (generic injury/health/turnover conditions without a documented particular fact)
-- [ ] Zero meta-analytical framing ("doing the work," "deserves a footnote," "the part that gets missed") — facts stated, not narrated
-- [ ] Ledger mechanics in furniture only; prose accountability reads human, never "I logged this on [date]"
 - [ ] Read-aloud test: a national columnist with Josh's worldview — not a Josh transcript
 - [ ] Would this feel credible if Josh read it on ESPN tomorrow?
 
@@ -118,4 +104,4 @@ assert len(kickers) <= max(1, body_words // 400), f"hammer budget exceeded: {len
 *Calibration note: the gold standard runs two body kickers ("That decision has to work." / "That's why Georgia is first.") across ~1,470 words, plus its mandated open hook and close. That is the target shape.*
 
 ---
-*v4.2 (Aug 27, 2026) — Josh's Miami-column corrections codified: banal-contingency ban, no meta-analytical framing, Ledger-is-furniture rule, "card" vocabulary ban; gold standard corrected to `feature-three-boards-v3_1.html` (footnote framing removed; the Predictor line now "asks the most important question of the three"). v4.1 (Aug 26, 2026) — kit v4.0 consolidation: §0B added (the Best Voice Yet standard: 50/30/20, hammer budget, earned lines, reported-over-performed, specificity-scales-with-opinion, cash-out rule); gold standard set to the hybrid `feature-three-boards-v3.html` with the ceiling rule; validator rebuilt to budget kickers rather than reward them. All prior voice documents superseded in full.*
+*v4.1 (Aug 26, 2026) — kit v4.0 consolidation: §0B added (the Best Voice Yet standard: 50/30/20, hammer budget, earned lines, reported-over-performed, specificity-scales-with-opinion, cash-out rule); gold standard set to the hybrid `feature-three-boards-v3.html` with the ceiling rule; validator rebuilt to budget kickers rather than reward them. All prior voice documents superseded in full.*

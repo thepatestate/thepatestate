@@ -100,7 +100,7 @@ describe("editorialSystem (the kit's load order: 01 → 02 → spec → 07 → h
   it("closes every lane with the approved article it must sound like", () => {
     // Kit v4: the approval lane calibrates to the v3 gold standard; the
     // autonomous lane (Wire + house reaction) to the approved Wire build.
-    expect(editorialSystem("feature", "")).toContain("=== feature-three-boards-v3_1.html ===");
+    expect(editorialSystem("feature", "")).toContain("=== feature-three-boards-v3.html ===");
     expect(editorialSystem("show-adaptation", "")).toContain("I picked three of them");
     expect(editorialSystem("news-reaction", "")).toContain("=== wire-ohio-state-rowe-safety.html ===");
     expect(editorialSystem("wire", "")).toContain("=== wire-ohio-state-rowe-safety.html ===");
@@ -236,22 +236,5 @@ describe("Voice Bible §13 as code (kit v4)", () => {
     const { ensureSignOff } = await import("./editorial");
     expect(ensureSignOff("Body.")).toBe("Body.\n\n— JP");
     expect(ensureSignOff("Body.\n\n— JP")).toBe("Body.\n\n— JP");
-  });
-});
-
-describe("kit v4.2 laws (Josh's Aug 27 corrections)", () => {
-  it("bans the banal contingency, meta-analytical framing, the narrated Ledger line, and card-for-schedule", () => {
-    expect(boilerplateViolations("Miami is the favorite as long as Mensah is upright.")).toContain("banal contingency (v4.2)");
-    expect(boilerplateViolations("If the quarterback goes down they will not be as good.")).toContain("banal contingency (v4.2)");
-    expect(boilerplateViolations("That last number deserves one honest footnote.")).toContain("meta-analytical framing (v4.2)");
-    expect(boilerplateViolations("Here is the part I think gets missed.")).toContain("meta-analytical framing (v4.2)");
-    expect(boilerplateViolations("The calendar is doing more work here than the roster gap is.")).toContain("meta-analytical framing (v4.2)");
-    expect(boilerplateViolations("I logged this on August 27, 2026, and it will be graded when the ACC title is decided.")).toContain("Ledger narrated in prose (v4.2)");
-    expect(boilerplateViolations("The toughest game on the whole card is at Notre Dame.")).toContain("card for a schedule (v4.2)");
-  });
-  it("lets the house versions through", () => {
-    expect(boilerplateViolations("This one gets graded the night the ACC championship is decided.")).toEqual([]);
-    expect(boilerplateViolations("The Cardinals host SMU on September 19. Louisville is a wild card in this race.")).toEqual([]);
-    expect(boilerplateViolations("A 9.4 average is partly Carr's arm and partly a run game so dangerous that defenses spent the year conceding space.")).toEqual([]);
   });
 });

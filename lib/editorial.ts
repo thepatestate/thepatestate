@@ -231,9 +231,7 @@ const COUNTERPOINT_RE = /\bthe (honest )?(complication|counterpoint|counterweigh
 const BOILERPLATE: { name: string; re: RegExp }[] = [
   { name: "failure-condition label", re: /\bthe (failure )?condition (is|here is)\b/i },
   { name: "consequence-is-simple", re: /\bthe consequence is (simple|straightforward|plain)\b/i },
-  // The plain "The question is…" is Josh's own sentence in the gold standard
-  // (v3_1: "The question is what it can see."); only the qualified label is gated.
-  { name: "the-real-question", re: /\bthe (real |right |better )question (is|isn't|becomes)\b|\bthe question becomes\b/i },
+  { name: "the-real-question", re: /\bthe (real |right |better )?question (is|isn't|becomes)\b/i },
   { name: "ceiling/floor anchor", re: /\bthe (ceiling|floor|margin) (is|here|for)\b/i },
   { name: "watch-for-the-answer", re: /\bwatch [^.!?]{2,40} for the answer\b/i },
   { name: "isn't-X-it's-Y", re: /\bthis isn'?t [^.!?]{2,40}\. it'?s\b/i },
@@ -271,14 +269,6 @@ const BOILERPLATE: { name: string; re: RegExp }[] = [
   { name: "AI tell (§2.8)", re: /\b(delve|delving|crucial|pivotal|landscape|navigat(e|es|ed|ing))\b/i },
   { name: "model nickname (§2.6)", re: /\b(the model says|the formula|the machine)\b/i },
   { name: "craft vocabulary (§2.7)", re: /\b(reframe the|the frame is|price (in|the) [a-z]+ take|honest read)\b/i },
-  // Kit v4.2, Voice Bible §0B (Josh's Aug 27 corrections to the Miami
-  // column): the contingency that is true of every team in America, the
-  // sentence that narrates the analysis instead of making it, the Ledger
-  // timestamp as a robotic prose line, and "card" for a schedule.
-  { name: "banal contingency (v4.2)", re: /\b(if [^.!?]{0,40}\b(stays?|stay|remains?|can stay|keeps?) (healthy|upright)|as long as [^.!?]{0,40}\b(is |stays? |remains? )?(healthy|upright)|if [^.!?]{0,40}\b(goes down|gets hurt|get hurt|is hurt|were to (get hurt|go down)|is injured|gets injured|suffers an injury)|barring (an )?injur(y|ies)|injuries (permitting|aside|notwithstanding)|health (is|will be|becomes) (the|a) (key|factor|x-factor|question|variable)|turnovers? (will|are going to|could) (matter|decide|be the difference)|(one|an) injury (away|from)|if (the )?(quarterback|qb|starter) (goes down|gets hurt))\b/i },
-  { name: "meta-analytical framing (v4.2)", re: /\b(deserves (one |an |a )?(honest |quick |brief )?(footnote|caveat|asterisk)|(here'?s|here is|this is|that'?s|that is) the part (that |I think |everybody |most people |people )?(gets|get) (missed|lost|overlooked)|the part (nobody|everyone|people) (is |are )?(missing|miss(es)?|skips?)|is doing (more|most|less|all|the|the real|the heavy) (of the )?(work|lifting)( here)? than|does more (of the )?work than|the (calendar|schedule|roster|number|gap) is doing the (work|lifting)|here'?s what (gets|people) (lost|miss(ed)?)|what (this|that) (argument|column|piece|number) is (really |actually )?(doing|about|saying)|the (bigger|larger|real) (point|story) here is|worth (a|one) (footnote|caveat|asterisk))\b/i },
-  { name: "Ledger narrated in prose (v4.2)", re: /\b(I (logged|filed|am logging|'m logging|have logged|'ve logged) (this|it|that|the (pick|call|take))\b|(logged|timestamped|filed) (this |it )?(on|at) (January|February|March|April|May|June|July|August|September|October|November|December) \d{1,2}|(will|'ll) be graded (when|on|the)|it gets graded when|is logged (on|to) the ledger)\b/i },
-  { name: "card for a schedule (v4.2)", re: /\b(?:on the|whole|full|entire|the|his|their|its|[A-Z][a-z]+(?:'|’)s) card\b(?! game)/i },
 ];
 
 // Thesis-announcing paragraph openers (Updates 4.0 rule 2): one is fine,

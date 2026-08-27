@@ -13,8 +13,6 @@ export interface JudgeOptions {
   schemaName: string;
   maxTokens: number;
   effort?: "low" | "medium" | "high";
-  /** Anthropic model override (default Sonnet); the OpenAI fallback keeps its own model. */
-  model?: string;
 }
 
 export type Via = "anthropic" | "openai";
@@ -52,7 +50,7 @@ export async function judgeJSON(
   if (anthropic && process.env.ANTHROPIC_API_KEY) {
     try {
       const res = await anthropic.messages.create({
-        model: opts.model ?? "claude-sonnet-5",
+        model: "claude-sonnet-5",
         max_tokens: opts.maxTokens,
         output_config: { ...(opts.effort ? { effort: opts.effort } : {}), format: { type: "json_schema", schema: opts.schema } },
         system: opts.system,

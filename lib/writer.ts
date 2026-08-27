@@ -26,12 +26,8 @@ export async function writeJSON(opts: {
   schema: Record<string, unknown>;
   schemaName: string;
   maxTokens: number;
-  /** Best-of-N (lib/column-pipeline.ts): run this call on a specific writer. */
-  provider?: "openai" | "anthropic";
-  model?: string;
 }): Promise<string> {
-  const provider = opts.provider ?? WRITER_PROVIDER;
-  if (provider === "openai") {
+  if (WRITER_PROVIDER === "openai") {
     const res = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -39,7 +35,7 @@ export async function writeJSON(opts: {
         authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
       },
       body: JSON.stringify({
-        model: opts.model ?? OPENAI_MODEL,
+        model: OPENAI_MODEL,
         max_completion_tokens: opts.maxTokens,
         response_format: {
           type: "json_schema",
@@ -50,7 +46,7 @@ export async function writeJSON(opts: {
           { role: "user", content: opts.user },
         ],
       }),
-      signal: AbortSignal.timeout(240_000),
+      signal: AbortSignal.timeout(180_000),
     });
     if (!res.ok) {
       throw new Error(`openai ${res.status}: ${(await res.text()).slice(0, 300)}`);
@@ -61,7 +57,7 @@ export async function writeJSON(opts: {
 
   const anthropic = new Anthropic();
   const res = await anthropic.messages.create({
-    model: opts.model ?? ANTHROPIC_MODEL,
+    model: ANTHROPIC_MODEL,
     max_tokens: opts.maxTokens,
     output_config: { format: { type: "json_schema", schema: opts.schema } },
     system: opts.system,

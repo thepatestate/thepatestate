@@ -1,9 +1,9 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import { boilerplateViolations, editorialSystem, circles, restatements, abstractParagraphs, kickerBudget, ensureSignOff, proseWords, type Architecture } from "@/lib/editorial";
+import { writeJSON } from "@/lib/writer";
+import { boilerplateViolations, editorialSystem, voiceMatch, circles, restatements, abstractParagraphs, kickerBudget, ensureSignOff, proseWords, type Architecture } from "@/lib/editorial";
 import { judgeJSON } from "@/lib/judge";
-import { planColumn, notesBlock, bestOfWriters, lineEdit, preview } from "@/lib/column-pipeline";
 
 export const BYLINE_STAFF = "The Pate State Staff";
 export const SERIES_VALUES = [
@@ -326,83 +326,96 @@ export async function draftCompanion(input: {
     ...(input.factSheet ? [input.factSheet] : []),
   ].join("\n\n");
 
-  // The column pipeline (lib/column-pipeline.ts): Opus plans ONE segment's
-  // argument → best-of-N writers draft from the notes → the fan and voice
-  // judges pick the winner → Opus line-edits it. Two rounds at most: a
-  // round whose best still violates the gates gets one corrective round
-  // with the violations named; a draft that still fails after that is
-  // accepted with lowConfidence: true rather than discarded.
-  const floor = 800;
-  const notes = input.transcriptText
-    ? await planColumn(c, {
-        kind: "show",
-        material: `EPISODE: ${input.title}\n\nDESCRIPTION:\n${input.description.slice(0, 3000)}\n\nTRANSCRIPT:\n${input.transcriptText}`,
-        factSheet: input.factSheet,
-      })
-    : null;
-  const user0 = input.transcriptText ? `${notesBlock(notes, floor)}\n\n${baseUser}` : baseUser;
-  const parse = (raw: string): CompanionDraft | null => {
+  // Two attempts total. A schema/parse miss just retries with the same prompt (loop
+  // continues below). A schema-valid draft whose quoted spans aren't verbatim in the
+  // transcript gets ONE retry with the offending quotes named; if that retry still
+  // fails (or errors), the last schema-valid draft is accepted with lowConfidence: true
+  // rather than discarded outright.
+  let user = baseUser;
+  let lastDraft: CompanionDraft | null = null;
+
+  for (let attempt = 0; attempt < 2; attempt++) {
     try {
+      const raw = await writeJSON({
+        system,
+        user,
+        schema: DRAFT_SCHEMA,
+        schemaName: "companion_draft",
+        maxTokens: 8192,
+      });
       const parsed = placePullQuoteMarker(JSON.parse(raw));
       const draft = validateDraft(parsed);
-      if (!draft) { console.warn(`[generate:draftCompanion] invalid draft (${draftProblem(parsed)})`); return null; }
+      if (!draft) { console.warn(`[generate:draftCompanion] attempt ${attempt}: invalid draft (${draftProblem(parsed)})`); continue; }
       // Stray JSON escapes in prose render as literal backslashes.
       draft.bodyMarkdown = draft.bodyMarkdown.replace(/\\(["'])/g, "$1");
       if (!process.env.VITEST) draft.bodyMarkdown = ensureSignOff(draft.bodyMarkdown);
       draft.pullQuote = draft.pullQuote.replace(/\\(["'])/g, "$1");
-      return draft;
-    } catch { return null; }
-  };
-  const gate = (draft: CompanionDraft): string[] => {
-    if (!input.transcriptText) return []; // nothing to verify against
-    const problems: string[] = [];
-    const boiler = boilerplateViolations(draft.bodyMarkdown);
-    if (boiler.length) problems.push(`Voice Bible §2 gated language: ${boiler.join("; ")}`);
-    const prose = draft.bodyMarkdown.replace(/\[QUOTE:[\d:]+\][\s\S]*?\[\/QUOTE\]/g, "");
-    // The lane, floor and hammer budget are kit laws on real columns; the
-    // unit tests feed three-sentence fixtures, so they run only outside vitest.
-    if (!process.env.VITEST) {
-      if (!/(?:^|[\s“"(])(I|I'm|I've|I'd|I'll|my)(?=[\s,.!?'’])/.test(prose)) problems.push("Constitution §3: this column drafts in Josh's first person, always");
-      const words = proseWords(prose);
-      if (words < floor) problems.push(`Voice Bible §3: columns are ${floor}–1,200 words (you wrote ${words}); the depth comes from the tape's football, never filler`);
-      const budget = kickerBudget(draft.bodyMarkdown);
-      if (!budget.ok) problems.push(`Voice Bible §0B hammer budget: ${budget.kickers.length} isolated one-liners, ${budget.allowed} allowed; fold the rest into their paragraphs`);
+
+      if (!input.transcriptText) return draft; // nothing to verify quotes against
+
+      const boiler = boilerplateViolations(draft.bodyMarkdown);
+      const prose = draft.bodyMarkdown.replace(/\[QUOTE:[\d:]+\][\s\S]*?\[\/QUOTE\]/g, "");
+      const noFirstPerson = !/(?:^|[\s“"(])(I|I'm|I've|I'd|I'll|my)(?=[\s,.!?'’])/.test(prose);
+      const circling = circles(prose);
+      const abstract = abstractParagraphs(prose);
+      const tooAbstract = abstract.length >= 2;
+      // The floor and the hammer budget are kit laws; the unit tests feed
+      // three-sentence fixtures, so they run only outside vitest.
+      const words = process.env.VITEST ? 800 : proseWords(prose);
+      const budget = process.env.VITEST ? { ok: true, kickers: [] as string[], allowed: 1 } : kickerBudget(draft.bodyMarkdown);
+      if ((boiler.length > 0 || noFirstPerson || circling || tooAbstract || words < 800 || !budget.ok) && attempt === 0) {
+        lastDraft = draft;
+        user = `${baseUser}\n\nYour previous draft violated the kit's laws${noFirstPerson ? " — Constitution §3: this column drafts in Josh's first person, always" : ""}${boiler.length ? ` — Voice Bible §2 gated language: ${boiler.join("; ")}` : ""}${words < 800 ? ` — Voice Bible §3: columns are 800–1,200 words (you wrote ${words}); the depth comes from the tape's football, never filler` : ""}${!budget.ok ? ` — Voice Bible §0B hammer budget: ${budget.kickers.length} isolated one-sentence paragraphs where ${budget.allowed} is the limit; fold the rest into their paragraphs` : ""}${circling ? ` — it restates itself; these sentences repeat a point already made: ${restatements(prose).slice(0, 4).map((s) => `"${s.slice(0, 110)}"`).join(" · ")}` : ""}${tooAbstract ? ` — Voice Bible §0B cash-out rule: these paragraphs carry no player, number, play or date; put the football from the tape in or cut them: ${abstract.slice(0, 3).map((p) => `"${p.slice(0, 90)}…"`).join(" · ")}` : ""}. Rewrite to the kit.`;
+        continue;
+      }
+      const badQuotes = findNonVerbatimQuotes(draft.bodyMarkdown, input.transcriptText);
+      // v1.2: the pull quote itself must also be verbatim from the transcript.
+      if (
+        draft.pullQuote.trim().split(/\s+/).length >= 5 &&
+        findNonVerbatimQuotes(`"${draft.pullQuote}"`, input.transcriptText).length > 0
+      ) {
+        badQuotes.push(draft.pullQuote.trim());
+      }
+      if (badQuotes.length === 0) {
+        // Voice judge against the approved Three Boards column: one rewrite
+        // with the judge's notes, adopted only if it still passes the gates.
+        if (process.env.VITEST) return draft;
+        let current = draft;
+        for (let round = 0; round < 2; round++) {
+          const voice = await voiceMatch(c, { lane: "feature", draft: current.bodyMarkdown });
+          if (voice.pass) break;
+          try {
+            const raw2 = await writeJSON({
+              system,
+              user: `${user}\n\nVOICE JUDGE (your previous draft scored ${voice.score}/10 against THE VOICE TO MATCH; it must read as the same writer): ${voice.notes}\n\nRewrite in the voice. Keep every claim traceable to the transcript; keep the quote blocks exact.\n\nPrevious draft:\n${current.bodyMarkdown}`,
+              schema: DRAFT_SCHEMA,
+              schemaName: "companion_draft",
+              maxTokens: 8192,
+            });
+            const d2 = validateDraft(placePullQuoteMarker(JSON.parse(raw2)));
+            if (!d2) break;
+            d2.bodyMarkdown = ensureSignOff(d2.bodyMarkdown.replace(/\\(["'])/g, "$1"));
+            const bad2 = findNonVerbatimQuotes(d2.bodyMarkdown, input.transcriptText);
+            if (d2.pullQuote.trim().split(/\s+/).length >= 5 && findNonVerbatimQuotes(`"${d2.pullQuote}"`, input.transcriptText).length > 0) bad2.push(d2.pullQuote);
+            if (bad2.length === 0 && boilerplateViolations(d2.bodyMarkdown).length === 0) current = d2;
+            else break;
+          } catch (err) {
+            console.error("[generate:draftCompanion] voice rewrite", err);
+            break;
+          }
+        }
+        return current;
+      }
+      console.warn(`[generate:draftCompanion] attempt ${attempt}: ${badQuotes.length} non-verbatim span(s):`, badQuotes.map((q) => q.slice(0, 120)));
+
+      lastDraft = draft;
+      user = `${baseUser}\n\nYour previous draft put quotation marks around text that is not a verbatim match to the transcript. Every quotation-marked phrase must be an exact substring of the transcript text. Fix this by quoting the exact transcript wording, or by removing the quotation marks and paraphrasing instead. Non-verbatim quoted spans from your last draft: ${badQuotes.map((q) => `"${q}"`).join("; ")}`;
+    } catch (err) {
+      // SDK already retried 429/5xx internally; loop covers schema/parse misses
+      console.error("[generate:draftCompanion]", attempt, err);
     }
-    if (circles(prose)) problems.push(`the piece circles; these sentences restate earlier ones: ${restatements(prose).slice(0, 3).join(" | ")}`);
-    const abstract = abstractParagraphs(prose);
-    if (abstract.length >= 2) problems.push(`abstract paragraphs with no name or number in them: ${abstract.map((p) => p.slice(0, 60)).join(" | ")}`);
-    const bad = findNonVerbatimQuotes(draft.bodyMarkdown, input.transcriptText);
-    // v1.2: the pull quote itself must also be verbatim from the transcript.
-    if (draft.pullQuote.trim().split(/\s+/).length >= 5 && findNonVerbatimQuotes(`"${draft.pullQuote}"`, input.transcriptText).length > 0) bad.push(draft.pullQuote.trim());
-    if (bad.length) problems.push(`quotation marks around text that is not verbatim in the transcript (quote the exact wording or paraphrase without quotation marks): ${bad.map((q) => `"${q.slice(0, 100)}"`).join("; ")}`);
-    return problems;
-  };
-  const bo = {
-    anthropic: c, lane: "feature" as const, system,
-    schema: DRAFT_SCHEMA as unknown as Record<string, unknown>, schemaName: "companion_draft", maxTokens: 8192,
-    parse, gate, text: (d: CompanionDraft) => ({ headline: d.headline, dek: d.dek, body: d.bodyMarkdown }),
-  };
-  try {
-    let user = user0;
-    let round = await bestOfWriters<CompanionDraft>({ ...bo, user });
-    if (!round) return null;
-    if (round.best.problems.length) {
-      console.warn(`[generate:draftCompanion] round 1 best (${round.best.writer}) violates: ${round.best.problems.join(" | ").slice(0, 400)}`);
-      user = `${user0}\n\nYour previous draft violated the kit's laws — ${round.best.problems.join(" — ")}. Fix these precisely and keep what works.\n\nPrevious draft:\n${round.best.draft.bodyMarkdown}`;
-      const again = await bestOfWriters<CompanionDraft>({ ...bo, user });
-      if (again && again.best.problems.length <= round.best.problems.length) round = again;
-    }
-    if (round.best.problems.length) {
-      console.warn(`[generate:draftCompanion] accepting with lowConfidence: ${round.best.problems.join(" | ").slice(0, 300)}`);
-      return { ...round.best.draft, lowConfidence: true };
-    }
-    const best = await lineEdit<CompanionDraft>({ ...bo, user, winner: round.best, notes, floor, body: (d) => d.bodyMarkdown });
-    console.log(`[generate:draftCompanion] ${best.writer} · fan ${best.fan?.score ?? "-"} · voice ${best.voice?.score ?? "-"} · ${preview(best.draft.bodyMarkdown)}`);
-    return best.draft;
-  } catch (err) {
-    console.error("[generate:draftCompanion]", err);
-    return null;
   }
+  return lastDraft ? { ...lastDraft, lowConfidence: true } : null;
 }
 
 export interface PlaybookIntro {

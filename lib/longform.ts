@@ -25,7 +25,6 @@ import { pickArchitecture, boilerplateViolations, scoreDraft, editorialSystem, v
 import { hasFirstPersonProse } from "@/lib/wire";
 import { judgeJSON } from "@/lib/judge";
 import { teamFactSheet } from "@/lib/fact-sheet";
-import { planColumn, notesBlock, bestOfWriters, lineEdit, preview } from "@/lib/column-pipeline";
 
 const MODEL = "claude-sonnet-5";
 
@@ -207,57 +206,33 @@ export async function draftLongformArticle(
     const joshLane = product === "feature";
     const floor = joshLane ? 800 : 600;
     const system = editorialSystem(product, prompt(joshLane ? "josh-column.md" : "news-reaction.md"));
-    // Josh's Read runs the lab pipeline (lib/column-pipeline.ts): Opus plans
-    // the argument, best-of-N writers draft from the notes, Opus line-edits
-    // the winner. The autonomous lane is one writer, gated the same way.
-    type Draft = {
+    let raw = "";
+    let user = sourcePack;
+    let draft!: {
       headline: string; dek: string; bodyMarkdown: string; pullQuote: string;
       primaryTeam: string; teams: string[]; tags: string[]; seo: { title: string; description: string };
     };
-    const notes = joshLane ? await planColumn(anthropic, { kind: "assignment", material: sourcePack }) : null;
-    const user0 = joshLane ? `${notesBlock(notes, floor)}\n\n${sourcePack}` : sourcePack;
-    const parse = (raw: string): Draft | null => {
-      try {
-        const d = JSON.parse(raw) as Draft;
-        if (!d || typeof d.bodyMarkdown !== "string" || !d.headline) return null;
-        if (joshLane) d.bodyMarkdown = ensureSignOff(d.bodyMarkdown);
-        return d;
-      } catch { return null; }
-    };
-    const gate = (d: Draft): string[] => {
-      const problems: string[] = [];
-      const boiler = boilerplateViolations(d.bodyMarkdown);
-      if (boiler.length) problems.push(`Voice Bible §2 gated language: ${boiler.join("; ")}`);
-      const hasI = hasFirstPersonProse(d.bodyMarkdown);
+    for (let attempt = 0; attempt < 2; attempt++) {
+      raw = await writeJSON({
+        system,
+        user,
+        schema: LONGFORM_SCHEMA,
+        schemaName: "longform_article",
+        maxTokens: 8192,
+      });
+      draft = JSON.parse(raw) as typeof draft;
+      if (joshLane) draft.bodyMarkdown = ensureSignOff(draft.bodyMarkdown);
+      const boiler = boilerplateViolations(draft.bodyMarkdown);
+      const hasI = hasFirstPersonProse(draft.bodyMarkdown);
       // Lane law (Constitution §3): Josh's Read is first person always; the
       // autonomous house reaction never is.
-      if (joshLane ? !hasI : hasI) problems.push(joshLane ? "Constitution §3: Josh's Read drafts in first person, always" : "Voice Bible §1: the autonomous lane carries no first person and no Josh opinion");
-      if (circles(d.bodyMarkdown)) problems.push(`the piece circles; these sentences restate earlier ones: ${restatements(d.bodyMarkdown).slice(0, 3).join(" | ")}`);
-      const words = proseWords(d.bodyMarkdown);
-      if (words < floor) problems.push(`the word floor is ${floor} (you wrote ${words}); the depth comes from the source pack's football, never filler`);
-      if (joshLane) {
-        const budget = kickerBudget(d.bodyMarkdown);
-        if (!budget.ok) problems.push(`Voice Bible §0B hammer budget: ${budget.kickers.length} isolated one-liners, ${budget.allowed} allowed; fold the rest into their paragraphs`);
-      }
-      return problems;
-    };
-    const bo = {
-      anthropic, lane: (joshLane ? "feature" : "wire") as "feature" | "wire", system,
-      schema: LONGFORM_SCHEMA as unknown as Record<string, unknown>, schemaName: "longform_article", maxTokens: 8192,
-      parse, gate, text: (d: Draft) => ({ headline: d.headline, dek: d.dek, body: d.bodyMarkdown }),
-    };
-    let user = user0;
-    let round = await bestOfWriters<Draft>({ ...bo, user });
-    if (!round) return { error: "no-draft" };
-    if (round.best.problems.length) {
-      user = `${user0}\n\nYOUR PREVIOUS DRAFT VIOLATED the kit's laws — ${round.best.problems.join(" — ")}. Fix these precisely and keep what works.\n\nPrevious draft:\n${round.best.draft.bodyMarkdown}`;
-      const again = await bestOfWriters<Draft>({ ...bo, user });
-      if (again && again.best.problems.length <= round.best.problems.length) round = again;
+      const wrongPerson = joshLane ? !hasI : hasI;
+      const circling = circles(draft.bodyMarkdown);
+      const words = proseWords(draft.bodyMarkdown);
+      const budget = joshLane ? kickerBudget(draft.bodyMarkdown) : { ok: true, kickers: [] as string[], allowed: 0 };
+      if (boiler.length === 0 && !wrongPerson && !circling && words >= floor && budget.ok) break;
+      user = `${sourcePack}\n\nYOUR PREVIOUS DRAFT VIOLATED the kit's laws${wrongPerson ? (joshLane ? " — Constitution §3: Josh's Read drafts in first person, always" : " — Voice Bible §1: the autonomous lane carries no first person and no Josh opinion") : ""}${boiler.length ? ` — Voice Bible §2 gated language: ${boiler.join("; ")}` : ""}${words < floor ? ` — the word floor is ${floor} (you wrote ${words}); depth comes from reporting and football, never filler` : ""}${!budget.ok ? ` — Voice Bible §0B hammer budget: ${budget.kickers.length} isolated one-sentence paragraphs where ${budget.allowed} is the limit; fold the rest into their neighboring paragraphs` : ""}${circling ? ` — it restates itself; these sentences repeat a point already made: ${restatements(draft.bodyMarkdown).slice(0, 4).map((s) => `"${s.slice(0, 110)}"`).join(" · ")}` : ""}. Rewrite to the kit.`;
     }
-    if (round.best.problems.length) return { error: `gate-kit:${round.best.problems[0].slice(0, 80)}` };
-    const best = joshLane ? await lineEdit<Draft>({ ...bo, user, winner: round.best, notes, floor, body: (d) => d.bodyMarkdown }) : round.best;
-    console.log(`[longform] ${product} · ${best.writer} · fan ${best.fan?.score ?? "-"} · voice ${best.voice?.score ?? "-"} · ${preview(best.draft.bodyMarkdown)}`);
-    const draft: Draft = { ...best.draft };
     draft.bodyMarkdown = scrubDashes(draft.bodyMarkdown).replace(/\[EMBED:[^\]]*\]\s*/g, "").replace(/\[\/PULLQUOTE\]/g, "");
     if (joshLane) draft.bodyMarkdown = ensureSignOff(draft.bodyMarkdown);
     draft.dek = scrubDashes(draft.dek);
@@ -315,7 +290,7 @@ export async function draftLongformArticle(
         schemaName: "longform_article",
         maxTokens: 8192,
       });
-      const draft2 = JSON.parse(raw2) as Draft;
+      const draft2 = JSON.parse(raw2) as typeof draft;
       draft2.bodyMarkdown = scrubDashes(draft2.bodyMarkdown).replace(/\[EMBED:[^\]]*\]\s*/g, "").replace(/\[\/PULLQUOTE\]/g, "");
       if (joshLane) draft2.bodyMarkdown = ensureSignOff(draft2.bodyMarkdown);
       const okPerson = joshLane ? hasFirstPersonProse(draft2.bodyMarkdown) : !hasFirstPersonProse(draft2.bodyMarkdown);
