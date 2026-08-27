@@ -2,7 +2,7 @@ JOSH'S READ — the JSON contract for spec 06 (the approval lane). The kit above
 
 - headline: descriptive (Constitution §5.1); first person welcome; the claims the column delivers; never an outlet name.
 - dek: 1–2 sentences that add a number, a stake, or a date the headline doesn't carry.
-- bodyMarkdown: 800–1,200 words (§3; the floor is law, there is no ceiling). Plain paragraphs, optional `## ` section headers that name football, **bold** only; no markdown links, lists, blockquotes, tables. Every prediction inside is logged in the prose with its named grading date. The last line is the sign-off: — JP
+- bodyMarkdown: 800–1,200 words (§3; the floor is law, there is no ceiling). Plain paragraphs, optional `## ` section headers that name football, **bold** only; no markdown links, lists, blockquotes, tables. Every prediction inside names its grading date once, where it is made; the site renders the Ledger receipts module from the column, so the "I logged this on [date]" line appears ONCE, in the porch close, never per section. The last line is the sign-off: — JP
 - pullQuote: THE LINE WORTH KEEPING (§3 pullquote law): one sentence of the column's own text, character-for-character, that stands alone; [PULLQUOTE] marker on its own line beside it; or "".
 - primaryTeam / teams: lowercase-hyphenated slugs (empty when national). tags: 3–6. seo: { title, description }.
 

@@ -142,7 +142,7 @@ export async function fetchFeeds(): Promise<FeedEntry[]> {
 // National CFB feeds carry other sports (Yahoo's especially: wrestling
 // schedules, hoops recruiting, high-school previews). The Wire is college
 // football only — kill off-topic entries before they cost a scoring call.
-const OFF_TOPIC = /\b(wrestl\w*|basketball|hoops|baseball|softball|volleyball|gymnastics|hockey|lacrosse|soccer|golf|tennis|track and field|swimming|wnba|nba|nfl|mlb|nhl|high school|prep football|truck series|cup series|xfinity|backcourt|frontcourt|point guard|shooting guard|power forward|nascar|indycar|formula one|motocross|real american freestyle|boxing|mma|ufc)\b/i;
+const OFF_TOPIC = /\b(wrestl\w*|basketball|hoops|baseball|softball|volleyball|gymnastics|hockey|lacrosse|soccer|golf|tennis|track and field|swimming|wnba|nba|nfl|mlb|nhl|high school|prep football|truck series|cup series|xfinity|pace lap|lap \\d+|spotter|wave[- ]around|caution (flag|period|laps?)|pit road|restart zone|daytona|talladega|speedway|backcourt|frontcourt|point guard|shooting guard|power forward|nascar|indycar|formula one|motocross|real american freestyle|boxing|mma|ufc)\b/i;
 
 /** True when an entry clearly isn't college football. Exported for tests.
  * 400 chars of body text — 160 missed sport mentions that arrive a sentence
@@ -528,6 +528,12 @@ export function narratesSourcing(text: string): boolean {
   );
 }
 
+/** The first sentence that trips narratesSourcing, for hold logs. */
+function narratingSentence(text: string): string {
+  const s = text.split(/(?<=[.!?])\s+/).find((x) => narratesSourcing(x)) ?? "";
+  return s.slice(0, 70);
+}
+
 export interface StoryJob {
   sourceBlock: string;
   outlets: string[];
@@ -648,10 +654,10 @@ export async function generateWireStory(
   const proseGateFailure = (d: StoryDraft, c: string): string | null => {
     if (BANNED_PATTERNS.some((re) => re.test(c))) return "banned";
     if (hasAttributionOpener(d.whatHappened) || headlineNamesOutlet(`${d.deck}\n${d.whatHappened}`)) return "attribution";
-    if (narratesSourcing(c)) return "sourcenarration";
+    if (narratesSourcing(c)) return `sourcenarration(${narratingSentence(c)})`;
     if (hasFirstPersonProse(c)) return "firstperson";
-    if (proseWords(c) < 600) return "floor";
-    if (!attributedInSentenceOne(d.whatHappened)) return "attribution";
+    if (proseWords(c) < 600) return `floor(${proseWords(c)}w)`;
+    if (!attributedInSentenceOne(d.whatHappened)) return `attribution(${d.whatHappened.split(/(?<=[.!?])\s+/)[0]?.slice(0, 60)})`;
     return null;
   };
   const factCheck = async (c: string): Promise<{ verdict: string; detail: string }> => {

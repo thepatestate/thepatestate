@@ -11,6 +11,7 @@ describe("isOffTopic (wire feed filter)", async () => {
     expect(isOffTopic("LSU Adds Donovan Dent to Run Will Wade's 2026-27 Backcourt")).toBe(true);
     expect(isOffTopic("IMG Academy's opening win", "The prep football powerhouse opened its season Friday")).toBe(true);
     expect(isOffTopic("Riggs stays in Trucks for 2027 as Front Row delays his Cup debut", "The Truck Series driver will wait a year")).toBe(true);
+    expect(isOffTopic("Carson Hocevar's New Hampshire spin draws allegations", "Hocevar spun on the pace lap and took the wave around; his spotter said so on Lap 203")).toBe(true);
   });
   it2("keeps college football", () => {
     expect(isOffTopic("Lane Kiffin declines comment on LSU-Ole Miss lawsuit")).toBe(false);
