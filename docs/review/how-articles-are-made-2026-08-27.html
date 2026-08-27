@@ -1,0 +1,244 @@
+<title>How The Pate State Writes</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Source+Sans+3:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root {
+    --paper: #FAFAF7;
+    --ink: #1A1D21;
+    --ink-2: #4A5058;
+    --ink-3: #7A8189;
+    --rule: #DCDDD6;
+    --card: #FFFFFF;
+    --field: #1E6B47;
+    --field-soft: #E4F0E9;
+    --judge: #9A6B00;
+    --judge-soft: #F6ECD2;
+    --model: #2F4E7A;
+    --model-soft: #E3EAF4;
+    --hold: #8A3B2F;
+    --hold-soft: #F5E3DF;
+    --lane-wire: #2F4E7A;
+    --lane-show: #1E6B47;
+    --lane-long: #6B4A9A;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #15181C; --ink: #ECEDE8; --ink-2: #B7BBB2; --ink-3: #868B86; --rule: #2D3238; --card: #1E2227;
+      --field: #5CC08E; --field-soft: #1C2E25; --judge: #E0B24A; --judge-soft: #2E2716; --model: #8FB0E0; --model-soft: #1C2633;
+      --hold: #E08A78; --hold-soft: #33201C; --lane-wire: #8FB0E0; --lane-show: #5CC08E; --lane-long: #B79AE0;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #15181C; --ink: #ECEDE8; --ink-2: #B7BBB2; --ink-3: #868B86; --rule: #2D3238; --card: #1E2227;
+    --field: #5CC08E; --field-soft: #1C2E25; --judge: #E0B24A; --judge-soft: #2E2716; --model: #8FB0E0; --model-soft: #1C2633;
+    --hold: #E08A78; --hold-soft: #33201C; --lane-wire: #8FB0E0; --lane-show: #5CC08E; --lane-long: #B79AE0;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font-family: "Source Sans 3", "Helvetica Neue", Arial, sans-serif; font-size: 16px; line-height: 1.5; }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 40px 24px 72px; }
+  h1, h2, h3 { font-family: "Barlow Condensed", "Arial Narrow", Impact, sans-serif; text-wrap: balance; margin: 0; letter-spacing: .01em; }
+  h1 { font-size: clamp(38px, 6vw, 64px); line-height: .95; font-weight: 700; }
+  h2 { font-size: 28px; font-weight: 700; margin-bottom: 6px; }
+  h3 { font-size: 18px; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; }
+  .eyebrow { font-family: "IBM Plex Mono", Menlo, monospace; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); }
+  .lede { max-width: 66ch; color: var(--ink-2); font-size: 18px; margin: 14px 0 0; }
+  .mono { font-family: "IBM Plex Mono", Menlo, monospace; font-size: 12.5px; }
+  section { margin-top: 56px; }
+  .sub { color: var(--ink-2); max-width: 70ch; margin: 0 0 18px; }
+
+  /* Legend */
+  .legend { display: flex; flex-wrap: wrap; gap: 10px 18px; margin-top: 18px; }
+  .legend span { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; color: var(--ink-2); }
+  .sw { width: 14px; height: 14px; border-radius: 3px; border: 1px solid var(--rule); }
+
+  /* Prompt stack */
+  .stack { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px; }
+  .stack .layer { background: var(--card); border: 1px solid var(--rule); border-top: 4px solid var(--field); border-radius: 6px; padding: 12px 12px 10px; min-height: 118px; }
+  .stack .layer b { display: block; font-size: 15px; }
+  .stack .layer small { display: block; color: var(--ink-3); margin-top: 4px; font-size: 13px; line-height: 1.35; }
+  .stack .layer .n { font-family: "IBM Plex Mono", monospace; font-size: 11px; color: var(--ink-3); letter-spacing: .06em; }
+  .models { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px; margin-top: 14px; }
+  .model { background: var(--model-soft); border-radius: 6px; padding: 12px 14px; }
+  .model b { font-family: "IBM Plex Mono", monospace; font-size: 13px; color: var(--model); }
+  .model p { margin: 4px 0 0; font-size: 14px; color: var(--ink-2); }
+
+  /* Lanes */
+  .lane { margin-top: 28px; }
+  .lane-head { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; margin-bottom: 10px; }
+  .lane-head h3 { color: var(--lane); }
+  .lane-head .cad { color: var(--ink-3); font-size: 14px; }
+  .flow-scroll { overflow-x: auto; padding-bottom: 8px; }
+  .flow { display: flex; align-items: stretch; gap: 0; min-width: max-content; }
+  .step { position: relative; width: 178px; background: var(--card); border: 1px solid var(--rule); border-radius: 6px; padding: 10px 11px 10px; margin-right: 26px; flex: none; }
+  .step::after { content: ""; position: absolute; right: -20px; top: 50%; width: 14px; height: 2px; background: var(--rule); }
+  .step::before { content: ""; position: absolute; right: -22px; top: calc(50% - 4px); border: 5px solid transparent; border-left-color: var(--rule); }
+  .step:last-child { margin-right: 0; }
+  .step:last-child::after, .step:last-child::before { display: none; }
+  .step .k { font-family: "IBM Plex Mono", monospace; font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); }
+  .step b { display: block; font-size: 14.5px; line-height: 1.25; margin: 3px 0 4px; }
+  .step small { display: block; font-size: 12.5px; line-height: 1.35; color: var(--ink-2); }
+  .step .tag { display: inline-block; margin-top: 6px; font-family: "IBM Plex Mono", monospace; font-size: 10.5px; padding: 2px 6px; border-radius: 3px; }
+  .step.model { border-left: 4px solid var(--model); } .step.model .tag { background: var(--model-soft); color: var(--model); }
+  .step.gate { border-left: 4px solid var(--field); } .step.gate .tag { background: var(--field-soft); color: var(--field); }
+  .step.judge { border-left: 4px solid var(--judge); } .step.judge .tag { background: var(--judge-soft); color: var(--judge); }
+  .step.hold { border-left: 4px solid var(--hold); background: var(--hold-soft); } .step.hold .tag { background: var(--card); color: var(--hold); }
+  .step.data { border-left: 4px solid var(--ink-3); } .step.data .tag { background: var(--paper); color: var(--ink-3); }
+  .step.out { border: 2px solid var(--lane); }
+
+  /* Gates + judges */
+  .two { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+  .panel { background: var(--card); border: 1px solid var(--rule); border-radius: 8px; padding: 18px 20px; }
+  .panel h3 { margin-bottom: 10px; }
+  .panel ul { margin: 0; padding-left: 18px; }
+  .panel li { margin: 5px 0; font-size: 14.5px; }
+  .panel li b { font-weight: 600; }
+  .panel .gate-h { color: var(--field); } .panel .judge-h { color: var(--judge); }
+  .score { font-family: "IBM Plex Mono", monospace; font-size: 12px; color: var(--ink-3); }
+
+  /* Ceiling */
+  .ceiling { background: var(--hold-soft); border-radius: 8px; padding: 20px 22px; }
+  .ceiling h2 { color: var(--hold); }
+  .ceiling ol { margin: 10px 0 0; padding-left: 20px; max-width: 78ch; }
+  .ceiling li { margin: 8px 0; }
+  .ceiling li b { font-weight: 600; }
+  footer { margin-top: 48px; color: var(--ink-3); font-size: 13px; }
+  @media (prefers-reduced-motion: no-preference) { .step { transition: transform .15s; } .step:hover { transform: translateY(-2px); } }
+</style>
+
+<div class="wrap">
+  <div class="eyebrow">The Pate State · editorial pipeline · as deployed (main @ 2662db0, Aug 27 2026)</div>
+  <h1>How an article gets made</h1>
+  <p class="lede">Three production lines, one shared voice system. Every box below is a real step in the code; the blue ones call a model, the green ones are deterministic checks, the gold ones are AI judges, the red ones are where a piece stops.</p>
+  <div class="legend">
+    <span><i class="sw" style="background:var(--model-soft);border-left:3px solid var(--model)"></i>Model writes or reads</span>
+    <span><i class="sw" style="background:var(--field-soft);border-left:3px solid var(--field)"></i>Code gate (deterministic)</span>
+    <span><i class="sw" style="background:var(--judge-soft);border-left:3px solid var(--judge)"></i>AI judge (scores, can trigger a rewrite)</span>
+    <span><i class="sw" style="background:var(--hold-soft);border-left:3px solid var(--hold)"></i>Piece is held or killed</span>
+    <span><i class="sw" style="background:var(--paper);border-left:3px solid var(--ink-3)"></i>Data source</span>
+  </div>
+
+  <!-- 1. The voice system -->
+  <section>
+    <h2>1 · The voice system every writer receives</h2>
+    <p class="sub">Before any lane writes, <span class="mono">editorialSystem()</span> assembles the system prompt in the kit's load order. Nothing outside <span class="mono">prompts/pate-state-kit/</span> is allowed in as writing instruction; the contract at the end only defines the JSON fields.</p>
+    <div class="stack">
+      <div class="layer"><span class="n">01</span><b>Constitution v1.2</b><small>Lanes, bylines, the approval rule, what never runs.</small></div>
+      <div class="layer"><span class="n">02</span><b>Voice Bible v4.1</b><small>§0B balance model, hammer budget, §2 banned language, §3 column structure, §12 ceiling rule.</small></div>
+      <div class="layer"><span class="n">04 / 06 / 05</span><b>One product spec</b><small>Wire (04) for the Wire + house reaction; Features (06) for Josh's Read + show columns; Annual (05).</small></div>
+      <div class="layer"><span class="n">07</span><b>Current state</b><small>Season facts with a 7-day stamp; outranks memory, never licenses a fact the sources lack.</small></div>
+      <div class="layer"><span class="n">reference build</span><b>The gold standard, verbatim</b><small>Wire lane: the Ohio State / Rowe build. Feature lane: Three Boards v3. "Match the register, never the content."</small></div>
+      <div class="layer"><span class="n">house</span><b>Site mechanics</b><small>What the site renders (Ledger module, Sourcing box, Pulse) so chrome never lands in prose.</small></div>
+      <div class="layer"><span class="n">contract</span><b>JSON task contract</b><small>wire-story · news-reaction · josh-column · companion-article. Fields, floors, markers.</small></div>
+    </div>
+    <div class="models">
+      <div class="model"><b>WRITER · gpt-5.6-luna (OpenAI)</b><p>Writes every draft and every rewrite, in one shot, from the prompt above plus the source material. Env-switchable to Sonnet; no planning step, no second writer.</p></div>
+      <div class="model"><b>VERIFIER · claude-sonnet-5 (Anthropic)</b><p>Fact-checks, judges, classifies, extracts quotes. Falls back to OpenAI when Anthropic credits are out. The checker is never the writer.</p></div>
+      <div class="model"><b>DATA · CFBD + ESPN + Supabase</b><p>Team fact sheets (records, schedules, poll ranks), the archived verbatim Josh-quote bank, wire clusters, on-record site positions.</p></div>
+    </div>
+  </section>
+
+  <!-- 2. The lanes -->
+  <section>
+    <h2>2 · The three production lines</h2>
+    <p class="sub">Read each left to right. Where a box says "×2", the writer gets one corrective retry with the failure named; where a judge says "≤2 rounds", a rewrite is adopted only if it re-passes the code gates.</p>
+
+    <!-- WIRE -->
+    <div class="lane" style="--lane: var(--lane-wire)">
+      <div class="lane-head"><h3>The Wire · autonomous · desk byline</h3><span class="cad">cron every 10 min, 6a–1a ET · publishes itself</span></div>
+      <div class="flow-scroll"><div class="flow">
+        <div class="step data"><span class="k">source</span><b>Outlet feeds</b><small>ESPN site API, On3, Yahoo and the rest of FEEDS. RSS that died (BR, SI, Fox) is gone.</small><span class="tag">fetchFeeds</span></div>
+        <div class="step gate"><span class="k">filter</span><b>Off-topic + dedup</b><small>Regex kills basketball, prep, NASCAR; 48-hour cluster memory stops the same news twice.</small><span class="tag">isOffTopic · wire_clusters</span></div>
+        <div class="step model"><span class="k">write</span><b>Wire item</b><small>Headline + sub from the cluster. No outlet names in headlines.</small><span class="tag">luna · 512 tok</span></div>
+        <div class="step gate"><span class="k">budget</span><b>Story budget</b><small>4 items per outlet per run; leftover budget backfills older storyless items (3 tries max).</small><span class="tag">MAX_ITEMS_PER_RUN</span></div>
+        <div class="step data"><span class="k">ground</span><b>Source text</b><small>The article page is fetched; if blocked, the feed's own content. Josh receipt looked up by team + keyword.</small><span class="tag">fetchSourceText · findReceipt</span></div>
+        <div class="step hold"><span class="k">gate</span><b>Thin source?</b><small>Under 2,200 characters of source → no story. Item stays as unlinked text.</small><span class="tag">isThinSource</span></div>
+        <div class="step model"><span class="k">write ×2</span><b>Seven-part story</b><small>deck · what happened · why · missing · chessboard · replacement board · watching. 600-word floor.</small><span class="tag">luna · 8192 tok</span></div>
+        <div class="step gate"><span class="k">gates</span><b>Prose gates</b><small>Outlet in headline · attribution opener · source narration · first person · §2 banned language · floor · circling.</small><span class="tag">proseGateFailure</span></div>
+        <div class="step judge"><span class="k">verify</span><b>Fact-check vs sources</b><small>Independent model reads SOURCES + DRAFT. Anything unsupported or contradicted kills the story.</small><span class="tag">Sonnet · pass / hold</span></div>
+        <div class="step judge"><span class="k">judge ≤2</span><b>Quality + voice</b><small>12-category quality score (&lt;8 in two = rewrite) and register vs the Wire gold standard (pass ≥ 8).</small><span class="tag">scoreDraft · voiceMatch</span></div>
+        <div class="step gate"><span class="k">furnish</span><b>Callout + receipt</b><small>Pure-code sentence scorer picks the pull line (threshold 4 or none); Josh's receipt only if the model says it's on subject.</small><span class="tag">selectCallout</span></div>
+        <div class="step out"><span class="k">out</span><b>Published</b><small>"The Pate State Wire Desk" byline. Outlet credit in the footer only. Homepage rail shows only items with a story.</small><span class="tag">wireStory</span></div>
+      </div></div>
+    </div>
+
+    <!-- SHOW -->
+    <div class="lane" style="--lane: var(--lane-show)">
+      <div class="lane-head"><h3>Show column · Josh's Read from an episode · his byline</h3><span class="cad">YouTube poll every 15 min · at most 1 a day, 5 a week · stops at the approval click</span></div>
+      <div class="flow-scroll"><div class="flow">
+        <div class="step data"><span class="k">source</span><b>New episode</b><small>Channel poll finds a full episode (not a short, not a clip).</small><span class="tag">getVideos · isEpisode</span></div>
+        <div class="step model"><span class="k">classify</span><b>Series</b><small>Weekend Truths, Poll Day, Mailbag… from title + description.</small><span class="tag">Sonnet</span></div>
+        <div class="step data"><span class="k">ground</span><b>Transcript</b><small>YouTube captions via OAuth (auto-captioned: names get garbled).</small><span class="tag">fetchTranscript</span></div>
+        <div class="step model"><span class="k">extract</span><b>Verbatim quotes</b><small>Josh's sharpest lines with timestamps, teams and heat → the archive and the only pull-quote candidates.</small><span class="tag">Sonnet · 8192 tok</span></div>
+        <div class="step data"><span class="k">facts</span><b>Team fact sheet</b><small>Records, schedule with dates, poll ranks for every team the quotes name.</small><span class="tag">CFBD / ESPN</span></div>
+        <div class="step model"><span class="k">write ×2</span><b>The column</b><small>First person, "— JP", 800–1,200 words, one [EMBED] at the central claim. Whole transcript in; no plan, one shot.</small><span class="tag">luna · 8192 tok</span></div>
+        <div class="step gate"><span class="k">gates</span><b>Code gates</b><small>§2 banned language · first person present · circling · abstract paragraphs · 800 floor · hammer budget · every quoted span verbatim in the transcript.</small><span class="tag">validateDraft + lints</span></div>
+        <div class="step judge"><span class="k">judge ≤2</span><b>Voice vs Three Boards</b><small>Register only: person, rhythm, where verdicts and numbers sit. Pass ≥ 8; rewrite adopted only if gates still pass.</small><span class="tag">voiceMatch</span></div>
+        <div class="step hold"><span class="k">hold</span><b>ai-drafted</b><small>Written to Sanity with Josh's byline and workflowState "ai-drafted". A person publishes from Studio.</small><span class="tag">approval gate</span></div>
+        <div class="step out"><span class="k">out</span><b>Published by a click</b><small>Companion-episode card, Ledger module and Pulse rendered by the site around the prose.</small><span class="tag">article</span></div>
+      </div></div>
+    </div>
+
+    <!-- LONGFORM -->
+    <div class="lane" style="--lane: var(--lane-long)">
+      <div class="lane-head"><h3>Daily standalone · house reaction or Josh's Read</h3><span class="cad">cron 14:00 and 20:00 UTC · one piece per run, or none</span></div>
+      <div class="flow-scroll"><div class="flow">
+        <div class="step data"><span class="k">source</span><b>72h of Wire coverage</b><small>The last 14 stories plus the 20 most recent article headlines (never duplicate).</small><span class="tag">Sanity</span></div>
+        <div class="step model"><span class="k">select</span><b>Type + topic + angle</b><small>Picks from the Playbook menu (NR-01 What It Means … TP-05 Portal fit) or decides nothing is warranted.</small><span class="tag">Sonnet</span></div>
+        <div class="step data"><span class="k">pack</span><b>Source pack</b><small>Full text of the chosen stories · up to 6 archived Josh quotes for those teams · fact sheet · on-record positions (bracket, JP Poll).</small><span class="tag">sourcePack</span></div>
+        <div class="step gate"><span class="k">route</span><b>Which lane?</b><small>NR / TI / SD types → house reaction (third person, staff byline, publishes). Everything else → Josh's Read (first person, held).</small><span class="tag">productForType</span></div>
+        <div class="step model"><span class="k">write ×2</span><b>The piece</b><small>600 floor (reaction) or 800 floor (column). Facts only from the pack; Josh's voice only from archived quotes.</small><span class="tag">luna · 8192 tok</span></div>
+        <div class="step gate"><span class="k">gates</span><b>Code gates</b><small>§2 banned language · lane person · circling · floor · hammer budget · no source narration · pull quote verbatim from a supplied quote and not duplicated inline.</small><span class="tag">lints</span></div>
+        <div class="step judge"><span class="k">verify</span><b>Fact-check vs pack</b><small>House argument is free; any stated fact outside the pack holds the piece.</small><span class="tag">Sonnet · pass / hold</span></div>
+        <div class="step judge"><span class="k">judge ≤2</span><b>Quality + voice</b><small>12-category score and register vs the lane's gold standard. Rewrite with the judge's notes; "cut, don't invent."</small><span class="tag">scoreDraft · voiceMatch</span></div>
+        <div class="step hold"><span class="k">hero + hold</span><b>Hero image, then state</b><small>Generated hero uploaded. Reaction → published now. Josh's Read → ai-drafted until the click.</small><span class="tag">publishLongformDraft</span></div>
+        <div class="step out"><span class="k">out</span><b>Article</b><small>Tagged with the type ID and architecture; Ledger receipts rendered from the column's own grading dates.</small><span class="tag">article</span></div>
+      </div></div>
+    </div>
+  </section>
+
+  <!-- 3. Gates and judges -->
+  <section>
+    <h2>3 · What the gates and judges actually check</h2>
+    <div class="two">
+      <div class="panel">
+        <h3 class="gate-h">Code gates (fail closed, no model involved)</h3>
+        <ul>
+          <li><b>Banned language</b> — ~40 regexes from the Voice Bible: consulting nouns, AI transitions, announced scaffolding ("the mechanism is"), coaching clichés, recruiting hype, announced candor, "the machine," §2.8 tells (delve, crucial, landscape, navigate), exemplar parroting.</li>
+          <li><b>Restatement</b> — a sentence sharing 4+ content words with an earlier one is a restatement; over 12% of sentences = the piece "circles" and goes back.</li>
+          <li><b>Abstract paragraphs</b> — 35+ words with no number and no proper noun; two of them fail the draft.</li>
+          <li><b>Hammer budget</b> — isolated one-liners (≤12 words alone) capped at one per 400 words.</li>
+          <li><b>Word floors</b> — 600 Wire / reaction, 800 columns.</li>
+          <li><b>Lane person</b> — Josh's Read must have first person; the Wire must not.</li>
+          <li><b>Verbatim</b> — any quoted span of 5+ words must be a substring of the transcript or the supplied quote.</li>
+          <li><b>Sourcing hygiene</b> — no outlet names in headlines or prose, no "the report does not say," no attribution openers.</li>
+          <li><b>Thin source</b> — under 2,200 chars of grounding, no Wire story at all.</li>
+        </ul>
+      </div>
+      <div class="panel">
+        <h3 class="judge-h">AI judges (Sonnet, OpenAI fallback; fail open)</h3>
+        <ul>
+          <li><b>Fact-check</b> — SOURCES vs DRAFT; verdict pass / unsupported / contradicted. Not a pass = the piece never publishes. <span class="score">hard stop</span></li>
+          <li><b>scoreDraft</b> — 12 categories 1–10: voice, originality, specificity, evidence, pacing, personality, structural variety, value added, headline, accuracy, humanity (written vs generated), discovery. Below 8 in two categories = one rewrite with the notes. <span class="score">pass: &lt;2 categories under 8</span></li>
+          <li><b>voiceMatch</b> — reads the draft next to the lane's gold-standard build and scores register only. <span class="score">pass ≥ 8 · up to 2 rewrites</span></li>
+          <li><b>fanScore</b> — a fan, not an editor: legibility, enjoyment, Josh-voice. Used by the review tooling to measure, not wired into production as a gate. <span class="score">target 8.5 · production pieces land ~6–7</span></li>
+          <li><b>Callout relevance</b> — Josh's receipt only prints when a model confirms it's the same specific subject.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. Ceiling -->
+  <section>
+    <div class="ceiling">
+      <h2>4 · Why this shape tops out around 7 on the fan judge</h2>
+      <ol>
+        <li><b>One writer, one shot, then patch.</b> Luna gets the whole kit and the whole transcript and writes the piece in a single pass; every later step can only send notes back ("fix these") to the same writer. There is no argument-planning step, no second draft to compare against, no editor pass — the judges are critics, not collaborators.</li>
+        <li><b>The judges' notes don't move the writer.</b> Rewrite rounds with "the same point restated four ways" as feedback produce a draft that restates it three ways. The rewrite is adopted only if it re-passes the gates, so most rounds end with the original.</li>
+        <li><b>Floors manufacture the restating.</b> A 600/800-word floor on a source that carries 300 words of real football gets filled with the same facts in new clothes; the restatement gate then bounces it, and the retry pads differently.</li>
+        <li><b>Source shape sets the ceiling.</b> Argument episodes (one take, football reasons) reach 7–7.5; list episodes and award-notes sources read as "a listicle wearing a monologue costume" at 5–6, regardless of voice instructions.</li>
+        <li><b>The gold standard was made interactively.</b> Josh's 9.7 column came from a draft plus Josh's own edits; the pipeline reproduces the register (voiceMatch passes) but not the judgment about what to leave out.</li>
+      </ol>
+    </div>
+  </section>
+
+  <footer>Sources: lib/wire.ts, lib/generate.ts, lib/ingest.ts, lib/longform.ts, lib/editorial.ts, lib/exemplars.ts, lib/judge.ts, lib/writer.ts, supabase/migrations (cron schedules), prompts/pate-state-kit/. Reflects main at 2662db0 after the Aug 27 rollback.</footer>
+</div>
