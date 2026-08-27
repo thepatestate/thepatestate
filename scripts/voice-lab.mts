@@ -24,7 +24,7 @@ const { default: Anthropic } = await import("@anthropic-ai/sdk");
 const { getVideos, isEpisode } = await import("../lib/youtube.ts");
 const { fetchTranscript, transcriptToPromptText } = await import("../lib/transcript.ts");
 const { extractQuotes, classifySeries, DRAFT_SCHEMA, findNonVerbatimQuotes, placePullQuoteMarker, validateDraft } = await import("../lib/generate.ts");
-const { editorialSystem, readPrompt, BOILERPLATE_PROMPT, boilerplateViolations, fanScore, voiceMatch, restatements, abstractParagraphs } = await import("../lib/editorial.ts");
+const { editorialSystem, readPrompt, boilerplateViolations, fanScore, voiceMatch, restatements, abstractParagraphs } = await import("../lib/editorial.ts");
 const { teamFactSheet } = await import("../lib/fact-sheet.ts");
 const { judgeJSON } = await import("../lib/judge.ts");
 
@@ -73,7 +73,6 @@ console.log("NOTES:", JSON.stringify(notes, null, 1).slice(0, 1800), "\n");
 // ---- 2. WRITE: best of three writers from the same notes ----------------------
 const system = editorialSystem("show-adaptation", readPrompt("companion-article.md"));
 const baseUser = [
-  BOILERPLATE_PROMPT,
   `THIS COLUMN IS ABOUT ONE THING: ${notes.segment?.topic} (the show segment from ${notes.segment?.start} to ${notes.segment?.end}). Everything else in the episode is out of scope; do not tour the other takes; the embed carries them. As short as the argument and no longer: 300–550 words, no section headers, one continuous argument the way the approved column argues. Say the take once, prove it once, tell the reader what to watch once. Name the realistic alternative and say plainly why it falls short. At most two dates in the whole column, each attached to a reason; never list a schedule. Never carry a spoken bit or a captioner's garble into prose ("whomst," "whomsted," or any word that isn't a word).\n\nTHE ARGUMENT NOTES (your editor's plan; write from these): TAKE: ${notes.take}\nMECHANISMS:\n${(notes.mechanisms ?? []).map((m: any, i: number) => `${i + 1}. ${m.claim} — the football: ${m.football} (${m.source})`).join("\n")}\nTHE ANGLE A FAN HASN'T CONSIDERED: ${notes.surprise}\nTHE LINE TO TEXT A FRIEND (use it, verbatim, where it lands hardest): ${notes.textLine}\nWATCH: ${(notes.watch ?? []).join(" · ")}\nDO NOT SPEND WORDS ON: ${(notes.cut ?? []).join(" · ")}\nEvery mechanism appears with its football specifics. Nothing beyond the transcript and the team facts. Say each thing once.`,
   `Episode title: ${v.title}`, `Series: ${series}`, `Published: ${v.published}`, `Description:\n${(v.description ?? "").slice(0, 3000)}`,
   `NO QUOTE BLOCKS: this is Josh's own first-person column, so it never quotes him back to the reader (a narrator quoting himself reads bolted on). Do not emit [QUOTE] blocks. His spoken lines become his written sentences. Never carry a spoken bit or a captioner's garble into prose ("whomst," "whomsted"). pullQuote: one sentence of the column's own text, character-for-character, that stands alone; or "".`,

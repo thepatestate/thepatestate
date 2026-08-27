@@ -19,8 +19,9 @@ import { narratesSourcing, scrubDashes } from "@/lib/wire";
 import { generateArticleHero } from "@/lib/hero-image";
 import { uploadHeroImage, setArticleHeroImage } from "@/lib/sanity";
 import { slugify } from "@/lib/slug";
+import { BYLINE_STAFF } from "@/lib/generate";
 import { JOSH_BRACKET_FIELD, JOSH_BRACKET_FINAL, JOSH_BRACKET_LABEL } from "@/lib/josh-bracket";
-import { pickArchitecture, boilerplateViolations, BOILERPLATE_PROMPT, scoreDraft, editorialSystem, voiceMatch, circles, restatements, type EditorialProduct } from "@/lib/editorial";
+import { pickArchitecture, boilerplateViolations, scoreDraft, editorialSystem, voiceMatch, circles, restatements, kickerBudget, ensureSignOff, proseWords, type EditorialProduct } from "@/lib/editorial";
 import { hasFirstPersonProse } from "@/lib/wire";
 import { judgeJSON } from "@/lib/judge";
 import { teamFactSheet } from "@/lib/fact-sheet";
@@ -57,9 +58,10 @@ RC-01 Commitment impact report — snap economics and rival cost of a recent com
 RC-04 Class rankings + trajectory — construction logic, not star math
 TP-05 Portal fit analysis — scheme + supporting cast + snap math for a recent transfer`;
 
-/** Kit routing (Playbook commissioning rule 3): NR/TI/SD types write from
- * the Wire spec's autonomous news-reaction lane; every other menu type is
- * a staff-byline piece in the features register. */
+/** Kit v4 routing (Playbook commissioning rule 3): NR/TI/SD types are the
+ * autonomous lane (spec 04: third person, staff byline, publishes); every
+ * other type is Josh's Read (spec 06: first person, his byline, held at
+ * the approval gate). */
 export function productForType(typeId: string): EditorialProduct {
   return /^(NR|TI|SD)-/i.test(typeId) ? "news-reaction" : "feature";
 }
@@ -181,8 +183,7 @@ export async function draftLongformArticle(
     const factSheet = await teamFactSheet(sel.teams).catch(() => "");
     const standing = `ON-RECORD SITE POSITIONS (never contradict silently): ${JOSH_BRACKET_LABEL} — field: ${JOSH_BRACKET_FIELD.map((t) => `${t.seed} ${t.name}`).join(", ")}; final on record: ${JOSH_BRACKET_FINAL}. The JP Poll shown on the show is the MODEL's power ratings (Ohio State No. 1 preseason), not a ranking.`;
     const sourcePack = [
-      `ASSIGNMENT: type ${sel.typeId} — ${sel.topic}\nANGLE: ${sel.angle}${process.env.EDITORIAL_LEAN === "1" ? "" : `\nARCHITECTURE FOR THIS PIECE (commit to it fully; it is the structural-variety rotation): ${arch.name} — ${arch.brief}`}`,
-      BOILERPLATE_PROMPT,
+      `ASSIGNMENT: type ${sel.typeId} — ${sel.topic}\nANGLE: ${sel.angle}`,
       fullStories.length
         ? `WIRE COVERAGE (verified facts — the fact base):\n${fullStories
             .map((s) => `• ${s.headline}\n${[s.whatHappened, s.whyBody, s.missing, s.section04Body, s.readBody].filter(Boolean).join("\n")}`)
@@ -202,7 +203,9 @@ export async function draftLongformArticle(
     // (Notebook, or Recruiting Intelligence for RI-* types) → house
     // overrides → the JSON contract in standalone-article.md.
     const product = productForType(sel.typeId);
-    const system = editorialSystem(product, prompt("standalone-article.md"));
+    const joshLane = product === "feature";
+    const floor = joshLane ? 800 : 600;
+    const system = editorialSystem(product, prompt(joshLane ? "josh-column.md" : "news-reaction.md"));
     let raw = "";
     let user = sourcePack;
     let draft!: {
@@ -218,15 +221,20 @@ export async function draftLongformArticle(
         maxTokens: 8192,
       });
       draft = JSON.parse(raw) as typeof draft;
+      if (joshLane) draft.bodyMarkdown = ensureSignOff(draft.bodyMarkdown);
       const boiler = boilerplateViolations(draft.bodyMarkdown);
-      // Josh, 2026-08-26: every column is in his first person, matching the
-      // approved Three Boards column. A draft with no "I" in it missed the lane.
-      const noFirstPerson = !hasFirstPersonProse(draft.bodyMarkdown);
+      const hasI = hasFirstPersonProse(draft.bodyMarkdown);
+      // Lane law (Constitution §3): Josh's Read is first person always; the
+      // autonomous house reaction never is.
+      const wrongPerson = joshLane ? !hasI : hasI;
       const circling = circles(draft.bodyMarkdown);
-      if (boiler.length === 0 && !noFirstPerson && !circling) break;
-      user = `${sourcePack}\n\nYOUR PREVIOUS DRAFT VIOLATED house style${noFirstPerson ? " — it is not written in Josh's first person; this is Josh's Read, written as \"I\" to \"you\", matching THE VOICE TO MATCH exactly" : ""}${boiler.length ? ` — banned language: ${boiler.join("; ")}` : ""}${circling ? ` — it restates itself; these sentences repeat a point already made and must go or become new information: ${restatements(draft.bodyMarkdown).slice(0, 4).map((s) => `"${s.slice(0, 110)}"`).join(" · ")}` : ""}. Keep the analysis; rewrite in the voice, shorter.`;
+      const words = proseWords(draft.bodyMarkdown);
+      const budget = joshLane ? kickerBudget(draft.bodyMarkdown) : { ok: true, kickers: [] as string[], allowed: 0 };
+      if (boiler.length === 0 && !wrongPerson && !circling && words >= floor && budget.ok) break;
+      user = `${sourcePack}\n\nYOUR PREVIOUS DRAFT VIOLATED the kit's laws${wrongPerson ? (joshLane ? " — Constitution §3: Josh's Read drafts in first person, always" : " — Voice Bible §1: the autonomous lane carries no first person and no Josh opinion") : ""}${boiler.length ? ` — Voice Bible §2 gated language: ${boiler.join("; ")}` : ""}${words < floor ? ` — the word floor is ${floor} (you wrote ${words}); depth comes from reporting and football, never filler` : ""}${!budget.ok ? ` — Voice Bible §0B hammer budget: ${budget.kickers.length} isolated one-sentence paragraphs where ${budget.allowed} is the limit; fold the rest into their neighboring paragraphs` : ""}${circling ? ` — it restates itself; these sentences repeat a point already made: ${restatements(draft.bodyMarkdown).slice(0, 4).map((s) => `"${s.slice(0, 110)}"`).join(" · ")}` : ""}. Rewrite to the kit.`;
     }
     draft.bodyMarkdown = scrubDashes(draft.bodyMarkdown).replace(/\[EMBED:[^\]]*\]\s*/g, "").replace(/\[\/PULLQUOTE\]/g, "");
+    if (joshLane) draft.bodyMarkdown = ensureSignOff(draft.bodyMarkdown);
     draft.dek = scrubDashes(draft.dek);
 
     // --- Gates ----------------------------------------------------------
@@ -271,10 +279,10 @@ export async function draftLongformArticle(
     for (let round = 0; round < 2; round++) {
       const [quality, voice] = await Promise.all([
         scoreDraft(anthropic, { headline: draft.headline, dek: draft.dek, body: draft.bodyMarkdown, sources: sourcePack }),
-        voiceMatch(anthropic, { lane: "feature", draft: draft.bodyMarkdown }),
+        voiceMatch(anthropic, { lane: joshLane ? "feature" : "wire", draft: draft.bodyMarkdown }),
       ]);
       if (quality.pass && voice.pass) break;
-      const notes = [quality.pass ? "" : `Quality judge: ${quality.notes}`, voice.pass ? "" : `Voice judge (scored ${voice.score}/10 against the approved Three Boards column; it must read as the same writer): ${voice.notes}`].filter(Boolean).join("\n");
+      const notes = [quality.pass ? "" : `Quality judge: ${quality.notes}`, voice.pass ? "" : `Voice judge (scored ${voice.score}/10 against the gold standard for this lane; it must read as the same writer): ${voice.notes}`].filter(Boolean).join("\n");
       const raw2 = await writeJSON({
         system,
         user: `${user}\n\nEDITOR'S REWRITE NOTES (your previous draft failed the pre-publish judges — fix these precisely, keep what works):\n${notes}\n\nPrevious draft:\n${draft.bodyMarkdown}\n\nIf the notes ask for detail the source pack does not contain, do NOT invent it: cut instead. Delete paragraphs that restate, and let the piece be shorter.`,
@@ -284,7 +292,9 @@ export async function draftLongformArticle(
       });
       const draft2 = JSON.parse(raw2) as typeof draft;
       draft2.bodyMarkdown = scrubDashes(draft2.bodyMarkdown).replace(/\[EMBED:[^\]]*\]\s*/g, "").replace(/\[\/PULLQUOTE\]/g, "");
-      if (boilerplateViolations(draft2.bodyMarkdown).length === 0 && hasFirstPersonProse(draft2.bodyMarkdown) && !narratesSourcing(draft2.bodyMarkdown)) {
+      if (joshLane) draft2.bodyMarkdown = ensureSignOff(draft2.bodyMarkdown);
+      const okPerson = joshLane ? hasFirstPersonProse(draft2.bodyMarkdown) : !hasFirstPersonProse(draft2.bodyMarkdown);
+      if (boilerplateViolations(draft2.bodyMarkdown).length === 0 && okPerson && !narratesSourcing(draft2.bodyMarkdown) && proseWords(draft2.bodyMarkdown) >= floor) {
         Object.assign(draft, draft2);
       } else {
         break;
@@ -317,10 +327,12 @@ export async function publishLongformDraft(draft: LongformDraft): Promise<string
       dek: draft.dek,
       bodyMarkdown: draft.bodyMarkdown,
       ...(draft.pullQuote ? { pullQuote: draft.pullQuote } : {}),
-      // Josh, 2026-08-26: his columns carry his byline, in his voice.
-      byline: "Josh Pate",
-      workflowState: "published",
-      publishedAt: new Date().toISOString(),
+      // Kit v4 Constitution §3: Josh's Read carries his byline and stops at
+      // the human approval gate; the autonomous house reaction publishes.
+      byline: draft.product === "feature" ? "Josh Pate" : BYLINE_STAFF,
+      ...(draft.product === "feature"
+        ? { workflowState: "ai-drafted" }
+        : { workflowState: "published", publishedAt: new Date().toISOString() }),
       lowConfidence: false,
       primaryTeam: draft.primaryTeam,
       teams: draft.teams,

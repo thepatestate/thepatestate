@@ -116,14 +116,10 @@ export async function ingestEpisode(v: IngestVideo): Promise<IngestResult> {
       // byline in his first person, matching the approved Three Boards
       // column. This is his direct instruction and outranks the kit's §3.
       byline: "Josh Pate",
-      // Auto-publish (owner call, 08-11): clean drafts go live immediately;
-      // Josh's team can unpublish or correct any piece in Studio. Drafts
-      // with no transcript grounding or self-flagged low confidence still
-      // hold in ai-drafted for human eyes — never auto-published.
-      workflowState: !transcriptText || draft.lowConfidence === true ? "ai-drafted" : "published",
-      ...(!transcriptText || draft.lowConfidence === true
-        ? {}
-        : { publishedAt: new Date().toISOString() }),
+      // Kit v4 Constitution §3 (Josh, 2026-08-26): no Josh-byline piece
+      // publishes without an explicit human approval click. Every column
+      // waits in ai-drafted; Josh's team publishes from Studio.
+      workflowState: "ai-drafted",
       lowConfidence: !transcriptText || draft.lowConfidence === true,
       primaryTeam: draft.primaryTeam,
       teams: draft.teams,

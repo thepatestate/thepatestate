@@ -23,7 +23,7 @@ loadDotEnvLocal();
 
 const { writeClient } = await import("../lib/sanity.ts");
 const { writeJSON, WRITER_PROVIDER } = await import("../lib/writer.ts");
-const { editorialSystem, readPrompt, BOILERPLATE_PROMPT, boilerplateViolations } = await import("../lib/editorial.ts");
+const { editorialSystem, readPrompt, boilerplateViolations } = await import("../lib/editorial.ts");
 const { STORY_SCHEMA, fetchSourceText, headlineNamesOutlet, hasAttributionOpener, narratesSourcing, hasFirstPersonProse, selectCallout, cleanSectionTitle, isThinSource } = await import("../lib/wire.ts");
 const { createAdminClient, isAdminConfigured } = await import("../lib/supabase/admin.ts");
 
@@ -63,7 +63,7 @@ console.log(`writer: ${WRITER_PROVIDER}\nstory: ${row._id}\ngrounding: ${texts.f
 const system = editorialSystem("wire", readPrompt("wire-story.md"));
 const thin = isThinSource(sourceBlock);
 console.log(`thin source: ${thin} (brief mode ${thin ? "ON" : "off"})\n`);
-const user = `${BOILERPLATE_PROMPT}${thin ? `\n\nSOURCE MATERIAL IS THIN (a few hundred words of reporting): file a BRIEF per the triage rule. Headline, a one-sentence deck, whatHappened at 80–120 words saying exactly what is known, impact, category, teams; every other field "" or []. Never expand a handful of facts into six sections; a short story that says only what is known is the correct answer (Wire §7).` : ""}\n\nSource cluster:\n${sourceBlock}`;
+const user = `${thin ? `\n\nSOURCE MATERIAL IS THIN (a few hundred words of reporting): file a BRIEF per the triage rule. Headline, a one-sentence deck, whatHappened at 80–120 words saying exactly what is known, impact, category, teams; every other field "" or []. Never expand a handful of facts into six sections; a short story that says only what is known is the correct answer (Wire §7).` : ""}\n\nSource cluster:\n${sourceBlock}`;
 const t0 = Date.now();
 const raw = await writeJSON({ system, user, schema: STORY_SCHEMA, schemaName: "wire_story", maxTokens: 8192 });
 const d = JSON.parse(raw) as Record<string, any>;

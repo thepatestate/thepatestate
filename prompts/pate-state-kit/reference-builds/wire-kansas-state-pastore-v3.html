@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kansas State's line just lost its last returning start — The Wire — The Pate State</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,500;0,600;0,700;0,800;1,700&family=Public+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --white:#FFFFFF; --off:#F4F6F9; --mast:#0D1321; --navy:#0E2240; --navy-deep:#0A1730;
+  --gold:#C9A227; --gold-dk:#A8861B; --red:#C8102E; --green:#1E7D3E; --green-bg:#EAF6EE;
+  --ink:#151A22; --mut:#5F6B7A; --hair:#E5E9EF; --purple:#512888;
+  --cond:'Barlow Condensed',sans-serif; --body:'Public Sans',sans-serif; --slab:'Public Sans',sans-serif;
+  --sh-sm:0 2px 8px rgba(14,24,42,.08);
+  --sh-md:0 10px 26px rgba(14,24,42,.14);
+  --sh-lg:0 22px 55px rgba(14,24,42,.22);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--body);background:var(--white);color:var(--ink)}
+a{text-decoration:none;color:inherit}
+img{display:block}
+.wrap{max-width:1200px;margin:0 auto;padding:0 24px}
+
+/* rhythm + mast (site chrome) */
+.rhythm{background:var(--navy-deep);color:#8FA0B8;font:600 10px/1 var(--cond);letter-spacing:.1em;text-transform:uppercase}
+.rhythm .wrap{display:flex;align-items:center;height:24px;gap:16px;overflow-x:auto;scrollbar-width:none}
+.rhythm b{color:#C8D2E0;font-weight:700}
+.rhythm .today b{color:var(--gold)}
+.mast{background:var(--mast);position:sticky;top:0;z-index:50;box-shadow:0 2px 14px rgba(0,0,0,.35)}
+.mast .wrap{display:flex;align-items:center;height:64px;gap:26px}
+.logo{color:#fff;font:800 24px/1 var(--cond);letter-spacing:.04em;text-transform:uppercase}
+.logo em{font-style:italic;color:var(--gold)}
+.logo span{display:block;font:600 8.5px/1 var(--cond);letter-spacing:.3em;color:#8FA0B8;margin-top:3px}
+nav.main{display:flex;gap:20px;margin-left:8px}
+nav.main a{color:#C8D2E0;font:700 13px/1 var(--cond);letter-spacing:.1em;text-transform:uppercase;padding:8px 2px;border-bottom:2px solid transparent}
+nav.main a:hover{color:#fff}
+nav.main a.on{color:var(--gold);border-bottom-color:var(--gold)}
+.mast .right{margin-left:auto;display:flex;align-items:center;gap:16px}
+.myteams{color:#C8D2E0;font:700 12px/1 var(--cond);letter-spacing:.08em}
+.join{background:var(--gold);color:var(--mast);font:800 12.5px/1 var(--cond);letter-spacing:.12em;text-transform:uppercase;padding:11px 17px;border-radius:5px;box-shadow:var(--sh-sm)}
+.join:hover{background:#DCB43A}
+.prog{position:sticky;top:64px;z-index:49;height:3px;background:var(--hair)}
+.prog i{display:block;height:100%;width:0%;background:linear-gradient(90deg,var(--gold),#DCB43A)}
+@media(max-width:900px){nav.main{display:none}}
+
+/* wire strip */
+.wirestrip{background:var(--red);color:#fff}
+.wirestrip .wrap{display:flex;align-items:center;gap:14px;height:34px;font:800 11px/1 var(--cond);letter-spacing:.2em;text-transform:uppercase}
+.wirestrip .dot{width:8px;height:8px;border-radius:50%;background:#fff;animation:pulse 1.6s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+.wirestrip span{opacity:.8;font-weight:700}
+.wirestrip .t{margin-left:auto;opacity:.75;letter-spacing:.08em}
+
+/* article grid */
+.art-grid{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:48px;padding:32px 0 40px}
+.article{max-width:700px}
+@media(max-width:980px){.art-grid{grid-template-columns:1fr}.rail{display:none}}
+.a-crumb{font:700 10.5px/1 var(--cond);letter-spacing:.16em;text-transform:uppercase;color:var(--mut)}
+.a-crumb a:hover{color:var(--navy)}
+.a-crumb b{color:var(--gold-dk)}
+.a-kick{display:flex;align-items:center;gap:10px;margin:18px 0 12px;flex-wrap:wrap}
+.a-kick .k{font:800 11px/1 var(--cond);letter-spacing:.16em;text-transform:uppercase;color:#fff;background:var(--red);padding:7px 11px;border-radius:4px}
+.a-kick .st{font:800 11px/1 var(--cond);letter-spacing:.14em;text-transform:uppercase;color:var(--green);background:var(--green-bg);border:1px solid rgba(30,125,62,.3);padding:6px 10px;border-radius:4px}
+.a-kick .imp{font:800 11px/1 var(--cond);letter-spacing:.14em;text-transform:uppercase;color:var(--gold-dk);background:#FCF9EF;border:1px solid rgba(201,162,39,.45);padding:6px 10px;border-radius:4px}
+.a-kick .team{display:flex;align-items:center;gap:7px;font:800 11px/1 var(--cond);letter-spacing:.14em;text-transform:uppercase;color:var(--mut)}
+.a-kick .team img{width:22px;height:22px;object-fit:contain}
+h1.a-hl{font:800 36px/1.14 var(--slab);letter-spacing:-.02em;color:var(--ink)}
+.a-dek{font:400 18px/1.55 var(--body);color:var(--mut);margin-top:14px}
+.a-dek b{color:var(--ink);font-weight:600}
+.a-by{display:flex;align-items:center;gap:14px;margin:22px 0;padding:16px 0;border-top:1px solid var(--hair);border-bottom:1px solid var(--hair)}
+.a-by .av{width:46px;height:46px;min-width:46px;border-radius:50%;background:linear-gradient(150deg,var(--navy),var(--navy-deep));color:var(--gold);font:800 15px/46px var(--cond);text-align:center;box-shadow:var(--sh-sm)}
+.a-by .who b{display:block;font:700 14.5px/1.2 var(--body);color:var(--ink)}
+.a-by .who span{font:500 12px/1.5 var(--body);color:var(--mut)}
+.a-by .upd{margin-left:auto;font:600 11px/1.5 var(--cond);letter-spacing:.1em;text-transform:uppercase;color:var(--mut);text-align:right}
+.a-by .upd b{color:var(--red)}
+.a-hero{border-radius:12px;overflow:hidden;box-shadow:var(--sh-md);margin-bottom:8px;position:relative}
+.a-hero .ph{aspect-ratio:16/8.5;background:radial-gradient(640px 340px at 70% 12%,rgba(123,79,192,.4),transparent 58%),linear-gradient(140deg,#2A1450 0%,var(--navy-deep) 62%,#1A2C55 100%);position:relative;display:flex;align-items:center;justify-content:center}
+.a-hero .ph::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,rgba(10,23,48,.45) 100%)}
+.a-hero .ph img{width:150px;height:150px;object-fit:contain;filter:drop-shadow(0 10px 30px rgba(0,0,0,.5))}
+.a-hero .lbl{position:absolute;right:14px;bottom:12px;font:700 9px/1 var(--cond);letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.55);z-index:2}
+.a-cap{font:500 12px/1.6 var(--body);color:var(--mut);margin-bottom:26px}
+.a-cap b{color:var(--ink);font-weight:600}
+.a-body p{font:400 17px/1.75 var(--body);color:#232A35;margin-bottom:22px}
+.a-body>p:first-of-type::first-letter{font:800 54px/0.9 var(--cond);color:var(--navy);float:left;padding:6px 10px 0 0}
+.a-body h2{font:800 24px/1.25 var(--slab);letter-spacing:-.015em;color:var(--navy);margin:40px 0 14px}
+.a-body h2 .pt{font:800 11px/1 var(--cond);letter-spacing:.2em;color:var(--gold-dk);display:block;margin-bottom:7px}
+.a-body p b{font-weight:700;color:var(--ink)}
+.a-body a{color:var(--gold-dk);font-weight:600;text-decoration:underline;text-decoration-color:rgba(201,162,39,.4);text-underline-offset:3px}
+.a-body a:hover{color:var(--navy)}
+
+/* modules */
+.nums{display:grid;grid-template-columns:repeat(3,1fr);margin:8px 0 26px;background:var(--white);border:1px solid var(--hair);border-radius:12px;box-shadow:var(--sh-sm);overflow:hidden}
+.num{padding:18px 20px;border-left:1px solid var(--hair)}
+.num:first-child{border-left:0}
+.num .n{font:800 26px/1 var(--cond);color:var(--gold-dk)}
+.num p{font:500 12.5px/1.5 var(--body);color:var(--mut);margin:8px 0 0 !important}
+@media(max-width:640px){.nums{grid-template-columns:1fr}.num{border-left:0;border-top:1px solid var(--hair)}.num:first-child{border-top:0}}
+.pull{border-left:4px solid var(--gold);padding:6px 0 6px 22px;margin:30px 0}
+.pull p{font:600 21px/1.45 var(--body);font-style:italic;color:var(--navy);margin:0 !important}
+.pull span{display:block;font:700 10.5px/1 var(--cond);letter-spacing:.14em;text-transform:uppercase;color:var(--mut);margin-top:10px}
+.sos{background:var(--off);border:1px solid var(--hair);border-radius:12px;padding:20px 22px;margin:28px 0;box-shadow:var(--sh-sm)}
+.sos .k{font:800 10px/1 var(--cond);letter-spacing:.2em;text-transform:uppercase;color:var(--gold-dk);margin-bottom:12px}
+.sos ul{list-style:none}
+.sos li{font:400 14px/1.6 var(--body);color:#232A35;padding:9px 0;border-top:1px solid var(--hair);display:flex;gap:12px}
+.sos li:first-child{border-top:0;padding-top:0}
+.sos li b{font:800 11px/1.6 var(--cond);letter-spacing:.1em;text-transform:uppercase;color:var(--mut);min-width:104px;flex:none;padding-top:2px}
+.sos li i{font-style:normal}
+.sos li .neg{color:var(--red);font-weight:700}
+/* zero-starts viz */
+.zviz{border:1px solid var(--hair);border-radius:12px;box-shadow:var(--sh-sm);margin:28px 0;overflow:hidden}
+.zviz .hd{background:var(--navy);color:#fff;padding:13px 20px;font:800 13px/1 var(--cond);letter-spacing:.14em;text-transform:uppercase}
+.zviz .bd{padding:18px 20px 14px;background:var(--white)}
+.zrow{display:grid;grid-template-columns:150px 1fr 66px;gap:14px;align-items:center;padding:8px 0}
+.zrow b{font:800 12px/1.3 var(--cond);letter-spacing:.06em;text-transform:uppercase;color:var(--ink)}
+.zrow b small{display:block;font:700 9px/1.4 var(--cond);letter-spacing:.12em;color:var(--mut)}
+.zbar{height:13px;background:var(--off);border-radius:7px;overflow:hidden;border:1px solid var(--hair)}
+.zbar i{display:block;height:100%;background:linear-gradient(90deg,var(--navy),#1A3A6B);border-radius:7px}
+.zbar i.rd{background:linear-gradient(90deg,#9C0C24,var(--red))}
+.zrow .v{font:800 14px/1 var(--cond);color:var(--navy);text-align:right}
+.zviz .sum{padding:13px 20px;background:#FCF9EF;border-top:1.5px solid rgba(201,162,39,.4);font:400 13px/1.6 var(--body);color:#232A35}
+.zviz .sum b{font-weight:700}
+@media(max-width:640px){.zrow{grid-template-columns:104px 1fr 48px}}
+/* replacement board */
+.p22{border:1px solid var(--hair);border-radius:12px;overflow:hidden;margin:28px 0;box-shadow:var(--sh-sm)}
+.p22 .hd{background:var(--navy);color:#fff;padding:13px 20px;display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+.p22 .hd b{font:800 14px/1 var(--cond);letter-spacing:.14em;text-transform:uppercase}
+.p22 .hd span{font:600 10px/1 var(--cond);letter-spacing:.08em;text-transform:uppercase;color:#8FA0B8}
+.p22 .row{display:grid;grid-template-columns:150px 1fr;gap:14px;padding:13px 20px;border-top:1px solid var(--hair);align-items:baseline;background:var(--white)}
+.p22 .row:nth-child(even){background:var(--off)}
+.p22 .pos{font:800 13px/1.4 var(--cond);letter-spacing:.06em;color:var(--gold-dk);text-transform:uppercase}
+.p22 .pos small{display:block;font:700 10px/1.5 var(--cond);letter-spacing:.1em;color:var(--mut)}
+.p22 .who{font:400 13.5px/1.6 var(--body);color:#232A35}
+.p22 .who b{font-weight:700;color:var(--ink)}
+.p22 .sum{padding:13px 20px;background:#FCF9EF;border-top:1.5px solid rgba(201,162,39,.4);font:400 13px/1.6 var(--body);color:#232A35}
+@media(max-width:640px){.p22 .row{grid-template-columns:1fr;gap:4px}}
+/* watch list */
+.wl{display:grid;gap:12px;margin:24px 0}
+.wl>div{display:grid;grid-template-columns:40px 1fr;gap:14px;border:1px solid var(--hair);border-radius:12px;padding:15px 18px;box-shadow:var(--sh-sm);background:var(--white)}
+.wl .n{font:800 17px/1 var(--cond);color:#fff;background:var(--navy);border-radius:8px;width:34px;height:34px;display:flex;align-items:center;justify-content:center}
+.wl h3{font:800 15px/1.35 var(--slab);color:var(--ink);margin:0 0 4px !important}
+.wl p{font:400 13.5px/1.6 var(--body);color:#232A35;margin:0 !important}
+/* footer note + footer */
+.stdnote{border:1px solid var(--hair);background:var(--off);border-radius:12px;padding:16px 20px;margin:34px 0 0;font:400 12.5px/1.65 var(--body);color:var(--mut)}
+.stdnote b{color:var(--ink);font-weight:600}
+.stdnote a{color:var(--gold-dk);font-weight:600}
+/* rail */
+.rail{position:sticky;top:92px;align-self:start;display:grid;gap:20px}
+.rc{border:1px solid var(--hair);border-radius:12px;box-shadow:var(--sh-sm);overflow:hidden;background:var(--white)}
+.rc .hd{background:var(--navy);color:#fff;padding:12px 18px;font:800 12px/1 var(--cond);letter-spacing:.16em;text-transform:uppercase}
+.rc .hd.red{background:var(--red)}
+.rc .bd{padding:16px 18px}
+.rc .impact{display:flex;align-items:center;gap:12px}
+.rc .impact .badge{font:800 13px/1 var(--cond);letter-spacing:.1em;text-transform:uppercase;color:var(--gold-dk);background:#FCF9EF;border:1px solid rgba(201,162,39,.45);padding:9px 12px;border-radius:6px}
+.rc .impact p{font:400 12.5px/1.55 var(--body);color:var(--mut)}
+.rc .nx{display:block;padding:13px 18px;border-top:1px solid var(--hair)}
+.rc .nx:hover{background:var(--off)}
+.rc .nx small{font:800 9.5px/1 var(--cond);letter-spacing:.18em;text-transform:uppercase;color:var(--red)}
+.rc .nx b{display:block;font:700 13.5px/1.4 var(--body);color:var(--ink);margin-top:5px}
+.rc .cta{display:block;text-align:center;background:var(--gold);color:var(--mast);font:800 13px/1 var(--cond);letter-spacing:.12em;text-transform:uppercase;padding:14px;border-radius:8px;margin:16px 18px}
+.rc .cta:hover{background:#DCB43A}
+.rc .sub{font:400 12px/1.6 var(--body);color:var(--mut);padding:0 18px 16px;text-align:center}
+footer{background:var(--mast);color:#8FA0B8;padding:40px 0 26px;margin-top:30px}
+footer .flogo{font:800 26px/1 var(--cond);text-transform:uppercase;color:#fff}
+footer .flogo em{font-style:italic;color:var(--gold)}
+footer .cols{display:flex;flex-wrap:wrap;gap:10px 26px;margin:16px 0 22px;font:700 11px/1.9 var(--cond);letter-spacing:.14em;text-transform:uppercase}
+footer a:hover{color:#fff}
+footer .fine{border-top:1px solid rgba(255,255,255,.12);padding-top:16px;font:400 11.5px/1.6 var(--body)}
+
+/* signature Pate State modules */
+.missbox{border:1px solid var(--hair);border-left:4px solid var(--red);border-radius:12px;background:var(--white);box-shadow:var(--sh-sm);padding:20px 22px;margin:14px 0 28px}
+.missbox .eb{font:800 10px/1 var(--cond);letter-spacing:.2em;text-transform:uppercase;color:var(--red);margin-bottom:10px}
+.a-body .missbox p{margin-bottom:0}
+.chessbox{background:var(--navy);border-radius:12px;box-shadow:var(--sh-md);padding:22px 24px;margin:14px 0 28px}
+.a-body .chessbox p{color:#DCE3F0;margin-bottom:0}
+.a-body .chessbox p b{color:#fff}
+.readcard{background:#FCF9EF;border:1px solid rgba(201,162,39,.35);border-top:3px solid var(--red);border-radius:12px;box-shadow:var(--sh-sm);padding:22px 24px;margin:14px 0 28px}
+.readcard .eb{font:800 10px/1 var(--cond);letter-spacing:.2em;text-transform:uppercase;color:var(--red);margin-bottom:10px}
+.a-body .readcard p{color:var(--navy);margin-bottom:0}
+/* what to watch & read next */
+.wrn{border-top:1px solid var(--hair);background:var(--off);padding:34px 0 40px}
+.wrn h2{font:800 22px/1.2 var(--slab);letter-spacing:-.015em;color:var(--navy);margin-bottom:4px}
+.wrn .sub{font:400 13.5px/1.5 var(--body);color:var(--mut);margin-bottom:20px}
+.wrn .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.wrn a{display:block;background:var(--white);border:1px solid var(--hair);border-radius:12px;padding:16px 18px;box-shadow:var(--sh-sm);transition:all .15s}
+.wrn a:hover{border-color:var(--gold);transform:translateY(-2px)}
+.wrn small{font:800 9.5px/1 var(--cond);letter-spacing:.18em;text-transform:uppercase;color:var(--red)}
+.wrn a.vid small{color:#fff;background:var(--red);padding:5px 8px;border-radius:4px;display:inline-block}
+.wrn b{display:block;font:700 14px/1.4 var(--body);color:var(--ink);margin-top:9px}
+@media(max-width:900px){.wrn .grid{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.wrn .grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="rhythm"><div class="wrap">
+  <span><b>MON</b> Weekend Truths</span><span><b>TUE</b> Poll Day</span><span class="today"><b>WED</b> The Sit-Down</span><span><b>THU</b> Picks Drop</span><span><b>FRI</b> The ESPN Show</span><span><b>SAT</b> We Watch Ball</span>
+</div></div>
+
+<header class="mast"><div class="wrap">
+  <a class="logo" href="https://thepatestate.com/">The Pate <em>State</em><span>The Front Porch of College Football</span></a>
+  <nav class="main">
+    <a href="https://thepatestate.com/notebook" class="on">Latest</a><a href="https://thepatestate.com/show">Show</a><a href="https://thepatestate.com/scores">Scores</a><a href="https://thepatestate.com/poll">Rankings</a><a href="https://thepatestate.com/recruiting">Recruiting</a><a href="https://thepatestate.com/play">Play</a><a href="https://thepatestate.com/community">Community</a>
+  </nav>
+  <div class="right"><a class="myteams" href="https://thepatestate.com/me">♡ My Teams</a><a class="join" href="https://thepatestate.com/join">Join Free</a></div>
+</div></header>
+<div class="prog"><i id="pbar"></i></div>
+
+<div class="wirestrip"><div class="wrap">
+  <span class="dot"></span><b>The Wire</b><span>Breaking coverage · Big 12</span><span class="t">UPDATED AUG 20, 2026</span>
+</div></div>
+
+<div class="wrap"><div class="art-grid">
+<article class="article">
+
+  <div class="a-crumb"><a href="https://thepatestate.com/">The Pate State</a> / <a href="https://thepatestate.com/wire"><b>The Wire</b></a></div>
+
+  <div class="a-kick">
+    <span class="k">The Wire</span>
+    <span class="st">Status · Confirmed</span>
+    <span class="imp">Impact · Significant</span>
+    <span class="team"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/2306.png" alt="Kansas State logo">Kansas State · Big 12</span>
+  </div>
+
+  <h1 class="a-hl">Kansas State&rsquo;s offensive line just lost its last returning start: John Pastore is out for the season</h1>
+  <p class="a-dek">The preseason All-Big 12 left tackle was the <b>only returning starter</b> on a front that ranked 10th in America in sacks allowed — and in the same press conference, Collin Klein ruled out tackle George Fitzpatrick, too. Sixteen days before kickoff, the Wildcats are rebuilding their front without a single starter from last season&rsquo;s five.</p>
+
+  <div class="a-by">
+    <div class="av">WD</div>
+    <div class="who"><b>The Pate State Wire Desk</b><span>Verified reporting · full source list below · monitored by an editor</span></div>
+    <div class="upd"><b>● Confirmed</b><br>Aug 20, 2026</div>
+  </div>
+
+  <div class="a-hero"><div class="ph"><img src="https://a.espncdn.com/i/teamlogos/ncaa/500/2306.png" alt="Kansas State Powercat"></div><span class="lbl">The Pate State · Wire Graphic</span></div>
+  <p class="a-cap"><b>Two tackles, one Thursday, zero games played.</b> Kansas State opens the season September 5.</p>
+
+  <div class="nums">
+    <div class="num"><div class="n">715</div><p>Snaps Pastore played at left tackle in 2025 — all 12 starts, All-Big 12 second team</p></div>
+    <div class="num"><div class="n">1.08</div><p>Sacks per game allowed by the 2025 line — 10th-best in the country</p></div>
+    <div class="num"><div class="n" style="color:var(--red)">0</div><p>Starters returning from K-State&rsquo;s 2025 offensive line, as of Thursday</p></div>
+  </div>
+
+  <div class="a-body">
+
+    <h2><span class="pt">01 · The News</span>What Happened</h2>
+    <p>Kansas State starting left tackle John Pastore will miss the entire 2026 season, head coach Collin Klein confirmed Thursday, after Pastore suffered a lower-body injury in practice that is reported to be an Achilles. The 6-foot-6, 302-pound senior started all twelve games at left tackle last fall, played 715 snaps, earned All-Big 12 second-team honors from the league&rsquo;s coaches, and entered camp as a preseason All-Big 12 first-team pick. Klein delivered a second blow in the same session: tackle George Fitzpatrick, the Ohio State transfer who missed all of 2025 after a medical emergency during a summer workout, is also out for the year. No replacement has been named at either spot. Kansas State opens its season September 5, sixteen days from the announcement.</p>
+
+    <h2><span class="pt">02 · The Stakes</span>Why This One Matters</h2>
+    <p>Because Pastore wasn&rsquo;t just a good player on a good line — he was the continuity. He was the lone returning starter from a 2025 front that quietly finished among the best in the sport: 10th nationally in sacks allowed at 1.08 per game, 5.09 yards per carry (fifth-best in Kansas State history), and three runs of 70-plus yards, a school record. Runs that long usually mean somebody won an edge decisively — and the left edge belonged to Pastore. And there&rsquo;s a human ledger, too: Pastore is a Colorado kid who redshirted to gain weight, played ten total snaps in 2023, came back from back surgery, and built himself into a first-team preseason pick across five years. That is the Kansas State development model in one career. It got finished this spring and shelved in one August practice.</p>
+
+    <div class="zviz">
+      <div class="hd">What Walked Off the Field — the 2025 Line&rsquo;s Ledger</div>
+      <div class="bd">
+        <div class="zrow"><b>Sacks per game<small>10th nationally</small></b><div class="zbar"><i style="width:90%"></i></div><span class="v">1.08</span></div>
+        <div class="zrow"><b>Yards per carry<small>5th in school history</small></b><div class="zbar"><i style="width:84%"></i></div><span class="v">5.09</span></div>
+        <div class="zrow"><b>Runs of 70+ yards<small>School record</small></b><div class="zbar"><i style="width:96%"></i></div><span class="v">3</span></div>
+        <div class="zrow"><b>Pastore&rsquo;s snaps<small>All 12 starts at LT</small></b><div class="zbar"><i style="width:88%"></i></div><span class="v">715</span></div>
+        <div class="zrow"><b>2025 starters returning<small>After Thursday</small></b><div class="zbar"><i class="rd" style="width:3%"></i></div><span class="v" style="color:var(--red)">0</span></div>
+      </div>
+      <div class="sum"><b>Read the bottom bar twice.</b> Everything above it was produced by a unit that, in snap-count terms, no longer exists.</div>
+    </div>
+
+    <h2><span class="pt">03 · The Detail Beneath the Headline</span>What Most People Are Missing</h2>
+    <div class="missbox"><div class="eb">The Wire&rsquo;s signature question: what&rsquo;s the story under the story?</div><p>The headline frames this as a talent loss. The bigger problem is a <b>certainty loss</b>. Kansas State&rsquo;s staff knew all winter it was replacing four-fifths of this line, and it built the offseason plan around one fixed post — importing three portal linemen from Missouri, Akron and Colorado State to be poured around Pastore, the position nobody had to think about. Thursday removed the post the plan was anchored to. And the Fitzpatrick news, buried in most coverage, matters more than it looks. He was one of the few experienced tackle bodies behind the starter, so the injury didn&rsquo;t just cost K-State its left tackle. It thinned the exact group that has to produce the replacement.</p></div>
+
+    <div class="pull"><p>&ldquo;This stopped being a depth chart question the moment Fitzpatrick&rsquo;s name followed Pastore&rsquo;s. It&rsquo;s now a roster-construction stress test, sixteen days from kickoff.&rdquo;</p><span>The Wire Desk</span></div>
+
+    <h2><span class="pt">04 · The Personnel</span>Next Man Up</h2>
+    <p>Klein has not named a replacement, so treat everything below as projection built from the reported roster, not a depth chart. The first name in early reporting is true freshman Oliver Miller, framed as a candidate to play meaningful snaps immediately — a remarkable sentence at Kansas State, a program that has spent a generation redshirting linemen into all-conference players on a five-year clock. The alternative path runs through the winter portal class: Keiton Jones arrived from Missouri with SEC experience, Tanner Morley from Colorado State and Delvin Morris from Akron with starting reps at their previous stops. One of them sliding to left tackle would solve the blind side by opening a hole somewhere else — which is precisely the kind of chain reaction a five-seat room with zero returning starts can&rsquo;t absorb cleanly. Gus Hawkins, back after missing significant time in 2025, is the closest thing to program continuity left standing.</p>
+
+    <div class="p22">
+      <div class="hd"><b>The Replacement Board</b><span>Pate State projection — not a confirmed depth chart</span></div>
+      <div class="row"><div class="pos">Oliver Miller<small>OT · True Freshman</small></div><div class="who">The first name in early reporting for immediate snaps. The question isn&rsquo;t his future — it&rsquo;s whether a true freshman can survive Big 12 speed rushers in month one.</div></div>
+      <div class="row"><div class="pos">Keiton Jones<small>OL · via Missouri</small></div><div class="who">The most battle-tested import on the roster. The question is whether moving him to the blind side costs the staff its plan at another seat.</div></div>
+      <div class="row"><div class="pos">Tanner Morley<small>OL · via Colorado State</small></div><div class="who">Starting experience at his previous stop makes him a live option. The question is the jump in edge talent from the Mountain West to the Big 12.</div></div>
+      <div class="sum"><b>The tell:</b> whoever takes Monday&rsquo;s first-team left tackle reps is the staff&rsquo;s honest answer — practice reports will break this before any press release does.</div>
+    </div>
+
+    <h2><span class="pt">05 · The Chessboard</span>What the Coaches Can Actually Change</h2>
+    <div class="chessbox"><p>A new left tackle doesn&rsquo;t just change one blocker — it changes the math of every protection call. The likeliest levers: protection slides leaning left more often, which hands the right side more one-on-ones. A tight end anchored beside the new tackle in obvious passing situations — help that costs a route and makes life easier on opposing coverage. A heavier dose of the quick game — hitches, slants, RPOs — because a ball out in under 2.5 seconds makes the edge rush irrelevant. And watch the run-game fingerprint: those record-setting explosive runs came from winning the edge, so if the staff doesn&rsquo;t trust the new corner of the line, the ground game tilts toward downhill, between-the-tackles concepts where a tackle&rsquo;s job is simpler. None of these adjustments are fatal. But every one of them costs the offense a little something, and those costs add up every week until the new blind side earns the staff&rsquo;s trust.</p></div>
+
+    <h2><span class="pt">06 · The Thesis</span>The Pate State Read</h2>
+    <div class="readcard"><div class="eb">The house analysis — identical treatment on every team&rsquo;s story</div><p>Everybody&rsquo;s first question is who plays left tackle. That&rsquo;s the wrong place to start. The real issue is that this line has never played a snap together. Next man up works when four guys who know the calls absorb one new face. Kansas State doesn&rsquo;t have that. Not one starter back from last year&rsquo;s five. Three transfers from three different programs. One returnee coming off a lost season, and a freshman who was probably planning on a redshirt until this week. Now, if any program in America deserves the benefit of the doubt here, it&rsquo;s this one. Pastore went from ten career snaps to All-Big 12 in that building, so the development piece is real. It just needs time, and a September schedule doesn&rsquo;t give you any. Early on they&rsquo;ll protect the new guy with tight ends and chip help. How fast they can stop doing that will tell you what kind of season this is.</p></div>
+
+    <h2><span class="pt">07 · The Watch List</span>What We&rsquo;re Watching</h2>
+    <div class="wl">
+      <div><div class="n">1</div><div><h3>Who takes the first-team left tackle reps this week?</h3><p>If it&rsquo;s a portal veteran, the staff is buying experience. If it&rsquo;s Oliver Miller, they&rsquo;re telling you the freshman is simply their best player at the spot — a headline of its own.</p></div></div>
+      <div><div class="n">2</div><div><h3>Does one move create two?</h3><p>Watch whether solving left tackle shuffles a guard or the right tackle. A second position change would confirm the chain reaction this story is really about.</p></div></div>
+      <div><div class="n">3</div><div><h3>Where does the tight end line up on September 5?</h3><p>Count the snaps with a tight end attached to the left side in the opener. That number is the staff&rsquo;s confidence rating in the new blind side, published one formation at a time.</p></div></div>
+      <div><div class="n">4</div><div><h3>What does Klein say when asked directly?</h3><p>Coaches reveal plans in fragments. Any comment naming candidates — or declining to — is the next real data point in this story.</p></div></div>
+    </div>
+
+    <div class="stdnote"><b>Sourcing &amp; standards:</b> Injury absence and Fitzpatrick news confirmed by head coach Collin Klein at his Thursday press availability, as covered by WIBW. The Achilles diagnosis was first reported by <a href="https://www.on3.com/news/kansas-state-starting-ot-john-pastore-set-to-miss-2026-season/">On3</a>. Career and statistical detail via John Pastore&rsquo;s official K-State Athletics biography. Produced by the Pate State Wire Desk under the site&rsquo;s <a href="https://thepatestate.com/standards">verification rules</a>, monitored by an editor. Corrections are timestamped, never silent.</div>
+
+  </div>
+</article>
+
+<aside class="rail">
+  <div class="rc">
+    <div class="hd red">Impact Rating</div>
+    <div class="bd"><div class="impact"><span class="badge">Significant</span><p>A top-ten protection unit now returns zero starts — serious, but one September away from being measurable, not yet season-shaping.</p></div></div>
+  </div>
+  <div class="rc">
+    <div class="hd">The Facts</div>
+    <div class="bd"><div class="sos" style="margin:0;padding:0;border:0;box-shadow:none;background:transparent">
+      <ul>
+        <li><b>Player</b><i><b>John Pastore</b> · LT · 6-6, 302 · Sr.</i></li>
+        <li><b>Injury</b><i>Lower-body, in practice · <span class="neg">out for 2026</span> · reported to be an Achilles</i></li>
+        <li><b>Résumé</b><i>12 starts · 715 snaps · All-Big 12 2nd team · preseason 1st team</i></li>
+        <li><b>Also out</b><i>OT George Fitzpatrick — second straight lost season</i></li>
+        <li><b>Status</b><i>Absence: <b>confirmed</b> · diagnosis: per reporting · replacement plan: developing</i></li>
+        <li><b>Opener</b><i>September 5 · 16 days away</i></li>
+      </ul>
+    </div></div>
+  </div>
+  <div class="rc">
+    <div class="hd">Citizenship</div>
+    <a class="cta" href="https://thepatestate.com/join">Join Free</a>
+    <p class="sub">Picks logged. Polls archived. The Porch gets the last word.</p>
+  </div>
+</aside>
+
+</div></div>
+
+
+<div class="wrn"><div class="wrap">
+  <h2>What to Read &amp; Watch Next</h2>
+  <p class="sub">The story continues on the show and across the Wire.</p>
+  <div class="grid">
+    <a class="vid" href="https://www.youtube.com/@JoshPateCFB"><small>▶ Video · The Show</small><b>Watch the latest episode of Josh Pate&rsquo;s College Football Show</b></a>
+    <a href="https://thepatestate.com/wire/tre-oiler-s-texas-a-m-and-notre-dame-interest-sharpens-ahead-of-fall-visits"><small>Recruiting</small><b>Tre Oiler&rsquo;s Texas A&amp;M and Notre Dame interest sharpens ahead of fall visits</b></a>
+    <a href="https://thepatestate.com/wire/usc-position-rankings-update-follows-2026-fall-camp"><small>Camp</small><b>USC position rankings update follows 2026 fall camp</b></a>
+    <a href="https://thepatestate.com/wire/four-minnesota-seniors-face-expanded-roles-in-2026-fall-camp"><small>Camp</small><b>Four Minnesota seniors face expanded roles in 2026 fall camp</b></a>
+  </div>
+</div></div>
+<footer><div class="wrap">
+  <div class="flogo">The Pate <em>State</em></div>
+  <div class="cols">
+    <a href="https://thepatestate.com/wire">The Wire</a><a href="https://thepatestate.com/notebook">The Notebook</a><a href="https://thepatestate.com/poll">JP Poll</a><a href="https://thepatestate.com/pickem">Pick&rsquo;Em</a><a href="https://thepatestate.com/community">The Porch</a><a href="https://www.youtube.com/@JoshPateCFB">▶ YouTube</a><a href="https://thepatestate.com/standards">Editorial Standards</a>
+  </div>
+  <div class="fine">© 2026 The Pate State · The front porch of college football. All picks logged. All poll results archived.</div>
+</div></footer>
+
+<script>
+addEventListener('scroll',function(){
+  var d=document.documentElement;
+  var p=d.scrollTop/(d.scrollHeight-d.clientHeight)*100;
+  document.getElementById('pbar').style.width=p+'%';
+},{passive:true});
+</script>
+</body>
+</html>

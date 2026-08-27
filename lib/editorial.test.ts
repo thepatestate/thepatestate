@@ -73,25 +73,23 @@ describe("editorialSystem (the kit's load order: 01 → 02 → spec → 07 → h
     const bible = sys.indexOf("THE PATE STATE VOICE BIBLE");
     const spec = sys.indexOf("SPEC: THE WIRE");
     const snap = sys.indexOf("CURRENT STATE — THE DATED SNAPSHOT");
-    const notes = sys.indexOf("HOUSE NOTES (site mechanics");
+    const ex = sys.indexOf("THE GOLD STANDARD —");
+    const notes = sys.indexOf("SITE MECHANICS (what the site does for you");
     const task = sys.indexOf("TASK CONTRACT MARKER");
-    // The voice card and the approved column now lead; the kit follows.
-    const card = sys.indexOf("WHO IS WRITING: Josh Pate");
-    const ex = sys.indexOf("THE VOICE TO MATCH");
-    expect(card).toBe(0);
-    expect(ex).toBeGreaterThan(card);
-    expect(con).toBeGreaterThan(ex);
+    // Kit v4 load order: 01 → 02 → the one spec → 07 → the gold standard → mechanics → contract.
+    expect(con).toBeGreaterThanOrEqual(0);
     expect(bible).toBeGreaterThan(con);
     expect(spec).toBeGreaterThan(bible);
     expect(snap).toBeGreaterThan(spec);
-    expect(notes).toBeGreaterThan(snap);
+    expect(ex).toBeGreaterThan(snap);
+    expect(notes).toBeGreaterThan(ex);
     expect(task).toBeGreaterThan(notes);
   });
   it("routes each lane to its spec and never loads a retired file", () => {
     expect(editorialSystem("news-reaction", "")).toContain("SPEC: THE WIRE");
-    expect(editorialSystem("feature", "")).toContain("SPEC: FEATURES, FRANCHISES");
-    expect(editorialSystem("show-adaptation", "")).toContain("SPEC: FEATURES, FRANCHISES");
-    expect(editorialSystem("annual", "")).toContain("SPEC: THE PRESEASON ANNUAL");
+    expect(editorialSystem("feature", "")).toContain("SPEC: JOSH-VOICE FEATURES");
+    expect(editorialSystem("show-adaptation", "")).toContain("SPEC: JOSH-VOICE FEATURES");
+    expect(editorialSystem("annual", "")).toContain("SPEC: PRESEASON ANNUALS");
     for (const p of ["wire", "feature", "show-adaptation"] as const) {
       const sys = editorialSystem(p, "");
       expect(sys).not.toContain("EDITORIAL CORE");
@@ -100,15 +98,16 @@ describe("editorialSystem (the kit's load order: 01 → 02 → spec → 07 → h
     }
   });
   it("closes every lane with the approved article it must sound like", () => {
-    expect(editorialSystem("feature", "")).toContain("=== feature-three-boards-josh.html ===");
+    // Kit v4: the approval lane calibrates to the v3 gold standard; the
+    // autonomous lane (Wire + house reaction) to the approved Wire build.
+    expect(editorialSystem("feature", "")).toContain("=== feature-three-boards-v3.html ===");
     expect(editorialSystem("show-adaptation", "")).toContain("I picked three of them");
-    expect(editorialSystem("news-reaction", "")).toContain("=== feature-three-boards-josh.html ===");
-    // Josh, 2026-08-26: "Everything needs to be written like it's written by Josh" — the Wire too.
-    expect(editorialSystem("wire", "")).toContain("=== feature-three-boards-josh.html ===");
+    expect(editorialSystem("news-reaction", "")).toContain("=== wire-ohio-state-rowe-safety.html ===");
+    expect(editorialSystem("wire", "")).toContain("=== wire-ohio-state-rowe-safety.html ===");
   });
   it("house notes keep the site's mechanics out of the prose and the examples out of the stories", () => {
     expect(HOUSE_NOTES).toMatch(/SITE RENDERS THE FURNITURE/);
-    expect(HOUSE_NOTES).toMatch(/EXAMPLES ARE NOT TEMPLATES/);
+    expect(HOUSE_NOTES).toMatch(/GOLD STANDARD's facts/);
   });
   it("the judge scores discovery", () => {
     expect(QUALITY_CATEGORIES).toContain("discovery");
@@ -215,5 +214,27 @@ describe("abstractParagraphs", () => {
     const abstract = "The popular read on this season is treating last year's results as permanent evidence about what these programs are, and that is where I think the conversation goes wrong, because a result is a snapshot of one afternoon and not a verdict on a program, and the difference between those two things is the whole argument here.";
     const concrete = "Ohio State returns three starters from a defense that allowed 9.3 points per game, and Rowe was the only one of them behind the front, which is why the Texas game on September 12 is the first real look at the four new starters around him and the one I have circled.";
     expect(abstractParagraphs(`${abstract}\n\n${concrete}`)).toHaveLength(1);
+  });
+});
+
+describe("Voice Bible §13 as code (kit v4)", () => {
+  it("kickerBudget allows one isolated kicker per 400 words in the body, excluding open and close", async () => {
+    const { kickerBudget } = await import("./editorial");
+    const para = "Georgia returns 117 combined career starts on the offensive line, which is the most of any team in the country and the reason the hard parts of football look routine in Athens. ".repeat(3);
+    const ok = [para, para, "That decision has to work.", para, para, para, "— JP"].join("\n\n");
+    expect(kickerBudget(ok).ok).toBe(true);
+    const over = [para, "Short one.", para, "Another short one.", "A third.", para, "— JP"].join("\n\n");
+    expect(kickerBudget(over).ok).toBe(false);
+  });
+  it("attributedInSentenceOne wants the source in sentence one", async () => {
+    const { attributedInSentenceOne } = await import("./editorial");
+    expect(attributedInSentenceOne("Ohio State safety Jalen Rowe will miss four to six weeks, head coach Ryan Day confirmed after practice. He has 26 starts.")).toBe(true);
+    expect(attributedInSentenceOne("Pete Thamel reported the timeline Wednesday afternoon.")).toBe(true);
+    expect(attributedInSentenceOne("Jalen Rowe is out four to six weeks. Ryan Day confirmed it later.")).toBe(false);
+  });
+  it("ensureSignOff appends — JP once", async () => {
+    const { ensureSignOff } = await import("./editorial");
+    expect(ensureSignOff("Body.")).toBe("Body.\n\n— JP");
+    expect(ensureSignOff("Body.\n\n— JP")).toBe("Body.\n\n— JP");
   });
 });

@@ -11,7 +11,7 @@ import { getTeamDirectory } from "@/lib/cfbd";
 import { findReceipt } from "@/lib/quotes";
 import { slugify } from "@/lib/slug";
 import { writeJSON } from "@/lib/writer";
-import { boilerplateViolations, BOILERPLATE_PROMPT, scoreDraft, editorialSystem, voiceMatch, circles, restatements } from "@/lib/editorial";
+import { boilerplateViolations, scoreDraft, editorialSystem, voiceMatch, circles, restatements, attributedInSentenceOne, proseWords } from "@/lib/editorial";
 import { judgeJSON } from "@/lib/judge";
 import { teamFactSheet } from "@/lib/fact-sheet";
 
@@ -348,6 +348,7 @@ export function scoreCallout(sentence: string): number {
   // Ramp openers read as mid-paragraph fragments, not standalone lines.
   if (/^(speaking|according to|talking|appearing|in an interview|asked about|when asked)\b/i.test(s)) return -Infinity;
   if (headlineNamesOutlet(s) || /\breport(s|ed|ing)?\b/i.test(s)) return -Infinity;
+  if (/(?:^|[\s“"(])(I|I'm|I've|I'd|my)\b/.test(s)) return -Infinity;
   const hedges = s.match(HEDGES)?.length ?? 0;
   if (hedges >= 2) return -Infinity;
   // Standalone anchor (Isaac 2026-08-21: a reader seeing ONLY the quote must
@@ -580,17 +581,17 @@ export async function generateWireStory(
 ): Promise<{ ok: true; fields: Record<string, unknown> } | { ok: false; reason: string }> {
   let receipt = await findReceipt(job.teams, job.receiptKeywords);
   if (receipt && !(await receiptIsRelevant(anthropic, receipt, job))) receipt = null;
+  // Kit v4 spec 04 §2.1: a Wire story under 600 words does not ship, and
+  // thin sources can't honestly reach 600. No story; the item stays a headline.
   const thin = isThinSource(job.sourceBlock);
-  const factSheet = thin ? "" : await teamFactSheet(job.teams, { games: 6 }).catch(() => "");
-  const baseUser = `${BOILERPLATE_PROMPT}${factSheet ? `\n\n${factSheet}` : ""}${thin ? `\n\nSOURCE MATERIAL IS THIN (a few hundred words of reporting): file a BRIEF per the triage rule. Headline, a one-sentence deck, whatHappened at 80–120 words saying exactly what is known, impact, category, teams; every other field "" or []. Never expand a handful of facts into six sections; a short story that says only what is known is the correct answer (Wire §7). Say what is unknown the way a person would ("Indiana hasn't said which injury," "no timetable yet"), never by pointing at the document ("the report does not identify," "was described as").` : ""}\n\nSource cluster:\n${job.sourceBlock}${receipt ? `\n\nJosh's archived on-topic quote (verbatim; render as his receipt, do NOT alter): "${receipt.quote}"` : ""}`;
+  if (thin) return { ok: false, reason: `thin:${job.clusterKey}` };
+  const factSheet = await teamFactSheet(job.teams, { games: 6 }).catch(() => "");
+  const baseUser = `${factSheet ? `${factSheet}\n\n` : ""}Source cluster:\n${job.sourceBlock}${receipt ? `\n\nJosh's archived on-topic quote (verbatim; the site renders it as the archive layer; never alter or paraphrase it): "${receipt.quote}"` : ""}`;
   // One corrective retry when the draft names an outlet in the upper page
   // (guide §5) — the old pipeline REQUIRED that habit, so writers relapse.
   // System prompt = preamble → 00 Editorial Core → 01 Wire (Josh's documents,
   // verbatim) → house overrides → the JSON contract in wire-story.md.
-  // Column form (loop round 5): one continuous read instead of five parallel
-  // modules, which the reader's judge kept scoring as repetition.
-  const columnForm = process.env.WIRE_COLUMN === "1";
-  const system = editorialSystem("wire", prompt(columnForm ? "wire-story-column.md" : "wire-story.md"));
+  const system = editorialSystem("wire", prompt("wire-story.md"));
   let storyRaw = "";
   let user = baseUser;
   for (let attempt = 0; attempt < 2; attempt++) {
@@ -606,16 +607,15 @@ export async function generateWireStory(
     const allProse = ["deck", "whatHappened", "whyBody", "missing", "section04Body", "chessboard", "readBody"]
       .map((k) => draft[k] ?? "").join("\n");
     const boiler = boilerplateViolations(allProse);
-    // A full-source story filed as a brief is the writer under-treating the
-    // news (six of six review-pack stories came back at ~100 words, 2026-08-26).
-    const underTreated = !thin && !(columnForm ? (draft.readBody ?? "").split(/\s+/).length >= 250 : Boolean(draft.whyBody && draft.readBody));
-    const circling = !thin && circles(allProse);
-    // Josh, 2026-08-26: the Wire is written as Josh too. A full story with
-    // no first person in its analysis modules missed the voice.
-    const analysis = ["whyBody", "missing", "section04Body", "chessboard", "readBody"].map((k) => draft[k] ?? "").join("\n");
-    const noVoice = !thin && analysis.trim().length > 0 && !hasFirstPersonProse(analysis);
-    if (!headlineNamesOutlet(upper) && !hasAttributionOpener(draft.whatHappened ?? "") && !narratesSourcing(allProse) && !noVoice && boiler.length === 0 && !underTreated && !circling && !/\*{2,}/.test(allProse)) break;
-    user = `${baseUser}\n\nYOUR PREVIOUS DRAFT VIOLATED the writing standard${boiler.length ? ` (gated language found: ${boiler.join("; ")})` : ""}${underTreated ? " (you filed a brief on a full-source story: the sources support a full Wire story, so write whyBody, section04, readBody and watching, and missing, board, chessboard where earned, 600–1,100 words per 04 §5)" : ""}${noVoice ? " (the analysis modules are not in Josh's first person: this is Josh telling the reader what the news means, \"I\" to \"you\", matching THE VOICE TO MATCH)" : ""}${circling ? ` (the piece restates itself; these sentences repeat a point already made and must go or become new information: ${restatements(allProse).slice(0, 4).map((s) => `"${s.slice(0, 110)}"`).join(" · ")})` : ""}. Never name an outlet or use in-prose attribution in the deck or the opening section (official source or a NAMED individual reporter only; unconfirmed details are "reported to be…"). And NEVER narrate your own sourcing anywhere — no "the source material," "the available information," "is described as," "no names are provided," "per the report." Write what IS known directly, the way an analyst explains news to a friend; where something is unknown, say what we don't know yet in plain speech ("Washington hasn't said who") without pointing at documents. Never include censored profanity from a source quote ("a lot of good *** can happen") — trim the quote at a word boundary before the censored word, or paraphrase the sentiment without quoting. Never reuse the editorial documents' example sentences or people. Rewrite the full story.`;
+    // Kit v4 spec 04 §2: 600-word floor, attribution in sentence one, the
+    // Wire register (third person; Josh only in the archive layer).
+    const words = proseWords(allProse);
+    const underFloor = words < 600;
+    const unattributed = !attributedInSentenceOne(draft.whatHappened ?? "");
+    const circling = circles(allProse);
+    const firstPerson = hasFirstPersonProse(allProse);
+    if (!headlineNamesOutlet(upper) && !hasAttributionOpener(draft.whatHappened ?? "") && !narratesSourcing(allProse) && !firstPerson && boiler.length === 0 && !underFloor && !unattributed && !circling && !/\*{2,}/.test(allProse)) break;
+    user = `${baseUser}\n\nYOUR PREVIOUS DRAFT VIOLATED the kit's laws${boiler.length ? ` (Voice Bible §2 gated language: ${boiler.join("; ")})` : ""}${underFloor ? ` (spec 04 §2.1: ${words} words of story prose; the floor is 600 and the depth comes from mechanism, honest scale and named next dates, never filler)` : ""}${unattributed ? " (spec 04 §2.2: sentence one must name who reported it or who said it, on the record — the official source or the named reporter)" : ""}${firstPerson ? " (Voice Bible §1: the Wire register carries zero Josh opinion and no first person; Josh appears only in the verbatim archive layer)" : ""}${circling ? ` (the piece restates itself; these sentences repeat a point already made and must go or become new information: ${restatements(allProse).slice(0, 4).map((s) => `"${s.slice(0, 110)}"`).join(" · ")})` : ""}. Never name an outlet or use in-prose attribution in the deck or the opening section (official source or a NAMED individual reporter only; unconfirmed details are "reported to be…"). And NEVER narrate your own sourcing anywhere — no "the source material," "the available information," "is described as," "no names are provided," "per the report." Write what IS known directly, the way an analyst explains news to a friend; where something is unknown, say what we don't know yet in plain speech ("Washington hasn't said who") without pointing at documents. Never include censored profanity from a source quote ("a lot of good *** can happen") — trim the quote at a word boundary before the censored word, or paraphrase the sentiment without quoting. Never reuse the editorial documents' example sentences or people. Rewrite the full story.`;
   }
   type StoryDraft = {
     headline: string; deck: string; verification: "confirmed" | "reported" | "developing";
@@ -649,6 +649,9 @@ export async function generateWireStory(
     if (BANNED_PATTERNS.some((re) => re.test(c))) return "banned";
     if (hasAttributionOpener(d.whatHappened) || headlineNamesOutlet(`${d.deck}\n${d.whatHappened}`)) return "attribution";
     if (narratesSourcing(c)) return "sourcenarration";
+    if (hasFirstPersonProse(c)) return "firstperson";
+    if (proseWords(c) < 600) return "floor";
+    if (!attributedInSentenceOne(d.whatHappened)) return "attribution";
     return null;
   };
   const factCheck = async (c: string): Promise<{ verdict: string; detail: string }> => {
@@ -685,22 +688,20 @@ export async function generateWireStory(
   // category) gets one shot at forcing a rewrite. Fail-open by design — the
   // Wire has to publish, and the hard gates above remain the floor; the
   // rewrite is only adopted when it passes those same gates plus fact-check.
-  const isBrief = !story.whyBody && !story.missing && !story.readBody;
-  // The judges get up to two rewrite rounds (loop round 1, 2026-08-26: one
-  // pass wasn't closing a 3/10 voice score). A rewrite is adopted only when
-  // it clears the hard gates and the fact-check; the best-scoring draft wins.
+  // The judges get up to two rewrite rounds; a rewrite is adopted only when
+  // it clears the hard gates and the fact-check.
   let lastRaw = storyRaw;
-  for (let round = 0; round < 2 && !isBrief; round++) {
+  for (let round = 0; round < 2; round++) {
     const [quality, voice] = await Promise.all([
       scoreDraft(anthropic, { headline: story.headline, dek: story.deck, body: combined, sources: job.sourceBlock }),
-      voiceMatch(anthropic, { lane: "feature", draft: combined }),
+      voiceMatch(anthropic, { lane: "wire", draft: combined }),
     ]);
     if (quality.pass && voice.pass) break;
-    const notes = [quality.pass ? "" : `Quality judge: ${quality.notes}`, voice.pass ? "" : `Voice judge (the draft scored ${voice.score}/10 against Josh's approved column; it must read as Josh): ${voice.notes}`].filter(Boolean).join("\n");
+    const notes = [quality.pass ? "" : `Quality judge: ${quality.notes}`, voice.pass ? "" : `Voice judge (the draft scored ${voice.score}/10 against the approved Wire build; it must read as the same desk): ${voice.notes}`].filter(Boolean).join("\n");
     try {
       const rewriteRaw = await writeJSON({
         system,
-        user: `${baseUser}\n\nYOUR PREVIOUS DRAFT FAILED the pre-publish judges. Notes (fix exactly these): ${notes}\n\nPrevious draft for reference:\n${lastRaw}\n\nRewrite the full story. Keep every verified fact; change the writing. If the notes ask for detail the sources do not contain, do NOT invent it: cut instead. Delete every paragraph that restates a fact already given, drop sections the sources can't fill (leave them ""), and let the story be shorter. It must read as Josh talking to one fan, never as a memo and never as generated prose.`,
+        user: `${baseUser}\n\nYOUR PREVIOUS DRAFT FAILED the pre-publish judges. Notes (fix exactly these): ${notes}\n\nPrevious draft for reference:\n${lastRaw}\n\nRewrite the full story. Keep every verified fact; change the writing. If the notes ask for detail the sources do not contain, do NOT invent it. Delete every sentence that restates a fact already given; the 600-word floor is met with mechanism, honest scale and named next dates, never filler. The Wire register: third person, zero Josh opinion.`,
         schema: STORY_SCHEMA,
         schemaName: "wire_story",
         maxTokens: 8192,
@@ -748,7 +749,7 @@ export async function generateWireStory(
       : {}),
     // Kit 04 §4 module 12: the Read carries a small label when Josh has not
     // spoken on today's news (a label, never a closer).
-    readLabel: receipt ? "The Pate State Read" : "Desk analysis · Josh has not yet commented on today's news",
+    readLabel: "Honest scale · what happens next",
     readBody: story.readBody.replace(/^\s*THE PATE STATE READ:?\s*/i, ""),
     sources: job.sources.slice(0, 6),
     },

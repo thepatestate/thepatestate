@@ -27,31 +27,87 @@ export function readPrompt(name: string): string {
 export type EditorialProduct = "wire" | "news-reaction" | "feature" | "show-adaptation" | "annual";
 
 const SPEC_FOR_PRODUCT: Record<EditorialProduct, string> = {
-  wire: "kit/04-spec-wire.md",
-  "news-reaction": "kit/04-spec-wire.md",
-  feature: "kit/06-spec-features.md",
-  "show-adaptation": "kit/06-spec-features.md",
-  annual: "kit/05-spec-annual.md",
+  wire: "pate-state-kit/04-spec-wire.md",
+  "news-reaction": "pate-state-kit/04-spec-wire.md",
+  feature: "pate-state-kit/06-spec-features.md",
+  "show-adaptation": "pate-state-kit/06-spec-features.md",
+  annual: "pate-state-kit/05-spec-annual.md",
 };
 
-/** Site facts the kit's files don't carry. On any WRITING rule the kit
- * wins; these only tell the writer what the site does for it. */
-export const HOUSE_NOTES = `HOUSE NOTES (site mechanics the kit's files don't carry; on any writing rule the kit wins):
-1. OUTPUT IS JSON. The kit describes editorial content; the task contract below defines the fields. Modules the story hasn't earned stay "" or [].
-2. THE SITE RENDERS THE FURNITURE. The Sourcing & Standards box, the video card, the Citizen Pulse, forward links, status and impact chips, and the byline row are page chrome: never write them into prose fields. Outlet credit therefore never appears in prose (Voice Bible §4); the site prints it in the footer automatically. Named individual reporters and official sources are fine in prose.
-3. ON-RECORD SITE POSITIONS, when supplied in the assignment, are the consistency ledger's current state and are the arbiter of picks (07-current-state.md says so itself). Where the snapshot and the ledger disagree, the ledger wins; never resolve the disagreement silently in prose.
-4. THE EXAMPLES ARE NOT TEMPLATES. Every illustration in the kit (Fleming, Pastore, Maryland's tight ends, Kansas State's line, "restore May," "the pressure behind it isn't," "Decision day.") shows a register. Never reuse their people, wording, numbers, or sentence shapes in a story about anything else.
-5. NO EM DASHES and NO EXCLAMATION POINTS in any prose field. The site scrubs dashes as a backstop; do not rely on it.`;
+/** Site mechanics the kit's files don't carry: what the site renders for the
+ * writer, and the output shape. Not writing instructions (the kit's
+ * exclusivity rule); the Voice Bible owns every rule about how prose sounds. */
+export const HOUSE_NOTES = `SITE MECHANICS (what the site does for you; not style rules):
+1. OUTPUT IS JSON matching the provided schema, nothing else. The task contract at the end defines the fields; the kit defines everything about the writing.
+2. THE SITE RENDERS THE FURNITURE: status rows, byline, the companion-episode card, Citizen Pulse, the Ledger receipts module, the Sourcing box, forward links. Never write chrome into prose fields. The Sourcing box is where outlet credit prints, so outlet names stay out of the prose; official sources and named individual reporters are attributed in the text.
+3. FACTS come only from the supplied source material and the current-state snapshot when it is loaded; on-record site positions supplied with the assignment are the consistency ledger's state and are never contradicted.
+4. THE GOLD STANDARD's facts, picks and lines are illustration only; never reuse its people, numbers, or sentence constructions.`;
 
-const SNAPSHOT_NOTE = `[The file below is the kit's dated snapshot. It orients; it does not license a fact. Nothing in it may be stated in an article unless the assignment's source material carries it, and its picks yield to the on-record site positions supplied with the assignment.]`;
+const SNAPSHOT_NOTE = `[The current-state snapshot is loaded because this task may state season facts. Check its stamp; it outranks memory; it never licenses a fact the source material does not carry.]`;
 
-/** Which approved build a lane's prose must match. Josh, 2026-08-26, after
- * the second look: "Everything needs to be written like it's written by
- * Josh." Every lane, the Wire included, matches his Three Boards column;
- * the Wire keeps its modules and its facts discipline and drops the desk
- * voice. (The desk-voice Wire builds stay as structure references only.) */
-export function exemplarLane(_product: EditorialProduct): keyof typeof EXEMPLAR_FOR_LANE {
-  return "feature";
+const KIT = "pate-state-kit";
+
+/** Kit v4 lanes: wire + news-reaction are the autonomous lane (spec 04, the
+ * Wire register: third person, zero Josh opinion); feature + show-adaptation
+ * are the approval lane (spec 06: first person, signed "— JP", human publish
+ * click). */
+export function exemplarLane(product: EditorialProduct): keyof typeof EXEMPLAR_FOR_LANE {
+  return product === "wire" || product === "news-reaction" ? "wire" : "feature";
+}
+
+/** Builds a writer's system prompt in the kit's load order (00-START-HERE):
+ * 01 always → 02 for prose → the one product spec → 07 for season facts →
+ * the lane's gold-standard build (the kit says open it before writing) →
+ * site mechanics → the JSON contract. Nothing outside prompts/pate-state-kit
+ * is loaded as instruction. */
+export function editorialSystem(product: EditorialProduct, taskPrompt: string): string {
+  return [
+    readPrompt(`${KIT}/01-constitution.md`),
+    readPrompt(`${KIT}/02-voice-bible.md`),
+    readPrompt(SPEC_FOR_PRODUCT[product]),
+    `${SNAPSHOT_NOTE}\n\n${readPrompt(`${KIT}/07-current-state.md`)}`,
+    voiceExemplarBlock(exemplarLane(product)),
+    HOUSE_NOTES,
+    taskPrompt,
+  ].filter(Boolean).join("\n\n");
+}
+
+// ---------------------------------------------------------------------------
+// Voice Bible §13 as code: fail-closed validators the pipelines call.
+
+/** Isolated one-sentence kickers (body paragraphs of ≤12 words), excluding
+ * the cold-open hook and the porch close. §0B: at most one per 400–600
+ * words. Exported for the gates and tests. */
+export function kickerBudget(bodyMarkdown: string): { kickers: string[]; allowed: number; ok: boolean } {
+  const paras = bodyMarkdown
+    .replace(/\[[^\]]*\]/g, " ")
+    .split(/\n{2,}/)
+    .map((p) => p.trim())
+    .filter((p) => p && !p.startsWith("## ") && !/^—\s*JP$/.test(p));
+  const body = paras.slice(1, Math.max(1, paras.length - 1));
+  const words = paras.join(" ").split(/\s+/).filter(Boolean).length;
+  const kickers = body.filter((p) => p.split(/\s+/).filter(Boolean).length <= 12);
+  const allowed = Math.max(1, Math.floor(words / 400));
+  return { kickers, allowed, ok: kickers.length <= allowed };
+}
+
+/** The Wire's sentence-one attribution (spec 04 §2.2): who reported it or
+ * who said it, on the record, before anything else. Exported for tests. */
+export function attributedInSentenceOne(whatHappened: string): boolean {
+  const first = whatHappened.split(/(?<=[.!?])\s+/)[0] ?? "";
+  return /\b(announced|said|says|confirmed|reported|reports|told|according to|statement|release|declared|posted|wrote)\b/i.test(first);
+}
+
+/** Josh-lane pieces sign off "— JP" (Voice Bible §3); the em-dash law
+ * allows the dash only here. Appends the sign-off when the writer forgot. */
+export function ensureSignOff(bodyMarkdown: string): string {
+  const b = bodyMarkdown.trimEnd();
+  return /—\s*JP\s*$/.test(b) ? b : `${b}\n\n— JP`;
+}
+
+/** Word count of the prose (markers stripped). Exported for the floors. */
+export function proseWords(text: string): number {
+  return text.replace(/\[[^\]]*\]/g, " ").replace(/—\s*JP\s*$/, "").split(/\s+/).filter(Boolean).length;
 }
 
 /** What a reader sees: markers become the furniture the site renders.
@@ -102,57 +158,6 @@ notes: 3-5 blunt sentences from the fan's chair: what bored you, what confused y
   } catch {
     return { legibility: 10, enjoyment: 10, joshVoice: 10, score: 10, notes: "", pass: true };
   }
-}
-
-/** The eight things the reader's judge kept failing pieces on (loop round 1,
- * 2026-08-26): what decides whether a piece reads like Josh, before the
- * rulebook. Sits at the top of every system prompt, with the exemplar
- * right behind it, because the kit's 15k tokens of rules were drowning the
- * voice when the exemplar sat at the end. */
-export const VOICE_CARD = `WHO IS WRITING: Josh Pate, to one smart fan, in his own first person. Before the rulebook, the eight things that decide whether this reads like him:
-1. Verdict first. The first two sentences say what happened and what you make of it. Defend it after; never wind up to it.
-2. Complete, plain sentences. Then a short one that lands on a period. Never clipped shorthand, never a paragraph of fragments, never five sentences the same length in a row.
-3. One idea per paragraph, said once. If a paragraph restates the last one in new clothes, cut it. The piece ends when the argument does.
-4. Numbers do the credibility work. A specific figure beats "significant," "a lot," "not close." A name beats a role.
-5. Say the uncertainty like a person, once: "Nobody has said how long he's out." Never narrate your own rules: no "that is a projection, not a confirmed policy," no "I can't speculate on," no "the sources don't say," no "what we can and can't say." You are not filling out a form; you are telling a friend what you know and what you think.
-6. Credit the opponent, then swing. Respect every fanbase. Humor is rare, dry, and comes from regular life, never from a joke slot.
-7. Give the reader something to watch on Saturday, specific: a player, a down, a formation, a date.
-8. Have a take. Somewhere in the piece is the sentence a fan would argue with at a bar; say it plainly and defend it. Caveat once, in the same breath, then move on. A piece with no take is a memo.
-9. Every paragraph carries a specific: a player, a coach, a number, a play, a game, a date. A paragraph that argues in the abstract ("last year's results don't define this team") without the football that proves it is a paragraph a fan skims. Dictate it the way you'd say it out loud to the friend, then clean the delivery; don't compose it like an essay. One line per section a fan would text somebody.
-10. Structure follows the argument, the way the approved column does: say the thing, prove it with the football and the numbers, tell the reader what it means and what to watch. No mandated beats, no counterpoint slot, no closing restatement of the opening, no "quickly" sweep, no section that exists to fill a template.
-11. The test: read the paragraph aloud on a porch. If it sounds like a memo, a lawyer, a press release, or a robot doing an impression of a podcaster, rewrite it.
-The approved column below is what "sounds like him" means. Match it.`;
-
-/** The short rulebook for the lean prompt: the laws that must never be
- * broken, in one screen. The kit's full documents govern the judges. */
-export const LEAN_LAWS = `THE LAWS (never broken, whatever the voice does):
-1. Never fabricate: no invented quotes, stats, injury details, timelines, depth-chart decisions, motivations, sources, or Josh Pate positions. Facts come only from the supplied sources; unknown stays unknown, said once, plainly.
-2. Josh's on-record positions come only from the supplied archived quotes and on-record site positions. Where he hasn't spoken, extend his stated logic the way a show listener would recognize; never invent a specific new pick, a memory ("I've been saying for years"), a source, or a claim to have said something on the show. Never contradict an on-record position.
-3. Outlet credit lives in the site's footer: never name another website in prose; official sources and named individual reporters are fine. Never narrate the sourcing ("the report does not say," "was described as").
-4. Flaws belong to units and situations, never named kids. No "overrated," no betting-tout language, no exclamation points, no em dashes in prose.
-5. The site renders the chrome (chips, byline, video card, Pulse, sourcing box): never write it into prose.
-6. A list delivers what it promises: if the headline says ten games, ten games appear, each with its own football reason. Never skip a number, never pad one.
-7. Output valid JSON matching the provided schema, nothing else.`;
-
-/** Builds a writer's system prompt: the voice card and the approved
- * article first, then the kit in its load order, then the JSON contract.
- * EDITORIAL_LEAN=1 (loop round 3, 2026-08-26): the writer sees only the
- * voice card, the approved column, the laws, and the contract; the kit's
- * documents govern the judges instead of the writer. */
-export function editorialSystem(product: EditorialProduct, taskPrompt: string): string {
-  if (process.env.EDITORIAL_LEAN === "1") {
-    return [VOICE_CARD, voiceExemplarBlock(exemplarLane(product)), LEAN_LAWS, taskPrompt].filter(Boolean).join("\n\n");
-  }
-  return [
-    VOICE_CARD,
-    voiceExemplarBlock(exemplarLane(product)),
-    readPrompt("kit/01-constitution.md"),
-    readPrompt("kit/02-voice-bible.md"),
-    readPrompt(SPEC_FOR_PRODUCT[product]),
-    `${SNAPSHOT_NOTE}\n\n${readPrompt("kit/07-current-state.md")}`,
-    HOUSE_NOTES,
-    taskPrompt,
-  ].filter(Boolean).join("\n\n");
 }
 
 export interface VoiceVerdict { score: number; notes: string; pass: boolean }
@@ -260,6 +265,10 @@ const BOILERPLATE: { name: string; re: RegExp }[] = [
   { name: "generic AI transition (kit)", re: /\b(will look to|will now turn (its|their) attention|something to monitor|in the world of college football|it'?s important to note)\b/i },
   { name: "overrated dunk-framing", re: /\boverrated\b/i },
   { name: "BREAKING in body copy", re: /\bBREAKING:/ },
+  // Kit v4.0, Voice Bible §2.6–2.8:
+  { name: "AI tell (§2.8)", re: /\b(delve|delving|crucial|pivotal|landscape|navigat(e|es|ed|ing))\b/i },
+  { name: "model nickname (§2.6)", re: /\b(the model says|the formula|the machine)\b/i },
+  { name: "craft vocabulary (§2.7)", re: /\b(reframe the|the frame is|price (in|the) [a-z]+ take|honest read)\b/i },
 ];
 
 // Thesis-announcing paragraph openers (Updates 4.0 rule 2): one is fine,

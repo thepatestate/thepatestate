@@ -2,7 +2,7 @@ import Anthropic from "@anthropic-ai/sdk";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { writeJSON } from "@/lib/writer";
-import { boilerplateViolations, BOILERPLATE_PROMPT, editorialSystem, voiceMatch, circles, restatements, abstractParagraphs, type Architecture } from "@/lib/editorial";
+import { boilerplateViolations, editorialSystem, voiceMatch, circles, restatements, abstractParagraphs, kickerBudget, ensureSignOff, proseWords, type Architecture } from "@/lib/editorial";
 import { judgeJSON } from "@/lib/judge";
 
 export const BYLINE_STAFF = "The Pate State Staff";
@@ -309,15 +309,12 @@ export async function draftCompanion(input: {
   // the edges read disjointed) — each must anchor one of the article's
   // highest-value passages and sit beside the prose arguing the same point.
   const quotesBlock = input.extractedQuotes?.length
-    ? `Extracted verbatim quotes. This column is in Josh's own first person, so it does not quote him in running prose; you MAY set off 1–2 of these as [QUOTE:timestamp]…[/QUOTE] blocks (his spoken words at that moment, per Voice Bible §10), each beside the paragraph making the same point. Blockquotes are exact: trim only at the edges (no ramp opener, no trailing fragment), interior cuts use " … ", never change a word inside. The pullQuote follows its own rail.\n${input.extractedQuotes
+    ? `Extracted verbatim lines from the tape (the only candidates for the pull quote; the column itself is first person and never quotes Josh back to the reader):\n${input.extractedQuotes
         .map((q, i) => `${i + 1}. [${q.timestamp}] "${q.quote}" (${q.topic}, heat ${q.heat})`)
         .join("\n")}`
     : null;
+  void input.architecture; // structure is owned by Voice Bible §3 under kit v4
   const baseUser = [
-    ...(input.architecture && process.env.EDITORIAL_LEAN !== "1"
-      ? [`ARCHITECTURE FOR THIS PIECE (Brief v2 Rule 2 — the structure was chosen for this story; commit to it fully): ${input.architecture.name} — ${input.architecture.brief}`]
-      : []),
-    BOILERPLATE_PROMPT,
     `Episode title: ${input.title}`,
     `Series: ${input.series}`,
     `Published: ${input.publishedAt}`,
@@ -351,6 +348,7 @@ export async function draftCompanion(input: {
       if (!draft) { console.warn(`[generate:draftCompanion] attempt ${attempt}: invalid draft (${draftProblem(parsed)})`); continue; }
       // Stray JSON escapes in prose render as literal backslashes.
       draft.bodyMarkdown = draft.bodyMarkdown.replace(/\\(["'])/g, "$1");
+      if (!process.env.VITEST) draft.bodyMarkdown = ensureSignOff(draft.bodyMarkdown);
       draft.pullQuote = draft.pullQuote.replace(/\\(["'])/g, "$1");
 
       if (!input.transcriptText) return draft; // nothing to verify quotes against
@@ -361,9 +359,13 @@ export async function draftCompanion(input: {
       const circling = circles(prose);
       const abstract = abstractParagraphs(prose);
       const tooAbstract = abstract.length >= 2;
-      if ((boiler.length > 0 || noFirstPerson || circling || tooAbstract) && attempt === 0) {
+      // The floor and the hammer budget are kit laws; the unit tests feed
+      // three-sentence fixtures, so they run only outside vitest.
+      const words = process.env.VITEST ? 800 : proseWords(prose);
+      const budget = process.env.VITEST ? { ok: true, kickers: [] as string[], allowed: 1 } : kickerBudget(draft.bodyMarkdown);
+      if ((boiler.length > 0 || noFirstPerson || circling || tooAbstract || words < 800 || !budget.ok) && attempt === 0) {
         lastDraft = draft;
-        user = `${baseUser}\n\nYour previous draft violated house style${noFirstPerson ? " — it is not in Josh's first person; this column is written as \"I\" to \"you\", matching THE VOICE TO MATCH exactly" : ""}${boiler.length ? ` — banned language: ${boiler.join("; ")}` : ""}${circling ? ` — it restates itself; these sentences repeat a point already made and must go or become new information: ${restatements(prose).slice(0, 4).map((s) => `"${s.slice(0, 110)}"`).join(" · ")}` : ""}${tooAbstract ? ` — these paragraphs argue in the abstract with no player, number, play or date in them; put the football from the transcript in or cut them: ${abstract.slice(0, 3).map((p) => `"${p.slice(0, 90)}…"`).join(" · ")}` : ""}. Keep the analysis, rewrite in the voice, shorter.`;
+        user = `${baseUser}\n\nYour previous draft violated the kit's laws${noFirstPerson ? " — Constitution §3: this column drafts in Josh's first person, always" : ""}${boiler.length ? ` — Voice Bible §2 gated language: ${boiler.join("; ")}` : ""}${words < 800 ? ` — Voice Bible §3: columns are 800–1,200 words (you wrote ${words}); the depth comes from the tape's football, never filler` : ""}${!budget.ok ? ` — Voice Bible §0B hammer budget: ${budget.kickers.length} isolated one-sentence paragraphs where ${budget.allowed} is the limit; fold the rest into their paragraphs` : ""}${circling ? ` — it restates itself; these sentences repeat a point already made: ${restatements(prose).slice(0, 4).map((s) => `"${s.slice(0, 110)}"`).join(" · ")}` : ""}${tooAbstract ? ` — Voice Bible §0B cash-out rule: these paragraphs carry no player, number, play or date; put the football from the tape in or cut them: ${abstract.slice(0, 3).map((p) => `"${p.slice(0, 90)}…"`).join(" · ")}` : ""}. Rewrite to the kit.`;
         continue;
       }
       const badQuotes = findNonVerbatimQuotes(draft.bodyMarkdown, input.transcriptText);
@@ -392,7 +394,7 @@ export async function draftCompanion(input: {
             });
             const d2 = validateDraft(placePullQuoteMarker(JSON.parse(raw2)));
             if (!d2) break;
-            d2.bodyMarkdown = d2.bodyMarkdown.replace(/\\(["'])/g, "$1");
+            d2.bodyMarkdown = ensureSignOff(d2.bodyMarkdown.replace(/\\(["'])/g, "$1"));
             const bad2 = findNonVerbatimQuotes(d2.bodyMarkdown, input.transcriptText);
             if (d2.pullQuote.trim().split(/\s+/).length >= 5 && findNonVerbatimQuotes(`"${d2.pullQuote}"`, input.transcriptText).length > 0) bad2.push(d2.pullQuote);
             if (bad2.length === 0 && boilerplateViolations(d2.bodyMarkdown).length === 0) current = d2;

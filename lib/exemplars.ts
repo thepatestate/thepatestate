@@ -16,7 +16,7 @@ const cache = new Map<string, string>();
 export function exemplarProse(name: string): string {
   const hit = cache.get(name);
   if (hit) return hit;
-  const html = readFileSync(join(process.cwd(), "docs", "reference-builds", `${name}.html`), "utf8");
+  const html = readFileSync(join(process.cwd(), "prompts", "pate-state-kit", "reference-builds", `${name}.html`), "utf8");
   const m = html.match(/<article[^>]*class="article"[^>]*>([\s\S]*?)<\/article>/) ?? html.match(/<main[^>]*>([\s\S]*?)<\/main>/);
   let body = m ? m[1] : html;
   body = body.replace(/<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>/g, "");
@@ -36,7 +36,8 @@ export function exemplarProse(name: string): string {
 }
 
 export const EXEMPLAR_FOR_LANE = {
-  feature: "feature-three-boards-josh",
+  // Kit v4.0: the hybrid Three Boards build is the gold standard and the ceiling.
+  feature: "feature-three-boards-v3",
   wire: "wire-ohio-state-rowe-safety",
 } as const;
 
@@ -45,11 +46,11 @@ export const EXEMPLAR_FOR_LANE = {
 export function voiceExemplarBlock(lane: keyof typeof EXEMPLAR_FOR_LANE): string {
   const name = EXEMPLAR_FOR_LANE[lane];
   const who = lane === "feature"
-    ? "Josh's Read, written and approved by Josh: first person, his byline, the ceiling for how conversational the site gets"
-    : "the Wire, approved by Josh as the standard: the desk's voice, zero opinions, Josh present only in the Receipt";
-  return `THE VOICE TO MATCH — ${who}. The article below is the target register for this piece. Match it exactly: how the sentences are built and how long they run, where the short hammer lands, how a fact and a verdict sit in the same paragraph, how the numbers carry the credibility, how the humor is placed and how rare it is, how a section opens and how it closes. A reader should believe the same person wrote both.
+    ? "the gold standard for Josh's Read and show-derived columns (Voice Bible §12): the best voice yet and the ceiling — calibrate to it, not past it"
+    : "the approved Wire build (spec 04): the Wire register, attribution in sentence one, zero Josh opinion, Josh only in verbatim archive quotes";
+  return `THE GOLD STANDARD — ${who}. The kit's rule is that you open the approved build before writing and calibrate to it; here it is. Match how its sentences are built and how long they run, where its rare isolated kicker lands and how the rest fold into their paragraphs, how a fact and a verdict share a paragraph, how the numbers sit where a vague quantifier could have lived, how the humor is placed and how rare it is. A reader should believe the same person wrote both.
 
-Its facts, picks, numbers, names, and lines are NOT material for your piece: never reuse its claims, its sentences, or its constructions with the nouns swapped. Match the voice; write your own story.
+Its facts, picks, numbers, names, and lines are NOT material for your piece: never reuse its claims, its sentences, or its constructions with the nouns swapped. Match the register; write your own story.
 
 === ${name}.html ===
 ${exemplarProse(name)}

@@ -113,7 +113,7 @@ describe("selectCallout", () => {
 
 describe("prompt hygiene (regression guard)", () => {
   it("wire prompts contain no callout-banned phrases", () => {
-    for (const name of ["wire-story.md", "wire-item.md", "standalone-article.md", "companion-article.md"]) {
+    for (const name of ["wire-story.md", "wire-item.md", "news-reaction.md", "josh-column.md", "companion-article.md"]) {
       const text = readFileSync(join(process.cwd(), "prompts", name), "utf8");
       for (const sentence of text.split(/\n/)) {
         // The ban applies to quotable prose examples; instruction lines that

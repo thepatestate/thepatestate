@@ -139,10 +139,10 @@ export default async function WireStoryPage({ params }: { params: Promise<{ slug
           {story.deck && <p className="a-dek">{story.deck}</p>}
 
           <div className="a-by">
-            <div className="av">JP</div>
+            <div className="av">WD</div>
             <div className="who">
-              <b>Josh Pate</b>
-              <span>The Wire · drafted from the cited sources in Josh&apos;s voice · verified and monitored by an editor</span>
+              <b>The Pate State Wire Desk</b>
+              <span>Verified reporting · full source list below · monitored by an editor</span>
             </div>
             <div className="upd"><b>● {status}</b><br />{formatDate(story.publishedAt ?? "")}</div>
           </div>
@@ -237,7 +237,7 @@ export default async function WireStoryPage({ params }: { params: Promise<{ slug
               <>
                 {/* Kit 04 §4 module 12: a small label when Josh hasn't spoken on today's
                     news — never a closer. */}
-                <SectionHead n={next()} kicker={story.joshReceipt?.quote ? "The Thesis" : "Desk Analysis · Josh Has Not Yet Commented on Today's News"} title="The Pate State Read" />
+                <SectionHead n={next()} kicker="Honest Scale" title="What Happens Next" />
                 <div className="readcard">
                   <p>{story.readBody}</p>
                 </div>
