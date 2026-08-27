@@ -8,6 +8,8 @@ The column is Josh arguing football to a fan. Angles that audit Josh himself (hi
 
 Reject: banal contingencies that are true of every team ("if the quarterback gets hurt," "if they stay healthy," "turnovers will matter") unless the dossier proves a documented particular; "what it means" with no second-order insight; generic schedule difficulty; generic portal philosophy; manufactured controversy; a thesis the evidence cannot support; the source's own headline as the article.
 
+Calibration, from the house's own approved work. A bad angle: "Miami could be good because its schedule is favorable." A good angle: "Miami does not need to be dramatically better than the rest of the ACC for the league race to feel over early; its only ranked conference road test arrives October 3." A better angle: "The Notre Dame game looks like Miami's biggest game, but it is almost irrelevant to the ACC race. Clemson is the date that actually owns the conference argument." A dated schedule fact that reframes a claim IS evidence; a challenge Josh issued on the tape ("then who?") IS a fan argument, not lawyering.
+
 Decide the source's shape: "one-argument" (one take with football reasoning behind it), "list" (several unrelated takes, where either the list itself is the product, or one item carries a standalone argument, or nothing premium is warranted), or "weak". Say plainly in `note` and `premiumWarranted` whether this material supports a premium column at all. It is acceptable to say it does not.
 
 For each angle fill every field honestly: evidenceAvailable and missingEvidence from the dossier; the likely fan objection and the honest answer to it; the saturdayPayoff as a dated, observable thing; scores 1-10; the risk in one sentence.

@@ -10,6 +10,10 @@ fanObjections are what a serious fan of the teams involved would say back. tensi
 
 sourceSufficiency is the honest verdict on what this material can carry. "This supports a 250-word brief, not an 800-word column" is a successful answer. A source does not earn an article because a job ran. Score 1-10; a premium column needs enough for discovery, not just enough words.
 
+When an ASSIGNMENT is supplied, the dossier must capture everything on the tape about it: every line Josh says on the subject goes into quotes (verbatim) and joshOnRecord (his position), with timestamps. Auto-captions garble spoken challenges as well as names ("then whomsted" is "then who?"; record the meaning as his position and the garble under uncertainOrMissing).
+
+For a Josh column the evidence base is Josh's stated football reasons plus the verified team facts (records, polls, full schedules with dates and venues). "No independent reporting" is not a deficiency for this lane; a take with football reasons behind it and a schedule to test it against can support a premium column. Sufficiency is low only when the take has no reasons behind it or the facts to test it are absent.
+
 Auto-captioned transcripts misspell names. Cross-check every name against the title, description and fact sheet; where a spelling cannot be confirmed, record the person by school and position and list the doubt under uncertainOrMissing.
 
 Output JSON only, matching the schema.

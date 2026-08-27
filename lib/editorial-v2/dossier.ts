@@ -35,11 +35,13 @@ export interface ShowMaterial {
   factSheet: string;
   onRecord: string;
   recentHeadlines?: string[];
+  assignment?: string;
 }
 
 /** The raw material as the dossier agent (and later the fact checker) sees it. */
 export function showMaterialBlock(m: ShowMaterial): string {
   return [
+    m.assignment ? `THE ASSIGNMENT (capture everything on the tape about this, verbatim, with timestamps): ${m.assignment}` : "",
     `EPISODE: ${m.episode.title}\nPUBLISHED: ${m.episode.publishedAt}\nSERIES: ${m.episode.series}\nDESCRIPTION [sourceRef: episode-description]:\n${m.episode.description.slice(0, 3000)}`,
     `EXTRACTED VERBATIM QUOTES (timestamps are sourceRefs):\n${m.quotes.map((q) => `[${q.timestamp}] "${q.quote}" (${q.topic}; ${q.teams.join(", ")}; heat ${q.heat})`).join("\n") || "none"}`,
     `TEAM FACTS [sourceRef: fact-sheet]:\n${m.factSheet || "none"}`,

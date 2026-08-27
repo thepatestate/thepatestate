@@ -30,6 +30,8 @@ export interface ShowColumnInput {
   /** Fragment sources to hide (a replay's benchmark). */
   excludeFragmentSources?: string[];
   budget?: Partial<LoopBudget>;
+  /** Production: verified facts for teams the dossier names that the material's fact sheet does not cover (replays are frozen and pass nothing). */
+  factSheetProvider?: (slugs: string[]) => Promise<string>;
   log?: (line: string) => void;
 }
 
@@ -42,7 +44,8 @@ export async function runShowColumnV2(input: ShowColumnInput): Promise<Editorial
   const run: EditorialRun = { id: newRunId(), lane: "show", product: "josh-column", sourceId: input.sourceId, fixture: input.fixture, mode: input.mode, status: "running", startedAt: new Date().toISOString(), cycles: 0, artifacts: { history: [] }, calls: [], totalCostUsd: 0 };
   const add = (...calls: (StageCall | null)[]) => { for (const c of calls) if (c) { run.calls.push(c); run.totalCostUsd = Math.round((run.totalCostUsd + c.costUsd) * 10000) / 10000; } };
   const spent: Spent = { remine: 0, blueprint: 0, rewrite: 0, factRepair: 0, cycles: 0 };
-  const raw = showMaterialBlock(input.material);
+  if (input.assignment) input.material.assignment = input.assignment;
+  let raw = showMaterialBlock(input.material);
   const finish = async (decision: EditorialDecision, final?: ArticleDraft) => {
     run.decision = decision; run.final = final; run.status = "completed"; run.completedAt = new Date().toISOString(); run.cycles = spent.cycles;
     if (run.artifacts.evaluation) run.finalScore = fanMean(run.artifacts.evaluation);
@@ -54,6 +57,19 @@ export async function runShowColumnV2(input: ShowColumnInput): Promise<Editorial
     // 1. dossier
     const d = await buildDossier(input.material); add(d.call); run.artifacts.dossier = d.dossier;
     log(`dossier: sufficiency ${d.dossier.sourceSufficiency.score}/10 · premium ${d.dossier.sourceSufficiency.canSupportPremiumColumn} · ${d.dossier.confirmedFacts.length} facts · ${d.dossier.joshOnRecord.length} Josh positions`);
+    // Fact-sheet top-up: the dossier names the teams the argument is about; if
+    // the material's sheet does not cover them, fetch them and re-report once.
+    if (input.factSheetProvider) {
+      const missing = d.dossier.teams.filter((t) => !new RegExp(`^${t.replace(/-/g, "[ -]")}\\b`, "im").test(input.material.factSheet));
+      if (missing.length) {
+        const extra = await input.factSheetProvider(missing.slice(0, 8)).catch(() => "");
+        if (extra) {
+          input.material.factSheet = `${input.material.factSheet}\n\n${extra}`; raw = showMaterialBlock(input.material);
+          const d2 = await buildDossier(input.material); add(d2.call); d.dossier = d2.dossier; run.artifacts.dossier = d2.dossier;
+          log(`fact sheet topped up for ${missing.join(", ")} · dossier re-reported: sufficiency ${d2.dossier.sourceSufficiency.score}/10`);
+        }
+      }
+    }
     if (!d.dossier.sourceSufficiency.canSupportPremiumColumn && d.dossier.sourceSufficiency.score < 4) {
       return finish({ decision: "kill", failureClass: "evidence", reason: `source cannot support a premium column: ${d.dossier.sourceSufficiency.reason}`, routeTo: "human", instructions: [] });
     }

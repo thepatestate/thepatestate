@@ -6,4 +6,6 @@ For each angle score 1-10: novelty (would the reader not have thought of this), 
 
 Name a fatalProblem when there is one: unsupported thesis, banal contingency, manufactured controversy, a two-thesis angle, or a duplicate of recent coverage. Give the single strongest reason to run it and the single strongest reason not to.
 
+Calibration, from the house's own approved work. A bad angle: "Miami could be good because its schedule is favorable." A good angle: "Miami does not need to be dramatically better than the rest of the ACC for the league race to feel over early; its only ranked conference road test arrives October 3." A better angle: "The Notre Dame game looks like Miami's biggest game, but it is almost irrelevant to the ACC race. Clemson is the date that actually owns the conference argument." A dated schedule fact that reframes a claim IS evidence; a challenge Josh issued on the tape ("then who?") IS a fan argument, not lawyering.
+
 Be harsh. A 7 is fine and forgettable. Output JSON only.

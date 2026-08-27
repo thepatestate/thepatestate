@@ -6,6 +6,13 @@ import { writeClient, isSanityWriteConfigured } from "@/lib/sanity";
 import { fetchTranscript, transcriptToPromptText } from "@/lib/transcript";
 import { extractQuotes } from "@/lib/generate";
 import { teamFactSheet } from "@/lib/fact-sheet";
+
+/** teamFactSheet caps at four teams per call; batch for the dossier's list. */
+export async function factSheetFor(slugs: string[]): Promise<string> {
+  const out: string[] = [];
+  for (let i = 0; i < slugs.length; i += 4) out.push(await teamFactSheet(slugs.slice(i, i + 4), { games: 14 }));
+  return out.filter(Boolean).join("\n\n");
+}
 import { JOSH_BRACKET_FIELD, JOSH_BRACKET_FINAL, JOSH_BRACKET_LABEL } from "@/lib/josh-bracket";
 import { editorialV2Flags } from "./flags";
 import { runShowColumnV2 } from "./show-column";
@@ -37,6 +44,7 @@ export async function shadowRunShowColumn(input: ShadowInput): Promise<Editorial
     return await runShowColumnV2({
       sourceId: input.ytId, mode: flags.shadow ? "shadow" : "live",
       material: { episode: { ytId: input.ytId, title: input.title, description: input.description, publishedAt: input.publishedAt, series: input.series }, transcriptText: input.transcriptText, quotes: input.quotes, factSheet: input.factSheet, onRecord: onRecordBlock(), recentHeadlines: input.recentHeadlines },
+      factSheetProvider: factSheetFor,
     });
   } catch (err) {
     console.error("[v2:shadow]", input.ytId, err instanceof Error ? err.message.slice(0, 200) : err);
