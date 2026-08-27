@@ -29,6 +29,8 @@ export interface ContextPack {
   decision: AngleDecision;
   blueprint: StoryBlueprint;
   fragments: VoiceFragment[];
+  /** The verified team facts, passed through whole (the dossier compresses them). */
+  factSheet?: string;
   /** Verbatim lines eligible for the pull quote (show lane). */
   quoteCandidates?: { quote: string; timestamp: string }[];
 }
@@ -37,7 +39,8 @@ export interface ContextPack {
 export function writerContext(p: ContextPack): string {
   const josh = p.dossier.joshOnRecord.length ? `JOSH'S OWN POSITIONS FROM THE MATERIAL (the only opinions the column may call his; each with its ref):\n${p.dossier.joshOnRecord.map((j) => `- ${j.text} (${j.timestamp ?? j.date ?? "on-record"}; ${j.topic})`).join("\n")}` : "";
   const quotes = p.quoteCandidates?.length ? `PULL-QUOTE CANDIDATES (verbatim; the only text allowed inside quotation marks):\n${p.quoteCandidates.map((q) => `[${q.timestamp}] "${q.quote}"`).join("\n")}` : "";
-  return [hardPolicyForLane(p.lane), voiceCardForLane(p.lane), angleBlock(p.angle, p.decision), blueprintBlock(p.blueprint), dossierBlock(p.dossier), fragmentsBlock(p.fragments), josh, quotes, outputContractForProduct(p.product)].filter(Boolean).join("\n\n");
+  const facts = p.factSheet ? `VERIFIED TEAM FACTS [sourceRef: fact-sheet] (records, polls, full schedules with dates and venues; part of the fact base):\n${p.factSheet}` : "";
+  return [hardPolicyForLane(p.lane), voiceCardForLane(p.lane), angleBlock(p.angle, p.decision), blueprintBlock(p.blueprint), dossierBlock(p.dossier), facts, fragmentsBlock(p.fragments), josh, quotes, outputContractForProduct(p.product)].filter(Boolean).join("\n\n");
 }
 
 export function cleanDraft(d: ArticleDraft): ArticleDraft {

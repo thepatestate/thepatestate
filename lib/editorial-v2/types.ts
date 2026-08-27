@@ -264,6 +264,8 @@ export interface FinalEvaluation {
   humanity: HumanityJudgement;
   voice: { score: number; notes: string; pass: boolean };
   legacyFan?: { score: number; legibility: number; enjoyment: number; joshVoice: number; notes: string };
+  /** V1's exemplar-similarity voice judge, kept for continuity only. */
+  legacyVoice?: { score: number; notes: string };
   thresholds: { fanMean: number; legibilityMin: number; sendabilityMean: number; voice: number; humanity: number };
   meets: { fanMean: boolean; legibilityMin: boolean; sendabilityMean: boolean; voice: boolean; humanity: boolean; all: boolean };
 }

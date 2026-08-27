@@ -91,23 +91,23 @@ export async function runShowColumnV2(input: ShowColumnInput): Promise<Editorial
     const decision = run.artifacts.angleDecision!;
 
     // 5–6. blueprint → editor (with blueprint budget; may route back)
-    let blueprint = (await (async () => { const b = await buildBlueprint(d.dossier, angle!, decision, { product: "josh-column" }); add(b.call); return b.blueprint; })());
+    let blueprint = (await (async () => { const b = await buildBlueprint(d.dossier, angle!, decision, { product: "josh-column", factSheet: input.material.factSheet }); add(b.call); return b.blueprint; })());
     for (;;) {
-      const r = await reviewBlueprint(d.dossier, blueprint, angle!); add(r.call); run.artifacts.blueprintReview = r.review;
+      const r = await reviewBlueprint(d.dossier, blueprint, angle!, input.material.factSheet); add(r.call); run.artifacts.blueprintReview = r.review;
       log(`blueprint editor: ${r.review.verdict} · ${r.review.problems.slice(0, 3).join(" | ").slice(0, 200)}`);
       if (r.review.verdict === "pass") break;
       if (r.review.verdict === "kill") return finish({ decision: "kill", failureClass: "structure", reason: r.review.reason, routeTo: "human", instructions: r.review.problems });
       if (r.review.verdict === "revise-blueprint" && r.review.revisedBlueprint && spent.blueprint < budget.blueprint) { spent.blueprint++; blueprint = r.review.revisedBlueprint; continue; }
       if (spent.blueprint >= budget.blueprint) { log("blueprint budget spent; proceeding with the last revision"); break; }
       spent.blueprint++;
-      const b = await buildBlueprint(d.dossier, angle!, decision, { product: "josh-column", guidance: `${r.review.verdict}: ${r.review.reason}\nProblems: ${r.review.problems.join("; ")}\nCut: ${r.review.cutBeats.join("; ")}` }); add(b.call); blueprint = b.blueprint;
+      const b = await buildBlueprint(d.dossier, angle!, decision, { product: "josh-column", factSheet: input.material.factSheet, guidance: `${r.review.verdict}: ${r.review.reason}\nProblems: ${r.review.problems.join("; ")}\nCut: ${r.review.cutBeats.join("; ")}` }); add(b.call); blueprint = b.blueprint;
     }
     run.artifacts.blueprint = blueprint;
 
     // 7. voice retrieval
     const fragments = retrieveFragments(blueprint, { teams: d.dossier.teams, topics: input.material.quotes.map((q) => q.topic), excludeSourceIds: input.excludeFragmentSources, min: 6 });
     run.artifacts.voiceFragmentIds = fragments.map((f) => f.id);
-    const pack: ContextPack = { lane: "show", product: "josh-column", dossier: d.dossier, angle: angle!, decision, blueprint, fragments, quoteCandidates: input.material.quotes.map((q) => ({ quote: q.quote, timestamp: q.timestamp })) };
+    const pack: ContextPack = { lane: "show", product: "josh-column", dossier: d.dossier, angle: angle!, decision, blueprint, fragments, factSheet: input.material.factSheet, quoteCandidates: input.material.quotes.map((q) => ({ quote: q.quote, timestamp: q.timestamp })) };
 
     // 8–9. two writers → editor
     const w = await writeDrafts(pack); add(...w.calls); run.artifacts.drafts = w.drafts; run.artifacts.writerPrompts = w.prompts;
@@ -119,7 +119,7 @@ export async function runShowColumnV2(input: ShowColumnInput): Promise<Editorial
       // Both drafts failed for the same structural/idea reason: the editor
       // says the blueprint (or angle) was wrong. One rebuild, then proceed.
       spent.blueprint++;
-      const b = await buildBlueprint(d.dossier, angle!, decision, { product: "josh-column", guidance: `The draft editor sent both drafts back (${sel.selection.route}): ${sel.selection.structuralProblems.join("; ")}` }); add(b.call); blueprint = b.blueprint; run.artifacts.blueprint = blueprint; pack.blueprint = blueprint;
+      const b = await buildBlueprint(d.dossier, angle!, decision, { product: "josh-column", factSheet: input.material.factSheet, guidance: `The draft editor sent both drafts back (${sel.selection.route}): ${sel.selection.structuralProblems.join("; ")}` }); add(b.call); blueprint = b.blueprint; run.artifacts.blueprint = blueprint; pack.blueprint = blueprint;
       const w2 = await writeDrafts(pack); add(...w2.calls); if (w2.drafts.length) { run.artifacts.drafts = w2.drafts; run.artifacts.writerPrompts = w2.prompts; }
       sel = await editDrafts(run.artifacts.drafts!, blueprint, decision.finalThesis ?? angle!.thesis); add(sel.call); run.artifacts.selection = sel.selection;
     }
@@ -158,7 +158,7 @@ export async function runShowColumnV2(input: ShowColumnInput): Promise<Editorial
       if (fd.decision.routeTo === "blueprint" || fd.decision.routeTo === "story-miner" || fd.decision.routeTo === "reporting") {
         if (spent.blueprint >= budget.blueprint) return finish({ ...fd.decision, decision: "hold", routeTo: "human" }, draft);
         spent.blueprint++;
-        const b = await buildBlueprint(d.dossier, angle!, decision, { product: "josh-column", guidance: `Final editor routed the piece back (${fd.decision.failureClass}): ${fd.decision.reason}\n${instructions.join("\n")}` }); add(b.call); blueprint = b.blueprint; run.artifacts.blueprint = blueprint; pack.blueprint = blueprint;
+        const b = await buildBlueprint(d.dossier, angle!, decision, { product: "josh-column", factSheet: input.material.factSheet, guidance: `Final editor routed the piece back (${fd.decision.failureClass}): ${fd.decision.reason}\n${instructions.join("\n")}` }); add(b.call); blueprint = b.blueprint; run.artifacts.blueprint = blueprint; pack.blueprint = blueprint;
         const w2 = await writeDrafts(pack); add(...w2.calls); if (w2.drafts.length) { run.artifacts.drafts = w2.drafts; run.artifacts.writerPrompts = w2.prompts; }
         sel = await editDrafts(run.artifacts.drafts!, blueprint, decision.finalThesis ?? angle!.thesis); add(sel.call); run.artifacts.selection = sel.selection;
       }
