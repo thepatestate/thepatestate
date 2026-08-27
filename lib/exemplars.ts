@@ -105,30 +105,3 @@ Its facts, picks, numbers, names, and lines are NOT material for your piece: nev
 ${exemplarProse(name)}
 === end of exemplar ===${secondBlock}`;
 }
-
-const norm = (s: string) => s.toLowerCase().replace(/[‘’]/g, "'").replace(/[“”]/g, '"').replace(/[^a-z0-9' ]+/g, " ").replace(/\s+/g, " ").trim();
-
-/** Runs of ten or more words a draft shares with the lane's approved
- * builds (the rail says their lines are not material; on a same-topic
- * column the writers lift them anyway — caught 2026-08-27 on Miami/ACC).
- * Returns the shared runs, longest first. */
-export function exemplarOverlap(text: string, lane: keyof typeof EXEMPLAR_FOR_LANE, n = 10): string[] {
-  const names = [EXEMPLAR_FOR_LANE[lane], SECOND_EXEMPLAR_FOR_LANE[lane]].filter((v): v is string => !!v);
-  const grams = new Set<string>();
-  for (const name of names) {
-    const w = norm(exemplarProse(name)).split(" ");
-    for (let i = 0; i + n <= w.length; i++) grams.add(w.slice(i, i + n).join(" "));
-  }
-  const words = norm(text).split(" ");
-  const hits: string[] = [];
-  let i = 0;
-  while (i + n <= words.length) {
-    if (grams.has(words.slice(i, i + n).join(" "))) {
-      let j = i + n;
-      while (j < words.length && grams.has(words.slice(j - n + 1, j + 1).join(" "))) j++;
-      hits.push(words.slice(i, j).join(" "));
-      i = j;
-    } else i++;
-  }
-  return hits.sort((a, b) => b.length - a.length);
-}

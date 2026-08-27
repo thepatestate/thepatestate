@@ -25,7 +25,7 @@ import { pickArchitecture, boilerplateViolations, scoreDraft, editorialSystem, v
 import { hasFirstPersonProse } from "@/lib/wire";
 import { judgeJSON } from "@/lib/judge";
 import { teamFactSheet } from "@/lib/fact-sheet";
-import { planColumn, notesBlock, produceColumn, preview } from "@/lib/column-pipeline";
+import { planColumn, notesBlock, bestOfWriters, lineEdit, preview } from "@/lib/column-pipeline";
 
 const MODEL = "claude-sonnet-5";
 
@@ -246,10 +246,16 @@ export async function draftLongformArticle(
       schema: LONGFORM_SCHEMA as unknown as Record<string, unknown>, schemaName: "longform_article", maxTokens: 8192,
       parse, gate, text: (d: Draft) => ({ headline: d.headline, dek: d.dek, body: d.bodyMarkdown }),
     };
-    const best = await produceColumn<Draft>({ ...bo, user: user0, notes, floor, body: (d) => d.bodyMarkdown });
-    if (!best) return { error: "no-draft" };
-    if (best.problems.length) return { error: `gate-kit:${best.problems[0].slice(0, 80)}` };
-    const user = user0;
+    let user = user0;
+    let round = await bestOfWriters<Draft>({ ...bo, user });
+    if (!round) return { error: "no-draft" };
+    if (round.best.problems.length) {
+      user = `${user0}\n\nYOUR PREVIOUS DRAFT VIOLATED the kit's laws — ${round.best.problems.join(" — ")}. Fix these precisely and keep what works.\n\nPrevious draft:\n${round.best.draft.bodyMarkdown}`;
+      const again = await bestOfWriters<Draft>({ ...bo, user });
+      if (again && again.best.problems.length <= round.best.problems.length) round = again;
+    }
+    if (round.best.problems.length) return { error: `gate-kit:${round.best.problems[0].slice(0, 80)}` };
+    const best = joshLane ? await lineEdit<Draft>({ ...bo, user, winner: round.best, notes, floor, body: (d) => d.bodyMarkdown }) : round.best;
     console.log(`[longform] ${product} · ${best.writer} · fan ${best.fan?.score ?? "-"} · voice ${best.voice?.score ?? "-"} · ${preview(best.draft.bodyMarkdown)}`);
     const draft: Draft = { ...best.draft };
     draft.bodyMarkdown = scrubDashes(draft.bodyMarkdown).replace(/\[EMBED:[^\]]*\]\s*/g, "").replace(/\[\/PULLQUOTE\]/g, "");

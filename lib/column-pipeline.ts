@@ -23,7 +23,7 @@ import Anthropic from "@anthropic-ai/sdk";
 import { writeJSON } from "@/lib/writer";
 import { judgeJSON } from "@/lib/judge";
 import { fanScore, voiceMatch, restatements, abstractParagraphs, renderedForJudge, type FanVerdict, type VoiceVerdict } from "@/lib/editorial";
-import { exemplarOverlap, type EXEMPLAR_FOR_LANE } from "@/lib/exemplars";
+import type { EXEMPLAR_FOR_LANE } from "@/lib/exemplars";
 
 type Lane = keyof typeof EXEMPLAR_FOR_LANE;
 
@@ -175,21 +175,9 @@ async function judge<T>(o: BestOfOptions<T>, draft: T): Promise<{ fan: FanVerdic
   return { fan, voice };
 }
 
-/** Best-reading first: the fan score decides, then fewer gate problems,
- * then the voice judge. A gated draft that reads best goes to the editor
- * (the 08-27 proof run threw away a 7.5 for a clean 5.5). */
 function rank<T>(a: Candidate<T>, b: Candidate<T>): number {
-  return (b.fan?.score ?? 0) - (a.fan?.score ?? 0) || a.problems.length - b.problems.length || (b.voice?.score ?? 0) - (a.voice?.score ?? 0);
-}
-
-/** The caller's gates plus the lane's own: no lifted exemplar lines. */
-function gateAll<T>(o: BestOfOptions<T>, draft: T): string[] {
-  const problems = o.gate(draft);
-  if (!process.env.VITEST) {
-    const lifted = exemplarOverlap(o.text(draft).body, o.lane);
-    if (lifted.length) problems.push(`lines lifted from the approved builds (their sentences are not material; write your own): "${lifted.slice(0, 3).map((l) => l.slice(0, 90)).join('" | "')}"`);
-  }
-  return problems;
+  if (a.problems.length !== b.problems.length) return a.problems.length - b.problems.length;
+  return (b.fan?.score ?? 0) - (a.fan?.score ?? 0) || (b.voice?.score ?? 0) - (a.voice?.score ?? 0);
 }
 
 /** Step 2: every writer drafts from the same prompt; the clean candidate
@@ -207,12 +195,9 @@ export async function bestOfWriters<T>(o: BestOfOptions<T>): Promise<{ best: Can
         ...(w ? { provider: w.provider, model: w.model } : {}),
       });
       const draft = o.parse(raw);
-      if (!draft) { console.warn(`[column] ${w?.name ?? "writer"}: invalid draft: ${raw.slice(0, 160).replace(/\n/g, " ")}`); return; }
-      const problems = gateAll(o, draft);
-      // Every candidate is judged: when all of them trip a gate, the ranking
-      // still has to know which one reads best (the 08-27 proof run picked
-      // by problem count alone and shipped a fan-4 column).
-      const { fan, voice } = await judge(o, draft);
+      if (!draft) { console.warn(`[column] ${w?.name ?? "writer"}: invalid draft`); return; }
+      const problems = o.gate(draft);
+      const { fan, voice } = problems.length === 0 || runs.length === 1 ? await judge(o, draft) : { fan: null, voice: null };
       console.log(`[column] ${w?.name ?? "writer"}: fan ${fan?.score ?? "-"} · voice ${voice?.score ?? "-"}${problems.length ? ` · gates: ${problems.join("; ")}` : ""}`);
       pool.push({ writer: w?.name ?? "writer", draft, problems, fan, voice });
     } catch (err) {
@@ -243,47 +228,21 @@ export async function lineEdit<T extends object>(
       effort: "medium",
       schemaName: o.schemaName,
       schema: o.schema,
-      system: `${EDITOR_SYSTEM(o.floor)}${o.winner.problems.length ? `\n\nTHE GATES THIS DRAFT FAILS (clear every one; a draft that still fails them is discarded):\n- ${o.winner.problems.join("\n- ")}\nAn "isolated one-liner" is a paragraph of twelve words or fewer standing alone; fold it into the paragraph before or after it, keeping the sentence.` : ""}${o.notes ? `\n\nTHE ARGUMENT NOTES:\n${JSON.stringify(o.notes)}` : ""}${o.winner.fan?.notes ? `\n\nA FAN'S NOTES ON THE DRAFT (fix these):\n${o.winner.fan.notes}` : ""}${o.winner.voice && !o.winner.voice.pass ? `\n\nTHE VOICE JUDGE (scored ${o.winner.voice.score}/10 against the gold standard):\n${o.winner.voice.notes}` : ""}\n\nRESTATED SENTENCES (cut or make new): ${restatements(body).slice(0, 5).join(" | ") || "none"}\nABSTRACT PARAGRAPHS (put the football in or cut): ${abstractParagraphs(body).slice(0, 3).map((p) => p.slice(0, 80)).join(" | ") || "none"}`,
+      system: `${EDITOR_SYSTEM(o.floor)}${o.notes ? `\n\nTHE ARGUMENT NOTES:\n${JSON.stringify(o.notes)}` : ""}${o.winner.fan?.notes ? `\n\nA FAN'S NOTES ON THE DRAFT (fix these):\n${o.winner.fan.notes}` : ""}${o.winner.voice && !o.winner.voice.pass ? `\n\nTHE VOICE JUDGE (scored ${o.winner.voice.score}/10 against the gold standard):\n${o.winner.voice.notes}` : ""}\n\nRESTATED SENTENCES (cut or make new): ${restatements(body).slice(0, 5).join(" | ") || "none"}\nABSTRACT PARAGRAPHS (put the football in or cut): ${abstractParagraphs(body).slice(0, 3).map((p) => p.slice(0, 80)).join(" | ") || "none"}`,
       user: JSON.stringify(o.winner.draft),
     });
     const draft = o.parse(text);
     if (!draft) { console.warn("[column] edit: invalid JSON; keeping the winner"); return o.winner; }
-    const problems = gateAll(o, draft);
-    // A gated winner is what the edit is for: adopt the edit when it clears
-    // more gates, or clears the same and reads no worse.
-    if (problems.length > o.winner.problems.length) { console.warn(`[column] edit rejected by gates: ${problems.join("; ")}`); return o.winner; }
+    const problems = o.gate(draft);
+    if (problems.length) { console.warn(`[column] edit rejected by gates: ${problems.join("; ")}`); return o.winner; }
     const { fan, voice } = await judge(o, draft);
-    const better = problems.length < o.winner.problems.length || (fan?.score ?? 0) >= (o.winner.fan?.score ?? 0);
+    const better = (fan?.score ?? 0) >= (o.winner.fan?.score ?? 0);
     console.log(`[column] edit via ${via}: fan ${fan?.score ?? "-"} · voice ${voice?.score ?? "-"} → ${better ? "adopted" : "kept the winner"}`);
     return better ? { writer: `${o.winner.writer}+edit`, draft, problems, fan, voice } : o.winner;
   } catch (err) {
     console.warn("[column] edit failed; keeping the winner", err instanceof Error ? err.message.slice(0, 120) : err);
     return o.winner;
   }
-}
-
-/** The whole pipeline for one column, shared by the show and assignment
- * callers: up to two rounds of best-of-N; each round the best-reading
- * draft goes to the editor; the first clean draft (edit or candidate) with
- * the top fan score wins. Returns null when nothing parsed; a result with
- * problems when two rounds never produced a clean draft. */
-export async function produceColumn<T extends object>(
-  o: BestOfOptions<T> & { notes: ArgumentNotes | null; floor: number; body: (draft: T) => string },
-): Promise<Candidate<T> | null> {
-  let user = o.user;
-  let last: Candidate<T> | null = null;
-  for (let round = 0; round < 2; round++) {
-    const r = await bestOfWriters<T>({ ...o, user });
-    if (!r) break;
-    const top = r.pool[0];
-    const edited = await lineEdit<T>({ ...o, user, winner: top });
-    const clean = [edited, ...r.pool].filter((c) => c.problems.length === 0).sort(rank);
-    if (clean.length) return clean[0];
-    last = edited.problems.length <= top.problems.length ? edited : top;
-    console.warn(`[column] round ${round + 1}: no clean draft; best (${last.writer}) fails: ${last.problems.join(" | ").slice(0, 400)}`);
-    user = `${o.user}\n\nYour previous draft violated the kit's laws — ${last.problems.join(" — ")}. Fix these precisely and keep what works.\n\nPrevious draft:\n${o.body(last.draft)}`;
-  }
-  return last;
 }
 
 /** For logs: what a reader would see, trimmed. */

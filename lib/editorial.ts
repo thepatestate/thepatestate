@@ -234,9 +234,7 @@ const BOILERPLATE: { name: string; re: RegExp }[] = [
   // The plain "The question is…" is Josh's own sentence in the gold standard
   // (v3_1: "The question is what it can see."); only the qualified label is gated.
   { name: "the-real-question", re: /\bthe (real |right |better )question (is|isn't|becomes)\b|\bthe question becomes\b/i },
-  // As a section ANCHOR (a header or a paragraph opener); mid-sentence "the
-  // margin is" in a column about a point spread is football, not a label.
-  { name: "ceiling/floor anchor", re: /(?:^|\n)\s*(?:#+\s*|\*\*)?the (ceiling|floor|margin) (is|here|for)\b/i },
+  { name: "ceiling/floor anchor", re: /\bthe (ceiling|floor|margin) (is|here|for)\b/i },
   { name: "watch-for-the-answer", re: /\bwatch [^.!?]{2,40} for the answer\b/i },
   { name: "isn't-X-it's-Y", re: /\bthis isn'?t [^.!?]{2,40}\. it'?s\b/i },
   { name: "headline-vs-story", re: /\bthe headline is [^.!?]{2,40}\. the (story|news) is\b/i },
