@@ -1,0 +1,120 @@
+{
+  "scoredAt": "2026-08-27T21:57:11.688Z",
+  "judges": "final-eval v2 (fan A Claude, fan B OpenAI, humanity, voice) + legacy fanScore",
+  "fixtures": {
+    "boldest-2026": [
+      {
+        "label": "production pipeline (Aug 27, rolled back)",
+        "system": "v1-pipeline",
+        "fanMean": 7.8,
+        "fanA": 7.5,
+        "fanB": 8,
+        "humanity": 7.5,
+        "voice": 6,
+        "legacyFan": 5.5,
+        "legacyFanRecorded": 5.5,
+        "words": 957,
+        "policy": "pass"
+      },
+      {
+        "label": "production pipeline, first run",
+        "system": "v1-pipeline",
+        "fanMean": 6,
+        "fanA": 6,
+        "fanB": 6,
+        "humanity": 3,
+        "voice": 4,
+        "legacyFan": 6,
+        "legacyFanRecorded": 4,
+        "words": 1216,
+        "policy": "pass"
+      }
+    ],
+    "final-predictions": [],
+    "miami-acc-traps": [],
+    "miami-acc": [
+      {
+        "label": "voice lab: terra + Opus edit (Josh: 'close')",
+        "system": "v1-lab",
+        "fanMean": 7.5,
+        "fanA": 8,
+        "fanB": 7,
+        "humanity": 7.5,
+        "voice": 6,
+        "legacyFan": 7.5,
+        "legacyFanRecorded": 7.8,
+        "words": 511,
+        "policy": [
+          "quote fidelity: not verbatim in the transcript: \"Miami's the best team by far in the ACC and everyone's playing for second.\"",
+          "Ledger timestamp narrated in prose (the site renders it)"
+        ]
+      },
+      {
+        "label": "voice lab: opus",
+        "system": "v1-lab",
+        "fanMean": 7.3,
+        "fanA": 7.5,
+        "fanB": 7,
+        "humanity": 8,
+        "voice": 6,
+        "legacyFan": 7.5,
+        "legacyFanRecorded": 7.5,
+        "words": 550,
+        "policy": [
+          "lane: Josh's column signs off — JP",
+          "spoken bit carried into prose (whomst)"
+        ]
+      },
+      {
+        "label": "production pipeline (Aug 27, rolled back)",
+        "system": "v1-pipeline",
+        "fanMean": 6,
+        "fanA": 6,
+        "fanB": 6,
+        "humanity": 6.5,
+        "voice": 6,
+        "legacyFan": 5.5,
+        "legacyFanRecorded": 5.5,
+        "words": 1026,
+        "policy": [
+          "spoken bit carried into prose (whomst)"
+        ]
+      }
+    ],
+    "portal-on-fire": [
+      {
+        "label": "voice lab: terra",
+        "system": "v1-lab",
+        "fanMean": 7,
+        "fanA": 7,
+        "fanB": 7,
+        "humanity": 6,
+        "voice": 6,
+        "legacyFan": 7.3,
+        "legacyFanRecorded": 7,
+        "words": 1011,
+        "policy": [
+          "Ledger timestamp narrated in prose (the site renders it)"
+        ]
+      }
+    ],
+    "top-10-games": [],
+    "truth-2026": [
+      {
+        "label": "kit v4 plain production draft",
+        "system": "v1",
+        "fanMean": 5.3,
+        "fanA": 5.5,
+        "fanB": 5,
+        "humanity": 3,
+        "voice": 4,
+        "legacyFan": 5,
+        "legacyFanRecorded": 5,
+        "words": 1384,
+        "policy": [
+          "Ledger timestamp narrated in prose (the site renders it)"
+        ]
+      }
+    ]
+  }
+}
