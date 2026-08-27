@@ -165,7 +165,7 @@ export async function callJSON<T>(opts: CallOptions): Promise<CallResult<T>> {
       const res = await (testTransport ?? (c.vendor === "openai" ? viaOpenAI : viaAnthropic))(req);
       const data = JSON.parse(res.text) as T;
       const call: StageCall = { stage: opts.stage, role: opts.role, vendor: c.vendor, model: c.model, inputTokens: res.inputTokens, outputTokens: res.outputTokens, costUsd: estimateCost(c.model, res.inputTokens, res.outputTokens), ms: Date.now() - started };
-      if (c.model !== choice.model) console.warn(`[v2:${opts.stage}] ${choice.model} unavailable; used ${c.vendor}/${c.model}`);
+      if (c.model !== choice.model) console.warn(`[v2:${opts.stage}] ${choice.model} failed (${errors.join(" | ").slice(0, 200)}); used ${c.vendor}/${c.model}`);
       return { data, call, raw: res.text };
     } catch (err) {
       const msg = err instanceof Error ? `${err.name}: ${err.message.slice(0, 160)}` : String(err);

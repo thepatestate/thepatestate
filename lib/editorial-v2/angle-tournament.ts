@@ -43,12 +43,12 @@ export async function judgeAngles(dossier: EditorialDossier, angles: StoryAngle[
   };
 }
 
-export async function selectAngle(dossier: EditorialDossier, angles: StoryAngle[], judgements: AngleJudgement[], opts: { lane: string; minerNote: string; premiumWarranted: boolean }): Promise<{ decision: AngleDecision; call: StageCall }> {
+export async function selectAngle(dossier: EditorialDossier, angles: StoryAngle[], judgements: AngleJudgement[], opts: { lane: string; minerNote: string; premiumWarranted: boolean; assignment?: string }): Promise<{ decision: AngleDecision; call: StageCall }> {
   const { data, call } = await callJSON<AngleDecision>({
     stage: "eic-angle", role: "eicAngle", maxTokens: 4000,
     schemaName: "angle_decision", schema: ANGLE_DECISION_SCHEMA as unknown as Record<string, unknown>,
     system: v2Prompt("eic-angle"),
-    user: `LANE: ${opts.lane}\nSTORY MINER'S VERDICT ON THE SOURCE: premiumWarranted=${opts.premiumWarranted}; ${opts.minerNote}\n\n${dossierBlock(dossier)}\n\n${anglesBlock(angles)}\n\nJUDGE SCORECARDS (independent; neither saw the other):\n${JSON.stringify(judgements, null, 1)}`,
+    user: `LANE: ${opts.lane}\n${opts.assignment ? `THE ASSIGNMENT (the column is about this; select only within it): ${opts.assignment}\n` : ""}STORY MINER'S VERDICT ON THE SOURCE: premiumWarranted=${opts.premiumWarranted}; ${opts.minerNote}\n\n${dossierBlock(dossier)}\n\n${anglesBlock(angles)}\n\nJUDGE SCORECARDS (independent; neither saw the other):\n${JSON.stringify(judgements, null, 1)}`,
   });
   if (data.decision === "select" && !angles.some((a) => a.id === data.selectedAngleId)) {
     data.selectedAngleId = angles[0]?.id;

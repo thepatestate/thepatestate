@@ -26,12 +26,12 @@ export const MINER_SCHEMA = obj({
   note: S,
 });
 
-export async function mineStories(dossier: EditorialDossier, opts: { lane: string; recentHeadlines?: string[]; guidance?: string }): Promise<{ result: StoryMinerResult; call: StageCall }> {
+export async function mineStories(dossier: EditorialDossier, opts: { lane: string; recentHeadlines?: string[]; guidance?: string; assignment?: string }): Promise<{ result: StoryMinerResult; call: StageCall }> {
   const { data, call } = await callJSON<StoryMinerResult>({
     stage: "story-miner", role: "storyMiner", maxTokens: 12000,
     schemaName: "story_miner", schema: MINER_SCHEMA as unknown as Record<string, unknown>,
     system: v2Prompt("story-miner"),
-    user: `LANE: ${opts.lane === "show" ? "Josh's Read, a first-person column drawn from his own show; the reader is a serious college-football fan who may have watched the episode" : opts.lane}\n\n${opts.recentHeadlines?.length ? `RECENT PATE STATE HEADLINES (an angle that duplicates these is worth less):\n${opts.recentHeadlines.map((h) => `- ${h}`).join("\n")}\n\n` : ""}${opts.guidance ? `EDITOR'S GUIDANCE FOR THIS ROUND:\n${opts.guidance}\n\n` : ""}${dossierBlock(dossier)}`,
+    user: `LANE: ${opts.lane === "show" ? "Josh's Read, a first-person column drawn from his own show; the reader is a serious college-football fan who may have watched the episode" : opts.lane}\n\n${opts.recentHeadlines?.length ? `RECENT PATE STATE HEADLINES (an angle that duplicates these is worth less):\n${opts.recentHeadlines.map((h) => `- ${h}`).join("\n")}\n\n` : ""}${opts.assignment ? `THE ASSIGNMENT (every angle must be a different article about THIS; anything outside it is out of scope): ${opts.assignment}\n\n` : ""}${opts.guidance ? `EDITOR'S GUIDANCE FOR THIS ROUND:\n${opts.guidance}\n\n` : ""}${dossierBlock(dossier)}`,
   });
   data.angles = data.angles.map((a, i) => ({ ...a, id: a.id || `angle-${i + 1}` }));
   return { result: data, call };

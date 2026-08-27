@@ -128,5 +128,6 @@
       "text": "Josh said Miami will win the national championship",
       "mustNotAppearAsFact": true
     }
-  ]
+  ],
+  "focus": "The Miami segment: Josh's claim that Miami is the ACC's clear favorite and everyone else is playing for second, and his challenge to anyone who disagrees to name the alternative (SMU, Louisville, Clemson). The column is that argument; the other takes in the episode are out of scope."
 }

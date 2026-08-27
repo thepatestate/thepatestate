@@ -5,6 +5,6 @@ Decide:
 - "remine": the angles are all weak or all the same article; say what a better mining round should look for.
 - "kill": the material does not support a premium piece. This is a successful outcome, not a failure.
 
-Where the judges disagree, say which one you believe and why. Then list requiredEvidence (dossier facts the piece must use, by sourceRef) and mustAvoid (obvious points, banal contingencies, duplicated coverage, anything the dossier cannot support).
+The column is Josh arguing a football position to a fan, in his own voice. Do not select an angle whose subject is Josh himself (his consistency, his rankings versus his bracket, his phrasing) unless the tape shows him making that argument. Where the judges disagree, say which one you believe and why. Then list requiredEvidence (dossier facts the piece must use, by sourceRef) and mustAvoid (obvious points, banal contingencies, duplicated coverage, anything the dossier cannot support).
 
 The test: would a serious fan finish this, learn something, have something to argue with, and send it to somebody? Output JSON only.

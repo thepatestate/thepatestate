@@ -25,6 +25,8 @@ export interface ShowColumnInput {
   material: ShowMaterial;
   mode: "shadow" | "replay" | "live";
   fixture?: string;
+  /** Optional editorial assignment: the segment or claim the column is about (the replay's acceptance case; a human commissioning note in production). */
+  assignment?: string;
   /** Fragment sources to hide (a replay's benchmark). */
   excludeFragmentSources?: string[];
   budget?: Partial<LoopBudget>;
@@ -60,10 +62,10 @@ export async function runShowColumnV2(input: ShowColumnInput): Promise<Editorial
     let angle: StoryAngle | undefined;
     let guidance: string | undefined;
     for (;;) {
-      const m = await mineStories(d.dossier, { lane: "show", recentHeadlines: input.material.recentHeadlines, guidance }); add(m.call); run.artifacts.miner = m.result;
+      const m = await mineStories(d.dossier, { lane: "show", recentHeadlines: input.material.recentHeadlines, guidance, assignment: input.assignment }); add(m.call); run.artifacts.miner = m.result;
       log(`miner: ${m.result.angles.length} angles · shape ${m.result.sourceShape} · premium ${m.result.premiumWarranted}`);
       const j = await judgeAngles(d.dossier, m.result.angles, { lane: "show", recentHeadlines: input.material.recentHeadlines }); add(...j.calls); run.artifacts.angleJudgements = j.judgements;
-      const s = await selectAngle(d.dossier, m.result.angles, j.judgements, { lane: "show", minerNote: m.result.note, premiumWarranted: m.result.premiumWarranted }); add(s.call); run.artifacts.angleDecision = s.decision;
+      const s = await selectAngle(d.dossier, m.result.angles, j.judgements, { lane: "show", minerNote: m.result.note, premiumWarranted: m.result.premiumWarranted, assignment: input.assignment }); add(s.call); run.artifacts.angleDecision = s.decision;
       log(`eic: ${s.decision.decision}${s.decision.selectedAngleId ? ` ${s.decision.selectedAngleId}` : ""} · consensus ${JSON.stringify(consensus(j.judgements))} · ${s.decision.reason.slice(0, 140)}`);
       if (s.decision.decision === "select") { angle = m.result.angles.find((a) => a.id === s.decision.selectedAngleId) ?? m.result.angles[0]; break; }
       if (s.decision.decision === "kill") return finish({ decision: "kill", failureClass: "angle", reason: s.decision.reason, routeTo: "human", instructions: [] });
@@ -87,7 +89,7 @@ export async function runShowColumnV2(input: ShowColumnInput): Promise<Editorial
     run.artifacts.blueprint = blueprint;
 
     // 7. voice retrieval
-    const fragments = retrieveFragments(blueprint, { teams: d.dossier.teams, topics: input.material.quotes.map((q) => q.topic), excludeSourceIds: input.excludeFragmentSources });
+    const fragments = retrieveFragments(blueprint, { teams: d.dossier.teams, topics: input.material.quotes.map((q) => q.topic), excludeSourceIds: input.excludeFragmentSources, min: 6 });
     run.artifacts.voiceFragmentIds = fragments.map((f) => f.id);
     const pack: ContextPack = { lane: "show", product: "josh-column", dossier: d.dossier, angle: angle!, decision, blueprint, fragments, quoteCandidates: input.material.quotes.map((q) => ({ quote: q.quote, timestamp: q.timestamp })) };
 
@@ -111,8 +113,8 @@ export async function runShowColumnV2(input: ShowColumnInput): Promise<Editorial
     let draft: ArticleDraft | undefined;
     for (;;) {
       spent.cycles++;
-      const rw = await developmentalRewrite(pack, run.artifacts.drafts!, sel.selection, { instructions }); add(rw.call); run.artifacts.rewrite = rw.draft; spent.rewrite++;
-      const ae = await audienceEdit(rw.draft, { lane: "show", product: "josh-column", fragments }); add(ae.call); run.artifacts.audienceEdit = ae.edit;
+      const rw = await developmentalRewrite(pack, run.artifacts.drafts!, sel.selection, { instructions, previous: draft }); add(rw.call); run.artifacts.rewrite = rw.draft; spent.rewrite++;
+      const ae = await audienceEdit(rw.draft, { lane: "show", product: "josh-column", fragments, diagnostics: styleDiagnostics(rw.draft.bodyMarkdown) }); add(ae.call); run.artifacts.audienceEdit = ae.edit;
       draft = ae.edit.draft;
       log(`cycle ${spent.cycles}: rewrite ${rw.call.model} (${draft.bodyMarkdown.split(/\s+/).length}w) · audience edit ${ae.edit.verdict}`);
       let fc = await factCheck(draft, d.dossier, raw); add(fc.call); run.artifacts.factCheck = fc.result;

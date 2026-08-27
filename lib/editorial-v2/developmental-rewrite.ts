@@ -8,6 +8,7 @@ import { angleBlock, blueprintBlock } from "./blueprint";
 import { fragmentsBlock } from "./voice-retrieval";
 import { ARTICLE_SCHEMA, cleanDraft, type ContextPack } from "./writers";
 import { paragraphs } from "./draft-editor";
+import { styleDiagnostics, diagnosticsBlock } from "./diagnostics";
 import type { ArticleDraft, DraftSelection, StageCall, WriterOutput } from "./types";
 
 export function keptPassages(selection: DraftSelection, drafts: WriterOutput[]): string {
@@ -16,7 +17,7 @@ export function keptPassages(selection: DraftSelection, drafts: WriterOutput[]):
   return kept.length ? `PASSAGES THE EDITOR KEPT (keep the ideas; the wording is yours):\n${kept.join("\n\n")}` : "PASSAGES THE EDITOR KEPT: none — write from the blueprint.";
 }
 
-export async function developmentalRewrite(pack: ContextPack, drafts: WriterOutput[], selection: DraftSelection, opts: { instructions?: string[] }): Promise<{ draft: ArticleDraft; call: StageCall; prompt: string }> {
+export async function developmentalRewrite(pack: ContextPack, drafts: WriterOutput[], selection: DraftSelection, opts: { instructions?: string[]; previous?: ArticleDraft }): Promise<{ draft: ArticleDraft; call: StageCall; prompt: string }> {
   const winner = selection.winner === "A" || selection.winner === "B" ? drafts.find((d) => d.writer === selection.winner) : drafts[0];
   const authorVendor = winner?.model.startsWith("claude") ? "anthropic" : "openai";
   const plan = [
@@ -27,6 +28,8 @@ export async function developmentalRewrite(pack: ContextPack, drafts: WriterOutp
     selection.generatedTells.length ? `SENTENCES THAT READ AS GENERATED (do not reproduce their shape): ${selection.generatedTells.join(" | ")}` : "",
     selection.cut.length ? `CUT (do not carry these ideas forward): ${selection.cut.map((c) => `${c.draft}:${c.paragraphIndex} — ${c.reason}`).join("; ")}` : "",
     opts.instructions?.length ? `EDITOR-IN-CHIEF INSTRUCTIONS FROM THE LAST CYCLE:\n${opts.instructions.map((i) => `- ${i}`).join("\n")}` : "",
+    opts.previous ? `${diagnosticsBlock(styleDiagnostics(opts.previous.bodyMarkdown))} — on the last version. Every restated sentence appears once in yours.` : (winner ? `${diagnosticsBlock(styleDiagnostics(winner.draft.bodyMarkdown))} — on the selected draft. Every restated sentence appears once in yours.` : ""),
+    `LENGTH: write to the blueprint's ideal (${pack.blueprint.targetLength.ideal} words, ${pack.blueprint.targetLength.minGuidance}–${pack.blueprint.targetLength.maxGuidance}). Cut restatement, never evidence; a shorter piece is right only when a beat was empty.`,
   ].filter(Boolean).join("\n");
   const user = [hardPolicyForLane(pack.lane), voiceCardForLane(pack.lane), angleBlock(pack.angle, pack.decision), blueprintBlock(pack.blueprint), plan, keptPassages(selection, drafts), dossierBlock(pack.dossier), fragmentsBlock(pack.fragments), pack.quoteCandidates?.length ? `PULL-QUOTE CANDIDATES (verbatim; the only text allowed inside quotation marks):\n${pack.quoteCandidates.map((q) => `[${q.timestamp}] "${q.quote}"`).join("\n")}` : "", outputContractForProduct(pack.product)].filter(Boolean).join("\n\n");
   const { data, call } = await callJSON<ArticleDraft>({

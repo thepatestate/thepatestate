@@ -72,7 +72,7 @@ async function replay(id: string) {
   }
   // V2
   const t1 = Date.now();
-  const run = await runShowColumnV2({ sourceId: fx.episode.ytId, fixture: fx.id, mode: "replay", material: { episode: fx.episode, transcriptText: fx.transcriptText, quotes: fx.quotes, factSheet: fx.factSheet, onRecord: fx.onRecord }, excludeFragmentSources: bench ? [bench.sourceId] : [] });
+  const run = await runShowColumnV2({ sourceId: fx.episode.ytId, fixture: fx.id, mode: "replay", material: { episode: fx.episode, transcriptText: fx.transcriptText, quotes: fx.quotes, factSheet: fx.factSheet, onRecord: fx.onRecord }, excludeFragmentSources: bench ? [bench.sourceId] : [], assignment: (fx as ShowFixture & { focus?: string }).focus });
   console.log(`V2: ${run.status} · ${run.decision?.decision} (${run.decision?.failureClass}) · ${run.calls.length} calls · $${run.totalCostUsd} · ${Math.round((Date.now() - t1) / 1000)}s · run ${run.id}`);
   if (run.final && run.artifacts.evaluation) {
     results.push({ system: "v2", label: "V2 (fresh run)", draft: run.final, evaluation: run.artifacts.evaluation, words: styleDiagnostics(run.final.bodyMarkdown).words, cost: run.totalCostUsd, calls: run.calls.length, ms: Date.now() - t1, decision: `${run.decision?.decision} / ${run.decision?.failureClass}` });

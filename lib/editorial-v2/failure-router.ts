@@ -27,7 +27,8 @@ export const ROUTE_FOR_CLASS: Record<FailureClass, RouteTarget> = {
 };
 
 export interface LoopBudget { remine: number; blueprint: number; rewrite: number; factRepair: number; total: number }
-export const DEFAULT_BUDGET: LoopBudget = { remine: 2, blueprint: 2, rewrite: 2, factRepair: 1, total: 3 };
+// rewrite counts the first developmental rewrite, so "max 2 rewrite cycles" = 3.
+export const DEFAULT_BUDGET: LoopBudget = { remine: 2, blueprint: 2, rewrite: 3, factRepair: 1, total: 3 };
 
 export interface Spent { remine: number; blueprint: number; rewrite: number; factRepair: number; cycles: number }
 
