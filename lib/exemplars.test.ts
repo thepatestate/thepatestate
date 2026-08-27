@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { exemplarProse, voiceExemplarBlock } from "./exemplars";
+import { exemplarProse, voiceExemplarBlock, exemplarOverlap } from "./exemplars";
 
 describe("voice exemplars (the approved reference builds)", () => {
   it("extracts Josh's Read as first-person prose", () => {
@@ -35,5 +35,12 @@ describe("kit v4.2 second approved column", () => {
     expect(b).toContain("=== feature-three-boards-v3_1.html ===");
     expect(b).toContain("=== article-miami-acc-favorite-v2.html ===");
     expect(b).not.toContain("deserves one honest footnote");
+  });
+});
+
+describe("exemplarOverlap", () => {
+  it("catches a lifted sentence and ignores ordinary football phrasing", () => {
+    expect(exemplarOverlap("So I'm planting it. Clemson on October 3 is the one result that makes me reopen the race, and that is that.", "feature").length).toBe(1);
+    expect(exemplarOverlap("Miami opens the year ranked seventh and nobody else in the league is close on either board.", "feature")).toEqual([]);
   });
 });

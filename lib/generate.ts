@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { boilerplateViolations, editorialSystem, circles, restatements, abstractParagraphs, kickerBudget, ensureSignOff, proseWords, type Architecture } from "@/lib/editorial";
 import { judgeJSON } from "@/lib/judge";
-import { planColumn, notesBlock, bestOfWriters, lineEdit, preview } from "@/lib/column-pipeline";
+import { planColumn, notesBlock, produceColumn, preview } from "@/lib/column-pipeline";
 
 export const BYLINE_STAFF = "The Pate State Staff";
 export const SERIES_VALUES = [
@@ -383,21 +383,13 @@ export async function draftCompanion(input: {
     parse, gate, text: (d: CompanionDraft) => ({ headline: d.headline, dek: d.dek, body: d.bodyMarkdown }),
   };
   try {
-    let user = user0;
-    let round = await bestOfWriters<CompanionDraft>({ ...bo, user });
-    if (!round) return null;
-    if (round.best.problems.length) {
-      console.warn(`[generate:draftCompanion] round 1 best (${round.best.writer}) violates: ${round.best.problems.join(" | ").slice(0, 400)}`);
-      user = `${user0}\n\nYour previous draft violated the kit's laws — ${round.best.problems.join(" — ")}. Fix these precisely and keep what works.\n\nPrevious draft:\n${round.best.draft.bodyMarkdown}`;
-      const again = await bestOfWriters<CompanionDraft>({ ...bo, user });
-      if (again && again.best.problems.length <= round.best.problems.length) round = again;
-    }
-    if (round.best.problems.length) {
-      console.warn(`[generate:draftCompanion] accepting with lowConfidence: ${round.best.problems.join(" | ").slice(0, 300)}`);
-      return { ...round.best.draft, lowConfidence: true };
-    }
-    const best = await lineEdit<CompanionDraft>({ ...bo, user, winner: round.best, notes, floor, body: (d) => d.bodyMarkdown });
+    const best = await produceColumn<CompanionDraft>({ ...bo, user: user0, notes, floor, body: (d) => d.bodyMarkdown });
+    if (!best) return null;
     console.log(`[generate:draftCompanion] ${best.writer} · fan ${best.fan?.score ?? "-"} · voice ${best.voice?.score ?? "-"} · ${preview(best.draft.bodyMarkdown)}`);
+    if (best.problems.length) {
+      console.warn(`[generate:draftCompanion] accepting with lowConfidence: ${best.problems.join(" | ").slice(0, 300)}`);
+      return { ...best.draft, lowConfidence: true };
+    }
     return best.draft;
   } catch (err) {
     console.error("[generate:draftCompanion]", err);
