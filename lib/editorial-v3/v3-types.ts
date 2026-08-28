@@ -96,6 +96,7 @@ export interface V3Run {
     pack?: ReportingPack;
     brief?: FanBrief;
     draft?: ArticleDraft;
+    tightened?: ArticleDraft;
     subtracted?: ArticleDraft;
     quit?: QuitReading;
     quitAfterRepair?: QuitReading;

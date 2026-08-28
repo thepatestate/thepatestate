@@ -127,7 +127,17 @@ async function testB(ids: string[]) {
   console.log(`\nblind page: ${OUT}/${stamp}-test-b.html`);
 }
 
-if (FIX === "miami") await testA("miami-acc");
+if (arg("--josh-engine")) {
+  const fx = JSON.parse(readFileSync(`${DIR}/show-${arg("--josh-engine")}.json`, "utf8"));
+  const m = { ytId: fx.episode.ytId, title: fx.episode.title, description: fx.episode.description, publishedAt: fx.episode.publishedAt, transcriptText: fx.transcriptText, factSheet: fx.factSheet, onRecord: fx.onRecord, assignment: fx.focus };
+  const run = await runJoshEngine(m, { mode: "replay", fixture: fx.id });
+  if (run.final) {
+    console.log(`\n${run.status} · ${run.words} words · ${run.calls.length} calls · ${run.totalCostUsd} · quit ${run.artifacts.quit?.neverWantedToQuit ? "never" : `¶${run.artifacts.quit?.quitParagraphIndex} ${run.artifacts.quit?.reason}`} · smell ${run.artifacts.smell?.pass ? "PASS" : run.artifacts.smell?.sentences.join(" | ")} · fact ${run.artifacts.fact?.verdict} · policy ${run.artifacts.policy?.pass ? "pass" : run.artifacts.policy?.violations.join("; ")}`);
+    console.log(`\n# ${run.final.headline}\n${run.final.dek}\n\n${run.final.bodyMarkdown}`);
+    writeFileSync(".superpowers/v3-josh-engine-latest.json", JSON.stringify([{ lane: "show", label: "Editorial Engine V3 · Josh Cut + facts + light edit + tightening pass · unpublished", episode: fx.episode.title, ytId: fx.episode.ytId, ...run.final }], null, 2));
+  } else console.log(run.status, run.error ?? run.artifacts.segment?.reason);
+}
+else if (FIX === "miami") await testA("miami-acc");
 else if (FIX === "reported-sample") await testB(["fsu-edge-visit", "alabama-beaman-acl", "castellanos-texas-tech"]);
 else if (existsSync(`${DIR}/show-${FIX}.json`)) await testA(FIX);
 else if (existsSync(`${DIR}/reported-${FIX}.json`)) await testB([FIX]);

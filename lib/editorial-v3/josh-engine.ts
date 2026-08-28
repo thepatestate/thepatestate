@@ -64,12 +64,19 @@ export async function lightProseEdit(cut: JoshCut, support: SupportFact[], m: Jo
   return { draft: cleanDraft(data), call };
 }
 
+/** The tightening pass (Isaac, 2026-08-28): spoken texture → written prose,
+ * his sentences kept, nothing added. A second edit, not a rewrite. */
+export async function tightenPass(draft: ArticleDraft, choice?: ModelChoice): Promise<{ draft: ArticleDraft; call: StageCall }> {
+  const { data, call } = await callJSON<ArticleDraft>({ stage: "josh-tighten", role: "joshProseEdit", choice, maxTokens: 8000, schemaName: "article", schema: ARTICLE_SCHEMA as unknown as Record<string, unknown>, system: `${v3Prompt("josh-tighten")}\n\n${hardPolicyForLane("show")}`, user: JSON.stringify(draft, null, 1) });
+  return { draft: cleanDraft(data), call };
+}
+
 export async function joshSubtraction(draft: ArticleDraft, quitParagraph: number, quitText: string, reason: string): Promise<{ draft: ArticleDraft; call: StageCall }> {
   const { data, call } = await callJSON<ArticleDraft>({ stage: "josh-subtraction", role: "joshSubtraction", maxTokens: 8000, schemaName: "article", schema: ARTICLE_SCHEMA as unknown as Record<string, unknown>, system: v3Prompt("josh-subtraction"), user: `A READER QUIT AT PARAGRAPH ${quitParagraph} (${reason}): "${quitText}"\n\nTHE ARTICLE:\n${JSON.stringify(draft, null, 1)}` });
   return { draft: cleanDraft(data), call };
 }
 
-export interface JoshRunOptions { mode: V3Run["mode"]; fixture?: string; editorChoice?: ModelChoice; log?: (l: string) => void }
+export interface JoshRunOptions { mode: V3Run["mode"]; fixture?: string; editorChoice?: ModelChoice; /** Run the tightening pass after the light edit (default true). */ tighten?: boolean; log?: (l: string) => void }
 
 /** Engine A end to end. Never writes to Sanity. */
 export async function runJoshEngine(m: JoshMaterial, opts: JoshRunOptions): Promise<V3Run> {
@@ -88,9 +95,14 @@ export async function runJoshEngine(m: JoshMaterial, opts: JoshRunOptions): Prom
     const ed = await lightProseEdit(cut.cut, sup.support, m, opts.editorChoice); add(ed.call);
     let draft = ed.draft; run.artifacts.draft = draft;
     log(`edit (${ed.call.model}): ${words(draft.bodyMarkdown)} words`);
+    if (opts.tighten !== false) {
+      const t = await tightenPass(draft, opts.editorChoice); add(t.call);
+      log(`tighten (${t.call.model}): ${words(draft.bodyMarkdown)} → ${words(t.draft.bodyMarkdown)} words`);
+      draft = t.draft; run.artifacts.tightened = draft;
+    }
     // Hard gates + fact/quote check (the cut's segment is the source universe).
     const source = `TRANSCRIPT SEGMENT:\n${segmentText(m.transcriptText, cut.cut.segmentStart, cut.cut.segmentEnd)}\n\nVERIFIED TEAM FACTS:\n${m.factSheet}\n\n${m.onRecord}`;
-    const gate = () => hardPolicyGates({ draft, lane: "show", transcriptText: m.transcriptText });
+    const gate = () => hardPolicyGates({ draft, lane: "show", transcriptText: `${m.transcriptText}\n${cut.cut.blocks.map((b) => b.text).join("\n")}` });
     run.artifacts.policy = gate();
     const fc = await factCheckSources(draft, source); add(fc.call); run.artifacts.fact = fc.result;
     log(`policy ${run.artifacts.policy.pass ? "pass" : run.artifacts.policy.violations.join("; ")} · fact ${fc.result.verdict}`);
@@ -100,7 +112,7 @@ export async function runJoshEngine(m: JoshMaterial, opts: JoshRunOptions): Prom
     log(`quit test: ${q1.result.neverWantedToQuit ? "never wanted to quit" : `quit at ¶${q1.result.quitParagraphIndex} (${q1.result.reason})`} · finished ${q1.result.didFinish} · football person ${q1.result.soundsLikeFootballPerson} · worth it ${q1.result.worthTheTime} · send ${q1.result.wouldSend}`);
     if (!q1.result.neverWantedToQuit && q1.result.quitParagraphIndex !== undefined) {
       const sub = await joshSubtraction(draft, q1.result.quitParagraphIndex, q1.result.quitText ?? "", q1.result.reason); add(sub.call);
-      const p = hardPolicyGates({ draft: sub.draft, lane: "show", transcriptText: m.transcriptText }); const fc2 = await factCheckSources(sub.draft, source); add(fc2.call);
+      const p = hardPolicyGates({ draft: sub.draft, lane: "show", transcriptText: `${m.transcriptText}\n${cut.cut.blocks.map((b) => b.text).join("\n")}` }); const fc2 = await factCheckSources(sub.draft, source); add(fc2.call);
       const q2 = await quitReadingTest(sub.draft, oppositeOf(editorVendor, "low")); add(q2.call); run.artifacts.quitAfterRepair = q2.result;
       const better = fc2.result.verdict === "pass" && (q2.result.neverWantedToQuit || (q2.result.didFinish && !q1.result.didFinish) || (q2.result.quitParagraphIndex ?? 0) > (q1.result.quitParagraphIndex ?? 0));
       log(`after deleting ¶${q1.result.quitParagraphIndex}: ${q2.result.neverWantedToQuit ? "never wanted to quit" : `quit at ¶${q2.result.quitParagraphIndex}`} · ${better ? "adopted" : "kept the original"}`);
