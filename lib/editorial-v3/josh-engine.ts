@@ -25,7 +25,8 @@ const SEGMENT_SCHEMA = obj({ decision: { type: "string", enum: ["segment", "no-a
 const CUT_SCHEMA = obj({ segmentStart: S, segmentEnd: S, centralThought: S, blocks: arr(obj({ text: S, sourceStart: S, sourceEnd: S })), removedBecauseRepetitive: arr(S), removedBecauseOffTopic: arr(S) });
 const SUPPORT_SCHEMA = obj({ supportFacts: arr(obj({ fact: S, sourceRef: S, insertAfterBlock: nullable({ type: "integer" }), whyUseful: S })) });
 
-const tsToSec = (t: string) => t.split(":").map(Number).reduce((a, b) => a * 60 + b, 0);
+/** "[02:06]", "02:06", "0:02:06" → seconds. */
+export const tsToSec = (t: string) => { const m = t.match(/(\d{1,2}):(\d{2})(?::(\d{2}))?/); if (!m) return NaN; return m[3] !== undefined ? Number(m[1]) * 3600 + Number(m[2]) * 60 + Number(m[3]) : Number(m[1]) * 60 + Number(m[2]); };
 
 /** The transcript lines inside [start, end], for the cut and the checks. */
 export function segmentText(transcriptText: string, start: string, end: string): string {
@@ -40,6 +41,7 @@ export async function selectSegment(m: JoshMaterial): Promise<{ decision: Segmen
 
 export async function buildJoshCut(m: JoshMaterial, seg: SegmentDecision): Promise<{ cut: JoshCut; call: StageCall }> {
   const text = segmentText(m.transcriptText, seg.segmentStart!, seg.segmentEnd!);
+  if (!text.trim()) throw new Error(`segment ${seg.segmentStart}–${seg.segmentEnd} matched no transcript lines`);
   const { data, call } = await callJSON<JoshCut>({ stage: "josh-cut", role: "joshCut", maxTokens: 8000, schemaName: "josh_cut", schema: CUT_SCHEMA as unknown as Record<string, unknown>, system: v3Prompt("josh-cut"), user: `CENTRAL THOUGHT: ${seg.centralThought}\nSEGMENT: ${seg.segmentStart}–${seg.segmentEnd}\n\nVERIFIED NAMES AND FACTS (for caption repair only):\n${m.factSheet.slice(0, 4000)}\n\nTRANSCRIPT SEGMENT:\n${text}` });
   return { cut: data, call };
 }
@@ -79,6 +81,7 @@ export async function runJoshEngine(m: JoshMaterial, opts: JoshRunOptions): Prom
     log(`segment: ${seg.decision.decision} ${seg.decision.segmentStart ?? ""}–${seg.decision.segmentEnd ?? ""} · ${seg.decision.centralThought ?? seg.decision.reason}`);
     if (seg.decision.decision !== "segment" || !seg.decision.segmentStart || !seg.decision.segmentEnd) { run.status = "no-article"; run.completedAt = new Date().toISOString(); await recordV3Run(run); return run; }
     const cut = await buildJoshCut(m, seg.decision); add(cut.call); run.artifacts.cut = cut.cut;
+    if (cut.cut.blocks.length === 0) throw new Error(`empty Josh Cut for segment ${seg.decision.segmentStart}–${seg.decision.segmentEnd}`);
     log(`cut: ${cut.cut.blocks.length} blocks · ${words(cutAsProse(cut.cut))} words · removed ${cut.cut.removedBecauseRepetitive.length} repetitive / ${cut.cut.removedBecauseOffTopic.length} off-topic`);
     const sup = await supportFacts(cut.cut, m); add(sup.call); run.artifacts.support = sup.support;
     log(`support: ${sup.support.length} facts`);

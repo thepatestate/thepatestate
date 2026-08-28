@@ -71,8 +71,8 @@ export function modelForRole(role: Role): ModelChoice {
     case "fanBrief": return oStrong("medium");
     case "reportedWriter": return aStrong("medium");
     case "subtractionEditor": return oStrong("medium");
-    case "quitJudge": return oStrong("low");
-    case "smellJudge": return oFast("low");
+    case "quitJudge": return oStrong("medium");
+    case "smellJudge": return oStrong("low");
   }
 }
 

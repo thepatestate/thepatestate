@@ -37,14 +37,14 @@ export async function extractPack(m: ReportedMaterial): Promise<{ pack: Reportin
   return { pack: data, call };
 }
 
-export async function fanBrief(pack: ReportingPack): Promise<{ brief: FanBrief; call: StageCall }> {
-  const { data, call } = await callJSON<FanBrief & { interestingDetail: string | null; footballAngle: string | null; importantUnknown: string | null }>({ stage: "fan-brief", role: "fanBrief", maxTokens: 2000, schemaName: "fan_brief", schema: BRIEF_SCHEMA as unknown as Record<string, unknown>, system: v3Prompt("fan-brief"), user: `REPORTING PACK:\n${JSON.stringify(pack, null, 1)}` });
+export async function fanBrief(pack: ReportingPack, raw?: string): Promise<{ brief: FanBrief; call: StageCall }> {
+  const { data, call } = await callJSON<FanBrief & { interestingDetail: string | null; footballAngle: string | null; importantUnknown: string | null }>({ stage: "fan-brief", role: "fanBrief", maxTokens: 2000, schemaName: "fan_brief", schema: BRIEF_SCHEMA as unknown as Record<string, unknown>, system: v3Prompt("fan-brief"), user: `REPORTING PACK:\n${JSON.stringify(pack, null, 1)}${raw ? `\n\nTHE SOURCES THEMSELVES (so you can judge how much is really here):\n${raw.slice(0, 12000)}` : ""}` });
   return { brief: { ...data, interestingDetail: data.interestingDetail ?? undefined, footballAngle: data.footballAngle ?? undefined, importantUnknown: data.importantUnknown ?? undefined }, call };
 }
 
 function briefBlock(b: FanBrief): string {
   const w = DEPTH_WORDS[b.depth];
-  return `FAN BRIEF:\nTHE NEWS: ${b.theNews}\nWHY A FAN CARES: ${b.whyAFanCares}${b.interestingDetail ? `\nTHE INTERESTING DETAIL: ${b.interestingDetail}` : ""}${b.footballAngle ? `\nTHE FOOTBALL ANGLE: ${b.footballAngle}` : ""}${b.importantUnknown ? `\nWHAT WE DON'T KNOW: ${b.importantUnknown}` : ""}\n\nDEPTH: ${b.depth.toUpperCase()} (${w.min}–${w.max} words; stop when the useful story ends) — ${b.depthReason}`;
+  return `FAN BRIEF:\nTHE NEWS: ${b.theNews}\nWHY A FAN CARES: ${b.whyAFanCares}${b.interestingDetail ? `\nTHE INTERESTING DETAIL: ${b.interestingDetail}` : ""}${b.footballAngle ? `\nTHE FOOTBALL ANGLE: ${b.footballAngle}` : ""}${b.importantUnknown ? `\nWHAT WE DON'T KNOW: ${b.importantUnknown}` : ""}\n\nDEPTH: ${b.depth.toUpperCase()} (${w.min}–${w.max} words) — ${b.depthReason}\nThe range is real in both directions: a ${b.depth} under ${w.min} words has left out facts the pack carries; one over ${w.max} is padded. Use the pack's facts, quotes and team context until the range is honestly filled, then stop.`;
 }
 
 export async function writeReported(pack: ReportingPack, brief: FanBrief): Promise<{ draft: ArticleDraft; call: StageCall }> {
@@ -57,7 +57,8 @@ export async function writeReported(pack: ReportingPack, brief: FanBrief): Promi
 }
 
 export async function subtractionEdit(draft: ArticleDraft, pack: ReportingPack, brief: FanBrief): Promise<{ draft: ArticleDraft; cuts: string[]; call: StageCall }> {
-  const { data, call } = await callJSON<{ cuts: string[]; draft: ArticleDraft }>({ stage: "subtraction-editor", role: "subtractionEditor", maxTokens: 6000, schemaName: "subtraction", schema: SUBTRACT_SCHEMA as unknown as Record<string, unknown>, system: `${v3Prompt("subtraction-editor")}\n\n${v3Prompt("desk-voice")}`, user: `${briefBlock(brief)}\n\nREPORTING PACK:\n${JSON.stringify(pack, null, 1)}\n\nDRAFT:\n${JSON.stringify(draft, null, 1)}` });
+  const w = DEPTH_WORDS[brief.depth]; const n = words(draft.bodyMarkdown);
+  const { data, call } = await callJSON<{ cuts: string[]; draft: ArticleDraft }>({ stage: "subtraction-editor", role: "subtractionEditor", maxTokens: 6000, schemaName: "subtraction", schema: SUBTRACT_SCHEMA as unknown as Record<string, unknown>, system: `${v3Prompt("subtraction-editor")}\n\n${v3Prompt("desk-voice")}`, user: `${briefBlock(brief)}\n\nDRAFT LENGTH: ${n} words against a ${brief.depth} range of ${w.min}–${w.max}. ${n <= w.min ? "The draft is already at or under the range: subtraction here means removing over-explanation and repetition only; do not shorten for its own sake, and restore any pack fact the writer dropped." : "Cut toward the range."}\n\nREPORTING PACK:\n${JSON.stringify(pack, null, 1)}\n\nDRAFT:\n${JSON.stringify(draft, null, 1)}` });
   return { draft: cleanDraft(data.draft), cuts: data.cuts, call };
 }
 
@@ -70,7 +71,7 @@ export async function runReportedEngine(m: ReportedMaterial, opts: ReportedRunOp
   try {
     const p = await extractPack(m); add(p.call); run.artifacts.pack = p.pack;
     log(`pack: ${p.pack.facts.length} facts · ${p.pack.quotes.length} quotes · ${p.pack.unknowns.length} unknowns`);
-    const b = await fanBrief(p.pack); add(b.call); run.artifacts.brief = b.brief;
+    const b = await fanBrief(p.pack, sourcesBlock(m)); add(b.call); run.artifacts.brief = b.brief;
     log(`brief: depth ${b.brief.depth} — ${b.brief.depthReason.slice(0, 120)}`);
     const w = await writeReported(p.pack, b.brief); add(w.call); run.artifacts.draft = w.draft;
     log(`writer (${w.call.model}): ${words(w.draft.bodyMarkdown)} words`);

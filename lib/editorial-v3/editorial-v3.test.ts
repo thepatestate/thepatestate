@@ -2,7 +2,7 @@ import { describe, it, expect, afterEach } from "vitest";
 import { editorialV3Flags, v3MayWrite } from "./flags";
 import { callJSON, __setTransportForTests, modelForRole, oppositeOf, type TransportRequest } from "./models";
 import { hardPolicyGates } from "./policy-gates";
-import { segmentText, cutOnlyArticle, cutAsProse } from "./josh-engine";
+import { segmentText, cutOnlyArticle, cutAsProse, tsToSec } from "./josh-engine";
 import { quitVerdict } from "./judges";
 import { DEPTH_WORDS } from "./v3-types";
 import { v3Prompt, words, ARTICLE_SCHEMA } from "./v3-context";
@@ -112,5 +112,15 @@ describe("telemetry and schemas", () => {
     expect(JSON.stringify(scrub({ a: 1, reasoning: "x", nested: { thoughts: "y", keep: 2 } }))).not.toMatch(/reasoning|thoughts/);
     expect(ARTICLE_SCHEMA.additionalProperties).toBe(false);
     expect(words("one two three [EMBED:00:00:01] four\n\n— JP")).toBe(4);
+  });
+});
+
+describe("timestamps", () => {
+  it("parses bracketed and bare timestamps, so a bracketed segment never empties the cut", () => {
+    expect(tsToSec("[02:06]")).toBe(126);
+    expect(tsToSec("02:06")).toBe(126);
+    expect(tsToSec("00:02:06")).toBe(126);
+    expect(segmentText("[02:06] a\n[03:00] b\n[09:00] c", "[02:06]", "[03:52]")).toContain("b");
+    expect(segmentText("[02:06] a\n[03:00] b\n[09:00] c", "[02:06]", "[03:52]")).not.toContain("c");
   });
 });
