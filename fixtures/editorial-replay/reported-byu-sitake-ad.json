@@ -1,0 +1,22 @@
+{
+  "id": "byu-sitake-ad",
+  "lane": "reported",
+  "shape": "fresh",
+  "note": "fresh feed item, 2026-08-28",
+  "frozenAt": "2026-08-28T12:40:17.976Z",
+  "sources": [
+    {
+      "key": "byu-sitake-ad",
+      "title": "BYU coach Sitake will no longer report to AD amid resource tension",
+      "outlets": [
+        "ESPN"
+      ],
+      "urls": [
+        "https://www.espn.com/college-football/story/_/id/49748302/byu-coach-sitake-no-longer-report-ad-amid-resource-tension"
+      ],
+      "text": ""
+    }
+  ],
+  "factSheet": "TEAM FACTS (verified from the live data feed as of 2026-08-28; use them to cash claims out with real games, dates and records; never contradict them, never go beyond them):\nBYU (Big 12)\n  2025 record: 12-2 (8-1 conference)\n  Preseason polls: AP Top 25 No. 14, AFCA Coaches No. 15\n  2026 schedule:\n    SAT SEP 5 vs Utah Tech · 8:00 PM ET\n    SAT SEP 12 vs Arizona · 3:30 PM ET\n    SAT SEP 19 at Colorado State · 7:30 PM ET\n    SAT OCT 3 at TCU\n    FRI OCT 9 vs Iowa State · 10:15 PM ET\n    SAT OCT 17 vs Notre Dame\n    SAT OCT 24 at UCF\n    SAT OCT 31 vs Arizona State\n    SAT NOV 7 at Utah\n    SAT NOV 14 vs Baylor\n    SAT NOV 21 at Kansas\n    SAT NOV 28 vs Cincinnati",
+  "knownOutputs": []
+}

@@ -1,0 +1,1723 @@
+[
+  {
+    "id": "sec-tro-texas",
+    "engine": "reported",
+    "run": {
+      "id": "run_mtcxwn65_fuyjha",
+      "engine": "reported",
+      "sourceId": "sec-tro-texas",
+      "fixture": "sec-tro-texas",
+      "mode": "replay",
+      "status": "completed",
+      "startedAt": "2026-08-28T12:40:42.317Z",
+      "artifacts": {
+        "repairs": [
+          "cut: Cut unrelated LSU basketball recruits and international professional commitments.",
+          "cut: Cut Junior Tuihalamaka because he is not central to LSU's immediate Wright-Harris roster question.",
+          "cut: Cut the list of Texas plaintiffs on NFL rosters; they do not clarify LSU's eligibility case.",
+          "cut: Shortened Kiffin's second quote and removed Sankey and Clayton quotes that repeated the legal dispute.",
+          "cut: Cut LSU's 2025 record, preseason ranking and schedule framing beyond the unresolved 2026 roster question."
+        ],
+        "pack": {
+          "development": "A Texas judge granted temporary restraining orders against the NCAA, the SEC and commissioner Greg Sankey on behalf of former college athletes challenging the SEC's new ban on former professional athletes returning to college sports.",
+          "facts": [
+            {
+              "fact": "A Texas judge granted temporary restraining orders against the NCAA, SEC and Greg Sankey on Thursday on behalf of a group of former college athletes.",
+              "sourceRef": "source-1",
+              "status": "confirmed"
+            },
+            {
+              "fact": "The SEC unanimously voted to ban professional athletes from returning to college.",
+              "sourceRef": "source-1",
+              "status": "confirmed"
+            },
+            {
+              "fact": "15 of 16 SEC institutions voted to implement penalties on teams that defy the ban; LSU abstained.",
+              "sourceRef": "source-1",
+              "status": "confirmed"
+            },
+            {
+              "fact": "Receiver Jordan Hudson (Cowboys), linebacker Wesley Bissainthe (Chiefs) and receiver Omari Evans (Chiefs) are named in the Texas ruling and are on NFL rosters.",
+              "sourceRef": "source-1",
+              "status": "confirmed"
+            },
+            {
+              "fact": "The Louisiana eligibility lawsuit has been amended to include the SEC and Sankey.",
+              "sourceRef": "source-1",
+              "status": "confirmed"
+            },
+            {
+              "fact": "That Louisiana suit includes three former Ole Miss players, two of whom, Dae'Quan Wright and Xzavian Harris, have committed to LSU.",
+              "sourceRef": "source-1",
+              "status": "confirmed"
+            },
+            {
+              "fact": "The SEC's penalty structure approved Wednesday includes a 50% season ban on the head coach and a financial penalty equal to 50% of the sport's operating budget.",
+              "sourceRef": "source-1",
+              "status": "confirmed"
+            },
+            {
+              "fact": "The Big Ten, ACC and Big 12 have also voted to impose penalties on teams playing former professional athletes but have not faced legal challenges yet.",
+              "sourceRef": "source-1",
+              "status": "confirmed"
+            },
+            {
+              "fact": "Lane Kiffin signed former Cleveland Browns tight end Dae'Quan Wright and former Saints defensive tackle Xzavian Harris, both former Ole Miss players.",
+              "sourceRef": "source-2",
+              "status": "confirmed"
+            },
+            {
+              "fact": "Will Wade added former Big East Player of the Year RJ Luis despite his signing contracts with the Utah Jazz and Boston Celtics' G League.",
+              "sourceRef": "source-2",
+              "status": "confirmed"
+            },
+            {
+              "fact": "On August 19, a temporary restraining order was granted from a Louisiana state court lawsuit allowing more than 30 plaintiffs an additional year of eligibility.",
+              "sourceRef": "source-2",
+              "status": "confirmed"
+            },
+            {
+              "fact": "The group included former SMU running back TJ Harden, former LSU linebacker Jack Plyburn (Buccaneers), and former Notre Dame defensive end Junior Tuihalamaka.",
+              "sourceRef": "source-2",
+              "status": "confirmed"
+            },
+            {
+              "fact": "Kiffin also signed Junior Tuihalamaka, who was not on an NFL roster.",
+              "sourceRef": "source-2",
+              "status": "confirmed"
+            },
+            {
+              "fact": "The TRO allowing the 16 other players to play lasts just 10 days from the filing.",
+              "sourceRef": "source-2",
+              "status": "confirmed"
+            },
+            {
+              "fact": "Wade secured verbal commitments from international professional players Márcio Santos, Saliou Niang, Brice Dessert and Michael Ružić.",
+              "sourceRef": "source-2",
+              "status": "confirmed"
+            },
+            {
+              "fact": "Sankey asked Judge Ronald Johnson in East Baton Rouge Parish court to uphold NCAA rules preventing athletes from returning.",
+              "sourceRef": "source-2",
+              "status": "confirmed"
+            }
+          ],
+          "quotes": [
+            {
+              "speaker": "Lane Kiffin",
+              "text": "At the end of the day, because of these rulings, they're either going to play for you or they're going to play for someone else around the country. So we've made the decision to recruit them like probably most people are.",
+              "sourceRef": "source-2"
+            },
+            {
+              "speaker": "Lane Kiffin",
+              "text": "Over 100 athletes in multiple sports were cleared and said you could go play. That's a court order. If you think back on all the different court orders of great players that were granted -- whether that's Diego Pavia or, now, Trinidad (Chambliss) that were allowed to play a sixth year, we followed all court orders. I think you get into a really interesting situation as a conference if you're now saying, 'Well, we're not going to follow this court order.' These kids that a court says can go anywhere, we're going to say, 'No you can't.'",
+              "sourceRef": "source-2"
+            },
+            {
+              "speaker": "Landry",
+              "text": "This whole thing is ridiculous. Don't hate the player, hate the game. I've been saying for a year that college sports need to be fixed. The NCAA could have done it. Congress could have done it. Neither did. Now the SEC is creating a legal mess over athletes it told were out of eligibility, only to change the rules afterward. The SEC accepted the courts' decisions on Diego Pavia and Trinidad Chambliss. Why is this different? You can't tell athletes their college careers are over, watch them move on, change the rules later, and then punish them for not predicting the future.",
+              "sourceRef": "source-2"
+            },
+            {
+              "speaker": "Tony Clayton",
+              "text": "The NCAA, in and of itself, are its member institutions. So, the conferences cannot now circumvent the Louisiana law and say that they're going to issue a ban against these players when the courts have already ruled that the NCAA cannot do it. You can't camouflage yourself or act as some chameleon and say that you're something else, and you're going to come in and enforce the rule that the judge just said you could not.",
+              "sourceRef": "source-2"
+            },
+            {
+              "speaker": "Greg Sankey",
+              "text": "These rules are grounded in the principle that athletics are an integral part of the academic experience. The rules align the time permitted for college athletics with the pursuit of an undergraduate education and further the important purpose of preserving opportunities for future student-athletes to participate in college sports.",
+              "sourceRef": "source-2"
+            }
+          ],
+          "numbers": [
+            {
+              "value": "50%",
+              "meaning": "Length of season head coach ban under SEC penalty structure for playing former pro athletes",
+              "sourceRef": "source-1"
+            },
+            {
+              "value": "50%",
+              "meaning": "Financial penalty equal to percentage of sport's operating budget under SEC rule",
+              "sourceRef": "source-1"
+            },
+            {
+              "value": "15 of 16",
+              "meaning": "Number of SEC institutions that voted to implement the penalty structure (LSU abstained)",
+              "sourceRef": "source-1"
+            },
+            {
+              "value": "10 days",
+              "meaning": "Duration of the TRO allowing the 16 players to play, from filing date",
+              "sourceRef": "source-2"
+            },
+            {
+              "value": "30+",
+              "meaning": "Number of plaintiffs covered by the Louisiana TRO granted August 19",
+              "sourceRef": "source-2"
+            }
+          ],
+          "unknowns": [
+            "How long the Texas restraining order will remain in effect and when a further hearing is scheduled",
+            "Whether the SEC will appeal or otherwise respond to the Texas TRO",
+            "How this affects LSU's eligibility to play the athletes it has signed for the 2026 season",
+            "Whether other conferences (Big Ten, ACC, Big 12) will face similar legal challenges",
+            "The final outcome of the amended Louisiana lawsuit naming the SEC and Sankey"
+          ],
+          "relevantTeamContext": [
+            "LSU (SEC) 2025 record: 7-6 (3-5 conference)",
+            "LSU preseason polls: AP Top 25 No. 11, AFCA Coaches No. 13",
+            "LSU 2026 schedule includes SAT SEP 19 at Ole Miss and SAT NOV 7 vs Alabama, among other SEC games",
+            "LSU was the only SEC school to abstain from the vote implementing penalties for playing former professional athletes"
+          ]
+        },
+        "brief": {
+          "theNews": "A Texas judge temporarily blocked the NCAA, SEC and commissioner Greg Sankey from enforcing the SEC’s new ban against former professional athletes returning to college sports, adding pressure to a related Louisiana case involving LSU signees Dae’Quan Wright and Xzavian Harris.",
+          "whyAFanCares": "LSU has recruited Wright and Harris, so the legal fight could determine whether the Tigers can use them without risking the SEC’s newly approved penalties, including a half-season suspension for the head coach and a fine equal to half the sport’s operating budget.",
+          "interestingDetail": "LSU was the lone SEC school to abstain from the vote approving penalties for schools that play former professional athletes.",
+          "footballAngle": "The amended Louisiana case directly involves Wright and Harris, two former Ole Miss players who committed to LSU, making their eligibility a concrete roster issue rather than just a conference-policy dispute.",
+          "importantUnknown": "It is still unclear how long the Texas order lasts, how the Louisiana court will rule, whether the SEC will appeal, and whether LSU can play Wright and Harris in 2026 without punishment.",
+          "depth": "story",
+          "depthReason": "There is a real LSU roster consequence involving two identified signees, a conference-wide enforcement threat with unusually severe penalties, and parallel court cases, though the ultimate eligibility outcome remains unresolved."
+        },
+        "draft": {
+          "headline": "Texas Judge Blocks SEC's Pro-Athlete Ban, Putting Two LSU Signees Back in Play",
+          "dek": "Temporary restraining orders against the NCAA, the SEC and Greg Sankey landed Thursday, days after 15 of 16 SEC schools approved penalties LSU declined to endorse.",
+          "bodyMarkdown": "A Texas judge granted temporary restraining orders Thursday against the NCAA, the SEC and commissioner Greg Sankey on behalf of a group of former college athletes, freezing enforcement of the conference's new ban on former professional athletes returning to college sports.\n\nThe timing matters for LSU more than anyone. The SEC voted unanimously to ban pro athletes from coming back, and on Wednesday 15 of 16 member schools approved the penalty structure attached to it: a head coach suspended for 50% of a season, and a financial penalty equal to 50% of the sport's operating budget. LSU was the lone abstention.\n\nLane Kiffin has already signed two players the rule was written to keep off the field. Tight end Dae'Quan Wright, formerly of the Cleveland Browns, and defensive tackle Xzavian Harris, formerly of the Saints, are both ex-Ole Miss players now committed to LSU. Kiffin also signed Junior Tuihalamaka, the former Notre Dame defensive end who was not on an NFL roster. On the basketball side, Will Wade added former Big East Player of the Year RJ Luis despite Luis signing contracts with the Utah Jazz and the Celtics' G League affiliate, plus verbal commitments from international pros Márcio Santos, Saliou Niang, Brice Dessert and Michael Ružić.\n\nWright and Harris are also plaintiffs. The Louisiana eligibility lawsuit, which produced an August 19 temporary restraining order in state court granting more than 30 plaintiffs an additional year, has been amended to name the SEC and Sankey directly. Three former Ole Miss players are part of that suit; two of them are the players LSU signed. Sankey has asked Judge Ronald Johnson in East Baton Rouge Parish court to uphold the NCAA rules preventing athletes from returning.\n\nThe Texas order covers a different set of names, including three players currently on NFL rosters: Cowboys receiver Jordan Hudson and Chiefs pair Wesley Bissainthe, a linebacker, and receiver Omari Evans.\n\nKiffin has been direct about the calculus. \"At the end of the day, because of these rulings, they're either going to play for you or they're going to play for someone else around the country,\" he said. \"So we've made the decision to recruit them like probably most people are.\"\n\nHe also framed the conference position as a collision with the courts. \"Over 100 athletes in multiple sports were cleared and said you could go play. That's a court order,\" Kiffin said. \"If you think back on all the different court orders of great players that were granted -- whether that's Diego Pavia or, now, Trinidad (Chambliss) that were allowed to play a sixth year, we followed all court orders. I think you get into a really interesting situation as a conference if you're now saying, 'Well, we're not going to follow this court order.'\"\n\nSankey has grounded the rule in eligibility philosophy: \"These rules are grounded in the principle that athletics are an integral part of the academic experience. The rules align the time permitted for college athletics with the pursuit of an undergraduate education and further the important purpose of preserving opportunities for future student-athletes to participate in college sports.\"\n\nAttorney Tony Clayton's argument is that the conference cannot do what the NCAA was barred from doing. \"The NCAA, in and of itself, are its member institutions,\" he said. \"You can't camouflage yourself or act as some chameleon and say that you're something else, and you're going to come in and enforce the rule that the judge just said you could not.\"\n\nWhat is not settled: how long the Texas order stands, whether the SEC appeals, how Judge Johnson rules in Baton Rouge, and whether LSU can put Wright and Harris on the field in 2026 without triggering a half-season ban for Kiffin. The Big Ten, ACC and Big 12 passed similar penalties and have not been sued yet.\n\nThe practical question for LSU, coming off 7-6 and slotted No. 11 in the preseason AP poll: whether two signed players are roster pieces or legal exposure by the time the Tigers open SEC play. They visit Ole Miss on September 19.",
+          "pullQuote": "At the end of the day, because of these rulings, they're either going to play for you or they're going to play for someone else around the country.",
+          "primaryTeam": "lsu",
+          "teams": [
+            "lsu",
+            "ole-miss"
+          ],
+          "tags": [
+            "eligibility-litigation",
+            "sec",
+            "greg-sankey",
+            "lane-kiffin",
+            "ncaa",
+            "roster-rules"
+          ],
+          "seo": {
+            "title": "Texas TRO Blocks SEC Pro-Athlete Ban, Affecting LSU Signees",
+            "description": "A Texas judge blocked the NCAA, SEC and Greg Sankey from enforcing the SEC's ban on former pro athletes, with LSU signees Dae'Quan Wright and Xzavian Harris at the center of a parallel Louisiana case."
+          }
+        },
+        "subtracted": {
+          "headline": "Texas Judge Temporarily Blocks SEC Pro-Athlete Ban, Raising Stakes for LSU Signees",
+          "dek": "The order against the NCAA, SEC and Greg Sankey adds pressure to a Louisiana case involving LSU commits Dae'Quan Wright and Xzavian Harris.",
+          "bodyMarkdown": "A Texas judge granted temporary restraining orders Thursday against the NCAA, the SEC and commissioner Greg Sankey on behalf of former college athletes challenging the SEC's ban on former professional athletes returning to college sports.\n\nFor LSU, the fight is a roster issue. Former Ole Miss players Dae'Quan Wright and Xzavian Harris have committed to the Tigers after professional stops with the Cleveland Browns and Saints, respectively. Both are also included in the Louisiana eligibility lawsuit that has been amended to name the SEC and Sankey.\n\nThe SEC unanimously voted to ban former professional athletes from returning to college. On Wednesday, 15 of 16 SEC schools approved penalties for teams that defy the ban: a 50% season suspension for the head coach and a financial penalty equal to 50% of the sport's operating budget. LSU was the lone school to abstain.\n\nThe Louisiana case previously produced an Aug. 19 state-court temporary restraining order granting more than 30 plaintiffs an additional year of eligibility. Three former Ole Miss players are part of the suit, including Wright and Harris. Sankey has asked Judge Ronald Johnson in East Baton Rouge Parish court to uphold NCAA rules preventing athletes from returning.\n\nLSU coach Lane Kiffin has made clear why the program recruited players whose eligibility is under challenge.\n\n> “At the end of the day, because of these rulings, they're either going to play for you or they're going to play for someone else around the country,” Kiffin said. “So we've made the decision to recruit them like probably most people are.”\n\nThe Texas order involves a different group of athletes, but it temporarily blocks the SEC from enforcing its new rule while the Louisiana litigation directly puts Wright and Harris at issue.\n\nWhat remains unresolved is how long the Texas order will last, whether the SEC appeals, how the Louisiana court rules and whether LSU can play Wright and Harris in 2026 without triggering the conference's penalties. The Big Ten, ACC and Big 12 have approved similar penalties but have not yet faced legal challenges.",
+          "pullQuote": "“At the end of the day, because of these rulings, they're either going to play for you or they're going to play for someone else around the country.”",
+          "primaryTeam": "lsu",
+          "teams": [
+            "lsu",
+            "ole-miss"
+          ],
+          "tags": [
+            "eligibility-litigation",
+            "sec",
+            "greg-sankey",
+            "lane-kiffin",
+            "ncaa",
+            "roster-rules"
+          ],
+          "seo": {
+            "title": "Texas TRO Blocks SEC Pro-Athlete Ban, Affecting LSU Signees",
+            "description": "A Texas judge temporarily blocked the NCAA, SEC and Greg Sankey from enforcing the SEC's pro-athlete ban as LSU commits Dae'Quan Wright and Xzavian Harris remain central to a Louisiana case."
+          }
+        },
+        "policy": {
+          "pass": true,
+          "violations": []
+        },
+        "fact": {
+          "verdict": "pass",
+          "claims": [
+            {
+              "claim": "Texas judge granted TROs Thursday against NCAA, SEC, and Sankey",
+              "status": "supported",
+              "sourceRefs": [
+                "source-1"
+              ]
+            },
+            {
+              "claim": "SEC voted unanimously to ban pro athletes from returning; 15 of 16 schools approved penalty structure Wednesday",
+              "status": "supported",
+              "sourceRefs": [
+                "source-1"
+              ]
+            },
+            {
+              "claim": "Penalty: head coach suspended 50% of season, financial penalty 50% of sport's operating budget",
+              "status": "supported",
+              "sourceRefs": [
+                "source-1"
+              ]
+            },
+            {
+              "claim": "LSU was the lone abstention",
+              "status": "supported",
+              "sourceRefs": [
+                "source-1"
+              ]
+            },
+            {
+              "claim": "Kiffin signed Dae'Quan Wright (former Browns TE, ex-Ole Miss) and Xzavian Harris (former Saints DT, ex-Ole Miss)",
+              "status": "supported",
+              "sourceRefs": [
+                "source-1",
+                "source-2"
+              ]
+            },
+            {
+              "claim": "Kiffin signed Junior Tuihalamaka, former Notre Dame DE not on NFL roster",
+              "status": "supported",
+              "sourceRefs": [
+                "source-2"
+              ]
+            },
+            {
+              "claim": "Will Wade added RJ Luis despite Jazz/Celtics G League contracts, plus Santos, Niang, Dessert, Ružić",
+              "status": "supported",
+              "sourceRefs": [
+                "source-2"
+              ]
+            },
+            {
+              "claim": "Louisiana lawsuit produced Aug 19 TRO granting 30+ plaintiffs extra year",
+              "status": "supported",
+              "sourceRefs": [
+                "source-2"
+              ]
+            },
+            {
+              "claim": "Lawsuit amended to name SEC and Sankey",
+              "status": "supported",
+              "sourceRefs": [
+                "source-2"
+              ]
+            },
+            {
+              "claim": "Three former Ole Miss players in suit, two are LSU signees Wright and Harris",
+              "status": "supported",
+              "sourceRefs": [
+                "source-1"
+              ]
+            },
+            {
+              "claim": "Sankey asked Judge Ronald Johnson in East Baton Rouge Parish to uphold NCAA rules",
+              "status": "supported",
+              "sourceRefs": [
+                "source-2"
+              ]
+            },
+            {
+              "claim": "Texas order covers Jordan Hudson (Cowboys), Wesley Bissainthe (Chiefs LB), Omari Evans (Chiefs WR)",
+              "status": "supported",
+              "sourceRefs": [
+                "source-1"
+              ]
+            },
+            {
+              "claim": "Kiffin quote about players playing for LSU or elsewhere",
+              "status": "supported",
+              "sourceRefs": [
+                "source-2"
+              ]
+            },
+            {
+              "claim": "Kiffin quote about court orders, Pavia, Chambliss",
+              "status": "supported",
+              "sourceRefs": [
+                "source-2"
+              ]
+            },
+            {
+              "claim": "Sankey quote on academic experience/eligibility philosophy",
+              "status": "supported",
+              "sourceRefs": [
+                "source-2"
+              ]
+            },
+            {
+              "claim": "Tony Clayton quote on NCAA/conferences camouflage argument",
+              "status": "supported",
+              "sourceRefs": [
+                "source-2"
+              ]
+            },
+            {
+              "claim": "Big Ten, ACC, Big12 passed similar penalties, not sued yet",
+              "status": "supported",
+              "sourceRefs": [
+                "source-1"
+              ]
+            },
+            {
+              "claim": "LSU 7-6 record, No. 11 AP preseason poll",
+              "status": "supported",
+              "sourceRefs": [
+                "fact-sheet"
+              ]
+            },
+            {
+              "claim": "LSU visits Ole Miss Sept 19",
+              "status": "supported",
+              "sourceRefs": [
+                "fact-sheet"
+              ]
+            },
+            {
+              "claim": "Uncertainty framing about appeals, rulings, roster outcomes",
+              "status": "analysis",
+              "sourceRefs": []
+            }
+          ],
+          "joshMisattribution": []
+        },
+        "quit": {
+          "neverWantedToQuit": true,
+          "reason": "none",
+          "didFinish": true,
+          "soundsLikeFootballPerson": true,
+          "worthTheTime": true,
+          "wouldClickAnother": true,
+          "wouldSend": true,
+          "note": "Clear, timely rundown of a genuinely consequential eligibility fight, with LSU’s specific exposure explained."
+        },
+        "smell": {
+          "pass": true,
+          "sentences": [],
+          "structural": false,
+          "note": "Reads like conventional reported sports news. The transitions and closing frame are functional rather than mechanically thesis-driven, and no sentences clearly reveal AI-style exposition or fake profundity."
+        }
+      },
+      "calls": [
+        {
+          "stage": "reporting-pack",
+          "role": "packExtract",
+          "vendor": "anthropic",
+          "model": "claude-sonnet-5",
+          "inputTokens": 4060,
+          "outputTokens": 2655,
+          "costUsd": 0.052,
+          "ms": 24853
+        },
+        {
+          "stage": "fan-brief",
+          "role": "fanBrief",
+          "vendor": "openai",
+          "model": "gpt-5.6-terra",
+          "inputTokens": 4226,
+          "outputTokens": 396,
+          "costUsd": 0.0581,
+          "ms": 7616
+        },
+        {
+          "stage": "reported-writer",
+          "role": "reportedWriter",
+          "vendor": "anthropic",
+          "model": "claude-opus-5",
+          "inputTokens": 5481,
+          "outputTokens": 2074,
+          "costUsd": 0.2378,
+          "ms": 26958
+        },
+        {
+          "stage": "subtraction-editor",
+          "role": "subtractionEditor",
+          "vendor": "openai",
+          "model": "gpt-5.6-terra",
+          "inputTokens": 3890,
+          "outputTokens": 933,
+          "costUsd": 0.0762,
+          "ms": 11859
+        },
+        {
+          "stage": "fact-check",
+          "role": "factCheck",
+          "vendor": "anthropic",
+          "model": "claude-sonnet-5",
+          "inputTokens": 0,
+          "outputTokens": 0,
+          "costUsd": 0,
+          "ms": 14595
+        },
+        {
+          "stage": "quit-reading",
+          "role": "quitJudge",
+          "vendor": "openai",
+          "model": "gpt-5.6-terra",
+          "inputTokens": 1299,
+          "outputTokens": 190,
+          "costUsd": 0.0206,
+          "ms": 4724
+        },
+        {
+          "stage": "ai-smell",
+          "role": "smellJudge",
+          "vendor": "openai",
+          "model": "gpt-5.6-terra",
+          "inputTokens": 1114,
+          "outputTokens": 180,
+          "costUsd": 0.0183,
+          "ms": 3961
+        }
+      ],
+      "totalCostUsd": 0.463,
+      "final": {
+        "headline": "Texas Judge Blocks SEC's Pro-Athlete Ban, Putting Two LSU Signees Back in Play",
+        "dek": "Temporary restraining orders against the NCAA, the SEC and Greg Sankey landed Thursday, days after 15 of 16 SEC schools approved penalties LSU declined to endorse.",
+        "bodyMarkdown": "A Texas judge granted temporary restraining orders Thursday against the NCAA, the SEC and commissioner Greg Sankey on behalf of a group of former college athletes, freezing enforcement of the conference's new ban on former professional athletes returning to college sports.\n\nThe timing matters for LSU more than anyone. The SEC voted unanimously to ban pro athletes from coming back, and on Wednesday 15 of 16 member schools approved the penalty structure attached to it: a head coach suspended for 50% of a season, and a financial penalty equal to 50% of the sport's operating budget. LSU was the lone abstention.\n\nLane Kiffin has already signed two players the rule was written to keep off the field. Tight end Dae'Quan Wright, formerly of the Cleveland Browns, and defensive tackle Xzavian Harris, formerly of the Saints, are both ex-Ole Miss players now committed to LSU. Kiffin also signed Junior Tuihalamaka, the former Notre Dame defensive end who was not on an NFL roster. On the basketball side, Will Wade added former Big East Player of the Year RJ Luis despite Luis signing contracts with the Utah Jazz and the Celtics' G League affiliate, plus verbal commitments from international pros Márcio Santos, Saliou Niang, Brice Dessert and Michael Ružić.\n\nWright and Harris are also plaintiffs. The Louisiana eligibility lawsuit, which produced an August 19 temporary restraining order in state court granting more than 30 plaintiffs an additional year, has been amended to name the SEC and Sankey directly. Three former Ole Miss players are part of that suit; two of them are the players LSU signed. Sankey has asked Judge Ronald Johnson in East Baton Rouge Parish court to uphold the NCAA rules preventing athletes from returning.\n\nThe Texas order covers a different set of names, including three players currently on NFL rosters: Cowboys receiver Jordan Hudson and Chiefs pair Wesley Bissainthe, a linebacker, and receiver Omari Evans.\n\nKiffin has been direct about the calculus. \"At the end of the day, because of these rulings, they're either going to play for you or they're going to play for someone else around the country,\" he said. \"So we've made the decision to recruit them like probably most people are.\"\n\nHe also framed the conference position as a collision with the courts. \"Over 100 athletes in multiple sports were cleared and said you could go play. That's a court order,\" Kiffin said. \"If you think back on all the different court orders of great players that were granted -- whether that's Diego Pavia or, now, Trinidad (Chambliss) that were allowed to play a sixth year, we followed all court orders. I think you get into a really interesting situation as a conference if you're now saying, 'Well, we're not going to follow this court order.'\"\n\nSankey has grounded the rule in eligibility philosophy: \"These rules are grounded in the principle that athletics are an integral part of the academic experience. The rules align the time permitted for college athletics with the pursuit of an undergraduate education and further the important purpose of preserving opportunities for future student-athletes to participate in college sports.\"\n\nAttorney Tony Clayton's argument is that the conference cannot do what the NCAA was barred from doing. \"The NCAA, in and of itself, are its member institutions,\" he said. \"You can't camouflage yourself or act as some chameleon and say that you're something else, and you're going to come in and enforce the rule that the judge just said you could not.\"\n\nWhat is not settled: how long the Texas order stands, whether the SEC appeals, how Judge Johnson rules in Baton Rouge, and whether LSU can put Wright and Harris on the field in 2026 without triggering a half-season ban for Kiffin. The Big Ten, ACC and Big 12 passed similar penalties and have not been sued yet.\n\nThe practical question for LSU, coming off 7-6 and slotted No. 11 in the preseason AP poll: whether two signed players are roster pieces or legal exposure by the time the Tigers open SEC play. They visit Ole Miss on September 19.",
+        "pullQuote": "At the end of the day, because of these rulings, they're either going to play for you or they're going to play for someone else around the country.",
+        "primaryTeam": "lsu",
+        "teams": [
+          "lsu",
+          "ole-miss"
+        ],
+        "tags": [
+          "eligibility-litigation",
+          "sec",
+          "greg-sankey",
+          "lane-kiffin",
+          "ncaa",
+          "roster-rules"
+        ],
+        "seo": {
+          "title": "Texas TRO Blocks SEC Pro-Athlete Ban, Affecting LSU Signees",
+          "description": "A Texas judge blocked the NCAA, SEC and Greg Sankey from enforcing the SEC's ban on former pro athletes, with LSU signees Dae'Quan Wright and Xzavian Harris at the center of a parallel Louisiana case."
+        }
+      },
+      "words": 679,
+      "completedAt": "2026-08-28T12:42:16.896Z"
+    }
+  },
+  {
+    "id": "kansas-state-standard",
+    "engine": "reported",
+    "run": {
+      "id": "run_mtcxyok6_7qc20m",
+      "engine": "reported",
+      "sourceId": "kansas-state-standard",
+      "fixture": "kansas-state-standard",
+      "mode": "replay",
+      "status": "completed",
+      "startedAt": "2026-08-28T12:42:17.430Z",
+      "artifacts": {
+        "repairs": [
+          "cut: Cut the redundant setup that called Scott's hiring story “specific” before the quote made that clear.",
+          "cut: Cut Klein's extended recollection of late-night evaluation conversations; it repeated the Scott-Klein connection without advancing the roster issue.",
+          "cut: Cut the comparison framing last season as “not talent-shaped so much as margin-shaped,” an unsupported conclusion.",
+          "cut: Cut Johnson's extended explanation of what he learned from a defensive-minded coach; the shorter quote makes the point.",
+          "cut: Cut the claim that roster repair falls “squarely in Scott's lane,” because Scott's duties beyond evaluation have not been detailed.",
+          "cut: Cut the Snyder/Klieman-building imagery and schedule-based prediction; neither changes Klein's immediate roster problem."
+        ],
+        "pack": {
+          "development": "Kansas State hired Colin Klein as head coach and Trey Scott as general manager following Chris Klieman's retirement, aiming to restore the program's former standard.",
+          "facts": [
+            {
+              "fact": "Trey Scott spent 11 years as an NFL executive with the Commanders and Raiders and also worked as a coach's agent.",
+              "sourceRef": "source-1",
+              "status": "confirmed"
+            },
+            {
+              "fact": "Scott took the general manager role at Kansas State in December 2025.",
+              "sourceRef": "source-1",
+              "status": "confirmed"
+            },
+            {
+              "fact": "Scott and Klein were teammates at Kansas State, with Scott serving as Klein's backup quarterback.",
+              "sourceRef": "source-1",
+              "status": "confirmed"
+            },
+            {
+              "fact": "Klein was an assistant coach under Bill Snyder and Chris Klieman from 2014-15 and 2017-23, then spent two years as offensive coordinator at Texas A&M.",
+              "sourceRef": "source-1",
+              "status": "confirmed"
+            },
+            {
+              "fact": "Bill Snyder led Kansas State to multiple conference championship games in the late 1990s and early 2000s and came within 60 minutes of a national title berth in 1999.",
+              "sourceRef": "source-1",
+              "status": "confirmed"
+            },
+            {
+              "fact": "Klein was a Heisman finalist and led Kansas State to No. 2 in the country and a Fiesta Bowl appearance in his senior season, 2012.",
+              "sourceRef": "source-1",
+              "status": "confirmed"
+            },
+            {
+              "fact": "Klieman's tenure peaked with a 10-win regular season and conference championship in 2022.",
+              "sourceRef": "source-1",
+              "status": "confirmed"
+            },
+            {
+              "fact": "2025 was the first non-COVID season since Snyder's last in 2018 in which Kansas State won fewer than eight games.",
+              "sourceRef": "source-1",
+              "status": "confirmed"
+            },
+            {
+              "fact": "Klieman retired at the end of the 2025 season.",
+              "sourceRef": "source-1",
+              "status": "confirmed"
+            },
+            {
+              "fact": "Bill Snyder was known for intense attention to detail, including a manual instructing assistant coaches how to shave.",
+              "sourceRef": "source-1",
+              "status": "confirmed"
+            },
+            {
+              "fact": "Of Kansas State's six losses in 2025, five were in one-possession games.",
+              "sourceRef": "source-1",
+              "status": "confirmed"
+            },
+            {
+              "fact": "Kansas State had one-score wins over FCS opponent North Dakota and Oklahoma State in 2025.",
+              "sourceRef": "source-1",
+              "status": "confirmed"
+            },
+            {
+              "fact": "Kansas State's leading receiver, Jayce Brown, transferred to LSU.",
+              "sourceRef": "source-1",
+              "status": "confirmed"
+            },
+            {
+              "fact": "Offensive linemen John Pastore and George Fitzpatrick suffered season-ending injuries.",
+              "sourceRef": "source-1",
+              "status": "confirmed"
+            },
+            {
+              "fact": "Bill Snyder still lives in Manhattan in the same home he bought when he arrived in 1989.",
+              "sourceRef": "source-1",
+              "status": "confirmed"
+            },
+            {
+              "fact": "Klieman is with the school in an advisory role and still around the facility, though ankle surgery slowed him in the spring.",
+              "sourceRef": "source-1",
+              "status": "confirmed"
+            }
+          ],
+          "quotes": [
+            {
+              "speaker": "Trey Scott",
+              "text": "I was good doing what I was doing... Probably a year prior, people started to call just as that [GM] role became a thing in college. So that was kind of when I had the conversation with my wife, because she was comfortable. We were living where her family was, and I told her, 'I promise you, I'm not chasing these jobs. I'm only gonna go if one person calls.' And I wrote it down on a piece of paper, and I signed it, and gave it to my wife, and it was Colin [Klein]. Sure as heck, he gets a job.",
+              "sourceRef": "source-1"
+            },
+            {
+              "speaker": "Colin Klein",
+              "text": "He'd stay at my house, and we'd be up talking way too late, not about him being a GM if I got an opportunity to be a head coach, but like, hey, how do you evaluate o linemen? What are the things that when you look at that position that are important to you? What is an NFL o-lineman? Measurables at every position? What is the makeup and mindset? The worlds were completely different at that time, but little did we know, like, they were going to merge and be very similar very soon. But he's a football guy, I'm a football guy. We both love working. We both love overcoming challenges. So I think all of that, all of those components lended itself to a very good fit.",
+              "sourceRef": "source-1"
+            },
+            {
+              "speaker": "Avery Johnson",
+              "text": "At times last year, let the small things kind of slip through the cracks, and I think this year we're kind of trying to hammer down on the small details. No matter how big or how small, that type of stuff translates to wins and losses in the fall.",
+              "sourceRef": "source-1"
+            },
+            {
+              "speaker": "Avery Johnson",
+              "text": "I think for me it would be having an offensive-minded head coach and a defensive-minded head coach, and I think I'm so grateful for the few years I had with Coach Klieman, because I got to see things from a defensive perspective, a defensive back's demeanor or a linebacker's demeanor -- are they going to blitz or not blitz -- different kinds of things that you don't necessarily always get from an offensive-minded head coach, because a defensive minded head coach sees the game from a defender standpoint. On the flip side, Coach Klein is an offensive-minded head coach, and something that I kind of relate to. So, having a coach that you can relate to and spitball ideas off of definitely helps. So, it's kind of cool now that I've been able to have both sides of it, and been able to take bits and pieces from both of my head coaches.",
+              "sourceRef": "source-1"
+            },
+            {
+              "speaker": "Colin Klein",
+              "text": "Our relationship is very unique, and I would say not many transitions, and not many relationships are probably like ours in a way that both of us have always looked and put the other person first, and what's best for them in whatever situation. And I think having that type of relationship, that kind of trust allows for some pretty good opportunities both ways.",
+              "sourceRef": "source-1"
+            }
+          ],
+          "numbers": [
+            {
+              "value": "11 years",
+              "meaning": "Length of Trey Scott's tenure as an NFL executive with the Commanders and Raiders",
+              "sourceRef": "source-1"
+            },
+            {
+              "value": "6-6 (5-4 conference)",
+              "meaning": "Kansas State's 2025 season record",
+              "sourceRef": "fact-sheet"
+            },
+            {
+              "value": "5 of 6",
+              "meaning": "Number of Kansas State's 2025 losses that were in one-possession games",
+              "sourceRef": "source-1"
+            },
+            {
+              "value": "10-win",
+              "meaning": "Klieman's high-water mark regular season, in 2022, with a conference championship",
+              "sourceRef": "source-1"
+            },
+            {
+              "value": "No. 2",
+              "meaning": "Kansas State's national ranking during Klein's senior season (2012) as a Heisman finalist",
+              "sourceRef": "source-1"
+            }
+          ],
+          "unknowns": [
+            "What specific title or duties Scott holds as general manager beyond player evaluation",
+            "When exactly Klein was formally hired as head coach",
+            "Who else besides Scott joined Klein's staff or front office",
+            "What Klieman's advisory role entails specifically",
+            "Whether Jayce Brown's transfer to LSU has been fully replaced on the roster"
+          ],
+          "relevantTeamContext": [
+            "Kansas State's 2025 record: 6-6 (5-4 conference)",
+            "2026 schedule includes SAT SEP 5 vs Nicholls, SAT SEP 12 vs Washington State, SAT SEP 19 vs Tulane, SAT SEP 26 at Cincinnati, SAT OCT 10 vs Houston, SAT OCT 17 vs Kansas, SAT OCT 24 at Arizona State, SAT OCT 31 at Colorado, SAT NOV 7 vs Oklahoma State, SAT NOV 14 at TCU, SAT NOV 21 vs Arizona, SAT NOV 28 at Iowa State"
+          ]
+        },
+        "brief": {
+          "theNews": "Kansas State has installed former Wildcats quarterback Colin Klein as head coach after Chris Klieman’s retirement and brought in Klein’s former K-State teammate Trey Scott, an 11-year NFL executive, as general manager.",
+          "whyAFanCares": "The new leadership is trying to reverse a 6-6 season in which Kansas State lost five one-possession games, while Klein must improve an offense that struggled to pass the ball and lost leading receiver Jayce Brown to LSU.",
+          "interestingDetail": "Scott told CBS Sports he had promised his wife he would leave his previous job only if Klein called, and the two had previously played together with Scott serving as Klein’s backup quarterback.",
+          "footballAngle": "Klein’s offensive background and his work with dual-threat quarterback Marcel Reed at Texas A&M could matter for Avery Johnson, who said he values having an offensive-minded head coach; however, the offense also enters the season without Brown and after season-ending injuries to linemen John Pastore and George Fitzpatrick.",
+          "importantUnknown": "Kansas State has not identified how it will replace Brown or the injured linemen, and Scott’s specific responsibilities as general manager have not been detailed.",
+          "depth": "story",
+          "depthReason": "This is more than a routine hiring because it connects a coaching transition and new front-office role to Kansas State’s close-loss 2025 season, Johnson’s development, and specific roster problems entering 2026."
+        },
+        "draft": {
+          "headline": "Colin Klein Takes Over Kansas State With a Former Backup QB Running the Front Office",
+          "dek": "Klein replaces the retired Chris Klieman and pairs with Trey Scott, an 11-year NFL executive and old K-State teammate, to fix a 6-6 team that lost five one-possession games.",
+          "bodyMarkdown": "Kansas State's answer to a 6-6 season is a Heisman finalist and an NFL personnel man who used to hold his clipboard.\n\nColin Klein is the head coach after Chris Klieman's retirement at the end of the 2025 season. Trey Scott, who spent 11 years as an executive with the Commanders and Raiders and also worked as a coach's agent, took the general manager job in December 2025. Scott was Klein's backup quarterback in Manhattan. Klein was the No. 2-ranked team's quarterback in 2012, a Heisman finalist who took the Wildcats to the Fiesta Bowl.\n\nScott's version of how it happened is specific. He was not chasing college jobs, and he told his wife so in writing.\n\n\"I promise you, I'm not chasing these jobs. I'm only gonna go if one person calls,\" Scott said. \"And I wrote it down on a piece of paper, and I signed it, and gave it to my wife, and it was Colin [Klein]. Sure as heck, he gets a job.\"\n\nKlein describes years of late-night conversations that were, in hindsight, job interviews neither man knew they were conducting. \"How do you evaluate o linemen? What are the things that when you look at that position that are important to you? What is an NFL o-lineman?\" Klein said, recalling the questions. \"The worlds were completely different at that time, but little did we know, like, they were going to merge and be very similar very soon.\"\n\nWhat Scott's duties actually cover beyond evaluation has not been spelled out.\n\nThe 2025 season was the first non-COVID year since Bill Snyder's last in 2018 that Kansas State won fewer than eight games, and it was not a blowout problem. Five of the six losses were one-possession games. The wins were tight in the other direction too: one-score margins over FCS North Dakota and over Oklahoma State. Klieman's peak was a 10-win regular season and a conference title in 2022. The gap between that team and last year's is not talent-shaped so much as margin-shaped.\n\nAvery Johnson, who has now played for a defensive head coach and an offensive one, framed it the same way. \"At times last year, let the small things kind of slip through the cracks,\" Johnson said, \"and I think this year we're kind of trying to hammer down on the small details. No matter how big or how small, that type of stuff translates to wins and losses in the fall.\"\n\nJohnson's read on the change at the top is favorable without being dismissive of what came before. He credited Klieman for teaching him to see coverage and pressure from a defender's side, then said of Klein: \"having a coach that you can relate to and spitball ideas off of definitely helps.\"\n\nThat relationship is the optimistic part. The roster is the hard part. Leading receiver Jayce Brown transferred to LSU, and Kansas State has not identified who replaces that production. Offensive linemen John Pastore and George Fitzpatrick both suffered season-ending injuries. For a passing game that already needed work, losing the top target and two linemen in the same offseason is the actual assignment in front of Klein and Scott, and it lands squarely in Scott's lane. The evaluation questions Klein was asking him in those late-night sessions were about offensive linemen. He gets to answer them now with a real roster.\n\nKlieman is still around the building in an advisory role, slowed in the spring by ankle surgery. Snyder still lives in the house he bought when he arrived in 1989. The standard is not abstract here; it lives a few miles away.\n\nThe schedule gives Klein a soft landing and then a real test in a hurry: Nicholls on Sept. 5, Washington State on Sept. 12, Tulane on Sept. 19, then at Cincinnati on Sept. 26. Kansas comes to Manhattan on Oct. 17. If the one-score games flip, this looks like a fast fix. If they don't, the roster questions from this winter will be the story again in November.",
+          "pullQuote": "I promise you, I'm not chasing these jobs. I'm only gonna go if one person calls.",
+          "primaryTeam": "kansas-state",
+          "teams": [
+            "kansas-state",
+            "texas-am",
+            "lsu"
+          ],
+          "tags": [
+            "colin-klein",
+            "trey-scott",
+            "avery-johnson",
+            "chris-klieman",
+            "coaching-changes",
+            "big-12"
+          ],
+          "seo": {
+            "title": "Colin Klein Named Kansas State Head Coach, Trey Scott Hired as GM",
+            "description": "Kansas State hired Colin Klein to replace the retired Chris Klieman and added former NFL executive Trey Scott as general manager, with a 6-6 season, five one-possession losses and roster holes at receiver and on the offensive line to fix."
+          }
+        },
+        "subtracted": {
+          "headline": "Colin Klein Takes Over Kansas State With Former Backup QB Trey Scott as GM",
+          "dek": "Klein replaces the retired Chris Klieman and pairs with Scott, an 11-year NFL executive and former K-State teammate, after a 6-6 season defined by close losses and new roster holes.",
+          "bodyMarkdown": "Kansas State's answer to a 6-6 season is Colin Klein at head coach and Trey Scott, his former backup quarterback, as general manager.\n\nKlein took over after Chris Klieman retired at the end of the 2025 season. Scott, who spent 11 years as an executive with the Commanders and Raiders and also worked as a coach's agent, took the general manager job in December 2025. Klein was a Heisman finalist who led Kansas State to No. 2 and a Fiesta Bowl appearance in 2012.\n\nScott said he had agreed to leave his previous job only if Klein called.\n\n\"I promise you, I'm not chasing these jobs. I'm only gonna go if one person calls,\" Scott said. \"And I wrote it down on a piece of paper, and I signed it, and gave it to my wife, and it was Colin [Klein]. Sure as heck, he gets a job.\"\n\nScott's specific duties beyond player evaluation have not been detailed.\n\nThe Wildcats went 6-6 in 2025, their first non-COVID season with fewer than eight wins since Bill Snyder's final season in 2018. Five of their six losses were one-possession games. They also had one-score wins over FCS opponent North Dakota and Oklahoma State. Klieman's tenure peaked with a 10-win regular season and conference championship in 2022.\n\nAvery Johnson tied last year's results to details Kansas State is emphasizing under Klein.\n\n\"At times last year, let the small things kind of slip through the cracks,\" Johnson said. \"I think this year we're kind of trying to hammer down on the small details. No matter how big or how small, that type of stuff translates to wins and losses in the fall.\"\n\nJohnson said having an offensive-minded head coach gives him someone he can \"relate to and spitball ideas off of.\" Klein spent two years as Texas A&M's offensive coordinator before returning to Manhattan.\n\nThe immediate problem is the roster. Leading receiver Jayce Brown transferred to LSU, and Kansas State has not identified his replacement. Offensive linemen John Pastore and George Fitzpatrick suffered season-ending injuries. The passing game struggled last season, and Klein begins without its top receiver and with two offensive-line injuries to address.\n\nKlieman remains with the school in an advisory role and was slowed in the spring by ankle surgery. Klein and Scott now inherit a program that was close in 2025 but enters 2026 with clear questions at receiver and on the offensive line.",
+          "pullQuote": "I promise you, I'm not chasing these jobs. I'm only gonna go if one person calls.",
+          "primaryTeam": "kansas-state",
+          "teams": [
+            "kansas-state",
+            "texas-am",
+            "lsu"
+          ],
+          "tags": [
+            "colin-klein",
+            "trey-scott",
+            "avery-johnson",
+            "chris-klieman",
+            "coaching-changes",
+            "big-12"
+          ],
+          "seo": {
+            "title": "Colin Klein Named Kansas State Head Coach, Trey Scott Hired as GM",
+            "description": "Kansas State hired Colin Klein to replace Chris Klieman and added former NFL executive Trey Scott as general manager after a 6-6 season marked by close losses and roster questions."
+          }
+        },
+        "policy": {
+          "pass": true,
+          "violations": []
+        },
+        "fact": {
+          "verdict": "pass",
+          "claims": [
+            {
+              "claim": "Kansas State went 6-6 in 2025",
+              "status": "supported",
+              "sourceRefs": [
+                "fact-sheet"
+              ]
+            },
+            {
+              "claim": "Klein took over after Chris Klieman retired at the end of 2025 season",
+              "status": "supported",
+              "sourceRefs": [
+                "source-1"
+              ]
+            },
+            {
+              "claim": "Scott spent 11 years as NFL executive with Commanders and Raiders, worked as coach's agent",
+              "status": "supported",
+              "sourceRefs": [
+                "source-1"
+              ]
+            },
+            {
+              "claim": "Scott took GM job in December 2025",
+              "status": "supported",
+              "sourceRefs": [
+                "source-1"
+              ]
+            },
+            {
+              "claim": "Klein was Heisman finalist, led K-State to No.2 and Fiesta Bowl in 2012",
+              "status": "supported",
+              "sourceRefs": [
+                "source-1"
+              ]
+            },
+            {
+              "claim": "Scott quote about promise to wife and paper agreement",
+              "status": "supported",
+              "sourceRefs": [
+                "source-1"
+              ]
+            },
+            {
+              "claim": "Scott's specific duties beyond player evaluation not detailed",
+              "status": "analysis",
+              "sourceRefs": []
+            },
+            {
+              "claim": "2025 season was first non-COVID season with fewer than 8 wins since Snyder's final season in 2018",
+              "status": "supported",
+              "sourceRefs": [
+                "source-1"
+              ]
+            },
+            {
+              "claim": "Five of six losses were one-possession games",
+              "status": "supported",
+              "sourceRefs": [
+                "source-1"
+              ]
+            },
+            {
+              "claim": "One-score wins over FCS North Dakota and Oklahoma State",
+              "status": "supported",
+              "sourceRefs": [
+                "source-1"
+              ]
+            },
+            {
+              "claim": "Klieman's tenure peaked with 10-win season and conference championship in 2022",
+              "status": "supported",
+              "sourceRefs": [
+                "source-1"
+              ]
+            },
+            {
+              "claim": "Avery Johnson quote about small details",
+              "status": "supported",
+              "sourceRefs": [
+                "source-1"
+              ]
+            },
+            {
+              "claim": "Johnson quote about relating to offensive-minded head coach",
+              "status": "supported",
+              "sourceRefs": [
+                "source-1"
+              ]
+            },
+            {
+              "claim": "Klein spent two years as Texas A&M offensive coordinator",
+              "status": "supported",
+              "sourceRefs": [
+                "source-1"
+              ]
+            },
+            {
+              "claim": "Jayce Brown transferred to LSU",
+              "status": "supported",
+              "sourceRefs": [
+                "source-1"
+              ]
+            },
+            {
+              "claim": "John Pastore and George Fitzpatrick suffered season-ending injuries",
+              "status": "supported",
+              "sourceRefs": [
+                "source-1"
+              ]
+            },
+            {
+              "claim": "Passing game struggled last season",
+              "status": "supported",
+              "sourceRefs": [
+                "source-1"
+              ]
+            },
+            {
+              "claim": "Klieman remains with school in advisory role, slowed by ankle surgery in spring",
+              "status": "supported",
+              "sourceRefs": [
+                "source-1"
+              ]
+            }
+          ],
+          "joshMisattribution": []
+        },
+        "quit": {
+          "neverWantedToQuit": false,
+          "quitParagraphIndex": 4,
+          "quitText": "Scott's specific duties beyond player evaluation have not been detailed.",
+          "reason": "no new information",
+          "didFinish": true,
+          "soundsLikeFootballPerson": true,
+          "worthTheTime": true,
+          "wouldClickAnother": true,
+          "wouldSend": false,
+          "note": "The Klein-Scott connection and the roster rundown are useful, but the vague GM-duties sentence briefly reads like a dead end."
+        },
+        "smell": {
+          "pass": true,
+          "sentences": [],
+          "structural": false,
+          "note": "The piece is straightforward, specific reporting. It does not show the synthetic argument structure, abstractions, or tidy rhetorical framing associated with AI-generated sportswriting."
+        }
+      },
+      "calls": [
+        {
+          "stage": "reporting-pack",
+          "role": "packExtract",
+          "vendor": "anthropic",
+          "model": "claude-sonnet-5",
+          "inputTokens": 3355,
+          "outputTokens": 2668,
+          "costUsd": 0.0501,
+          "ms": 24937
+        },
+        {
+          "stage": "fan-brief",
+          "role": "fanBrief",
+          "vendor": "openai",
+          "model": "gpt-5.6-terra",
+          "inputTokens": 4030,
+          "outputTokens": 436,
+          "costUsd": 0.0577,
+          "ms": 7571
+        },
+        {
+          "stage": "reported-writer",
+          "role": "reportedWriter",
+          "vendor": "anthropic",
+          "model": "claude-opus-5",
+          "inputTokens": 5501,
+          "outputTokens": 1695,
+          "costUsd": 0.2096,
+          "ms": 24530
+        },
+        {
+          "stage": "subtraction-editor",
+          "role": "subtractionEditor",
+          "vendor": "openai",
+          "model": "gpt-5.6-terra",
+          "inputTokens": 4037,
+          "outputTokens": 1306,
+          "costUsd": 0.0926,
+          "ms": 15527
+        },
+        {
+          "stage": "fact-check",
+          "role": "factCheck",
+          "vendor": "anthropic",
+          "model": "claude-sonnet-5",
+          "inputTokens": 0,
+          "outputTokens": 0,
+          "costUsd": 0,
+          "ms": 9754
+        },
+        {
+          "stage": "quit-reading",
+          "role": "quitJudge",
+          "vendor": "openai",
+          "model": "gpt-5.6-terra",
+          "inputTokens": 977,
+          "outputTokens": 103,
+          "costUsd": 0.0139,
+          "ms": 1999
+        },
+        {
+          "stage": "ai-smell",
+          "role": "smellJudge",
+          "vendor": "openai",
+          "model": "gpt-5.6-terra",
+          "inputTokens": 791,
+          "outputTokens": 57,
+          "costUsd": 0.0102,
+          "ms": 2111
+        }
+      ],
+      "totalCostUsd": 0.4341,
+      "final": {
+        "headline": "Colin Klein Takes Over Kansas State With Former Backup QB Trey Scott as GM",
+        "dek": "Klein replaces the retired Chris Klieman and pairs with Scott, an 11-year NFL executive and former K-State teammate, after a 6-6 season defined by close losses and new roster holes.",
+        "bodyMarkdown": "Kansas State's answer to a 6-6 season is Colin Klein at head coach and Trey Scott, his former backup quarterback, as general manager.\n\nKlein took over after Chris Klieman retired at the end of the 2025 season. Scott, who spent 11 years as an executive with the Commanders and Raiders and also worked as a coach's agent, took the general manager job in December 2025. Klein was a Heisman finalist who led Kansas State to No. 2 and a Fiesta Bowl appearance in 2012.\n\nScott said he had agreed to leave his previous job only if Klein called.\n\n\"I promise you, I'm not chasing these jobs. I'm only gonna go if one person calls,\" Scott said. \"And I wrote it down on a piece of paper, and I signed it, and gave it to my wife, and it was Colin [Klein]. Sure as heck, he gets a job.\"\n\nScott's specific duties beyond player evaluation have not been detailed.\n\nThe Wildcats went 6-6 in 2025, their first non-COVID season with fewer than eight wins since Bill Snyder's final season in 2018. Five of their six losses were one-possession games. They also had one-score wins over FCS opponent North Dakota and Oklahoma State. Klieman's tenure peaked with a 10-win regular season and conference championship in 2022.\n\nAvery Johnson tied last year's results to details Kansas State is emphasizing under Klein.\n\n\"At times last year, let the small things kind of slip through the cracks,\" Johnson said. \"I think this year we're kind of trying to hammer down on the small details. No matter how big or how small, that type of stuff translates to wins and losses in the fall.\"\n\nJohnson said having an offensive-minded head coach gives him someone he can \"relate to and spitball ideas off of.\" Klein spent two years as Texas A&M's offensive coordinator before returning to Manhattan.\n\nThe immediate problem is the roster. Leading receiver Jayce Brown transferred to LSU, and Kansas State has not identified his replacement. Offensive linemen John Pastore and George Fitzpatrick suffered season-ending injuries. The passing game struggled last season, and Klein begins without its top receiver and with two offensive-line injuries to address.\n\nKlieman remains with the school in an advisory role and was slowed in the spring by ankle surgery. Klein and Scott now inherit a program that was close in 2025 but enters 2026 with clear questions at receiver and on the offensive line.",
+        "pullQuote": "I promise you, I'm not chasing these jobs. I'm only gonna go if one person calls.",
+        "primaryTeam": "kansas-state",
+        "teams": [
+          "kansas-state",
+          "texas-am",
+          "lsu"
+        ],
+        "tags": [
+          "colin-klein",
+          "trey-scott",
+          "avery-johnson",
+          "chris-klieman",
+          "coaching-changes",
+          "big-12"
+        ],
+        "seo": {
+          "title": "Colin Klein Named Kansas State Head Coach, Trey Scott Hired as GM",
+          "description": "Kansas State hired Colin Klein to replace Chris Klieman and added former NFL executive Trey Scott as general manager after a 6-6 season marked by close losses and roster questions."
+        }
+      },
+      "words": 404,
+      "completedAt": "2026-08-28T12:43:43.869Z"
+    }
+  },
+  {
+    "id": "big-ten-qb-rankings",
+    "engine": "reported",
+    "run": {
+      "id": "run_mtcy0jhl_aa0eh2",
+      "engine": "reported",
+      "sourceId": "big-ten-qb-rankings",
+      "fixture": "big-ten-qb-rankings",
+      "mode": "replay",
+      "status": "completed",
+      "startedAt": "2026-08-28T12:43:44.169Z",
+      "artifacts": {
+        "repairs": [
+          "cut: Cut the unsupported framing that the ranking was \"less a surprise\" and the transition about where the calendar points.",
+          "cut: Cut the generic claim that Sayin’s production \"survives a preseason list argument.\"",
+          "cut: Cut the analysis that Ohio State’s offensive line was the variable that made its 12-2 season feel less than airtight.",
+          "cut: Cut the abstract conclusion that September will be more informative than the ranking.",
+          "cut: Condensed the secondary-quarterback roundup and removed the broad \"league in transition\" framing.",
+          "deleted ¶4 (no new information)"
+        ],
+        "pack": {
+          "development": "CBS Sports released a preseason ranking of Big Ten quarterbacks entering the 2026 season, placing Ohio State's Julian Sayin and Oregon's Dante Moore atop an elite tier.",
+          "facts": [
+            {
+              "fact": "CBS Sports ranks Julian Sayin and Dante Moore as the top tier of Big Ten quarterbacks entering 2026.",
+              "sourceRef": "source-1",
+              "status": "reported"
+            },
+            {
+              "fact": "Sayin had a 32-touchdown, 3,600-yard season in 2025.",
+              "sourceRef": "source-1",
+              "status": "reported"
+            },
+            {
+              "fact": "Ohio State lost to Indiana and Miami in 2025 with Sayin playing 'human' behind a faulty offensive line.",
+              "sourceRef": "source-1",
+              "status": "reported"
+            },
+            {
+              "fact": "Ohio State has a new offensive coordinator, Arthur Smith, for 2026.",
+              "sourceRef": "source-1",
+              "status": "reported"
+            },
+            {
+              "fact": "Sayin faces an early test at Texas in Week 2 of 2026.",
+              "sourceRef": "source-1",
+              "status": "reported"
+            },
+            {
+              "fact": "Dante Moore returned to Oregon for 2026 as one of the nation's highest-paid players and will have a new offensive coordinator.",
+              "sourceRef": "source-1",
+              "status": "reported"
+            },
+            {
+              "fact": "USC's Maiava is described as having arm talent and playmaking ability valued by coach Lincoln Riley.",
+              "sourceRef": "source-1",
+              "status": "reported"
+            },
+            {
+              "fact": "Maryland finished 4-8 in 2025, and quarterback Washington is seen as a potential program-changer.",
+              "sourceRef": "source-1",
+              "status": "reported"
+            },
+            {
+              "fact": "Indiana's Hoover replaces Heisman winner Fernando Mendoza and previously played at TCU.",
+              "sourceRef": "source-1",
+              "status": "reported"
+            },
+            {
+              "fact": "Washington (Huskies QB) is described as a dual-threat quarterback who could push Washington into playoff conversation.",
+              "sourceRef": "source-1",
+              "status": "reported"
+            },
+            {
+              "fact": "UCLA's Iamaleava plays for first-year coach Bob Chesney and lacked consistency in 2025.",
+              "sourceRef": "source-1",
+              "status": "reported"
+            },
+            {
+              "fact": "Michigan's Underwood will play under new offensive coordinator Jason Beck in 2026.",
+              "sourceRef": "source-1",
+              "status": "reported"
+            }
+          ],
+          "quotes": [],
+          "numbers": [
+            {
+              "value": "32",
+              "meaning": "Julian Sayin's touchdown passes in 2025",
+              "sourceRef": "source-1"
+            },
+            {
+              "value": "3,600",
+              "meaning": "Julian Sayin's passing yards in 2025",
+              "sourceRef": "source-1"
+            },
+            {
+              "value": "4-8",
+              "meaning": "Maryland's 2025 season record",
+              "sourceRef": "source-1"
+            },
+            {
+              "value": "3:1",
+              "meaning": "Incomplete ratio mentioned regarding a quarterback's touchdown-to-interception performance (text cut off)",
+              "sourceRef": "source-1"
+            }
+          ],
+          "unknowns": [
+            "What the full ranking order is beyond the quarterbacks mentioned (the list appears cut off).",
+            "Which quarterback the '3:1' ratio at the end of the article refers to.",
+            "How the rankings were compiled (advanced stats, coach input, etc.).",
+            "Whether any of these quarterbacks have suffered injuries entering the season."
+          ],
+          "relevantTeamContext": [
+            "Ohio State 2025 record: 12-2 (9-0 conference); preseason AP/Coaches No. 1; 2026 schedule includes at Texas on Sep 12, vs Oregon on Nov 7.",
+            "Oregon 2025 record: 13-2 (8-1 conference); preseason AP/Coaches No. 2; 2026 schedule includes at Ohio State on Nov 7."
+          ]
+        },
+        "brief": {
+          "theNews": "CBS Sports put Ohio State’s Julian Sayin and Oregon’s Dante Moore alone in its top preseason tier of Big Ten quarterbacks for 2026.",
+          "whyAFanCares": "The ranking spotlights the quarterbacks leading the preseason AP and Coaches poll’s No. 1 and No. 2 teams, with Sayin and Moore set to meet when Oregon visits Ohio State on Nov. 7.",
+          "interestingDetail": "Both top-tier quarterbacks will be working with new offensive coordinators: Arthur Smith at Ohio State and an unnamed new coordinator at Oregon.",
+          "footballAngle": "Sayin’s 32-touchdown, 3,600-yard 2025 season gives Ohio State proven production entering its Week 2 trip to Texas, while Moore’s return keeps Oregon’s playoff-caliber roster settled at quarterback before the Ducks’ Nov. 7 game at Ohio State.",
+          "importantUnknown": "CBS Sports’ ranking methodology and the complete order beyond the quarterbacks discussed are not provided in the available report.",
+          "depth": "brief",
+          "depthReason": "This is a single outlet’s preseason ranking, but it includes meaningful production context for Sayin, the Oregon-Ohio State head-to-head date, and coordinator changes for both top quarterbacks."
+        },
+        "draft": {
+          "headline": "Sayin and Moore Head Big Ten Quarterback Tier Ahead of Nov. 7 Meeting",
+          "dek": "A preseason ranking puts Ohio State's Julian Sayin and Oregon's Dante Moore alone at the top of the league — both with new play-callers, both circling the same November date.",
+          "bodyMarkdown": "Julian Sayin and Dante Moore sit alone in the top tier of a preseason ranking of Big Ten quarterbacks for 2026. Given that Ohio State opens as the No. 1 team in both the AP and Coaches polls and Oregon as No. 2, the ordering is less a surprise than a reminder of where the November calendar points: Oregon visits Columbus on Nov. 7.\n\nSayin's 2025 was 32 touchdowns and 3,600 yards, which is the kind of production that survives a preseason list argument. The counterweight is also in the record — losses to Indiana and Miami, with Sayin described as \"human\" behind a faulty offensive line. That is the part worth tracking, because Ohio State's front is the variable that made a 12-2 season feel less than airtight, and the Buckeyes hit Texas in Week 2 on Sept. 12 before the schedule gives them much runway.\n\nBoth headliners are also breaking in a new play-caller. Arthur Smith takes over the Ohio State offense. Moore returns to Oregon — as one of the nation's highest-paid players — to a new coordinator of his own. Continuity at quarterback with turnover above it is the shared condition at the top of the league, and it is the reason September will be more informative than the ranking is.\n\nBelow them, the tiers read like a league in transition: Indiana hands the job to Hoover, a former TCU quarterback, replacing Heisman winner Fernando Mendoza; Michigan's Bryce Underwood works under new coordinator Jason Beck; UCLA's Nico Iamaleava plays for first-year coach Bob Chesney after an inconsistent 2025; Maryland is betting Washington can move a program that went 4-8.\n\nThe methodology behind the ranking was not detailed, and the full order beyond those quarterbacks was not available.",
+          "pullQuote": "",
+          "primaryTeam": "ohio-state",
+          "teams": [
+            "ohio-state",
+            "oregon",
+            "michigan",
+            "indiana",
+            "ucla",
+            "maryland"
+          ],
+          "tags": [
+            "julian-sayin",
+            "dante-moore",
+            "big-ten",
+            "quarterback-rankings",
+            "arthur-smith",
+            "2026-season"
+          ],
+          "seo": {
+            "title": "Julian Sayin, Dante Moore Top Preseason Big Ten QB Tier for 2026",
+            "description": "Ohio State's Julian Sayin and Oregon's Dante Moore headline a preseason Big Ten quarterback ranking, with new coordinators for both and a Nov. 7 meeting in Columbus ahead."
+          }
+        },
+        "subtracted": {
+          "headline": "Sayin and Moore Head CBS Sports’ Top Big Ten QB Tier Ahead of Nov. 7 Meeting",
+          "dek": "Ohio State’s Julian Sayin and Oregon’s Dante Moore are alone in CBS Sports’ top preseason Big Ten quarterback tier, with new coordinators and a Nov. 7 meeting in Columbus ahead.",
+          "bodyMarkdown": "CBS Sports placed Ohio State’s Julian Sayin and Oregon’s Dante Moore alone in its top preseason tier of Big Ten quarterbacks for 2026. Ohio State is preseason No. 1 in the AP and Coaches polls, while Oregon is No. 2. The Ducks visit the Buckeyes on Nov. 7.\n\nSayin threw 32 touchdown passes and for 3,600 yards in 2025. Ohio State lost to Indiana and Miami with Sayin described as “human” behind a faulty offensive line. The Buckeyes open their major tests early, traveling to Texas in Week 2 on Sept. 12.\n\nBoth quarterbacks will work with new offensive coordinators. Arthur Smith takes over Ohio State’s offense. Moore returned to Oregon for 2026 as one of the nation’s highest-paid players and will have a new coordinator.\n\nCBS Sports also highlighted Indiana’s Hoover, a former TCU quarterback replacing Heisman winner Fernando Mendoza; Michigan’s Bryce Underwood, who will play under new coordinator Jason Beck; UCLA’s Nico Iamaleava, coming off an inconsistent 2025 under first-year coach Bob Chesney; and Maryland’s Washington, who could change a program that finished 4-8 in 2025.\n\nCBS Sports’ ranking methodology was not detailed, and the complete order beyond the quarterbacks discussed was not available.",
+          "pullQuote": "",
+          "primaryTeam": "ohio-state",
+          "teams": [
+            "ohio-state",
+            "oregon",
+            "michigan",
+            "indiana",
+            "ucla",
+            "maryland"
+          ],
+          "tags": [
+            "julian-sayin",
+            "dante-moore",
+            "big-ten",
+            "quarterback-rankings",
+            "arthur-smith",
+            "2026-season"
+          ],
+          "seo": {
+            "title": "Julian Sayin, Dante Moore Top CBS Sports’ Big Ten QB Tier",
+            "description": "CBS Sports placed Ohio State’s Julian Sayin and Oregon’s Dante Moore in its top Big Ten quarterback tier for 2026 ahead of their Nov. 7 meeting."
+          }
+        },
+        "policy": {
+          "pass": true,
+          "violations": []
+        },
+        "fact": {
+          "verdict": "pass",
+          "claims": [
+            {
+              "claim": "Sayin and Moore sit alone in top tier of preseason Big Ten QB ranking",
+              "status": "supported",
+              "sourceRefs": [
+                "source-1"
+              ]
+            },
+            {
+              "claim": "Ohio State opens No.1 in AP and Coaches polls",
+              "status": "supported",
+              "sourceRefs": [
+                "fact-sheet"
+              ]
+            },
+            {
+              "claim": "Oregon opens No.2 in both polls",
+              "status": "supported",
+              "sourceRefs": [
+                "fact-sheet"
+              ]
+            },
+            {
+              "claim": "Oregon visits Columbus on Nov. 7",
+              "status": "supported",
+              "sourceRefs": [
+                "fact-sheet"
+              ]
+            },
+            {
+              "claim": "Sayin's 2025: 32 touchdowns, 3,600 yards",
+              "status": "supported",
+              "sourceRefs": [
+                "source-1"
+              ]
+            },
+            {
+              "claim": "Sayin's losses to Indiana and Miami, described as 'human' behind faulty offensive line",
+              "status": "supported",
+              "sourceRefs": [
+                "source-1"
+              ]
+            },
+            {
+              "claim": "Ohio State's 2025 record 12-2",
+              "status": "supported",
+              "sourceRefs": [
+                "fact-sheet"
+              ]
+            },
+            {
+              "claim": "Ohio State plays at Texas in Week 2, Sept. 12",
+              "status": "supported",
+              "sourceRefs": [
+                "fact-sheet",
+                "source-1"
+              ]
+            },
+            {
+              "claim": "Arthur Smith takes over Ohio State offense",
+              "status": "supported",
+              "sourceRefs": [
+                "source-1"
+              ]
+            },
+            {
+              "claim": "Moore returns to Oregon as one of nation's highest-paid players, new coordinator",
+              "status": "supported",
+              "sourceRefs": [
+                "source-1"
+              ]
+            },
+            {
+              "claim": "Indiana hands job to Hoover, former TCU quarterback, replacing Heisman winner Fernando Mendoza",
+              "status": "supported",
+              "sourceRefs": [
+                "source-1"
+              ]
+            },
+            {
+              "claim": "Michigan's Bryce Underwood works under new coordinator Jason Beck",
+              "status": "supported",
+              "sourceRefs": [
+                "source-1"
+              ]
+            },
+            {
+              "claim": "UCLA's Nico Iamaleava plays for first-year coach Bob Chesney after inconsistent 2025",
+              "status": "supported",
+              "sourceRefs": [
+                "source-1"
+              ]
+            },
+            {
+              "claim": "Maryland betting Washington can move a program that went 4-8",
+              "status": "supported",
+              "sourceRefs": [
+                "source-1"
+              ]
+            }
+          ],
+          "joshMisattribution": []
+        },
+        "quit": {
+          "neverWantedToQuit": false,
+          "quitParagraphIndex": 4,
+          "quitText": "The methodology behind the ranking was not detailed, and the full order beyond those quarterbacks was not available.",
+          "reason": "no new information",
+          "didFinish": true,
+          "soundsLikeFootballPerson": true,
+          "worthTheTime": false,
+          "wouldClickAnother": true,
+          "wouldSend": false,
+          "note": "The Sayin-Moore setup and Nov. 7 hook are useful, but the piece never delivers enough of the actual ranking to make the premise pay off."
+        },
+        "quitAfterRepair": {
+          "neverWantedToQuit": true,
+          "reason": "none",
+          "didFinish": true,
+          "soundsLikeFootballPerson": true,
+          "worthTheTime": true,
+          "wouldClickAnother": true,
+          "wouldSend": false,
+          "note": "Quick, informed setup for the Sayin-Moore collision, though it stops before giving much real tier debate beyond the top two."
+        },
+        "smell": {
+          "pass": false,
+          "sentences": [
+            "Given that Ohio State opens as the No. 1 team in both the AP and Coaches polls and Oregon as No. 2, the ordering is less a surprise than a reminder of where the November calendar points: Oregon visits Columbus on Nov. 7.",
+            "The counterweight is also in the record — losses to Indiana and Miami, with Sayin described as \"human\" behind a faulty offensive line.",
+            "Continuity at quarterback with turnover above it is the shared condition at the top of the league, and it is the reason September will be more informative than the ranking is.",
+            "Below them, the tiers read like a league in transition: Indiana hands the job to Hoover, a former TCU quarterback, replacing Heisman winner Fernando Mendoza; Michigan's Bryce Underwood works under new coordinator Jason Beck; UCLA's Nico Iamaleava plays for first-year coach Bob Chesney after an inconsistent 2025; Maryland is betting Washington can move a program that went 4-8."
+          ],
+          "structural": true,
+          "note": "The piece is structurally synthetic: it opens with a thesis, supplies a neat counterweight, broadens to a shared abstract condition, then closes by summarizing the rest of the league as a transition."
+        }
+      },
+      "calls": [
+        {
+          "stage": "reporting-pack",
+          "role": "packExtract",
+          "vendor": "anthropic",
+          "model": "claude-sonnet-5",
+          "inputTokens": 3689,
+          "outputTokens": 1365,
+          "costUsd": 0.0315,
+          "ms": 14145
+        },
+        {
+          "stage": "fan-brief",
+          "role": "fanBrief",
+          "vendor": "openai",
+          "model": "gpt-5.6-terra",
+          "inputTokens": 2988,
+          "outputTokens": 375,
+          "costUsd": 0.0449,
+          "ms": 5853
+        },
+        {
+          "stage": "reported-writer",
+          "role": "reportedWriter",
+          "vendor": "anthropic",
+          "model": "claude-opus-5",
+          "inputTokens": 3959,
+          "outputTokens": 1106,
+          "costUsd": 0.1423,
+          "ms": 15462
+        },
+        {
+          "stage": "subtraction-editor",
+          "role": "subtractionEditor",
+          "vendor": "openai",
+          "model": "gpt-5.6-terra",
+          "inputTokens": 2443,
+          "outputTokens": 872,
+          "costUsd": 0.0593,
+          "ms": 10661
+        },
+        {
+          "stage": "fact-check",
+          "role": "factCheck",
+          "vendor": "anthropic",
+          "model": "claude-sonnet-5",
+          "inputTokens": 0,
+          "outputTokens": 0,
+          "costUsd": 0,
+          "ms": 6883
+        },
+        {
+          "stage": "quit-reading",
+          "role": "quitJudge",
+          "vendor": "openai",
+          "model": "gpt-5.6-terra",
+          "inputTokens": 815,
+          "outputTokens": 192,
+          "costUsd": 0.0158,
+          "ms": 3338
+        },
+        {
+          "stage": "fact-check",
+          "role": "factCheck",
+          "vendor": "anthropic",
+          "model": "claude-sonnet-5",
+          "inputTokens": 0,
+          "outputTokens": 0,
+          "costUsd": 0,
+          "ms": 9170
+        },
+        {
+          "stage": "quit-reading",
+          "role": "quitJudge",
+          "vendor": "openai",
+          "model": "gpt-5.6-terra",
+          "inputTokens": 792,
+          "outputTokens": 337,
+          "costUsd": 0.0214,
+          "ms": 6524
+        },
+        {
+          "stage": "ai-smell",
+          "role": "smellJudge",
+          "vendor": "openai",
+          "model": "gpt-5.6-terra",
+          "inputTokens": 627,
+          "outputTokens": 366,
+          "costUsd": 0.0209,
+          "ms": 4536
+        }
+      ],
+      "totalCostUsd": 0.3361,
+      "final": {
+        "headline": "Sayin and Moore Head Big Ten Quarterback Tier Ahead of Nov. 7 Meeting",
+        "dek": "A preseason ranking puts Ohio State's Julian Sayin and Oregon's Dante Moore alone at the top of the league — both with new play-callers, both circling the same November date.",
+        "bodyMarkdown": "Julian Sayin and Dante Moore sit alone in the top tier of a preseason ranking of Big Ten quarterbacks for 2026. Given that Ohio State opens as the No. 1 team in both the AP and Coaches polls and Oregon as No. 2, the ordering is less a surprise than a reminder of where the November calendar points: Oregon visits Columbus on Nov. 7.\n\nSayin's 2025 was 32 touchdowns and 3,600 yards, which is the kind of production that survives a preseason list argument. The counterweight is also in the record — losses to Indiana and Miami, with Sayin described as \"human\" behind a faulty offensive line. That is the part worth tracking, because Ohio State's front is the variable that made a 12-2 season feel less than airtight, and the Buckeyes hit Texas in Week 2 on Sept. 12 before the schedule gives them much runway.\n\nBoth headliners are also breaking in a new play-caller. Arthur Smith takes over the Ohio State offense. Moore returns to Oregon — as one of the nation's highest-paid players — to a new coordinator of his own. Continuity at quarterback with turnover above it is the shared condition at the top of the league, and it is the reason September will be more informative than the ranking is.\n\nBelow them, the tiers read like a league in transition: Indiana hands the job to Hoover, a former TCU quarterback, replacing Heisman winner Fernando Mendoza; Michigan's Bryce Underwood works under new coordinator Jason Beck; UCLA's Nico Iamaleava plays for first-year coach Bob Chesney after an inconsistent 2025; Maryland is betting Washington can move a program that went 4-8.",
+        "pullQuote": "",
+        "primaryTeam": "ohio-state",
+        "teams": [
+          "ohio-state",
+          "oregon",
+          "michigan",
+          "indiana",
+          "ucla",
+          "maryland"
+        ],
+        "tags": [
+          "julian-sayin",
+          "dante-moore",
+          "big-ten",
+          "quarterback-rankings",
+          "arthur-smith",
+          "2026-season"
+        ],
+        "seo": {
+          "title": "Julian Sayin, Dante Moore Top Preseason Big Ten QB Tier for 2026",
+          "description": "Ohio State's Julian Sayin and Oregon's Dante Moore headline a preseason Big Ten quarterback ranking, with new coordinators for both and a Nov. 7 meeting in Columbus ahead."
+        }
+      },
+      "words": 273,
+      "completedAt": "2026-08-28T12:45:00.754Z"
+    }
+  },
+  {
+    "id": "ole-miss-pause",
+    "engine": "reported",
+    "run": {
+      "id": "run_mtcy26v9_06q39q",
+      "engine": "reported",
+      "sourceId": "ole-miss-pause",
+      "fixture": "ole-miss-pause",
+      "mode": "replay",
+      "status": "completed",
+      "startedAt": "2026-08-28T12:45:01.125Z",
+      "artifacts": {
+        "repairs": [
+          "cut: Removed the unsupported claim that Ole Miss is not a consensus national pick.",
+          "cut: Cut the repetitive explanation that neither Upadhyay’s case nor the Baton Rouge discussion was detailed.",
+          "cut: Trimmed schedule framing and combined the unreported-discussion caveats."
+        ],
+        "pack": {
+          "development": "CBS Sports co-host Sudu Upadhyay joined the Talk of Champions podcast to discuss reasons for national skepticism about the 2026 Ole Miss Rebels.",
+          "facts": [
+            {
+              "fact": "Sudu Upadhyay, co-host at CBS Sports and Game Runs Deep, joined Talk of Champions to discuss the 2026 Ole Miss Rebels.",
+              "sourceRef": "source-1",
+              "status": "confirmed"
+            },
+            {
+              "fact": "The article's author wrote an earlier piece identifying five things Pete Golding and the coaching staff need to go right for major success this season.",
+              "sourceRef": "source-1",
+              "status": "confirmed"
+            },
+            {
+              "fact": "The discussion also covered the NFL-to-college football pipeline in Baton Rouge.",
+              "sourceRef": "source-1",
+              "status": "confirmed"
+            }
+          ],
+          "quotes": [],
+          "numbers": [
+            {
+              "value": "five",
+              "meaning": "number of things identified that need to go right for Ole Miss's success this season",
+              "sourceRef": "source-1"
+            }
+          ],
+          "unknowns": [
+            "What specifically are the five things Pete Golding needs to go right?",
+            "What specific reasons did Upadhyay give for national concern about Ole Miss?",
+            "What did the discussion of the Baton Rouge NFL-to-CFB pipeline actually entail?",
+            "When did this podcast air relative to the season?"
+          ],
+          "relevantTeamContext": [
+            "Ole Miss 2025 record: 13-2 (7-1 conference)",
+            "Preseason polls: AP Top 25 No. 9, AFCA Coaches No. 10",
+            "2026 schedule includes SUN SEP 6 vs Louisville, SAT SEP 19 vs LSU, SAT NOV 7 vs Georgia, SAT OCT 24 at Texas"
+          ]
+        },
+        "brief": {
+          "theNews": "CBS Sports co-host Sudu Upadhyay appeared on Ole Miss’s Talk of Champions podcast to discuss why national commentators have reservations about the 2026 Rebels.",
+          "whyAFanCares": "Ole Miss enters 2026 ranked No. 9 in the AP poll after a 13-2 season, so fans may want to hear the case against the hype before a schedule that includes LSU, Texas, Georgia and Oklahoma.",
+          "interestingDetail": "The podcast also touched on an NFL-to-college football pipeline in Baton Rouge, though the available report does not say what that discussion involved.",
+          "importantUnknown": "The report provides none of Upadhyay’s actual reasons for skepticism or the five factors Ole Miss coach Pete Golding needs to have break right, so there is no substantive football argument to evaluate.",
+          "depth": "item",
+          "depthReason": "This is a promotional podcast appearance note without the discussion’s specific claims, evidence, or roster and on-field consequences."
+        },
+        "draft": {
+          "headline": "National Skepticism About Ole Miss Gets Aired on Rebels Podcast",
+          "dek": "CBS Sports co-host Sudu Upadhyay joined Talk of Champions to talk through why the No. 9 Rebels aren't a consensus pick nationally.",
+          "bodyMarkdown": "Sudu Upadhyay, a co-host at CBS Sports and Game Runs Deep, appeared on the Talk of Champions podcast to lay out why national voices have reservations about the 2026 Ole Miss Rebels. The specifics of his case were not detailed in the available report.\n\nOle Miss is coming off a 13-2 season and a 7-1 league mark, and opens the year at No. 9 in the AP poll and No. 10 in the AFCA Coaches poll. The schedule does not ease anyone into the argument: Louisville on Sunday, Sept. 6, LSU on Saturday, Sept. 19, a trip to Texas on Oct. 24 and Georgia on Nov. 7.\n\nThe same conversation touched on the NFL-to-college pipeline in Baton Rouge, though the substance of that segment also wasn't reported.\n\nSeparately, the podcast's host had previously written up five things Pete Golding and his staff need to break right for Ole Miss to reach the top of the sport this season. Those five items weren't enumerated in the available report either.",
+          "pullQuote": "",
+          "primaryTeam": "ole-miss",
+          "teams": [
+            "ole-miss",
+            "lsu",
+            "texas",
+            "georgia",
+            "louisville"
+          ],
+          "tags": [
+            "ole-miss",
+            "pete-golding",
+            "sec",
+            "2026-season",
+            "preseason-polls"
+          ],
+          "seo": {
+            "title": "Ole Miss 2026: National Skepticism Discussed on Rebels Podcast",
+            "description": "CBS Sports co-host Sudu Upadhyay joined Talk of Champions to discuss doubts about the No. 9 Ole Miss Rebels, who return from a 13-2 season into a schedule with LSU, Texas and Georgia."
+          }
+        },
+        "subtracted": {
+          "headline": "National Skepticism About Ole Miss Gets Aired on Rebels Podcast",
+          "dek": "CBS Sports co-host Sudu Upadhyay joined Talk of Champions to discuss reservations about the 2026 Rebels.",
+          "bodyMarkdown": "Sudu Upadhyay, a co-host at CBS Sports and Game Runs Deep, joined the Talk of Champions podcast to discuss national reservations about the 2026 Ole Miss Rebels. The available report did not include the specifics of his case.\n\nOle Miss enters 2026 after a 13-2 season and a 7-1 conference mark, ranked No. 9 in the AP poll and No. 10 in the AFCA Coaches poll. Its schedule includes Louisville on Sept. 6, LSU on Sept. 19, Texas on Oct. 24 and Georgia on Nov. 7.\n\nThe discussion also covered the NFL-to-college football pipeline in Baton Rouge. Separately, the article’s author had identified five things Pete Golding and his staff need to get right for major success, though those items were not provided in the report.",
+          "pullQuote": "",
+          "primaryTeam": "ole-miss",
+          "teams": [
+            "ole-miss",
+            "lsu",
+            "texas",
+            "georgia",
+            "louisville"
+          ],
+          "tags": [
+            "ole-miss",
+            "pete-golding",
+            "sec",
+            "2026-season",
+            "preseason-polls"
+          ],
+          "seo": {
+            "title": "Ole Miss 2026: National Skepticism Discussed on Rebels Podcast",
+            "description": "CBS Sports co-host Sudu Upadhyay joined Talk of Champions to discuss reservations about No. 9 Ole Miss, coming off a 13-2 season."
+          }
+        },
+        "policy": {
+          "pass": true,
+          "violations": []
+        },
+        "fact": {
+          "verdict": "pass",
+          "claims": [
+            {
+              "claim": "Sudu Upadhyay, a co-host at CBS Sports and Game Runs Deep, joined the Talk of Champions podcast to discuss national reservations about the 2026 Ole Miss Rebels",
+              "status": "supported",
+              "sourceRefs": [
+                "source-1"
+              ]
+            },
+            {
+              "claim": "The available report did not include the specifics of his case",
+              "status": "analysis",
+              "sourceRefs": []
+            },
+            {
+              "claim": "Ole Miss enters 2026 after a 13-2 season and a 7-1 conference mark",
+              "status": "supported",
+              "sourceRefs": [
+                "fact-sheet"
+              ]
+            },
+            {
+              "claim": "ranked No. 9 in the AP poll and No. 10 in the AFCA Coaches poll",
+              "status": "supported",
+              "sourceRefs": [
+                "fact-sheet"
+              ]
+            },
+            {
+              "claim": "Its schedule includes Louisville on Sept. 6, LSU on Sept. 19, Texas on Oct. 24 and Georgia on Nov. 7",
+              "status": "supported",
+              "sourceRefs": [
+                "fact-sheet"
+              ]
+            },
+            {
+              "claim": "The discussion also covered the NFL-to-college football pipeline in Baton Rouge",
+              "status": "supported",
+              "sourceRefs": [
+                "source-1"
+              ]
+            },
+            {
+              "claim": "The article's author had identified five things Pete Golding and his staff need to get right for major success",
+              "status": "supported",
+              "sourceRefs": [
+                "source-1"
+              ]
+            },
+            {
+              "claim": "those items were not provided in the report",
+              "status": "analysis",
+              "sourceRefs": []
+            }
+          ],
+          "joshMisattribution": []
+        },
+        "quit": {
+          "neverWantedToQuit": false,
+          "quitParagraphIndex": 0,
+          "quitText": "Sudu Upadhyay, a co-host at CBS Sports and Game Runs Deep, joined the Talk of Champions podcast to discuss national reservations about the 2026 Ole Miss Rebels. The available report did not include the specifics of his case.",
+          "reason": "no new information",
+          "didFinish": false,
+          "soundsLikeFootballPerson": false,
+          "worthTheTime": false,
+          "wouldClickAnother": false,
+          "wouldSend": false,
+          "note": "The headline promises the national skepticism, then immediately says the article cannot tell me what it was."
+        },
+        "smell": {
+          "pass": false,
+          "sentences": [
+            "The available report did not include the specifics of his case.",
+            "Separately, the article’s author had identified five things Pete Golding and his staff need to get right for major success, though those items were not provided in the report."
+          ],
+          "structural": false,
+          "note": "These are machine-like meta-summary sentences that describe missing source material rather than report football."
+        }
+      },
+      "calls": [
+        {
+          "stage": "reporting-pack",
+          "role": "packExtract",
+          "vendor": "anthropic",
+          "model": "claude-sonnet-5",
+          "inputTokens": 2112,
+          "outputTokens": 590,
+          "costUsd": 0.0152,
+          "ms": 7718
+        },
+        {
+          "stage": "fan-brief",
+          "role": "fanBrief",
+          "vendor": "openai",
+          "model": "gpt-5.6-terra",
+          "inputTokens": 1514,
+          "outputTokens": 207,
+          "costUsd": 0.0234,
+          "ms": 3993
+        },
+        {
+          "stage": "reported-writer",
+          "role": "reportedWriter",
+          "vendor": "anthropic",
+          "model": "claude-opus-5",
+          "inputTokens": 2999,
+          "outputTokens": 701,
+          "costUsd": 0.0976,
+          "ms": 9236
+        },
+        {
+          "stage": "subtraction-editor",
+          "role": "subtractionEditor",
+          "vendor": "openai",
+          "model": "gpt-5.6-terra",
+          "inputTokens": 1664,
+          "outputTokens": 391,
+          "costUsd": 0.0323,
+          "ms": 4347
+        },
+        {
+          "stage": "fact-check",
+          "role": "factCheck",
+          "vendor": "anthropic",
+          "model": "claude-sonnet-5",
+          "inputTokens": 0,
+          "outputTokens": 0,
+          "costUsd": 0,
+          "ms": 4336
+        },
+        {
+          "stage": "quit-reading",
+          "role": "quitJudge",
+          "vendor": "openai",
+          "model": "gpt-5.6-terra",
+          "inputTokens": 596,
+          "outputTokens": 131,
+          "costUsd": 0.0112,
+          "ms": 2081
+        },
+        {
+          "stage": "ai-smell",
+          "role": "smellJudge",
+          "vendor": "openai",
+          "model": "gpt-5.6-terra",
+          "inputTokens": 433,
+          "outputTokens": 145,
+          "costUsd": 0.0101,
+          "ms": 2565
+        }
+      ],
+      "totalCostUsd": 0.1898,
+      "final": {
+        "headline": "National Skepticism About Ole Miss Gets Aired on Rebels Podcast",
+        "dek": "CBS Sports co-host Sudu Upadhyay joined Talk of Champions to discuss reservations about the 2026 Rebels.",
+        "bodyMarkdown": "Sudu Upadhyay, a co-host at CBS Sports and Game Runs Deep, joined the Talk of Champions podcast to discuss national reservations about the 2026 Ole Miss Rebels. The available report did not include the specifics of his case.\n\nOle Miss enters 2026 after a 13-2 season and a 7-1 conference mark, ranked No. 9 in the AP poll and No. 10 in the AFCA Coaches poll. Its schedule includes Louisville on Sept. 6, LSU on Sept. 19, Texas on Oct. 24 and Georgia on Nov. 7.\n\nThe discussion also covered the NFL-to-college football pipeline in Baton Rouge. Separately, the article’s author had identified five things Pete Golding and his staff need to get right for major success, though those items were not provided in the report.",
+        "pullQuote": "",
+        "primaryTeam": "ole-miss",
+        "teams": [
+          "ole-miss",
+          "lsu",
+          "texas",
+          "georgia",
+          "louisville"
+        ],
+        "tags": [
+          "ole-miss",
+          "pete-golding",
+          "sec",
+          "2026-season",
+          "preseason-polls"
+        ],
+        "seo": {
+          "title": "Ole Miss 2026: National Skepticism Discussed on Rebels Podcast",
+          "description": "CBS Sports co-host Sudu Upadhyay joined Talk of Champions to discuss reservations about No. 9 Ole Miss, coming off a 13-2 season."
+        }
+      },
+      "words": 126,
+      "completedAt": "2026-08-28T12:45:35.408Z"
+    }
+  }
+]
