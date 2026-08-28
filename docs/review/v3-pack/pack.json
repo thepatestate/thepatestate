@@ -1,0 +1,2301 @@
+[
+  {
+    "id": "miami-acc",
+    "engine": "josh",
+    "episode": "The WORST College Football Takes Of 2026 - Josh Pate's College Football Show",
+    "run": {
+      "id": "reviewed",
+      "engine": "josh",
+      "sourceId": "fx52TLhd8Cs",
+      "mode": "replay",
+      "status": "completed",
+      "startedAt": "",
+      "artifacts": {
+        "segment": {
+          "decision": "segment",
+          "segmentStart": "02:06",
+          "segmentEnd": "03:51",
+          "reason": ""
+        },
+        "quit": {
+          "neverWantedToQuit": true,
+          "reason": "none",
+          "didFinish": true,
+          "soundsLikeFootballPerson": true,
+          "worthTheTime": false,
+          "wouldClickAnother": true,
+          "wouldSend": false,
+          "note": ""
+        },
+        "smell": {
+          "pass": true,
+          "sentences": [],
+          "structural": false,
+          "note": ""
+        },
+        "fact": {
+          "verdict": "pass",
+          "claims": [],
+          "joshMisattribution": []
+        }
+      },
+      "final": {
+        "lane": "show",
+        "label": "Editorial Engine V3 · Josh Cut + facts + light edit + tightening pass · unpublished",
+        "episode": "The WORST College Football Takes Of 2026 - Josh Pate's College Football Show",
+        "ytId": "fx52TLhd8Cs",
+        "headline": "Miami Is The Best Team In The ACC, And If Not Them, Then Who?",
+        "dek": "A viewer called it a bad prediction that Miami is far and away the ACC's best team with everyone else playing for second. That's my opinion, so I'll take the other side.",
+        "bodyMarkdown": "This one came from Spencer. He said, \"One of the bad predictions out there is that Miami is by far the best team in the ACC, and everyone else is playing for second.\"\n\nSpencer, Miami is the best team by far in the ACC, and everyone's playing for second. That's my opinion. So I am one of the many here, and you seem like one of the very few.\n\n[EMBED:00:02:06]\n\nBut I know maybe where you're going with that. You did me the favor of typing one sentence. If you'd typed two or three more, you probably would have said things like, \"We're still waiting on Miami to win the ACC. They still haven't ever won the conference title game. They were an overwhelming favorite last year and they didn't get it done.\" Although Clemson was in the mix last year.\n\nAll that having been said — a 13-3 season, 6-2 in the league, No. 7 in both preseason polls — I still think they're an overwhelming favorite to do this this year. So my question, rhetorically, because you're not here to defend yourself, would be if not them, then who?\n\n[PULLQUOTE]\n\nThere is a scenario here where Darian Mensah has something happen to him. If he were hurt, if he were unavailable, there is a massive drop off between QB1 and QB2 at Miami. If that were to happen, and I don't know that anyone has a model to predict injury, then everything's off the table.\n\nBut if Darian Mensah is healthy, if this team is largely as is on paper, and you're telling me they're flat out not it and it's SMU or Louisville or Clemson or someone else, that's a model I want to buy stock in, because I can't see it.\n\n— JP",
+        "pullQuote": "If not them, then who?",
+        "primaryTeam": "Miami",
+        "teams": [
+          "Miami",
+          "Clemson",
+          "SMU",
+          "Louisville"
+        ],
+        "tags": [
+          "ACC",
+          "Darien Mensah",
+          "2026 season",
+          "preseason",
+          "mailbag"
+        ],
+        "seo": {
+          "title": "Josh Pate: Miami Is The ACC's Best Team, And Everyone Else Is Playing For Second",
+          "description": "Josh Pate answers a viewer who called it a bad prediction: Miami is far and away the ACC's best team, and if not them, then who — SMU, Louisville or Clemson?"
+        }
+      },
+      "words": 293,
+      "calls": [
+        {
+          "stage": "",
+          "role": "",
+          "vendor": "openai",
+          "model": "",
+          "inputTokens": 0,
+          "outputTokens": 0,
+          "costUsd": 0.038,
+          "ms": 0
+        },
+        {
+          "stage": "",
+          "role": "",
+          "vendor": "openai",
+          "model": "",
+          "inputTokens": 0,
+          "outputTokens": 0,
+          "costUsd": 0.038,
+          "ms": 0
+        },
+        {
+          "stage": "",
+          "role": "",
+          "vendor": "openai",
+          "model": "",
+          "inputTokens": 0,
+          "outputTokens": 0,
+          "costUsd": 0.038,
+          "ms": 0
+        },
+        {
+          "stage": "",
+          "role": "",
+          "vendor": "openai",
+          "model": "",
+          "inputTokens": 0,
+          "outputTokens": 0,
+          "costUsd": 0.038,
+          "ms": 0
+        },
+        {
+          "stage": "",
+          "role": "",
+          "vendor": "openai",
+          "model": "",
+          "inputTokens": 0,
+          "outputTokens": 0,
+          "costUsd": 0.038,
+          "ms": 0
+        },
+        {
+          "stage": "",
+          "role": "",
+          "vendor": "openai",
+          "model": "",
+          "inputTokens": 0,
+          "outputTokens": 0,
+          "costUsd": 0.038,
+          "ms": 0
+        },
+        {
+          "stage": "",
+          "role": "",
+          "vendor": "openai",
+          "model": "",
+          "inputTokens": 0,
+          "outputTokens": 0,
+          "costUsd": 0.038,
+          "ms": 0
+        },
+        {
+          "stage": "",
+          "role": "",
+          "vendor": "openai",
+          "model": "",
+          "inputTokens": 0,
+          "outputTokens": 0,
+          "costUsd": 0.038,
+          "ms": 0
+        }
+      ],
+      "totalCostUsd": 0.3
+    }
+  },
+  {
+    "id": "final-predictions",
+    "engine": "josh",
+    "episode": "Final 2026 CFP & Conference Title Predictions - Josh Pate's College Football Show",
+    "run": {
+      "id": "run_mtcfc0zw_7ach9e",
+      "engine": "josh",
+      "sourceId": "3f58dSytoSA",
+      "fixture": "final-predictions",
+      "mode": "replay",
+      "status": "completed",
+      "startedAt": "2026-08-28T04:00:47.372Z",
+      "artifacts": {
+        "repairs": [
+          "deleted ¶6 (too slow): \"Speaking of that opener — look at how hard I'm gripping the pen. Clemson at LSU,\""
+        ],
+        "segment": {
+          "decision": "segment",
+          "segmentStart": "[00:54]",
+          "segmentEnd": "[03:10]",
+          "centralThought": "Josh explains why he's now leaning toward Clemson being much better than the public expects and picks Miami over Clemson in the ACC title game, framing a week-one Clemson-at-LSU loss as fuel for a Dabo Swinney redemption run.",
+          "reason": "This is the most self-contained, football-reasoned take: it starts with a clear thesis (public underrating Clemson), builds a specific argument (team dynamic, being in a weaker league, the LSU game narrative), and resolves with a concrete prediction (Miami over Clemson twice). It doesn't require the rest of the bracket reveal to make sense and has enough color and reasoning to sustain a written piece, unlike the later segments which are rapid-fire bracket listing or a hypothetical scenario dump."
+        },
+        "cut": {
+          "segmentStart": "00:54",
+          "segmentEnd": "03:10",
+          "centralThought": "Josh explains why he's now leaning toward Clemson being much better than the public expects and picks Miami over Clemson in the ACC title game, framing a week-one Clemson-at-LSU loss as fuel for a Dabo Swinney redemption run.",
+          "blocks": [
+            {
+              "text": "In the ACC, once upon a time, I had Miami over SMU. Guys, I got to tell you something, and I want to whisper this because this could go up in flames early. I have either willingly or through force been talked into Clemson being a little bit better slash a lot better than what most of America expects from them.",
+              "sourceStart": "00:51",
+              "sourceEnd": "01:17"
+            },
+            {
+              "text": "Dabo Swinney did nothing to me when we went over there this spring. This is not dark magic. This is nothing like that. This is just me thinking that the public has sold way too hard here. And it may just be one of those classic cases of a team achieving more the year after a lot is expected.",
+              "sourceStart": "01:17",
+              "sourceEnd": "01:39"
+            },
+            {
+              "text": "Cuz I will tell you this, I really like the dynamic at Clemson right now, the team dynamic. And if I threw them in the Big 10 or the SEC, no, they may not compete, but they're in the ACC.",
+              "sourceStart": "01:39",
+              "sourceEnd": "01:52"
+            },
+            {
+              "text": "And I don't even care if they go and lose to LSU in week one. In fact, them losing to LSU in week one may make this even better because then Dabo really gets to play the us against the world, everyone's forgot us mentality.",
+              "sourceStart": "01:54",
+              "sourceEnd": "02:04"
+            },
+            {
+              "text": "I think Miami and Clemson are going to play twice this year. Once in the regular season, once in the ACC title game.",
+              "sourceStart": "02:04",
+              "sourceEnd": "02:11"
+            },
+            {
+              "text": "And by the way, speaking of that week one game, look at how hard I'm gripping the pen. That week one game, Clemson at LSU, Jesse, you got a line on that right now. Is it nine or so? Nine and a half. 10. I think it's nine and a half. Anyway, LSU is a healthy favorite. 10 and a half. There we go.",
+              "sourceStart": "02:12",
+              "sourceEnd": "02:34"
+            },
+            {
+              "text": "Don't let Clemson win that game. Don't do it because if Clemson wins that game, Miami at Clemson in week five becomes a huge marquee spotlight game out of the blue. And no one expected that.",
+              "sourceStart": "02:35",
+              "sourceEnd": "02:52"
+            },
+            {
+              "text": "And buddy, the press conference for Dabo after that game, if they were to somehow go down to LSU, some of you think LSU should be favored by three and a half touchdowns.",
+              "sourceStart": "02:52",
+              "sourceEnd": "03:02"
+            },
+            {
+              "text": "So, I've got Miami over Clemson in the ACC.",
+              "sourceStart": "03:04",
+              "sourceEnd": "03:10"
+            }
+          ],
+          "removedBecauseRepetitive": [
+            "Anyway, I'm getting ahead of myself. That's next week's show."
+          ],
+          "removedBecauseOffTopic": [
+            "I think Jesse tapped out after I trashed his designs.",
+            "The SEC, I toiled. I I wrestled with this and"
+          ]
+        },
+        "support": [
+          {
+            "fact": "Clemson opens at LSU on Saturday, Sep 5 (not technically 'week one' but the season opener), 7:30 PM ET",
+            "sourceRef": "fact-sheet",
+            "insertAfterBlock": 5,
+            "whyUseful": "Confirms the actual date/time of the LSU game Josh is discussing"
+          },
+          {
+            "fact": "Miami and Clemson are scheduled to meet only once in the regular season, on Sat Oct 3, not in week five as stated",
+            "sourceRef": "fact-sheet",
+            "insertAfterBlock": 6,
+            "whyUseful": "Corrects the claimed 'week five' matchup date and flags that the schedule shows only one regular-season meeting, not the double-header implied in block 4"
+          },
+          {
+            "fact": "Clemson enters the season unranked in the AP poll and only No. 23 in the AFCA Coaches poll; Miami is No. 7 in both",
+            "sourceRef": "fact-sheet",
+            "insertAfterBlock": 1,
+            "whyUseful": "Gives concrete evidence for Josh's claim that 'the public has sold way too hard' against Clemson relative to Miami"
+          },
+          {
+            "fact": "On Josh's own preseason bracket (Aug 2026), Clemson was ranked No. 3 and Miami No. 11",
+            "sourceRef": "on-record",
+            "insertAfterBlock": 0,
+            "whyUseful": "Shows Josh had already rated Clemson above Miami on record, adding context/tension to his 'Miami over Clemson' pick"
+          },
+          {
+            "fact": "Miami finished 2025 at 13-3 (6-2 conference); Clemson finished 7-6 (4-4 conference)",
+            "sourceRef": "fact-sheet",
+            "insertAfterBlock": 2,
+            "whyUseful": "Grounds the 'team achieving more after high expectations' comparison with actual prior-year records"
+          }
+        ],
+        "draft": {
+          "headline": "I've Been Talked Into Clemson Being A Lot Better Than America Expects",
+          "dek": "I once had Miami over SMU in the ACC. Now I've got Miami over Clemson in the title game — and I think those two play twice, with the season opener at LSU possibly making Clemson more dangerous, not less.",
+          "bodyMarkdown": "In the ACC, once upon a time, I had Miami over SMU.\n\nGuys, I got to tell you something, and I want to whisper this because this could go up in flames early. I have either willingly or through force been talked into Clemson being a little bit better slash a lot better than what most of America expects from them. On my own preseason bracket I've got Clemson at No. 3 and Miami at No. 11, so I'm already on record leaning this direction.\n\n[EMBED:00:00:54]\n\nDabo Swinney did nothing to me when we went over there this spring. This is not dark magic. This is nothing like that. This is just me thinking that the public has sold way too hard here. And it may just be one of those classic cases of a team achieving more the year after a lot is expected. Clemson enters the season unranked in the AP poll and only 23rd in the coaches poll. Miami is seventh in both.\n\n[PULLQUOTE]\n\nCuz I will tell you this, I really like the dynamic at Clemson right now, the team dynamic. And if I threw them in the Big Ten or the SEC, no, they may not compete, but they're in the ACC.\n\nAnd I don't even care if they go and lose to LSU in the opener. In fact, them losing to LSU may make this even better because then Dabo really gets to play the us against the world, everyone's forgot us mentality.\n\nI think Miami and Clemson are going to play twice this year. Once in the regular season, once in the ACC title game. Their regular-season meeting is set for Oct. 3, the only time they're scheduled to see each other before Charlotte.\n\nAnd by the way, speaking of that opener — look at how hard I'm gripping the pen. Clemson at LSU, Sept. 5, 7:30 Eastern. Jesse, you got a line on that right now. Is it nine or so? Nine and a half. Ten. I think it's nine and a half. Anyway, LSU is a healthy favorite. Ten and a half. There we go.\n\nDon't let Clemson win that game. Don't do it, because if Clemson wins that game, Miami at Clemson becomes a huge marquee spotlight game out of the blue. And no one expected that.\n\nAnd buddy, the press conference for Dabo after that game, if they were to somehow go down to LSU — some of you think LSU should be favored by three and a half touchdowns.\n\nSo, I've got Miami over Clemson in the ACC.\n\n— JP",
+          "pullQuote": "This is just me thinking that the public has sold way too hard here.",
+          "primaryTeam": "Clemson",
+          "teams": [
+            "Clemson",
+            "Miami",
+            "LSU"
+          ],
+          "tags": [
+            "ACC",
+            "Dabo Swinney",
+            "conference title predictions",
+            "preseason bracket",
+            "2026 season"
+          ],
+          "seo": {
+            "title": "Josh Pate: Clemson Is Better Than America Expects, But I've Got Miami In The ACC",
+            "description": "Josh Pate explains why he's been talked into Clemson being far better than the public thinks, why a loss at LSU in the opener could help Dabo Swinney, and why he still picks Miami in the ACC title game."
+          }
+        },
+        "tightened": {
+          "headline": "I've Been Talked Into Clemson Being A Lot Better Than America Expects",
+          "dek": "I once had Miami over SMU in the ACC. Now I've got Miami over Clemson in the title game — and I think those two play twice, with the season opener at LSU possibly making Clemson more dangerous, not less.",
+          "bodyMarkdown": "In the ACC, once upon a time, I had Miami over SMU.\n\nI want to whisper this because it could go up in flames early. I have either willingly or through force been talked into Clemson being a lot better than what most of America expects from them. On my own preseason bracket I've got Clemson at No. 3 and Miami at No. 11, so I'm already on record leaning this direction.\n\n[EMBED:00:00:54]\n\nDabo Swinney did nothing to me when we went over there this spring. This is not dark magic. This is just me thinking that the public has sold way too hard here. It may be one of those classic cases of a team achieving more the year after a lot is expected. Clemson enters the season unranked in the AP poll and only 23rd in the coaches poll. Miami is seventh in both.\n\n[PULLQUOTE]\n\nI really like the team dynamic at Clemson right now. If I threw them in the Big Ten or the SEC, no, they may not compete. But they're in the ACC.\n\nAnd I don't even care if they go lose to LSU in the opener. Them losing to LSU may make this even better, because then Dabo gets to play the us-against-the-world, everyone's-forgot-us mentality.\n\nI think Miami and Clemson are going to play twice this year. Once in the regular season, once in the ACC title game. Their regular-season meeting is set for Oct. 3, the only time they're scheduled to see each other before Charlotte.\n\nSpeaking of that opener — look at how hard I'm gripping the pen. Clemson at LSU, Sept. 5, 7:30 Eastern. Jesse, you got a line on that right now. Is it nine or so? Nine and a half. I think it's nine and a half. LSU is a healthy favorite. Ten and a half. There we go.\n\nDon't let Clemson win that game. Don't do it, because if Clemson wins that game, Miami at Clemson becomes a huge marquee spotlight game out of the blue. And no one expected that.\n\nAnd the press conference for Dabo if they were to somehow go down to LSU and win — some of you think LSU should be favored by three and a half touchdowns.\n\nSo, I've got Miami over Clemson in the ACC.\n\n— JP",
+          "pullQuote": "This is just me thinking that the public has sold way too hard here.",
+          "primaryTeam": "Clemson",
+          "teams": [
+            "Clemson",
+            "Miami",
+            "LSU"
+          ],
+          "tags": [
+            "ACC",
+            "Dabo Swinney",
+            "conference title predictions",
+            "preseason bracket",
+            "2026 season"
+          ],
+          "seo": {
+            "title": "Josh Pate: Clemson Is Better Than America Expects, But I've Got Miami In The ACC",
+            "description": "Josh Pate explains why he's been talked into Clemson being far better than the public thinks, why a loss at LSU in the opener could help Dabo Swinney, and why he still picks Miami in the ACC title game."
+          }
+        },
+        "policy": {
+          "pass": true,
+          "violations": []
+        },
+        "fact": {
+          "verdict": "pass",
+          "claims": [
+            {
+              "claim": "Once had Miami over SMU in the ACC",
+              "status": "supported",
+              "sourceRefs": [
+                "[00:51]"
+              ]
+            },
+            {
+              "claim": "Josh has been talked into Clemson being better than expected",
+              "status": "supported",
+              "sourceRefs": [
+                "[01:05]-[01:17]"
+              ]
+            },
+            {
+              "claim": "On Josh's preseason bracket, Clemson is No. 3 and Miami is No. 11",
+              "status": "supported",
+              "sourceRefs": [
+                "ON-RECORD SITE POSITIONS"
+              ]
+            },
+            {
+              "claim": "Dabo Swinney did nothing to Josh when they went to Clemson this spring",
+              "status": "supported",
+              "sourceRefs": [
+                "[01:20]"
+              ]
+            },
+            {
+              "claim": "Clemson enters the season unranked in the AP poll and 23rd in the coaches poll",
+              "status": "supported",
+              "sourceRefs": [
+                "Clemson: Preseason polls: AFCA Coaches No. 23"
+              ]
+            },
+            {
+              "claim": "Miami is seventh in both polls",
+              "status": "supported",
+              "sourceRefs": [
+                "Miami: Preseason polls: AP Top 25 No. 7, AFCA Coaches No. 7"
+              ]
+            },
+            {
+              "claim": "Josh likes the team dynamic at Clemson right now",
+              "status": "supported",
+              "sourceRefs": [
+                "[01:40]-[01:43]"
+              ]
+            },
+            {
+              "claim": "If Clemson were in the Big Ten or SEC they may not compete",
+              "status": "supported",
+              "sourceRefs": [
+                "[01:46]-[01:48]"
+              ]
+            },
+            {
+              "claim": "Josh doesn't care if Clemson loses to LSU in the opener; it may help Dabo's us-against-the-world mentality",
+              "status": "supported",
+              "sourceRefs": [
+                "[01:54]-[02:03]"
+              ]
+            },
+            {
+              "claim": "Miami and Clemson will play twice this year: regular season and ACC title game",
+              "status": "supported",
+              "sourceRefs": [
+                "[02:06]-[02:09]"
+              ]
+            },
+            {
+              "claim": "Their regular-season meeting is set for Oct. 3",
+              "status": "supported",
+              "sourceRefs": [
+                "Miami schedule: SAT OCT 3 at Clemson",
+                "Clemson schedule: SAT OCT 3 vs Miami"
+              ]
+            },
+            {
+              "claim": "Clemson at LSU, Sept. 5, 7:30 Eastern",
+              "status": "supported",
+              "sourceRefs": [
+                "Clemson schedule: SAT SEP 5 at LSU · 7:30 PM ET"
+              ]
+            },
+            {
+              "claim": "LSU is a healthy favorite in that game",
+              "status": "supported",
+              "sourceRefs": [
+                "[02:29]-[02:32]"
+              ]
+            },
+            {
+              "claim": "If Clemson wins at LSU, Miami at Clemson becomes a huge marquee spotlight game",
+              "status": "supported",
+              "sourceRefs": [
+                "[02:38]-[02:50]"
+              ]
+            },
+            {
+              "claim": "Some think LSU should be favored by three and a half touchdowns",
+              "status": "supported",
+              "sourceRefs": [
+                "[02:57]-[03:02]"
+              ]
+            },
+            {
+              "claim": "Josh has Miami over Clemson in the ACC",
+              "status": "supported",
+              "sourceRefs": [
+                "[03:06]-[03:09]"
+              ]
+            }
+          ],
+          "joshMisattribution": []
+        },
+        "quit": {
+          "neverWantedToQuit": false,
+          "quitParagraphIndex": 6,
+          "quitText": "Speaking of that opener — look at how hard I'm gripping the pen. Clemson at LSU, Sept. 5, 7:30 Eastern. Jesse, you got a line on that right now. Is it nine or so? Nine and a half. I think it's nine and a half. LSU is a healthy favorite. Ten and a half. There we go.",
+          "reason": "too slow",
+          "didFinish": false,
+          "soundsLikeFootballPerson": true,
+          "worthTheTime": true,
+          "wouldClickAnother": true,
+          "wouldSend": false,
+          "note": "The Clemson/Miami thesis is interesting, but the extended live line-check bit starts to feel like filler."
+        },
+        "quitAfterRepair": {
+          "neverWantedToQuit": false,
+          "quitParagraphIndex": 6,
+          "quitText": "Speaking of that opener — look at how hard I'm gripping the pen. Clemson at LSU, Sept. 5, 7:30 Eastern. LSU is a healthy favorite.",
+          "reason": "no new information",
+          "didFinish": true,
+          "soundsLikeFootballPerson": true,
+          "worthTheTime": true,
+          "wouldClickAnother": true,
+          "wouldSend": false,
+          "note": "The Clemson-vs.-LSU angle is interesting, but the late LSU setup starts repeating the same point after the Miami-Clemson prediction is already made."
+        },
+        "subtracted": {
+          "headline": "I've Been Talked Into Clemson Being A Lot Better Than America Expects",
+          "dek": "I once had Miami over SMU in the ACC. Now I've got Miami over Clemson in the title game — and I think those two play twice, with the season opener at LSU possibly making Clemson more dangerous, not less.",
+          "bodyMarkdown": "In the ACC, once upon a time, I had Miami over SMU.\n\nI want to whisper this because it could go up in flames early. I have either willingly or through force been talked into Clemson being a lot better than what most of America expects from them. On my own preseason bracket I've got Clemson at No. 3 and Miami at No. 11, so I'm already on record leaning this direction.\n\n[EMBED:00:00:54]\n\nDabo Swinney did nothing to me when we went over there this spring. This is not dark magic. This is just me thinking that the public has sold way too hard here. It may be one of those classic cases of a team achieving more the year after a lot is expected. Clemson enters the season unranked in the AP poll and only 23rd in the coaches poll. Miami is seventh in both.\n\n[PULLQUOTE]\n\nI really like the team dynamic at Clemson right now. If I threw them in the Big Ten or the SEC, no, they may not compete. But they're in the ACC.\n\nAnd I don't even care if they go lose to LSU in the opener. Them losing to LSU may make this even better, because then Dabo gets to play the us-against-the-world, everyone's-forgot-us mentality.\n\nI think Miami and Clemson are going to play twice this year. Once in the regular season, once in the ACC title game. Their regular-season meeting is set for Oct. 3, the only time they're scheduled to see each other before Charlotte.\n\nSpeaking of that opener — look at how hard I'm gripping the pen. Clemson at LSU, Sept. 5, 7:30 Eastern. LSU is a healthy favorite.\n\nDon't let Clemson win that game. Don't do it, because if Clemson wins that game, Miami at Clemson becomes a huge marquee spotlight game out of the blue. And no one expected that.\n\nAnd the press conference for Dabo if they were to somehow go down to LSU and win — some of you think LSU should be favored by three and a half touchdowns.\n\nSo, I've got Miami over Clemson in the ACC.\n\n— JP",
+          "pullQuote": "This is just me thinking that the public has sold way too hard here.",
+          "primaryTeam": "Clemson",
+          "teams": [
+            "Clemson",
+            "Miami",
+            "LSU"
+          ],
+          "tags": [
+            "ACC",
+            "Dabo Swinney",
+            "conference title predictions",
+            "preseason bracket",
+            "2026 season"
+          ],
+          "seo": {
+            "title": "Josh Pate: Clemson Is Better Than America Expects, But I've Got Miami In The ACC",
+            "description": "Josh Pate explains why he's been talked into Clemson being far better than the public thinks, why a loss at LSU in the opener could help Dabo Swinney, and why he still picks Miami in the ACC title game."
+          }
+        },
+        "smell": {
+          "pass": true,
+          "sentences": [],
+          "structural": false,
+          "note": "No clear AI smell. The piece is voice-driven, uneven in a human way, and its repetitions serve the columnist's live, speculative cadence rather than a synthetic thesis structure."
+        }
+      },
+      "calls": [
+        {
+          "stage": "josh-segment",
+          "role": "joshSegment",
+          "vendor": "anthropic",
+          "model": "claude-sonnet-5",
+          "inputTokens": 8331,
+          "outputTokens": 540,
+          "costUsd": 0.0331,
+          "ms": 8261
+        },
+        {
+          "stage": "josh-segment",
+          "role": "joshSegment",
+          "vendor": "anthropic",
+          "model": "claude-sonnet-5",
+          "inputTokens": 8419,
+          "outputTokens": 297,
+          "costUsd": 0.0297,
+          "ms": 5345
+        },
+        {
+          "stage": "josh-cut",
+          "role": "joshCut",
+          "vendor": "anthropic",
+          "model": "claude-sonnet-5",
+          "inputTokens": 14383,
+          "outputTokens": 1091,
+          "costUsd": 0.0595,
+          "ms": 11136
+        },
+        {
+          "stage": "reporting-support",
+          "role": "supportFacts",
+          "vendor": "anthropic",
+          "model": "claude-sonnet-5",
+          "inputTokens": 2840,
+          "outputTokens": 878,
+          "costUsd": 0.0217,
+          "ms": 11934
+        },
+        {
+          "stage": "josh-prose-edit",
+          "role": "joshProseEdit",
+          "vendor": "anthropic",
+          "model": "claude-opus-5",
+          "inputTokens": 13773,
+          "outputTokens": 1152,
+          "costUsd": 0.293,
+          "ms": 15089
+        },
+        {
+          "stage": "josh-tighten",
+          "role": "joshProseEdit",
+          "vendor": "anthropic",
+          "model": "claude-opus-5",
+          "inputTokens": 2737,
+          "outputTokens": 1086,
+          "costUsd": 0.1225,
+          "ms": 10264
+        },
+        {
+          "stage": "fact-check",
+          "role": "factCheck",
+          "vendor": "anthropic",
+          "model": "claude-sonnet-5",
+          "inputTokens": 0,
+          "outputTokens": 0,
+          "costUsd": 0,
+          "ms": 14460
+        },
+        {
+          "stage": "quit-reading",
+          "role": "quitJudge",
+          "vendor": "openai",
+          "model": "gpt-5.6-terra",
+          "inputTokens": 932,
+          "outputTokens": 159,
+          "costUsd": 0.0157,
+          "ms": 2105
+        },
+        {
+          "stage": "josh-subtraction",
+          "role": "joshSubtraction",
+          "vendor": "anthropic",
+          "model": "claude-opus-5",
+          "inputTokens": 1973,
+          "outputTokens": 1240,
+          "costUsd": 0.1226,
+          "ms": 11225
+        },
+        {
+          "stage": "fact-check",
+          "role": "factCheck",
+          "vendor": "anthropic",
+          "model": "claude-sonnet-5",
+          "inputTokens": 0,
+          "outputTokens": 0,
+          "costUsd": 0,
+          "ms": 14118
+        },
+        {
+          "stage": "quit-reading",
+          "role": "quitJudge",
+          "vendor": "openai",
+          "model": "gpt-5.6-terra",
+          "inputTokens": 893,
+          "outputTokens": 131,
+          "costUsd": 0.0142,
+          "ms": 1830
+        },
+        {
+          "stage": "ai-smell",
+          "role": "smellJudge",
+          "vendor": "openai",
+          "model": "gpt-5.6-terra",
+          "inputTokens": 706,
+          "outputTokens": 100,
+          "costUsd": 0.0111,
+          "ms": 1852
+        }
+      ],
+      "totalCostUsd": 0.7231,
+      "final": {
+        "headline": "I've Been Talked Into Clemson Being A Lot Better Than America Expects",
+        "dek": "I once had Miami over SMU in the ACC. Now I've got Miami over Clemson in the title game — and I think those two play twice, with the season opener at LSU possibly making Clemson more dangerous, not less.",
+        "bodyMarkdown": "In the ACC, once upon a time, I had Miami over SMU.\n\nI want to whisper this because it could go up in flames early. I have either willingly or through force been talked into Clemson being a lot better than what most of America expects from them. On my own preseason bracket I've got Clemson at No. 3 and Miami at No. 11, so I'm already on record leaning this direction.\n\n[EMBED:00:00:54]\n\nDabo Swinney did nothing to me when we went over there this spring. This is not dark magic. This is just me thinking that the public has sold way too hard here. It may be one of those classic cases of a team achieving more the year after a lot is expected. Clemson enters the season unranked in the AP poll and only 23rd in the coaches poll. Miami is seventh in both.\n\n[PULLQUOTE]\n\nI really like the team dynamic at Clemson right now. If I threw them in the Big Ten or the SEC, no, they may not compete. But they're in the ACC.\n\nAnd I don't even care if they go lose to LSU in the opener. Them losing to LSU may make this even better, because then Dabo gets to play the us-against-the-world, everyone's-forgot-us mentality.\n\nI think Miami and Clemson are going to play twice this year. Once in the regular season, once in the ACC title game. Their regular-season meeting is set for Oct. 3, the only time they're scheduled to see each other before Charlotte.\n\nSpeaking of that opener — look at how hard I'm gripping the pen. Clemson at LSU, Sept. 5, 7:30 Eastern. LSU is a healthy favorite.\n\nDon't let Clemson win that game. Don't do it, because if Clemson wins that game, Miami at Clemson becomes a huge marquee spotlight game out of the blue. And no one expected that.\n\nAnd the press conference for Dabo if they were to somehow go down to LSU and win — some of you think LSU should be favored by three and a half touchdowns.\n\nSo, I've got Miami over Clemson in the ACC.\n\n— JP",
+        "pullQuote": "This is just me thinking that the public has sold way too hard here.",
+        "primaryTeam": "Clemson",
+        "teams": [
+          "Clemson",
+          "Miami",
+          "LSU"
+        ],
+        "tags": [
+          "ACC",
+          "Dabo Swinney",
+          "conference title predictions",
+          "preseason bracket",
+          "2026 season"
+        ],
+        "seo": {
+          "title": "Josh Pate: Clemson Is Better Than America Expects, But I've Got Miami In The ACC",
+          "description": "Josh Pate explains why he's been talked into Clemson being far better than the public thinks, why a loss at LSU in the opener could help Dabo Swinney, and why he still picks Miami in the ACC title game."
+        }
+      },
+      "words": 350,
+      "completedAt": "2026-08-28T04:02:35.009Z"
+    }
+  },
+  {
+    "id": "truth-2026",
+    "engine": "josh",
+    "episode": "The TRUTH About The 2026 Season Nobody Wants To Believe - Josh Pate's College Football Show",
+    "run": {
+      "id": "run_mtcfh8dw_2hklvy",
+      "engine": "josh",
+      "sourceId": "GnsM0vg8rko",
+      "fixture": "truth-2026",
+      "mode": "replay",
+      "status": "completed",
+      "startedAt": "2026-08-28T04:04:50.228Z",
+      "artifacts": {
+        "repairs": [
+          "tried deleting ¶4 (no new information): \"I don't think there's anything magical. I think Notre Dame would measure up very\""
+        ],
+        "segment": {
+          "decision": "segment",
+          "segmentStart": "[02:43]",
+          "segmentEnd": "[05:14]",
+          "centralThought": "Josh argues Notre Dame's talent and physicality would let it compete for an SEC title, and that a team's quality should be judged by playoff performance, not by the perceived softness of its schedule.",
+          "reason": "This stretch is a self-contained, energetic argument responding directly to the criticism that Notre Dame wouldn't survive an SEC schedule. Josh lays out a clear thesis (talent/roster comparability to SEC teams), uses a vivid analogy (Seahawks vs. ULM schedule), and concludes with a clear standard for judgment (the playoff exposes frauds). It's understandable on its own and matches the assignment precisely, excluding the unrelated takes on the 2014 playoff take, Arch Manning, John Mateer, and Lincoln Riley."
+        },
+        "cut": {
+          "segmentStart": "02:38",
+          "segmentEnd": "05:14",
+          "centralThought": "Josh argues Notre Dame's talent and physicality would let it compete for an SEC title, and that a team's quality should be judged by playoff performance, not by the perceived softness of its schedule.",
+          "blocks": [
+            {
+              "text": "Ryan said that one of the worst takes out there is Notre Dame being the best team if they were in the SEC, they would not survive that schedule.",
+              "sourceStart": "02:44",
+              "sourceEnd": "02:56"
+            },
+            {
+              "text": "I was on Colin's show and he was asking me, do you think that Notre Dame will just be a product of their schedule or are they a legit national title contender? So the quickest way that I could summarize my feelings towards Notre Dame is I said if they played in the SEC this year, I'd pick them to win the SEC.",
+              "sourceStart": "03:01",
+              "sourceEnd": "03:19"
+            },
+            {
+              "text": "I want to know this. What is it about the SEC schedule that Notre Dame's personnel wouldn't be able to survive? They're really good along the lines of scrimmage. The program is bedrocked in the very principles that it takes to survive that kind of schedule.",
+              "sourceStart": "03:24",
+              "sourceEnd": "03:41"
+            },
+            {
+              "text": "So I ask, what magic formula is it? What magic talent acquisition mechanism is it that Georgia possesses or South Carolina possesses or whoever you think is going to compete in the SEC that Notre Dame doesn't have? Is it a top quarterback? All they have is the Heisman Trophy favorite at Notre Dame. I don't think there is anything magical. In fact, I think Notre Dame would measure up very very comparably with the best in the SEC.",
+              "sourceStart": "03:41",
+              "sourceEnd": "04:11"
+            },
+            {
+              "text": "Now, if you want to take shots at their schedule, take shots at their schedule. But, as we have discussed many times on this show, there's a difference between a team and the schedule the team plays.",
+              "sourceStart": "04:17",
+              "sourceEnd": "04:30"
+            },
+            {
+              "text": "The example I always use, which is radical, is if I took the Seattle Seahawks fresh off a Super Bowl and I had them play University of Louisiana Monroe's schedule, you would have no respect for their schedule, nor should you, but that'd still be the Seahawks.",
+              "sourceStart": "04:30",
+              "sourceEnd": "04:45"
+            },
+            {
+              "text": "Just like Notre Dame this year, could play one of the softest schedules in the country. But if they're the best team in the country, they're the best team in the country. If they're a fraud, which is what many of you suspect, and they cakewalk their way through an inferior schedule, but they're not really legit — well, that's why we have a playoff. God invented the playoff to expose frauds.",
+              "sourceStart": "04:45",
+              "sourceEnd": "05:06"
+            },
+            {
+              "text": "So, that'll happen. If you're right and I'm wrong, that'll happen in the playoff. I highly suspect that Notre Dame will be a factor throughout.",
+              "sourceStart": "05:06",
+              "sourceEnd": "05:14"
+            }
+          ],
+          "removedBecauseRepetitive": [
+            "heads exploded."
+          ],
+          "removedBecauseOffTopic": [
+            "Quick timeout. Please subscribe to the channel. It's free for you. It doesn't sign you up for anything and it helps us. That's it. Time in.",
+            "Next up feels like another shot at me. John Matier will be better because he's not"
+          ]
+        },
+        "support": [
+          {
+            "fact": "Notre Dame's 2025 record was 10-2, and they are preseason AP No. 4 / AFCA Coaches No. 5.",
+            "sourceRef": "fact-sheet",
+            "insertAfterBlock": 2,
+            "whyUseful": "Grounds Josh's 'legit contender' claim with the actual record and ranking backing it up."
+          },
+          {
+            "fact": "Josh's own preseason bracket (Aug 2026) placed Notre Dame 9th, below Texas (5) and LSU (8), with Georgia over Ohio State as his final pick.",
+            "sourceRef": "on-record",
+            "insertAfterBlock": 3,
+            "whyUseful": "Lets readers see how this claim compares to Josh's own on-record ranking of Notre Dame relative to SEC teams he's discussing."
+          },
+          {
+            "fact": "Notre Dame's 2026 schedule includes Miami, Michigan State, and Boston College, but no other current AP top-15 teams before the playoff.",
+            "sourceRef": "fact-sheet",
+            "insertAfterBlock": 6,
+            "whyUseful": "Gives readers concrete opponents to weigh against the 'softest schedule' claim rather than an abstract assertion."
+          }
+        ],
+        "draft": {
+          "headline": "If Notre Dame Played In The SEC This Year, I'd Pick Them To Win It",
+          "dek": "Ryan called it one of the worst takes out there. I said it on Colin's show and I'll say it here: I want to know what exactly it is about the SEC schedule Notre Dame's personnel couldn't survive.",
+          "bodyMarkdown": "Ryan said that one of the worst takes out there is Notre Dame being the best team — that if they were in the SEC, they would not survive that schedule.\n\nI was on Colin's show and he was asking me: do you think Notre Dame will just be a product of their schedule, or are they a legit national title contender? So the quickest way I could summarize my feelings toward Notre Dame — I said if they played in the SEC this year, I'd pick them to win the SEC.\n\n[EMBED:00:02:38]\n\nI want to know this. What is it about the SEC schedule that Notre Dame's personnel wouldn't be able to survive? They're really good along the lines of scrimmage. The program is bedrocked in the very principles that it takes to survive that kind of schedule. This is a 10-2 team from a year ago sitting at No. 4 in the preseason AP poll and No. 5 with the coaches.\n\nSo I ask: what magic formula is it? What magic talent acquisition mechanism is it that Georgia possesses, or South Carolina possesses, or whoever you think is going to compete in the SEC, that Notre Dame doesn't have? Is it a top quarterback? All they have is the Heisman Trophy favorite at Notre Dame.\n\nI don't think there is anything magical. In fact, I think Notre Dame would measure up very, very comparably with the best in the SEC.\n\nNow, if you want to take shots at their schedule, take shots at their schedule. Miami, Michigan State, Boston College — and beyond that, nobody else currently sitting in the AP top 15 before the playoff. Fine. But as we have discussed many times on this show, there's a difference between a team and the schedule the team plays.\n\n[PULLQUOTE]\n\nThe example I always use, which is radical: if I took the Seattle Seahawks fresh off a Super Bowl and I had them play University of Louisiana Monroe's schedule, you would have no respect for their schedule, nor should you. But that'd still be the Seahawks.\n\nJust like Notre Dame this year. Could play one of the softest schedules in the country. But if they're the best team in the country, they're the best team in the country. If they're a fraud, which is what many of you suspect, and they cakewalk their way through an inferior schedule but they're not really legit — well, that's why we have a playoff. God invented the playoff to expose frauds.\n\nSo that'll happen. If you're right and I'm wrong, that'll happen in the playoff. I have them ninth in my preseason bracket, behind Texas and LSU, so I'm not out here calling them the favorite. But I highly suspect that Notre Dame will be a factor throughout.\n\n— JP",
+          "pullQuote": "God invented the playoff to expose frauds.",
+          "primaryTeam": "Notre Dame",
+          "teams": [
+            "Notre Dame",
+            "Georgia",
+            "Texas",
+            "LSU",
+            "South Carolina"
+          ],
+          "tags": [
+            "Notre Dame",
+            "SEC",
+            "College Football Playoff",
+            "schedule strength",
+            "preseason rankings"
+          ],
+          "seo": {
+            "title": "Josh Pate: If Notre Dame Played In The SEC, I'd Pick Them To Win It",
+            "description": "Josh Pate makes the case for Notre Dame's 2026 roster, asks what exactly the SEC has that the Irish don't, and argues schedule strength gets settled in the playoff."
+          }
+        },
+        "tightened": {
+          "headline": "If Notre Dame Played In The SEC This Year, I'd Pick Them To Win It",
+          "dek": "Ryan called it one of the worst takes out there. I said it on Colin's show and I'll say it here: I want to know what exactly it is about the SEC schedule Notre Dame's personnel couldn't survive.",
+          "bodyMarkdown": "Ryan said one of the worst takes out there is Notre Dame being the best team — that if they were in the SEC, they would not survive that schedule.\n\nI was on Colin's show and he asked me: do you think Notre Dame will be a product of their schedule, or are they a legit national title contender? The quickest way I could summarize my feelings toward Notre Dame — I said if they played in the SEC this year, I'd pick them to win the SEC.\n\n[EMBED:00:02:38]\n\nWhat is it about the SEC schedule that Notre Dame's personnel wouldn't be able to survive? They're really good along the lines of scrimmage. The program is bedrocked in the very principles it takes to survive that kind of schedule. This is a 10-2 team from a year ago sitting at No. 4 in the preseason AP poll and No. 5 with the coaches.\n\nSo what magic formula is it? What magic talent acquisition mechanism does Georgia possess, or South Carolina, or whoever you think is going to compete in the SEC, that Notre Dame doesn't have? Is it a top quarterback? All they have is the Heisman Trophy favorite.\n\nI don't think there's anything magical. I think Notre Dame would measure up very comparably with the best in the SEC.\n\nIf you want to take shots at their schedule, take shots at their schedule. Miami, Michigan State, Boston College — and beyond that, nobody else currently sitting in the AP top 15 before the playoff. Fine. But as we've discussed many times on this show, there's a difference between a team and the schedule the team plays.\n\n[PULLQUOTE]\n\nThe example I always use is radical: if I took the Seattle Seahawks fresh off a Super Bowl and had them play University of Louisiana Monroe's schedule, you'd have no respect for their schedule, nor should you. But that'd still be the Seahawks.\n\nJust like Notre Dame this year. Could play one of the softest schedules in the country. But if they're the best team in the country, they're the best team in the country. If they're a fraud, which is what many of you suspect, and they cakewalk their way through an inferior schedule — well, that's why we have a playoff. God invented the playoff to expose frauds.\n\nIf you're right and I'm wrong, that'll happen in the playoff. I have them ninth in my preseason bracket, behind Texas and LSU, so I'm not out here calling them the favorite. But I highly suspect Notre Dame will be a factor throughout.\n\n— JP",
+          "pullQuote": "God invented the playoff to expose frauds.",
+          "primaryTeam": "Notre Dame",
+          "teams": [
+            "Notre Dame",
+            "Georgia",
+            "Texas",
+            "LSU",
+            "South Carolina"
+          ],
+          "tags": [
+            "Notre Dame",
+            "SEC",
+            "College Football Playoff",
+            "schedule strength",
+            "preseason rankings"
+          ],
+          "seo": {
+            "title": "Josh Pate: If Notre Dame Played In The SEC, I'd Pick Them To Win It",
+            "description": "Josh Pate makes the case for Notre Dame's 2026 roster, asks what exactly the SEC has that the Irish don't, and argues schedule strength gets settled in the playoff."
+          }
+        },
+        "policy": {
+          "pass": true,
+          "violations": []
+        },
+        "fact": {
+          "verdict": "unsupported",
+          "claims": [
+            {
+              "claim": "Ryan said one of the worst takes is Notre Dame being the best team if in the SEC they wouldn't survive the schedule",
+              "status": "supported",
+              "sourceRefs": [
+                "02:44-02:53"
+              ]
+            },
+            {
+              "claim": "Josh was on Colin's show and discussed Notre Dame",
+              "status": "supported",
+              "sourceRefs": [
+                "02:57-03:03"
+              ]
+            },
+            {
+              "claim": "Josh said if Notre Dame played in the SEC this year, he'd pick them to win the SEC",
+              "status": "supported",
+              "sourceRefs": [
+                "03:10-03:17"
+              ]
+            },
+            {
+              "claim": "Notre Dame is really good along the lines of scrimmage and bedrocked in principles to survive that schedule",
+              "status": "supported",
+              "sourceRefs": [
+                "03:31-03:38"
+              ]
+            },
+            {
+              "claim": "Notre Dame is a 10-2 team from a year ago",
+              "status": "supported",
+              "sourceRefs": [
+                "Notre Dame 2025 record: 10-2"
+              ]
+            },
+            {
+              "claim": "Notre Dame sits at No. 4 in preseason AP poll and No. 5 with coaches",
+              "status": "supported",
+              "sourceRefs": [
+                "Notre Dame Preseason polls: AP No.4, AFCA No.5"
+              ]
+            },
+            {
+              "claim": "Notre Dame has the Heisman Trophy favorite at quarterback",
+              "status": "supported",
+              "sourceRefs": [
+                "03:58-04:00"
+              ]
+            },
+            {
+              "claim": "Notre Dame's schedule includes Miami, Michigan State, Boston College",
+              "status": "supported",
+              "sourceRefs": [
+                "Notre Dame 2026 schedule: vs Michigan State, vs Miami, vs Boston College"
+              ]
+            },
+            {
+              "claim": "Beyond Miami, Michigan State, Boston College, nobody else on Notre Dame's schedule is currently sitting in the AP top 15 before the playoff",
+              "status": "unsupported",
+              "sourceRefs": []
+            },
+            {
+              "claim": "The Seahawks/ULM analogy about team vs schedule",
+              "status": "analysis",
+              "sourceRefs": [
+                "04:31-04:45"
+              ]
+            },
+            {
+              "claim": "God invented the playoff to expose frauds",
+              "status": "supported",
+              "sourceRefs": [
+                "05:01-05:04"
+              ]
+            },
+            {
+              "claim": "Josh has Notre Dame ninth in his preseason bracket, behind Texas and LSU",
+              "status": "supported",
+              "sourceRefs": [
+                "ON-RECORD SITE POSITIONS: 5 Texas, 8 LSU, 9 Notre Dame"
+              ]
+            },
+            {
+              "claim": "Josh highly suspects Notre Dame will be a factor throughout (the playoff)",
+              "status": "supported",
+              "sourceRefs": [
+                "05:10-05:12"
+              ]
+            }
+          ],
+          "joshMisattribution": []
+        },
+        "quit": {
+          "neverWantedToQuit": false,
+          "quitParagraphIndex": 4,
+          "quitText": "I don't think there's anything magical. I think Notre Dame would measure up very comparably with the best in the SEC.",
+          "reason": "no new information",
+          "didFinish": false,
+          "soundsLikeFootballPerson": true,
+          "worthTheTime": false,
+          "wouldClickAnother": false,
+          "wouldSend": false,
+          "note": "The premise is solid and the line-of-scrimmage point is fair, but by paragraph 4 it is mostly repeating the assertion without getting into actual roster or matchup specifics."
+        },
+        "quitAfterRepair": {
+          "neverWantedToQuit": false,
+          "quitParagraphIndex": 5,
+          "quitText": "The example I always use is radical: if I took the Seattle Seahawks fresh off a Super Bowl and had them play University of Louisiana Monroe's schedule, you'd have no respect for their schedule, nor should you. But that'd still be the Seahawks.",
+          "reason": "overexplained",
+          "didFinish": true,
+          "soundsLikeFootballPerson": true,
+          "worthTheTime": false,
+          "wouldClickAnother": false,
+          "wouldSend": false,
+          "note": "The core Notre Dame-vs.-SEC claim is fun, but the argument mostly repeats itself and never really proves they would beat Georgia, Texas, LSU, or the league’s weekly depth."
+        },
+        "smell": {
+          "pass": true,
+          "sentences": [],
+          "structural": false,
+          "note": "The rhetoric is conversational and sports-radio-specific rather than mechanically essay-shaped. The repetition and analogies read like a human trying to defend a hot take, not generic AI prose."
+        }
+      },
+      "calls": [
+        {
+          "stage": "josh-segment",
+          "role": "joshSegment",
+          "vendor": "anthropic",
+          "model": "claude-sonnet-5",
+          "inputTokens": 4507,
+          "outputTokens": 301,
+          "costUsd": 0.018,
+          "ms": 5560
+        },
+        {
+          "stage": "josh-cut",
+          "role": "joshCut",
+          "vendor": "anthropic",
+          "model": "claude-sonnet-5",
+          "inputTokens": 8963,
+          "outputTokens": 1140,
+          "costUsd": 0.044,
+          "ms": 9174
+        },
+        {
+          "stage": "reporting-support",
+          "role": "supportFacts",
+          "vendor": "anthropic",
+          "model": "claude-sonnet-5",
+          "inputTokens": 2947,
+          "outputTokens": 609,
+          "costUsd": 0.018,
+          "ms": 7855
+        },
+        {
+          "stage": "josh-prose-edit",
+          "role": "joshProseEdit",
+          "vendor": "anthropic",
+          "model": "claude-opus-5",
+          "inputTokens": 8011,
+          "outputTokens": 1233,
+          "costUsd": 0.2126,
+          "ms": 14833
+        },
+        {
+          "stage": "josh-tighten",
+          "role": "joshProseEdit",
+          "vendor": "anthropic",
+          "model": "claude-opus-5",
+          "inputTokens": 2824,
+          "outputTokens": 1182,
+          "costUsd": 0.131,
+          "ms": 10808
+        },
+        {
+          "stage": "fact-check",
+          "role": "factCheck",
+          "vendor": "anthropic",
+          "model": "claude-sonnet-5",
+          "inputTokens": 0,
+          "outputTokens": 0,
+          "costUsd": 0,
+          "ms": 15112
+        },
+        {
+          "stage": "quit-reading",
+          "role": "quitJudge",
+          "vendor": "openai",
+          "model": "gpt-5.6-terra",
+          "inputTokens": 969,
+          "outputTokens": 124,
+          "costUsd": 0.0147,
+          "ms": 2229
+        },
+        {
+          "stage": "josh-subtraction",
+          "role": "joshSubtraction",
+          "vendor": "anthropic",
+          "model": "claude-opus-5",
+          "inputTokens": 1999,
+          "outputTokens": 1142,
+          "costUsd": 0.1156,
+          "ms": 9642
+        },
+        {
+          "stage": "fact-check",
+          "role": "factCheck",
+          "vendor": "anthropic",
+          "model": "claude-sonnet-5",
+          "inputTokens": 0,
+          "outputTokens": 0,
+          "costUsd": 0,
+          "ms": 12522
+        },
+        {
+          "stage": "quit-reading",
+          "role": "quitJudge",
+          "vendor": "openai",
+          "model": "gpt-5.6-terra",
+          "inputTokens": 942,
+          "outputTokens": 152,
+          "costUsd": 0.0155,
+          "ms": 2162
+        },
+        {
+          "stage": "ai-smell",
+          "role": "smellJudge",
+          "vendor": "openai",
+          "model": "gpt-5.6-terra",
+          "inputTokens": 785,
+          "outputTokens": 130,
+          "costUsd": 0.0131,
+          "ms": 2245
+        }
+      ],
+      "totalCostUsd": 0.5825,
+      "final": {
+        "headline": "If Notre Dame Played In The SEC This Year, I'd Pick Them To Win It",
+        "dek": "Ryan called it one of the worst takes out there. I said it on Colin's show and I'll say it here: I want to know what exactly it is about the SEC schedule Notre Dame's personnel couldn't survive.",
+        "bodyMarkdown": "Ryan said one of the worst takes out there is Notre Dame being the best team — that if they were in the SEC, they would not survive that schedule.\n\nI was on Colin's show and he asked me: do you think Notre Dame will be a product of their schedule, or are they a legit national title contender? The quickest way I could summarize my feelings toward Notre Dame — I said if they played in the SEC this year, I'd pick them to win the SEC.\n\n[EMBED:00:02:38]\n\nWhat is it about the SEC schedule that Notre Dame's personnel wouldn't be able to survive? They're really good along the lines of scrimmage. The program is bedrocked in the very principles it takes to survive that kind of schedule. This is a 10-2 team from a year ago sitting at No. 4 in the preseason AP poll and No. 5 with the coaches.\n\nSo what magic formula is it? What magic talent acquisition mechanism does Georgia possess, or South Carolina, or whoever you think is going to compete in the SEC, that Notre Dame doesn't have? Is it a top quarterback? All they have is the Heisman Trophy favorite.\n\nI don't think there's anything magical. I think Notre Dame would measure up very comparably with the best in the SEC.\n\nIf you want to take shots at their schedule, take shots at their schedule. Miami, Michigan State, Boston College — and beyond that, nobody else currently sitting in the AP top 15 before the playoff. Fine. But as we've discussed many times on this show, there's a difference between a team and the schedule the team plays.\n\n[PULLQUOTE]\n\nThe example I always use is radical: if I took the Seattle Seahawks fresh off a Super Bowl and had them play University of Louisiana Monroe's schedule, you'd have no respect for their schedule, nor should you. But that'd still be the Seahawks.\n\nJust like Notre Dame this year. Could play one of the softest schedules in the country. But if they're the best team in the country, they're the best team in the country. If they're a fraud, which is what many of you suspect, and they cakewalk their way through an inferior schedule — well, that's why we have a playoff. God invented the playoff to expose frauds.\n\nIf you're right and I'm wrong, that'll happen in the playoff. I have them ninth in my preseason bracket, behind Texas and LSU, so I'm not out here calling them the favorite. But I highly suspect Notre Dame will be a factor throughout.\n\n— JP",
+        "pullQuote": "God invented the playoff to expose frauds.",
+        "primaryTeam": "Notre Dame",
+        "teams": [
+          "Notre Dame",
+          "Georgia",
+          "Texas",
+          "LSU",
+          "South Carolina"
+        ],
+        "tags": [
+          "Notre Dame",
+          "SEC",
+          "College Football Playoff",
+          "schedule strength",
+          "preseason rankings"
+        ],
+        "seo": {
+          "title": "Josh Pate: If Notre Dame Played In The SEC, I'd Pick Them To Win It",
+          "description": "Josh Pate makes the case for Notre Dame's 2026 roster, asks what exactly the SEC has that the Irish don't, and argues schedule strength gets settled in the playoff."
+        }
+      },
+      "words": 429,
+      "completedAt": "2026-08-28T04:06:22.392Z"
+    }
+  },
+  {
+    "id": "portal-on-fire",
+    "engine": "josh",
+    "episode": "Transfer Portal On Fire...Big Ten & SEC Ban NFL Players - Josh Pate's College Football Show",
+    "run": {
+      "id": "run_mtcf73c0_gb7v88",
+      "engine": "josh",
+      "sourceId": "nSmIs0OL16s",
+      "fixture": "portal-on-fire",
+      "mode": "replay",
+      "status": "completed",
+      "startedAt": "2026-08-28T03:56:57.120Z",
+      "artifacts": {
+        "repairs": [
+          "tried deleting ¶17 (no new information): \"For what it's worth, LSU and Auburn are scheduled to play October 24 at Auburn, \""
+        ],
+        "segment": {
+          "decision": "segment",
+          "segmentStart": "[00:00]",
+          "segmentEnd": "[10:59]",
+          "centralThought": "The Big Ten and SEC's coordinated crackdown on NFL-cut players returning to college rosters reveals that leagues are punishing institutions rather than players, and raises whether any program will still risk defying it despite looming legal challenges.",
+          "reason": "This is a single sustained argument from open to close: Josh walks through the news, dissects Lane Kiffin's defense of LSU's position, generalizes it against the Sorsby precedent, articulates his core philosophy (rules, not honor codes, govern competitors), and lands on a sharp legal read (enforcement targets schools, not players) plus an open rhetorical question about risk-taking. It's fully coherent standalone, has clear energy and stakes, and doesn't require outside context."
+        },
+        "cut": {
+          "segmentStart": "00:00",
+          "segmentEnd": "10:59",
+          "centralThought": "The Big Ten and SEC's coordinated crackdown on NFL-cut players returning to college rosters reveals that leagues are punishing institutions rather than players, and raises whether any program will still risk defying it despite looming legal challenges.",
+          "blocks": [
+            {
+              "text": "This transfer portal thing's been a disaster. But boy, what a Tuesday it has been. So this morning, if you're like me, you woke up and before you even said hello to your loved ones, you checked your phone and you saw a notification probably from Pete Nikkos or maybe from Ross Dinger and it said the Big 10 is deciding that they're not going to let pro athletes come back and play college sports and college football. And everyone was like golf club. And then in this tribalistic world of ours, people started taking shots at the SEC because, well, you guys just put out a strongly worded statement last night, which was a layer or two of pathetic cuz it looked like a statement and nothing else.",
+              "sourceStart": "00:00",
+              "sourceEnd": "00:47"
+            },
+            {
+              "text": "And then the Big 10, they definitely won the PR game on this day. They come out and say, \"We're going to put out more than a statement. We're going to put out a policy.\" And what their policy was, I'm going to paraphrase a lot of this, it's not all that important, was if you guys take some of these cats who have been cut from the NFL and you play them, we're going to suspend you as a head coach for up to 50% of your season and we're going to fine your institution millions of dollars. And they had unanimous support. Every president, every AD, they were on board with in the Big 10.",
+              "sourceStart": "00:47",
+              "sourceEnd": "01:17"
+            },
+            {
+              "text": "And then right at close of business, just about an hour or so ago, we get word from the SEC, we're doing the same thing. And then some because they expanded it to basketball and everything else. And this is Ross Dinger. If you're watching on YouTube, you can see this. Ross reported that SEC presidents granted Greg Sanki, quote, pay close attention, kids, quote, full and unlimited authority, which includes the ability to suspend a school from competition. In addition to that, league bylaw grants the commissioner powers to deem a player ineligible, suspend coaches, administrators, etc. In other words, we're also going to have a policy against that.",
+              "sourceStart": "01:17",
+              "sourceEnd": "02:07"
+            },
+            {
+              "text": "Now, this was about five or so hours after Lane Kiffin showed up on Pat McAfee's show earlier today. And keep in mind, this is chronologically a little out of order, but I'm doing it this way for a reason. At the point in time Lane went on the show, we had not gotten word from the SEC. All the SEC had done was say, \"Hey, we don't like this. This shouldn't happen.\" But they hadn't come out with the actual stance and policy and whatnot. So, listen closely. This was Lane Kiffin earlier today talking about all the latest news surrounding them possibly taking guys who had been cut from NFL teams in training camp and playing for LSU this season.",
+              "sourceStart": "02:07",
+              "sourceEnd": "02:50"
+            },
+            {
+              "text": "Yeah, there's a lot of parts of it that I don't like within that. I don't think professionals should come back to college sports and college football particularly. But in this instance, this is not professionals that have gone played seasons or just, you know, randomly file an injunction in a state to become eligible. This is part of a specific class that was ruled wrong by the NCAA that was supposed to be five for five. So, I think you're going to get in a really interesting situation if now as a conference you start to say, \"Well, we're not going to follow this court order that's been issued and we're going to say that these kids that the court says can go anywhere, we're going to say no, you can't.\" That's that's some issues there.",
+              "sourceStart": "02:50",
+              "sourceEnd": "03:31"
+            },
+            {
+              "text": "Okay. So, what Lane is saying there has a germ of validity to it. What he's really saying is first off, he's trying to draw a delineation between guys who have actually played in NFL regular season games versus people who have tried out for teams and been cut and whatnot. And the language that the SEC later released sort of cut through all that cuz it was, if you've even tried out for teams, if you've even rubbed against, if you've declared for anything, you're ineligible. Okay. So they took care of the gray area there.",
+              "sourceStart": "03:36",
+              "sourceEnd": "04:04"
+            },
+            {
+              "text": "But what Lane's saying, which again in theory has some validity to it, is that the NCAA passed this rule, this five for five rule. And that whole thing was meant to say, okay, from this point forward, instead of doing the whole red shirt thing and the injury thing and all that, you're just going to have five years to play and that's it. However, you 2022 kids, you don't get that. Or also another explanation is some guys declared for the draft not knowing that rule change was coming and the argument there is well that's not fair because had they known the rule change was coming maybe they wouldn't have declared for the draft.",
+              "sourceStart": "04:06",
+              "sourceEnd": "04:50"
+            },
+            {
+              "text": "Is there some germ of validity in there? Of course there is. It doesn't bear the weight of greater scrutiny. The weight of greater scrutiny is forget the details. Is someone's feelings hurt? Maybe so. Could you argue something's a little unfair? Maybe so. But I'll see you with that and I'll raise you that these dudes were playing in NFL preseason games. These guys were in NFL preseason camp. They're professional athletes. They're not coming back to play college football. And then that's kind of when most people dust their hands and they absolve themselves. They kind of wash their hands of it all.",
+              "sourceStart": "04:50",
+              "sourceEnd": "05:26"
+            },
+            {
+              "text": "But this is the second time in six months that we've had this inflection point in college football where a famously well documented divided society has totally united. Brendan Sorsby bet on games. 95 plus% of the public said, \"Yeah, he should never play college ball again.\" And Texas Tech/Brendan Sorsby tried to fight it and there was that whole kerfuffle out in Texas and everybody rose up against it. And then just when I thought I couldn't see that again, I got not just Lane and LSU, but I've got LSU among other programs looking at what they think is a very legal loophole to add players to their roster. And 95% of the public hated that too. This was even further down the road of that because this even united the conferences. These people have disagreed on everything and all of a sudden they agree on this. So hey, golf clap golf clap because it's the proper stance to have.",
+              "sourceStart": "05:39",
+              "sourceEnd": "06:43"
+            },
+            {
+              "text": "I will say this, as I said the other day, a lot of folks after we did our show the other night were in my DMs saying, \"You took it easy on Lane. You took it easy on LSU.\" I don't care about Lane and LSU was my whole point. I will never count on any competitor in an ultra competitive arena voluntarily abiding by some code that you want them to abide by. Their only code, the only barrier is rules. That's it. Those are the entire reasons rules exist because you can't count on people to just do it the way you want them to, especially if it means foregoing an edge they think they can get.",
+              "sourceStart": "06:43",
+              "sourceEnd": "07:26"
+            },
+            {
+              "text": "I don't count on the competitors to do that. If you were against steroid use in baseball, you should be for a rule against steroids in baseball, which there was. So then when guys did it, it was a violation of rules and then you get popped. That's how it's supposed to work. The way it's not supposed to work is, huh, let's see, multivitamins are technically legal, I just don't think players should take those, that's not fair, that's a little bit of a health advantage. No, if it's that bad of an advantage, make it illegal. Similarly here, it's just that we've had our shoelaces tied in college athletics because every time you try and enforce a rule or write a new rule, some lawyer comes along and you find out it's illegal.",
+              "sourceStart": "07:26",
+              "sourceEnd": "08:14"
+            },
+            {
+              "text": "So, here's what's happening right now. Yes, the Big 10 and the SEC came out with these policies, and it sounds like the Big 12 will do it, the ACC will do it. And the natural followup is this is probably not done. All you'll see is players sue conferences. In all likelihood, that's what you're going to see. I would expect it as early as tomorrow to see players trying to challenge conferences because conferences are acting in blatant violation of court rulings.",
+              "sourceStart": "08:14",
+              "sourceEnd": "08:51"
+            },
+            {
+              "text": "Now, here's my question. Famously, I am not a lawyer. Although Pate State has a heck of a law school, but I'm not a lawyer. But here is where my head is at on this. The enforcement threat from the Big 10 and the SEC, as I read it, is not on players. The enforcement threat was towards the schools themselves.",
+              "sourceStart": "08:51",
+              "sourceEnd": "09:13"
+            },
+            {
+              "text": "So, if Bradley goes and tries out for the Atlanta Falcons and gets cut and then wants to go and play for Auburn, if I'm Greg Sanki, I'm not punishing Bradley. I'm threatening Alex Gooish in Auburn and I'm saying you do whatever you want to but if you do play him I have got, and I want to use the quote again, full and unlimited authority granted in a 160 unanimous decision amongst university presidents to act any way that I see fit and I can suspend you and I can hold your institution financially responsible. And at that point, play him if you want to, but there will be consequences.",
+              "sourceStart": "09:13",
+              "sourceEnd": "09:57"
+            },
+            {
+              "text": "That's kind of how this reads to me. Full and unlimited authority, not to tell players they can't play. That's not what was in those graphics today. It was no, this is to you, the institution. You better not do it or there'll be consequences. So, I don't doubt that there'll be lawsuits. I don't doubt we'll hear a lot more noise about that.",
+              "sourceStart": "09:57",
+              "sourceEnd": "10:20"
+            },
+            {
+              "text": "But the other question that I'm asking is I kind of understand when they fought so hard for Brendan Sorsby, like that's your quarterback. I mean, that's a potential game changer. That's a potential season, playoff altering situation that Texas Tech had on their hands. I don't want to be disrespectful. I'm just rhetorically asking, in light of all this, is any school, LSU or anyone else, are any of them going to look and say, you know, it's worth it, I think we're going to pursue this anyway, I think we're going to go take some guys that were cut from NFL rosters and we're going to bolster ours a little bit. Yep, this is worth the risk. I don't know. Time will tell.",
+              "sourceStart": "10:20",
+              "sourceEnd": "11:02"
+            }
+          ],
+          "removedBecauseRepetitive": [
+            "Every president, every AD, they were on board with in the Big 10.",
+            "And 95% of the public hated that too."
+          ],
+          "removedBecauseOffTopic": [
+            "Hey, really quick word here. Please subscribe to the channel if you haven't already. This is college football. We do it year round. We keep it free. It doesn't sign you up for anything. It's free of charge for you. It just is a big help. Please subscribe."
+          ]
+        },
+        "support": [
+          {
+            "fact": "LSU and Auburn are scheduled to play on SAT OCT 24 at Auburn, 12:00 PM ET",
+            "sourceRef": "fact-sheet",
+            "insertAfterBlock": 13,
+            "whyUseful": "Grounds the hypothetical Bradley/Auburn-LSU scenario in an actual real matchup on the 2026 schedule, making the example concrete rather than purely rhetorical"
+          }
+        ],
+        "draft": {
+          "headline": "The Big Ten and SEC Aren't Punishing Players — They're Threatening Schools",
+          "dek": "Both leagues went from statements to policies in a single Tuesday, with the SEC granting Greg Sankey \"full and unlimited authority.\" My question now is whether any program still thinks defying it is worth the risk.",
+          "bodyMarkdown": "This transfer portal thing's been a disaster. But boy, what a Tuesday it has been.\n\nSo this morning, if you're like me, you woke up and before you even said hello to your loved ones, you checked your phone and you saw a notification — probably from Pete Nikkos or maybe from Ross Dinger — and it said the Big Ten is deciding that they're not going to let pro athletes come back and play college sports and college football. And everyone was like, golf clap. And then in this tribalistic world of ours, people started taking shots at the SEC because, well, you guys just put out a strongly worded statement last night, which was a layer or two of pathetic 'cause it looked like a statement and nothing else.\n\n[EMBED:00:00:00]\n\nAnd then the Big Ten, they definitely won the PR game on this day. They come out and say, \"We're going to put out more than a statement. We're going to put out a policy.\" And what their policy was — I'm going to paraphrase a lot of this, it's not all that important — was if you guys take some of these cats who have been cut from the NFL and you play them, we're going to suspend you as a head coach for up to 50% of your season and we're going to fine your institution millions of dollars. And they had unanimous support. Every president, every AD, they were on board with it in the Big Ten.\n\nAnd then right at close of business, just about an hour or so ago, we get word from the SEC: we're doing the same thing. And then some, because they expanded it to basketball and everything else. And this is Ross Dinger. Ross reported that SEC presidents granted Greg Sankey — quote, pay close attention, kids — \"full and unlimited authority,\" which includes the ability to suspend a school from competition. In addition to that, league bylaw grants the commissioner powers to deem a player ineligible, suspend coaches, administrators, etc. In other words, we're also going to have a policy against that.\n\nNow, this was about five or so hours after Lane Kiffin showed up on Pat McAfee's show earlier today. Keep in mind, this is chronologically a little out of order, but I'm doing it this way for a reason. At the point in time Lane went on the show, we had not gotten word from the SEC. All the SEC had done was say, hey, we don't like this, this shouldn't happen. But they hadn't come out with the actual stance and policy and whatnot.\n\nWhat Lane is saying there has a germ of validity to it. First off, he's trying to draw a delineation between guys who have actually played in NFL regular season games versus people who have tried out for teams and been cut and whatnot. And the language that the SEC later released sort of cut through all that, because it was: if you've even tried out for teams, if you've even rubbed against it, if you've declared for anything, you're ineligible. Okay. So they took care of the gray area there.\n\nBut what Lane's saying, which again in theory has some validity to it, is that the NCAA passed this five-for-five rule. That whole thing was meant to say, okay, from this point forward, instead of doing the whole redshirt thing and the injury thing and all that, you're just going to have five years to play and that's it. However, you 2022 kids, you don't get that. Or also another explanation is some guys declared for the draft not knowing that rule change was coming, and the argument there is, well, that's not fair — because had they known the rule change was coming, maybe they wouldn't have declared for the draft.\n\nIs there some germ of validity in there? Of course there is. It doesn't bear the weight of greater scrutiny. The weight of greater scrutiny is: forget the details. Is someone's feelings hurt? Maybe so. Could you argue something's a little unfair? Maybe so. But I'll see you with that and I'll raise you that these dudes were playing in NFL preseason games. These guys were in NFL preseason camp. They're professional athletes. They're not coming back to play college football. And then that's kind of when most people dust their hands and absolve themselves. They wash their hands of it all.\n\nBut this is the second time in six months that we've had this inflection point in college football where a famously well-documented divided society has totally united. Brendan Sorsby bet on games. 95-plus percent of the public said, yeah, he should never play college ball again. And Texas Tech and Brendan Sorsby tried to fight it and there was that whole kerfuffle out in Texas and everybody rose up against it. And then just when I thought I couldn't see that again, I've got not just Lane and LSU, but LSU among other programs looking at what they think is a very legal loophole to add players to their roster. And 95% of the public hated that too. This was even further down the road of that, because this even united the conferences. These people have disagreed on everything and all of a sudden they agree on this. So hey, golf clap, golf clap, because it's the proper stance to have.\n\nI will say this. As I said the other day, a lot of folks after we did our show the other night were in my DMs saying, \"You took it easy on Lane. You took it easy on LSU.\" I don't care about Lane and LSU was my whole point.\n\n[PULLQUOTE]\n\nTheir only code, the only barrier, is rules. That's it. Those are the entire reasons rules exist — because you can't count on people to just do it the way you want them to, especially if it means foregoing an edge they think they can get.\n\nI don't count on the competitors to do that. If you were against steroid use in baseball, you should be for a rule against steroids in baseball, which there was. So then when guys did it, it was a violation of rules and then you get popped. That's how it's supposed to work. The way it's not supposed to work is, huh, let's see, multivitamins are technically legal, I just don't think players should take those, that's not fair, that's a little bit of a health advantage. No — if it's that bad of an advantage, make it illegal. Similarly here, it's just that we've had our shoelaces tied in college athletics, because every time you try and enforce a rule or write a new rule, some lawyer comes along and you find out it's illegal.\n\nSo here's what's happening right now. Yes, the Big Ten and the SEC came out with these policies, and it sounds like the Big 12 will do it, the ACC will do it. And the natural follow-up is, this is probably not done. All you'll see is players sue conferences. In all likelihood, that's what you're going to see. I would expect it as early as tomorrow to see players trying to challenge conferences, because conferences are acting in blatant violation of court rulings.\n\nNow, here's my question. Famously, I am not a lawyer. Although Pate State has a heck of a law school, but I'm not a lawyer. But here is where my head is at on this. The enforcement threat from the Big Ten and the SEC, as I read it, is not on players. The enforcement threat was towards the schools themselves.\n\nSo if Bradley goes and tries out for the Atlanta Falcons and gets cut and then wants to go and play for Auburn, if I'm Greg Sankey, I'm not punishing Bradley. I'm threatening Alex Gooish in Auburn and I'm saying, you do whatever you want to, but if you do play him I have got — and I want to use the quote again — \"full and unlimited authority\" granted in a 16-0 unanimous decision amongst university presidents to act any way that I see fit, and I can suspend you and I can hold your institution financially responsible. And at that point, play him if you want to, but there will be consequences.\n\nThat's kind of how this reads to me. Full and unlimited authority — not to tell players they can't play. That's not what was in those graphics today. It was, no, this is to you, the institution. You better not do it or there'll be consequences. So I don't doubt that there'll be lawsuits. I don't doubt we'll hear a lot more noise about that.\n\nBut the other question that I'm asking is, I kind of understand when they fought so hard for Brendan Sorsby. Like, that's your quarterback. I mean, that's a potential game changer. That's a potential season, playoff-altering situation that Texas Tech had on their hands. I don't want to be disrespectful. I'm just rhetorically asking: in light of all this, is any school — LSU or anyone else — are any of them going to look and say, you know, it's worth it, I think we're going to pursue this anyway, I think we're going to go take some guys that were cut from NFL rosters and we're going to bolster ours a little bit. Yep, this is worth the risk.\n\nFor what it's worth, LSU and Auburn are scheduled to play October 24 at Auburn, noon Eastern. I don't know. Time will tell.\n\n— JP",
+          "pullQuote": "I will never count on any competitor in an ultra competitive arena voluntarily abiding by some code that you want them to abide by.",
+          "primaryTeam": "LSU",
+          "teams": [
+            "LSU",
+            "Auburn"
+          ],
+          "tags": [
+            "SEC",
+            "Big Ten",
+            "Greg Sankey",
+            "Lane Kiffin",
+            "transfer portal",
+            "eligibility",
+            "NCAA"
+          ],
+          "seo": {
+            "title": "Josh Pate: The Big Ten and SEC Are Threatening Schools, Not Players",
+            "description": "Josh Pate on the Big Ten and SEC policies against NFL-cut players returning to college rosters, Lane Kiffin's argument, and whether any program still thinks defying it is worth the risk."
+          }
+        },
+        "tightened": {
+          "headline": "The Big Ten and SEC Aren't Punishing Players — They're Threatening Schools",
+          "dek": "Both leagues went from statements to policies in a single Tuesday, with the SEC granting Greg Sankey \"full and unlimited authority.\" My question now is whether any program still thinks defying it is worth the risk.",
+          "bodyMarkdown": "This transfer portal thing's been a disaster. But boy, what a Tuesday it has been.\n\nThis morning, if you're like me, you woke up and before you even said hello to your loved ones, you checked your phone and saw a notification — probably from Pete Nikkos or maybe from Ross Dinger — and it said the Big Ten is deciding they're not going to let pro athletes come back and play college football. And everyone was like, golf clap. Then in this tribalistic world of ours, people started taking shots at the SEC, because you guys just put out a strongly worded statement last night, which was a layer or two of pathetic 'cause it looked like a statement and nothing else.\n\n[EMBED:00:00:00]\n\nThe Big Ten definitely won the PR game on this day. They come out and say, \"We're going to put out more than a statement. We're going to put out a policy.\" And their policy — I'm going to paraphrase, the details aren't all that important — was if you take some of these cats who have been cut from the NFL and you play them, we're going to suspend you as a head coach for up to 50% of your season and fine your institution millions of dollars. And they had unanimous support. Every president, every AD in the Big Ten.\n\nThen right at close of business, about an hour ago, we get word from the SEC: we're doing the same thing. And then some, because they expanded it to basketball and everything else. This is Ross Dinger. Ross reported that SEC presidents granted Greg Sankey — quote, pay close attention, kids — \"full and unlimited authority,\" which includes the ability to suspend a school from competition. League bylaw also grants the commissioner powers to deem a player ineligible, suspend coaches, administrators, etc.\n\nNow, this was about five hours after Lane Kiffin showed up on Pat McAfee's show. Keep in mind, this is chronologically a little out of order, but I'm doing it this way for a reason. At the point Lane went on the show, we had not gotten word from the SEC. All the SEC had done was say, hey, we don't like this, this shouldn't happen. They hadn't come out with the actual stance and policy.\n\nWhat Lane is saying there has a germ of validity to it. First off, he's trying to draw a delineation between guys who have actually played in NFL regular season games versus people who have tried out for teams and been cut. The language the SEC later released cut through all that: if you've even tried out for teams, if you've even rubbed against it, if you've declared for anything, you're ineligible. So they took care of the gray area.\n\nBut what Lane's saying is that the NCAA passed this five-for-five rule. That whole thing was meant to say, from this point forward, instead of doing the whole redshirt thing and the injury thing, you're just going to have five years to play and that's it. However, you 2022 kids, you don't get that. Another explanation is some guys declared for the draft not knowing that rule change was coming, and the argument is that's not fair — because had they known, maybe they wouldn't have declared.\n\nIs there some germ of validity in there? Of course there is. It doesn't bear the weight of greater scrutiny. Forget the details. Is someone's feelings hurt? Maybe so. Could you argue something's a little unfair? Maybe so. But I'll see you with that and I'll raise you that these dudes were playing in NFL preseason games. These guys were in NFL preseason camp. They're professional athletes. They're not coming back to play college football. That's when most people dust their hands and absolve themselves.\n\nBut this is the second time in six months that we've had an inflection point in college football where a famously divided society has totally united. Brendan Sorsby bet on games. 95-plus percent of the public said he should never play college ball again. Texas Tech and Brendan Sorsby tried to fight it and there was that whole kerfuffle out in Texas and everybody rose up against it. And then just when I thought I couldn't see that again, I've got not just Lane and LSU, but LSU among other programs looking at what they think is a very legal loophole to add players to their roster. And 95% of the public hated that too. This one was even further down the road, because it united the conferences. These people have disagreed on everything and all of a sudden they agree on this. So golf clap, because it's the proper stance to have.\n\nI will say this. A lot of folks after we did our show the other night were in my DMs saying, \"You took it easy on Lane. You took it easy on LSU.\" I don't care about Lane and LSU was my whole point.\n\n[PULLQUOTE]\n\nTheir only code, the only barrier, is rules. That's the entire reason rules exist — because you can't count on people to do it the way you want them to, especially if it means foregoing an edge they think they can get.\n\nI don't count on the competitors to do that. If you were against steroid use in baseball, you should be for a rule against steroids in baseball, which there was. So when guys did it, it was a violation of rules and you get popped. That's how it's supposed to work. The way it's not supposed to work is, let's see, multivitamins are technically legal, I just don't think players should take those, that's a little bit of a health advantage. No — if it's that bad of an advantage, make it illegal. Similarly here, we've had our shoelaces tied in college athletics, because every time you try and enforce a rule or write a new rule, some lawyer comes along and you find out it's illegal.\n\nSo here's what's happening right now. The Big Ten and the SEC came out with these policies, and it sounds like the Big 12 will do it, the ACC will do it. This is probably not done. All you'll see is players sue conferences. I would expect as early as tomorrow to see players trying to challenge conferences, because conferences are acting in blatant violation of court rulings.\n\nNow, here's my question. Famously, I am not a lawyer. Pate State has a heck of a law school, but I'm not a lawyer. Here is where my head is at. The enforcement threat from the Big Ten and the SEC, as I read it, is not on players. The enforcement threat was toward the schools themselves.\n\nSo if Bradley goes and tries out for the Atlanta Falcons and gets cut and then wants to go play for Auburn, if I'm Greg Sankey, I'm not punishing Bradley. I'm threatening Alex Gooish in Auburn and I'm saying, you do whatever you want to, but if you play him I have got — and I want to use the quote again — \"full and unlimited authority\" granted in a 16-0 unanimous decision amongst university presidents to act any way that I see fit, and I can suspend you and I can hold your institution financially responsible. At that point, play him if you want to, but there will be consequences.\n\nThat's how this reads to me. Full and unlimited authority — not to tell players they can't play. That's not what was in those graphics today. It was, this is to you, the institution. You better not do it or there'll be consequences. So I don't doubt there'll be lawsuits. I don't doubt we'll hear a lot more noise about that.\n\nBut the other question I'm asking is, I understand when they fought so hard for Brendan Sorsby. That's your quarterback. That's a potential season, playoff-altering situation that Texas Tech had on their hands. I don't want to be disrespectful. I'm just rhetorically asking: in light of all this, is any school — LSU or anyone else — going to look and say, it's worth it, I think we're going to pursue this anyway, I think we're going to go take some guys that were cut from NFL rosters and bolster ours a little bit. Yep, this is worth the risk.\n\nFor what it's worth, LSU and Auburn are scheduled to play October 24 at Auburn, noon Eastern. I don't know. Time will tell.\n\n— JP",
+          "pullQuote": "I will never count on any competitor in an ultra competitive arena voluntarily abiding by some code that you want them to abide by.",
+          "primaryTeam": "LSU",
+          "teams": [
+            "LSU",
+            "Auburn"
+          ],
+          "tags": [
+            "SEC",
+            "Big Ten",
+            "Greg Sankey",
+            "Lane Kiffin",
+            "transfer portal",
+            "eligibility",
+            "NCAA"
+          ],
+          "seo": {
+            "title": "Josh Pate: The Big Ten and SEC Are Threatening Schools, Not Players",
+            "description": "Josh Pate on the Big Ten and SEC policies against NFL-cut players returning to college rosters, Lane Kiffin's argument, and whether any program still thinks defying it is worth the risk."
+          }
+        },
+        "policy": {
+          "pass": true,
+          "violations": []
+        },
+        "fact": {
+          "verdict": "pass",
+          "claims": [
+            {
+              "claim": "Big Ten announced policy suspending head coaches up to 50% of season and fining institutions millions for playing cut NFL players",
+              "status": "supported",
+              "sourceRefs": [
+                "00:56-01:14"
+              ]
+            },
+            {
+              "claim": "Big Ten policy had unanimous support from every president and AD",
+              "status": "supported",
+              "sourceRefs": [
+                "01:14-01:19"
+              ]
+            },
+            {
+              "claim": "SEC followed with similar policy, expanded to basketball and other sports",
+              "status": "supported",
+              "sourceRefs": [
+                "01:22-01:33"
+              ]
+            },
+            {
+              "claim": "Ross Dinger reported SEC presidents granted Sankey 'full and unlimited authority' including ability to suspend a school from competition",
+              "status": "supported",
+              "sourceRefs": [
+                "01:39-01:52"
+              ]
+            },
+            {
+              "claim": "League bylaw grants commissioner power to deem player ineligible, suspend coaches, administrators",
+              "status": "supported",
+              "sourceRefs": [
+                "01:52-02:03"
+              ]
+            },
+            {
+              "claim": "Lane Kiffin appeared on Pat McAfee's show about five hours before SEC policy announcement",
+              "status": "supported",
+              "sourceRefs": [
+                "02:05-02:12"
+              ]
+            },
+            {
+              "claim": "Kiffin drew distinction between players who played NFL regular season games vs. those tried out/cut",
+              "status": "supported",
+              "sourceRefs": [
+                "02:50-03:19"
+              ]
+            },
+            {
+              "claim": "NCAA five-for-five rule background as described",
+              "status": "supported",
+              "sourceRefs": [
+                "04:06-04:33"
+              ]
+            },
+            {
+              "claim": "Brendan Sorsby betting scandal and Texas Tech situation, 95%+ public reaction",
+              "status": "supported",
+              "sourceRefs": [
+                "05:51-06:08"
+              ]
+            },
+            {
+              "claim": "LSU among programs looking at loophole to add cut NFL players to roster",
+              "status": "supported",
+              "sourceRefs": [
+                "06:14-06:24"
+              ]
+            },
+            {
+              "claim": "Steroids-in-baseball rule analogy",
+              "status": "supported",
+              "sourceRefs": [
+                "07:30-07:38"
+              ]
+            },
+            {
+              "claim": "Prediction that players will sue conferences as early as tomorrow",
+              "status": "supported",
+              "sourceRefs": [
+                "08:35-08:40"
+              ]
+            },
+            {
+              "claim": "Enforcement threat targets schools/institutions, not players directly, per Josh's reading",
+              "status": "supported",
+              "sourceRefs": [
+                "09:01-10:13"
+              ]
+            },
+            {
+              "claim": "Sankey quote 'full and unlimited authority' granted in 16-0 unanimous decision",
+              "status": "supported",
+              "sourceRefs": [
+                "09:39-09:43"
+              ]
+            },
+            {
+              "claim": "LSU and Auburn scheduled to play October 24 at Auburn, noon Eastern",
+              "status": "supported",
+              "sourceRefs": [
+                "VERIFIED TEAM FACTS: LSU schedule SAT OCT 24 at Auburn 12:00 PM ET; Auburn schedule SAT OCT 24 vs LSU 12:00 PM ET"
+              ]
+            },
+            {
+              "claim": "Josh's overall argument that rules, not player codes, are the only real barrier to competitive behavior",
+              "status": "analysis",
+              "sourceRefs": [
+                "07:06-07:44"
+              ]
+            }
+          ],
+          "joshMisattribution": []
+        },
+        "quit": {
+          "neverWantedToQuit": false,
+          "quitParagraphIndex": 17,
+          "quitText": "For what it's worth, LSU and Auburn are scheduled to play October 24 at Auburn, noon Eastern. I don't know. Time will tell.",
+          "reason": "no new information",
+          "didFinish": true,
+          "soundsLikeFootballPerson": true,
+          "worthTheTime": true,
+          "wouldClickAnother": true,
+          "wouldSend": false,
+          "note": "The school-focused enforcement angle is a useful read on the policy, though the ending fixture note adds nothing."
+        },
+        "quitAfterRepair": {
+          "neverWantedToQuit": false,
+          "quitParagraphIndex": 15,
+          "quitText": "That's how this reads to me. Full and unlimited authority — not to tell players they can't play. That's not what was in those graphics today. It was, this is to you, the institution. You better not do it or there'll be consequences. So I don't doubt there'll be lawsuits. I don't doubt we'll hear a lot more noise about that.",
+          "reason": "repetitive",
+          "didFinish": true,
+          "soundsLikeFootballPerson": true,
+          "worthTheTime": true,
+          "wouldClickAnother": true,
+          "wouldSend": false,
+          "note": "The school-versus-player enforcement angle is a worthwhile framing, though it gets restated once too often near the end."
+        },
+        "smell": {
+          "pass": true,
+          "sentences": [],
+          "structural": false,
+          "note": "The piece is conversational, repetitive, and chronologically messy in a recognizably human talk-show/transcript way; it does not show the polished thesis-counterthesis structure or synthetic summarizing associated with AI sportswriting."
+        }
+      },
+      "calls": [
+        {
+          "stage": "josh-segment",
+          "role": "joshSegment",
+          "vendor": "anthropic",
+          "model": "claude-sonnet-5",
+          "inputTokens": 5590,
+          "outputTokens": 284,
+          "costUsd": 0.021,
+          "ms": 5226
+        },
+        {
+          "stage": "josh-cut",
+          "role": "joshCut",
+          "vendor": "anthropic",
+          "model": "claude-sonnet-5",
+          "inputTokens": 9172,
+          "outputTokens": 3749,
+          "costUsd": 0.0838,
+          "ms": 35072
+        },
+        {
+          "stage": "reporting-support",
+          "role": "supportFacts",
+          "vendor": "anthropic",
+          "model": "claude-sonnet-5",
+          "inputTokens": 4567,
+          "outputTokens": 155,
+          "costUsd": 0.016,
+          "ms": 2990
+        },
+        {
+          "stage": "josh-prose-edit",
+          "role": "joshProseEdit",
+          "vendor": "anthropic",
+          "model": "claude-opus-5",
+          "inputTokens": 7601,
+          "outputTokens": 3420,
+          "costUsd": 0.3705,
+          "ms": 40021
+        },
+        {
+          "stage": "josh-tighten",
+          "role": "joshProseEdit",
+          "vendor": "anthropic",
+          "model": "claude-opus-5",
+          "inputTokens": 4789,
+          "outputTokens": 2922,
+          "costUsd": 0.291,
+          "ms": 29535
+        },
+        {
+          "stage": "fact-check",
+          "role": "factCheck",
+          "vendor": "anthropic",
+          "model": "claude-sonnet-5",
+          "inputTokens": 0,
+          "outputTokens": 0,
+          "costUsd": 0,
+          "ms": 12353
+        },
+        {
+          "stage": "quit-reading",
+          "role": "quitJudge",
+          "vendor": "openai",
+          "model": "gpt-5.6-terra",
+          "inputTokens": 2170,
+          "outputTokens": 114,
+          "costUsd": 0.0263,
+          "ms": 2567
+        },
+        {
+          "stage": "josh-subtraction",
+          "role": "joshSubtraction",
+          "vendor": "anthropic",
+          "model": "claude-opus-5",
+          "inputTokens": 3750,
+          "outputTokens": 2867,
+          "costUsd": 0.2713,
+          "ms": 26486
+        },
+        {
+          "stage": "fact-check",
+          "role": "factCheck",
+          "vendor": "anthropic",
+          "model": "claude-sonnet-5",
+          "inputTokens": 0,
+          "outputTokens": 0,
+          "costUsd": 0,
+          "ms": 16877
+        },
+        {
+          "stage": "quit-reading",
+          "role": "quitJudge",
+          "vendor": "openai",
+          "model": "gpt-5.6-terra",
+          "inputTokens": 2138,
+          "outputTokens": 287,
+          "costUsd": 0.0329,
+          "ms": 4095
+        },
+        {
+          "stage": "ai-smell",
+          "role": "smellJudge",
+          "vendor": "openai",
+          "model": "gpt-5.6-terra",
+          "inputTokens": 1959,
+          "outputTokens": 142,
+          "costUsd": 0.0253,
+          "ms": 3974
+        }
+      ],
+      "totalCostUsd": 1.1381,
+      "final": {
+        "headline": "The Big Ten and SEC Aren't Punishing Players — They're Threatening Schools",
+        "dek": "Both leagues went from statements to policies in a single Tuesday, with the SEC granting Greg Sankey \"full and unlimited authority.\" My question now is whether any program still thinks defying it is worth the risk.",
+        "bodyMarkdown": "This transfer portal thing's been a disaster. But boy, what a Tuesday it has been.\n\nThis morning, if you're like me, you woke up and before you even said hello to your loved ones, you checked your phone and saw a notification — probably from Pete Nikkos or maybe from Ross Dinger — and it said the Big Ten is deciding they're not going to let pro athletes come back and play college football. And everyone was like, golf clap. Then in this tribalistic world of ours, people started taking shots at the SEC, because you guys just put out a strongly worded statement last night, which was a layer or two of pathetic 'cause it looked like a statement and nothing else.\n\n[EMBED:00:00:00]\n\nThe Big Ten definitely won the PR game on this day. They come out and say, \"We're going to put out more than a statement. We're going to put out a policy.\" And their policy — I'm going to paraphrase, the details aren't all that important — was if you take some of these cats who have been cut from the NFL and you play them, we're going to suspend you as a head coach for up to 50% of your season and fine your institution millions of dollars. And they had unanimous support. Every president, every AD in the Big Ten.\n\nThen right at close of business, about an hour ago, we get word from the SEC: we're doing the same thing. And then some, because they expanded it to basketball and everything else. This is Ross Dinger. Ross reported that SEC presidents granted Greg Sankey — quote, pay close attention, kids — \"full and unlimited authority,\" which includes the ability to suspend a school from competition. League bylaw also grants the commissioner powers to deem a player ineligible, suspend coaches, administrators, etc.\n\nNow, this was about five hours after Lane Kiffin showed up on Pat McAfee's show. Keep in mind, this is chronologically a little out of order, but I'm doing it this way for a reason. At the point Lane went on the show, we had not gotten word from the SEC. All the SEC had done was say, hey, we don't like this, this shouldn't happen. They hadn't come out with the actual stance and policy.\n\nWhat Lane is saying there has a germ of validity to it. First off, he's trying to draw a delineation between guys who have actually played in NFL regular season games versus people who have tried out for teams and been cut. The language the SEC later released cut through all that: if you've even tried out for teams, if you've even rubbed against it, if you've declared for anything, you're ineligible. So they took care of the gray area.\n\nBut what Lane's saying is that the NCAA passed this five-for-five rule. That whole thing was meant to say, from this point forward, instead of doing the whole redshirt thing and the injury thing, you're just going to have five years to play and that's it. However, you 2022 kids, you don't get that. Another explanation is some guys declared for the draft not knowing that rule change was coming, and the argument is that's not fair — because had they known, maybe they wouldn't have declared.\n\nIs there some germ of validity in there? Of course there is. It doesn't bear the weight of greater scrutiny. Forget the details. Is someone's feelings hurt? Maybe so. Could you argue something's a little unfair? Maybe so. But I'll see you with that and I'll raise you that these dudes were playing in NFL preseason games. These guys were in NFL preseason camp. They're professional athletes. They're not coming back to play college football. That's when most people dust their hands and absolve themselves.\n\nBut this is the second time in six months that we've had an inflection point in college football where a famously divided society has totally united. Brendan Sorsby bet on games. 95-plus percent of the public said he should never play college ball again. Texas Tech and Brendan Sorsby tried to fight it and there was that whole kerfuffle out in Texas and everybody rose up against it. And then just when I thought I couldn't see that again, I've got not just Lane and LSU, but LSU among other programs looking at what they think is a very legal loophole to add players to their roster. And 95% of the public hated that too. This one was even further down the road, because it united the conferences. These people have disagreed on everything and all of a sudden they agree on this. So golf clap, because it's the proper stance to have.\n\nI will say this. A lot of folks after we did our show the other night were in my DMs saying, \"You took it easy on Lane. You took it easy on LSU.\" I don't care about Lane and LSU was my whole point.\n\n[PULLQUOTE]\n\nTheir only code, the only barrier, is rules. That's the entire reason rules exist — because you can't count on people to do it the way you want them to, especially if it means foregoing an edge they think they can get.\n\nI don't count on the competitors to do that. If you were against steroid use in baseball, you should be for a rule against steroids in baseball, which there was. So when guys did it, it was a violation of rules and you get popped. That's how it's supposed to work. The way it's not supposed to work is, let's see, multivitamins are technically legal, I just don't think players should take those, that's a little bit of a health advantage. No — if it's that bad of an advantage, make it illegal. Similarly here, we've had our shoelaces tied in college athletics, because every time you try and enforce a rule or write a new rule, some lawyer comes along and you find out it's illegal.\n\nSo here's what's happening right now. The Big Ten and the SEC came out with these policies, and it sounds like the Big 12 will do it, the ACC will do it. This is probably not done. All you'll see is players sue conferences. I would expect as early as tomorrow to see players trying to challenge conferences, because conferences are acting in blatant violation of court rulings.\n\nNow, here's my question. Famously, I am not a lawyer. Pate State has a heck of a law school, but I'm not a lawyer. Here is where my head is at. The enforcement threat from the Big Ten and the SEC, as I read it, is not on players. The enforcement threat was toward the schools themselves.\n\nSo if Bradley goes and tries out for the Atlanta Falcons and gets cut and then wants to go play for Auburn, if I'm Greg Sankey, I'm not punishing Bradley. I'm threatening Alex Gooish in Auburn and I'm saying, you do whatever you want to, but if you play him I have got — and I want to use the quote again — \"full and unlimited authority\" granted in a 16-0 unanimous decision amongst university presidents to act any way that I see fit, and I can suspend you and I can hold your institution financially responsible. At that point, play him if you want to, but there will be consequences.\n\nThat's how this reads to me. Full and unlimited authority — not to tell players they can't play. That's not what was in those graphics today. It was, this is to you, the institution. You better not do it or there'll be consequences. So I don't doubt there'll be lawsuits. I don't doubt we'll hear a lot more noise about that.\n\nBut the other question I'm asking is, I understand when they fought so hard for Brendan Sorsby. That's your quarterback. That's a potential season, playoff-altering situation that Texas Tech had on their hands. I don't want to be disrespectful. I'm just rhetorically asking: in light of all this, is any school — LSU or anyone else — going to look and say, it's worth it, I think we're going to pursue this anyway, I think we're going to go take some guys that were cut from NFL rosters and bolster ours a little bit. Yep, this is worth the risk.\n\nFor what it's worth, LSU and Auburn are scheduled to play October 24 at Auburn, noon Eastern. I don't know. Time will tell.\n\n— JP",
+        "pullQuote": "I will never count on any competitor in an ultra competitive arena voluntarily abiding by some code that you want them to abide by.",
+        "primaryTeam": "LSU",
+        "teams": [
+          "LSU",
+          "Auburn"
+        ],
+        "tags": [
+          "SEC",
+          "Big Ten",
+          "Greg Sankey",
+          "Lane Kiffin",
+          "transfer portal",
+          "eligibility",
+          "NCAA"
+        ],
+        "seo": {
+          "title": "Josh Pate: The Big Ten and SEC Are Threatening Schools, Not Players",
+          "description": "Josh Pate on the Big Ten and SEC policies against NFL-cut players returning to college rosters, Lane Kiffin's argument, and whether any program still thinks defying it is worth the risk."
+        }
+      },
+      "words": 1421,
+      "completedAt": "2026-08-28T03:59:56.342Z"
+    }
+  },
+  {
+    "id": "brewster-texas-tech",
+    "engine": "reported",
+    "run": {
+      "id": "run_mtcfec86_h5pzov",
+      "engine": "reported",
+      "sourceId": "brewster-texas-tech",
+      "fixture": "brewster-texas-tech",
+      "mode": "replay",
+      "status": "completed",
+      "startedAt": "2026-08-28T04:02:35.238Z",
+      "artifacts": {
+        "repairs": [
+          "cut: Cut the unsupported claim that LSU “pushed hardest.”",
+          "cut: Cut the extended explanation of Brewster’s and his father’s culture comments.",
+          "cut: Cut Robert Brewster’s NFL background as unnecessary to the commitment news.",
+          "cut: Cut the 40-yard-dash detail and the Ojo NIL comparison.",
+          "cut: Cut the generic verbal-commitment caveat and unsupported timing reference."
+        ],
+        "pack": {
+          "development": "Five-star 2027 defensive lineman Jalen Brewster, the nation's top-ranked recruit, has committed and shut down his recruitment to stay with Texas Tech over LSU and other schools.",
+          "facts": [
+            {
+              "fact": "Brewster's family confirmed to Rivals he will honor his commitment to Texas Tech",
+              "sourceRef": "source-1",
+              "status": "reported"
+            },
+            {
+              "fact": "Brewster considered enrolling early and playing this fall in Lubbock but will instead play his senior season at Buford (Ga.) High",
+              "sourceRef": "source-1",
+              "status": "reported"
+            },
+            {
+              "fact": "Brewster chose Texas Tech and head coach Joey McGuire over LSU",
+              "sourceRef": "source-1",
+              "status": "confirmed"
+            },
+            {
+              "fact": "Other schools he strongly considered included Florida, Indiana, Ohio State, SMU and Texas",
+              "sourceRef": "source-1",
+              "status": "reported"
+            },
+            {
+              "fact": "Brewster's father Robert played offensive line in the NFL and was a third-round pick by the Dallas Cowboys",
+              "sourceRef": "source-1",
+              "status": "confirmed"
+            },
+            {
+              "fact": "Rivals ranks Texas Tech's recruiting class No. 9 nationally and No. 1 in the Big 12",
+              "sourceRef": "source-1",
+              "status": "confirmed"
+            },
+            {
+              "fact": "Rivals Director of Scouting Charles Power compares Brewster's game to Jalen Carter",
+              "sourceRef": "source-1",
+              "status": "confirmed"
+            },
+            {
+              "fact": "Brewster officially shut down his recruitment and detailed his reasons with On3",
+              "sourceRef": "source-2",
+              "status": "confirmed"
+            },
+            {
+              "fact": "Texas Tech previously won over 2025 five-star offensive tackle Felix Ojo with a $2.3 million NIL deal",
+              "sourceRef": "source-2",
+              "status": "confirmed"
+            },
+            {
+              "fact": "Brewster measured at around 6-foot-3, 300 pounds prior to his junior season",
+              "sourceRef": "source-1",
+              "status": "reported"
+            },
+            {
+              "fact": "Brewster was tabbed as the Rivals MVP at the Under Armour All-America Game after his junior season",
+              "sourceRef": "source-1",
+              "status": "confirmed"
+            }
+          ],
+          "quotes": [
+            {
+              "speaker": "Jalen Brewster",
+              "text": "Culture, family, atmosphere, everybody playing together.",
+              "sourceRef": "source-1"
+            },
+            {
+              "speaker": "Jalen Brewster",
+              "text": "The way they feed into their players. The words, the practices, practice like games. Culture for sure. The way they run their program, how they were underdogs and nobody thought they would make it this far. It was me looking for a program where I can be a better self and have a great circle around me and make it to the next level.",
+              "sourceRef": "source-1"
+            },
+            {
+              "speaker": "Robert Brewster",
+              "text": "It's a family atmosphere. With a lot of these coaches it's all about ball, that's it. With (Joey) McGuire and Tech, especially McGuire, you can tell he cares about family and cares about the players and that's the main thing I'm looking for in a school for my son.",
+              "sourceRef": "source-1"
+            },
+            {
+              "speaker": "Robert Brewster",
+              "text": "Texas Tech from day one everything has been the same. They've never changed, never switched, that's the one thing we love about them so much.",
+              "sourceRef": "source-1"
+            },
+            {
+              "speaker": "Charles Power",
+              "text": "Uber-athletic defensive line prospect with true game-wrecking ability. Measured in at around 6-foot-3, 300 pounds prior to his junior season. Carries his weight exceptionally well with a dense build. Tests as an elite athlete in the combine setting, easily cracking 5.0 seconds in the 40-yard dash.",
+              "sourceRef": "source-1"
+            },
+            {
+              "speaker": "Jalen Brewster",
+              "text": "The way they feed into their players. The words, the practices, practice like games. Culture for sure.",
+              "sourceRef": "source-2"
+            },
+            {
+              "speaker": "Jalen Brewster",
+              "text": "I feel like Texas Tech is the best place for me and the best place to build my own legacy.",
+              "sourceRef": "source-2"
+            }
+          ],
+          "numbers": [
+            {
+              "value": "No. 1",
+              "meaning": "Brewster's ranking as Rivals' top recruit in the 2027 class",
+              "sourceRef": "source-1"
+            },
+            {
+              "value": "6-foot-3, 300 pounds",
+              "meaning": "Brewster's measurements prior to his junior season",
+              "sourceRef": "source-1"
+            },
+            {
+              "value": "5.0 seconds",
+              "meaning": "Brewster's reported 40-yard dash time in combine setting",
+              "sourceRef": "source-1"
+            },
+            {
+              "value": "No. 9",
+              "meaning": "Rivals' national ranking of Texas Tech's recruiting class",
+              "sourceRef": "source-1"
+            },
+            {
+              "value": "$2.3 million",
+              "meaning": "NIL deal that helped Texas Tech land 2025 five-star OT Felix Ojo",
+              "sourceRef": "source-2"
+            }
+          ],
+          "unknowns": [
+            "When exactly Brewster's original commitment to Texas Tech was made",
+            "What specific factors led to his decision to remain at Buford instead of enrolling early",
+            "Whether Texas Tech offered Brewster any NIL package as part of his commitment",
+            "How Brewster's commitment affects Texas Tech's 2027 recruiting class rankings going forward",
+            "Details of LSU's or other schools' final pitches to Brewster"
+          ],
+          "relevantTeamContext": [
+            "Texas Tech 2025 record: 12-2 (8-1 conference)",
+            "Texas Tech preseason polls: AP Top 25 No. 12, AFCA Coaches No. 12",
+            "Texas Tech head coach is Joey McGuire"
+          ]
+        },
+        "brief": {
+          "theNews": "Five-star 2027 defensive lineman Jalen Brewster, Rivals’ No. 1 overall recruit in the class, has shut down his recruitment and will remain committed to Texas Tech over LSU and several other major programs.",
+          "whyAFanCares": "Keeping Brewster gives Joey McGuire and Texas Tech a commitment from an elite interior defensive-line prospect while Rivals ranks the Red Raiders’ class No. 9 nationally and first in the Big 12.",
+          "interestingDetail": "Brewster considered enrolling early to play for Texas Tech this fall but will instead finish his senior season at Buford High in Georgia.",
+          "footballAngle": "At roughly 6-foot-3 and 300 pounds, Brewster is viewed by Rivals scouting director Charles Power as a disruptive, versatile defensive lineman with the athleticism to rush from multiple spots; Power compared his upside to Jalen Carter.",
+          "importantUnknown": "A verbal commitment more than a year before signing day is not binding, and the reporting does not say whether Texas Tech offered Brewster an NIL package.",
+          "depth": "item",
+          "depthReason": "This is a significant recruiting retention, but the reporting supplies a straightforward commitment decision, prospect evaluation and general reasons rather than enough new reporting to support a broader roster or program story."
+        },
+        "draft": {
+          "headline": "Texas Tech Holds Onto Jalen Brewster, The No. 1 Recruit In The 2027 Class",
+          "dek": "The five-star defensive lineman from Buford, Ga., shut down his recruitment with Texas Tech over LSU, Ohio State, Texas and others — and will finish his senior year in Georgia rather than enroll early.",
+          "bodyMarkdown": "Jalen Brewster, the No. 1 overall recruit in Rivals' 2027 rankings, has shut down his recruitment and will stay committed to Texas Tech. His family confirmed he intends to honor the pledge, ending a stretch in which LSU pushed hardest and Florida, Indiana, Ohio State, SMU and Texas were all in the picture.\n\nBrewster considered enrolling early and playing this fall in Lubbock. Instead he will play his senior season at Buford (Ga.) High.\n\nHis reasoning stayed on one theme: \"Culture, family, atmosphere, everybody playing together.\" He also pointed to Joey McGuire's program specifically — \"the practices, practice like games\" — and to a team \"where nobody thought they would make it this far.\" His father, Robert, a third-round offensive line pick by the Cowboys, said Texas Tech never wavered: \"Texas Tech from day one everything has been the same. They've never changed, never switched, that's the one thing we love about them so much.\"\n\nBrewster measured around 6-foot-3, 300 pounds before his junior season and was the Rivals MVP at the Under Armour All-America Game. Rivals scouting director Charles Power called him an \"uber-athletic defensive line prospect with true game-wrecking ability\" who cracks 5.0 in the 40, and compared his ceiling to Jalen Carter.\n\nTexas Tech's class currently ranks No. 9 nationally and first in the Big 12. A verbal in the spring of a junior year is not binding, and the reporting does not indicate whether an NIL package was part of this one — the program did give 2025 five-star tackle Felix Ojo a $2.3 million deal.",
+          "pullQuote": "I feel like Texas Tech is the best place for me and the best place to build my own legacy.",
+          "primaryTeam": "texas-tech",
+          "teams": [
+            "texas-tech",
+            "lsu"
+          ],
+          "tags": [
+            "recruiting",
+            "2027-class",
+            "jalen-brewster",
+            "joey-mcguire",
+            "big-12"
+          ],
+          "seo": {
+            "title": "Jalen Brewster Shuts Down Recruitment, Stays With Texas Tech",
+            "description": "Five-star 2027 defensive lineman Jalen Brewster, Rivals' No. 1 overall recruit, is staying committed to Texas Tech over LSU and will finish his senior season at Buford (Ga.) High."
+          }
+        },
+        "subtracted": {
+          "headline": "Texas Tech Keeps No. 1 2027 Recruit Jalen Brewster",
+          "dek": "The five-star defensive lineman shut down his recruitment and will remain committed to the Red Raiders over LSU and other contenders.",
+          "bodyMarkdown": "Jalen Brewster, Rivals’ No. 1 overall recruit in the 2027 class, has shut down his recruitment and will remain committed to Texas Tech. His family confirmed he will honor his pledge to Joey McGuire’s program over LSU, Florida, Indiana, Ohio State, SMU and Texas.\n\nBrewster considered enrolling early to play this fall in Lubbock but will instead finish his senior season at Buford (Ga.) High.\n\nThe 6-foot-3, 300-pound defensive lineman was Rivals’ MVP at the Under Armour All-America Game after his junior season. Rivals scouting director Charles Power called Brewster an “uber-athletic defensive line prospect with true game-wrecking ability” and compared his game to Jalen Carter.\n\nTexas Tech’s class ranks No. 9 nationally and first in the Big 12, according to Rivals. Brewster said: “I feel like Texas Tech is the best place for me and the best place to build my own legacy.”",
+          "pullQuote": "I feel like Texas Tech is the best place for me and the best place to build my own legacy.",
+          "primaryTeam": "texas-tech",
+          "teams": [
+            "texas-tech",
+            "lsu"
+          ],
+          "tags": [
+            "recruiting",
+            "2027-class",
+            "jalen-brewster",
+            "joey-mcguire",
+            "big-12"
+          ],
+          "seo": {
+            "title": "Jalen Brewster Shuts Down Recruitment, Stays With Texas Tech",
+            "description": "Five-star 2027 defensive lineman Jalen Brewster, Rivals’ No. 1 overall recruit, is staying committed to Texas Tech over LSU and other contenders."
+          }
+        },
+        "policy": {
+          "pass": true,
+          "violations": []
+        },
+        "fact": {
+          "verdict": "pass",
+          "claims": [
+            {
+              "claim": "Jalen Brewster is Rivals' No. 1 overall recruit in the 2027 class",
+              "status": "supported",
+              "sourceRefs": [
+                "source-1"
+              ]
+            },
+            {
+              "claim": "Brewster shut down recruitment and remains committed to Texas Tech",
+              "status": "supported",
+              "sourceRefs": [
+                "source-1",
+                "source-2"
+              ]
+            },
+            {
+              "claim": "Family confirmed he will honor pledge to Joey McGuire's program over LSU, Florida, Indiana, Ohio State, SMU and Texas",
+              "status": "supported",
+              "sourceRefs": [
+                "source-1"
+              ]
+            },
+            {
+              "claim": "Brewster considered enrolling early to play this fall in Lubbock but will finish senior season at Buford (Ga.) High",
+              "status": "supported",
+              "sourceRefs": [
+                "source-1"
+              ]
+            },
+            {
+              "claim": "6-foot-3, 300-pound defensive lineman",
+              "status": "supported",
+              "sourceRefs": [
+                "source-1"
+              ]
+            },
+            {
+              "claim": "Rivals MVP at Under Armour All-America Game after junior season",
+              "status": "supported",
+              "sourceRefs": [
+                "source-1"
+              ]
+            },
+            {
+              "claim": "Charles Power called Brewster an 'uber-athletic defensive line prospect with true game-wrecking ability' and compared him to Jalen Carter",
+              "status": "supported",
+              "sourceRefs": [
+                "source-1"
+              ]
+            },
+            {
+              "claim": "Texas Tech's class ranks No. 9 nationally and first in the Big 12 per Rivals",
+              "status": "supported",
+              "sourceRefs": [
+                "source-1"
+              ]
+            },
+            {
+              "claim": "Brewster quote: 'I feel like Texas Tech is the best place for me and the best place to build my own legacy.'",
+              "status": "supported",
+              "sourceRefs": [
+                "source-2"
+              ]
+            }
+          ],
+          "joshMisattribution": []
+        },
+        "quit": {
+          "neverWantedToQuit": true,
+          "reason": "none",
+          "didFinish": true,
+          "soundsLikeFootballPerson": true,
+          "worthTheTime": true,
+          "wouldClickAnother": true,
+          "wouldSend": true,
+          "note": "Quick, useful recruiting update with the key decision, finalists, context and a credible scouting hook."
+        },
+        "smell": {
+          "pass": true,
+          "sentences": [],
+          "structural": false,
+          "note": "Straight recruiting report with attributable facts and a player quote; no clear AI-style prose or structural pattern."
+        }
+      },
+      "calls": [
+        {
+          "stage": "reporting-pack",
+          "role": "packExtract",
+          "vendor": "anthropic",
+          "model": "claude-sonnet-5",
+          "inputTokens": 3222,
+          "outputTokens": 1876,
+          "costUsd": 0.0378,
+          "ms": 16549
+        },
+        {
+          "stage": "fan-brief",
+          "role": "fanBrief",
+          "vendor": "openai",
+          "model": "gpt-5.6-terra",
+          "inputTokens": 3272,
+          "outputTokens": 266,
+          "costUsd": 0.0434,
+          "ms": 4556
+        },
+        {
+          "stage": "reported-writer",
+          "role": "reportedWriter",
+          "vendor": "anthropic",
+          "model": "claude-opus-5",
+          "inputTokens": 4640,
+          "outputTokens": 937,
+          "costUsd": 0.1399,
+          "ms": 12297
+        },
+        {
+          "stage": "subtraction-editor",
+          "role": "subtractionEditor",
+          "vendor": "openai",
+          "model": "gpt-5.6-terra",
+          "inputTokens": 2942,
+          "outputTokens": 608,
+          "costUsd": 0.0537,
+          "ms": 6693
+        },
+        {
+          "stage": "fact-check",
+          "role": "factCheck",
+          "vendor": "anthropic",
+          "model": "claude-sonnet-5",
+          "inputTokens": 0,
+          "outputTokens": 0,
+          "costUsd": 0,
+          "ms": 4773
+        },
+        {
+          "stage": "quit-reading",
+          "role": "quitJudge",
+          "vendor": "openai",
+          "model": "gpt-5.6-terra",
+          "inputTokens": 636,
+          "outputTokens": 83,
+          "costUsd": 0.0097,
+          "ms": 1381
+        },
+        {
+          "stage": "ai-smell",
+          "role": "smellJudge",
+          "vendor": "openai",
+          "model": "gpt-5.6-terra",
+          "inputTokens": 471,
+          "outputTokens": 46,
+          "costUsd": 0.0066,
+          "ms": 1388
+        }
+      ],
+      "totalCostUsd": 0.2911,
+      "final": {
+        "headline": "Texas Tech Keeps No. 1 2027 Recruit Jalen Brewster",
+        "dek": "The five-star defensive lineman shut down his recruitment and will remain committed to the Red Raiders over LSU and other contenders.",
+        "bodyMarkdown": "Jalen Brewster, Rivals’ No. 1 overall recruit in the 2027 class, has shut down his recruitment and will remain committed to Texas Tech. His family confirmed he will honor his pledge to Joey McGuire’s program over LSU, Florida, Indiana, Ohio State, SMU and Texas.\n\nBrewster considered enrolling early to play this fall in Lubbock but will instead finish his senior season at Buford (Ga.) High.\n\nThe 6-foot-3, 300-pound defensive lineman was Rivals’ MVP at the Under Armour All-America Game after his junior season. Rivals scouting director Charles Power called Brewster an “uber-athletic defensive line prospect with true game-wrecking ability” and compared his game to Jalen Carter.\n\nTexas Tech’s class ranks No. 9 nationally and first in the Big 12, according to Rivals. Brewster said: “I feel like Texas Tech is the best place for me and the best place to build my own legacy.”",
+        "pullQuote": "I feel like Texas Tech is the best place for me and the best place to build my own legacy.",
+        "primaryTeam": "texas-tech",
+        "teams": [
+          "texas-tech",
+          "lsu"
+        ],
+        "tags": [
+          "recruiting",
+          "2027-class",
+          "jalen-brewster",
+          "joey-mcguire",
+          "big-12"
+        ],
+        "seo": {
+          "title": "Jalen Brewster Shuts Down Recruitment, Stays With Texas Tech",
+          "description": "Five-star 2027 defensive lineman Jalen Brewster, Rivals’ No. 1 overall recruit, is staying committed to Texas Tech over LSU and other contenders."
+        }
+      },
+      "words": 144,
+      "completedAt": "2026-08-28T04:03:22.887Z"
+    }
+  },
+  {
+    "id": "sec-pro-penalties",
+    "engine": "reported",
+    "run": {
+      "id": "run_mtcffda4_a2puk9",
+      "engine": "reported",
+      "sourceId": "sec-pro-penalties",
+      "fixture": "sec-pro-penalties",
+      "mode": "replay",
+      "status": "completed",
+      "startedAt": "2026-08-28T04:03:23.260Z",
+      "artifacts": {
+        "repairs": [
+          "cut: Cut the unsupported claim that LSU has the “most immediate exposure.”",
+          "cut: Cut “The abstention is the tell,” which interpreted the vote rather than reporting it.",
+          "cut: Cut the Louisiana Attorney General’s lack of involvement as peripheral to LSU’s football decision.",
+          "cut: Cut LSU’s 2025 record, Clemson opener and the speculative statement about what a suspension would cover."
+        ],
+        "pack": {
+          "development": "SEC presidents voted Wednesday to approve stiff penalties for schools that sign returning pro athletes, with LSU abstaining from the vote.",
+          "facts": [
+            {
+              "fact": "LSU abstained from Wednesday's vote on penalties",
+              "sourceRef": "source-1",
+              "status": "reported"
+            },
+            {
+              "fact": "LSU was part of a unanimous 16-0 vote a day earlier to enforce rules against fielding athletes who dropped out of pro leagues",
+              "sourceRef": "source-1",
+              "status": "confirmed"
+            },
+            {
+              "fact": "LSU football coach Lane Kiffin has recruited at least two players made NCAA eligible by a Louisiana court injunction",
+              "sourceRef": "source-1",
+              "status": "confirmed"
+            },
+            {
+              "fact": "LSU men's basketball coach Will Wade was pursuing another such player",
+              "sourceRef": "source-1",
+              "status": "confirmed"
+            },
+            {
+              "fact": "Neither Kiffin, Wade nor LSU's administration has publicly commented since the Tuesday night SEC announcement",
+              "sourceRef": "source-1",
+              "status": "confirmed"
+            },
+            {
+              "fact": "SEC commissioner Greg Sankey was authorized to enforce the ban with penalties",
+              "sourceRef": "source-1",
+              "status": "confirmed"
+            },
+            {
+              "fact": "Penalties include a coach suspension for half the season, a fine of 50% of that sport's fiscal year operating budget, loss of conference voting privileges, and additional penalties as deemed appropriate",
+              "sourceRef": "source-1",
+              "status": "confirmed"
+            },
+            {
+              "fact": "The Big Ten put in similar penalties when it voted earlier Tuesday to disallow former pro athletes from returning to rosters",
+              "sourceRef": "source-1",
+              "status": "confirmed"
+            },
+            {
+              "fact": "The NCAA passed an age-based eligibility rule in June giving athletes a five-year window to play, but it did not grandfather in Class of 2022 high school athletes who exhausted eligibility under the previous standard",
+              "sourceRef": "source-1",
+              "status": "confirmed"
+            },
+            {
+              "fact": "Court injunctions, including one in Louisiana, are against the NCAA, and the SEC and Big Ten have interpreted them not to cover individual conferences",
+              "sourceRef": "source-1",
+              "status": "confirmed"
+            },
+            {
+              "fact": "Lawyers for players said the SEC's rule put the NCAA in contempt, but had not filed suit against the SEC as of Wednesday afternoon",
+              "sourceRef": "source-1",
+              "status": "reported"
+            },
+            {
+              "fact": "The Louisiana Attorney General's Office has not been involved in the issue",
+              "sourceRef": "source-1",
+              "status": "confirmed"
+            }
+          ],
+          "quotes": [],
+          "numbers": [
+            {
+              "value": "50%",
+              "meaning": "fine equal to that fiscal year's operating budget for the sport",
+              "sourceRef": "source-1"
+            },
+            {
+              "value": "16-0",
+              "meaning": "unanimous SEC vote a day before to enforce rules against fielding pro athletes",
+              "sourceRef": "source-1"
+            },
+            {
+              "value": "half of the season",
+              "meaning": "length of coach suspension penalty",
+              "sourceRef": "source-1"
+            }
+          ],
+          "unknowns": [
+            "Which specific players Kiffin recruited under the Louisiana court injunction",
+            "Whether LSU will actually field these players despite the new penalties",
+            "What LSU's administration plans to do in response to the vote",
+            "Whether the NCAA or SEC will face legal action over contempt claims",
+            "How the penalties would specifically apply if LSU proceeds with using these players"
+          ],
+          "relevantTeamContext": [
+            "LSU 2025 record: 7-6 (3-5 conference)",
+            "LSU Preseason polls: AP Top 25 No. 11, AFCA Coaches No. 13",
+            "LSU 2026 schedule includes season opener SAT SEP 5 vs Clemson"
+          ]
+        },
+        "brief": {
+          "theNews": "LSU abstained as SEC presidents approved penalties—including a half-season coach suspension and a fine equal to 50% of a sport’s operating budget—for schools that field athletes returning from pro leagues.",
+          "whyAFanCares": "Lane Kiffin has recruited at least two players covered by a Louisiana court injunction, so LSU could face major football consequences if it uses them despite the SEC policy.",
+          "interestingDetail": "LSU joined the SEC’s unanimous 16-0 vote a day earlier to enforce the ban, then abstained when presidents voted on the specific penalties.",
+          "footballAngle": "The policy could affect whether LSU can put the players Kiffin recruited on the field; the listed sanctions include suspending the coach for half a season.",
+          "importantUnknown": "The reporting does not identify the players, say whether LSU has signed or plans to play them, or explain how the SEC would apply penalties in LSU’s case.",
+          "depth": "brief",
+          "depthReason": "This is a meaningful policy development with a direct LSU football connection and clear potential sanctions, but the reporting lacks player identities, roster decisions and an LSU response."
+        },
+        "draft": {
+          "headline": "LSU Abstains as SEC Presidents Approve Penalties for Fielding Returning Pro Athletes",
+          "dek": "A day after joining a 16-0 vote to enforce the ban, LSU sat out the vote on sanctions that include a half-season coach suspension and a fine worth 50% of a sport's operating budget.",
+          "bodyMarkdown": "SEC presidents voted Wednesday to attach real penalties to the conference's ban on fielding athletes who left pro leagues, and LSU abstained.\n\nThat matters because LSU is the school with the most immediate exposure. Lane Kiffin has recruited at least two players made NCAA-eligible by a Louisiana court injunction, and men's basketball coach Will Wade was pursuing another. The penalties now on the books: suspension of the head coach for half the season, a fine equal to 50% of that sport's fiscal-year operating budget, loss of conference voting privileges, and additional penalties as deemed appropriate. Commissioner Greg Sankey was authorized to enforce them.\n\nThe abstention is the tell. LSU was part of the unanimous 16-0 vote a day earlier to enforce rules against fielding athletes who dropped out of pro leagues. When the vote turned to what happens to schools that do it anyway, LSU stepped back.\n\nThe legal split is the whole fight. The injunctions, including the Louisiana one, are against the NCAA. The SEC and Big Ten have both interpreted those orders as not binding on individual conferences — meaning a player can be NCAA-eligible and still be unusable in the SEC. The Big Ten installed similar penalties when it voted earlier Tuesday. Lawyers for players argued the SEC's rule puts the NCAA in contempt, but as of Wednesday afternoon had not filed suit against the SEC. The Louisiana Attorney General's Office has not been involved.\n\nUnderneath all of it is the NCAA's June age-based eligibility rule, which gave athletes a five-year window but did not grandfather in Class of 2022 high school athletes who had already exhausted eligibility under the old standard. That gap is what sent players to court in the first place.\n\nWhat's still unknown is most of the football. The players Kiffin recruited have not been identified, LSU has not said whether it intends to play them, and neither Kiffin, Wade nor the administration has commented publicly since Tuesday night's SEC announcement.\n\nLSU went 7-6 in 2025 and opens 2026 against Clemson on Sept. 5. A half-season suspension, if it ever came to that, would cover a lot more than the opener.",
+          "pullQuote": "",
+          "primaryTeam": "lsu",
+          "teams": [
+            "lsu"
+          ],
+          "tags": [
+            "lsu",
+            "lane-kiffin",
+            "sec",
+            "eligibility",
+            "greg-sankey",
+            "will-wade"
+          ],
+          "seo": {
+            "title": "LSU Abstains as SEC Approves Penalties for Fielding Returning Pro Athletes",
+            "description": "SEC presidents approved a half-season coach suspension and a fine equal to 50% of a sport's operating budget. LSU, which has recruited players covered by a Louisiana injunction, abstained."
+          }
+        },
+        "subtracted": {
+          "headline": "LSU Abstains as SEC Presidents Approve Penalties for Fielding Returning Pro Athletes",
+          "dek": "A day after joining a 16-0 vote to enforce the ban, LSU abstained from the vote on sanctions that include a half-season coach suspension and a fine worth 50% of a sport's operating budget.",
+          "bodyMarkdown": "SEC presidents voted Wednesday to approve penalties for schools that field athletes who dropped out of pro leagues. LSU abstained.\n\nThe vote has a direct LSU football connection: Lane Kiffin has recruited at least two players made NCAA eligible by a Louisiana court injunction. LSU men's basketball coach Will Wade was pursuing another such player.\n\nThe penalties include a coach suspension for half the season, a fine equal to 50% of that sport's fiscal-year operating budget, loss of conference voting privileges and additional penalties as deemed appropriate. Commissioner Greg Sankey was authorized to enforce the ban with penalties.\n\nLSU had been part of a unanimous 16-0 vote a day earlier to enforce rules against fielding athletes who dropped out of pro leagues.\n\nThe injunctions, including the Louisiana injunction, are against the NCAA. The SEC and Big Ten have interpreted them not to cover individual conferences. The Big Ten adopted similar penalties when it voted earlier Tuesday to disallow former pro athletes from returning to rosters.\n\nThe NCAA passed an age-based eligibility rule in June that gave athletes a five-year window to play but did not grandfather in Class of 2022 high school athletes who exhausted eligibility under the previous standard.\n\nThe players Kiffin recruited have not been identified, and it is unknown whether LSU will field them despite the penalties. Neither Kiffin, Wade nor LSU's administration has publicly commented since Tuesday night's SEC announcement. Lawyers for players said the SEC's rule put the NCAA in contempt, but had not filed suit against the SEC as of Wednesday afternoon.",
+          "pullQuote": "",
+          "primaryTeam": "lsu",
+          "teams": [
+            "lsu"
+          ],
+          "tags": [
+            "lsu",
+            "lane-kiffin",
+            "sec",
+            "eligibility",
+            "greg-sankey",
+            "will-wade"
+          ],
+          "seo": {
+            "title": "LSU Abstains as SEC Approves Penalties for Fielding Returning Pro Athletes",
+            "description": "SEC presidents approved a half-season coach suspension and a fine equal to 50% of a sport's operating budget. LSU, which has recruited players covered by a Louisiana injunction, abstained."
+          }
+        },
+        "policy": {
+          "pass": true,
+          "violations": []
+        },
+        "fact": {
+          "verdict": "pass",
+          "claims": [
+            {
+              "claim": "SEC presidents voted Wednesday to approve penalties for schools that field athletes who dropped out of pro leagues; LSU abstained",
+              "status": "supported",
+              "sourceRefs": [
+                "source-1"
+              ]
+            },
+            {
+              "claim": "Lane Kiffin has recruited at least two players made NCAA eligible by a Louisiana court injunction",
+              "status": "supported",
+              "sourceRefs": [
+                "source-1"
+              ]
+            },
+            {
+              "claim": "Will Wade was pursuing another such player",
+              "status": "supported",
+              "sourceRefs": [
+                "source-1"
+              ]
+            },
+            {
+              "claim": "Penalties: coach suspension half season, fine 50% of sport's fiscal year operating budget, loss of conference voting privileges, additional penalties as deemed appropriate",
+              "status": "supported",
+              "sourceRefs": [
+                "source-1"
+              ]
+            },
+            {
+              "claim": "Commissioner Greg Sankey was authorized to enforce the ban with penalties",
+              "status": "supported",
+              "sourceRefs": [
+                "source-1"
+              ]
+            },
+            {
+              "claim": "LSU part of unanimous 16-0 vote a day earlier to enforce rules against fielding athletes who dropped out of pro leagues",
+              "status": "supported",
+              "sourceRefs": [
+                "source-1"
+              ]
+            },
+            {
+              "claim": "Injunctions, including Louisiana injunction, are against the NCAA; SEC and Big Ten interpreted them not to cover individual conferences",
+              "status": "supported",
+              "sourceRefs": [
+                "source-1"
+              ]
+            },
+            {
+              "claim": "Big Ten adopted similar penalties when it voted earlier Tuesday to disallow former pro athletes from returning to rosters",
+              "status": "supported",
+              "sourceRefs": [
+                "source-1"
+              ]
+            },
+            {
+              "claim": "NCAA passed age-based eligibility rule in June giving athletes five-year window, not grandfathering Class of 2022 high school athletes",
+              "status": "supported",
+              "sourceRefs": [
+                "source-1"
+              ]
+            },
+            {
+              "claim": "Players Kiffin recruited have not been identified, unknown if LSU will field them despite penalties",
+              "status": "analysis",
+              "sourceRefs": []
+            },
+            {
+              "claim": "Neither Kiffin, Wade nor LSU's administration has publicly commented since Tuesday night's SEC announcement",
+              "status": "supported",
+              "sourceRefs": [
+                "source-1"
+              ]
+            },
+            {
+              "claim": "Lawyers for players said the SEC's rule put the NCAA in contempt, but had not filed suit against the SEC as of Wednesday afternoon",
+              "status": "supported",
+              "sourceRefs": [
+                "source-1"
+              ]
+            }
+          ],
+          "joshMisattribution": []
+        },
+        "quit": {
+          "neverWantedToQuit": true,
+          "reason": "none",
+          "didFinish": true,
+          "soundsLikeFootballPerson": true,
+          "worthTheTime": true,
+          "wouldClickAnother": true,
+          "wouldSend": true,
+          "note": "Short, consequential SEC eligibility news with the LSU/Kiffin angle and enough legal context to make the vote matter."
+        },
+        "smell": {
+          "pass": true,
+          "sentences": [],
+          "structural": false,
+          "note": "No clear AI-generated sportswriting markers; the piece is straightforward, reportorial, and avoids synthetic argument structure or faux-profound framing."
+        }
+      },
+      "calls": [
+        {
+          "stage": "reporting-pack",
+          "role": "packExtract",
+          "vendor": "anthropic",
+          "model": "claude-sonnet-5",
+          "inputTokens": 2400,
+          "outputTokens": 1249,
+          "costUsd": 0.0259,
+          "ms": 11363
+        },
+        {
+          "stage": "fan-brief",
+          "role": "fanBrief",
+          "vendor": "openai",
+          "model": "gpt-5.6-terra",
+          "inputTokens": 2185,
+          "outputTokens": 359,
+          "costUsd": 0.0362,
+          "ms": 4980
+        },
+        {
+          "stage": "reported-writer",
+          "role": "reportedWriter",
+          "vendor": "anthropic",
+          "model": "claude-opus-5",
+          "inputTokens": 3842,
+          "outputTokens": 1089,
+          "costUsd": 0.1393,
+          "ms": 13844
+        },
+        {
+          "stage": "subtraction-editor",
+          "role": "subtractionEditor",
+          "vendor": "openai",
+          "model": "gpt-5.6-terra",
+          "inputTokens": 2432,
+          "outputTokens": 939,
+          "costUsd": 0.0619,
+          "ms": 8915
+        },
+        {
+          "stage": "fact-check",
+          "role": "factCheck",
+          "vendor": "anthropic",
+          "model": "claude-sonnet-5",
+          "inputTokens": 0,
+          "outputTokens": 0,
+          "costUsd": 0,
+          "ms": 7178
+        },
+        {
+          "stage": "quit-reading",
+          "role": "quitJudge",
+          "vendor": "openai",
+          "model": "gpt-5.6-terra",
+          "inputTokens": 766,
+          "outputTokens": 177,
+          "costUsd": 0.0147,
+          "ms": 3265
+        },
+        {
+          "stage": "ai-smell",
+          "role": "smellJudge",
+          "vendor": "openai",
+          "model": "gpt-5.6-terra",
+          "inputTokens": 592,
+          "outputTokens": 110,
+          "costUsd": 0.0103,
+          "ms": 1923
+        }
+      ],
+      "totalCostUsd": 0.2883,
+      "final": {
+        "headline": "LSU Abstains as SEC Presidents Approve Penalties for Fielding Returning Pro Athletes",
+        "dek": "A day after joining a 16-0 vote to enforce the ban, LSU abstained from the vote on sanctions that include a half-season coach suspension and a fine worth 50% of a sport's operating budget.",
+        "bodyMarkdown": "SEC presidents voted Wednesday to approve penalties for schools that field athletes who dropped out of pro leagues. LSU abstained.\n\nThe vote has a direct LSU football connection: Lane Kiffin has recruited at least two players made NCAA eligible by a Louisiana court injunction. LSU men's basketball coach Will Wade was pursuing another such player.\n\nThe penalties include a coach suspension for half the season, a fine equal to 50% of that sport's fiscal-year operating budget, loss of conference voting privileges and additional penalties as deemed appropriate. Commissioner Greg Sankey was authorized to enforce the ban with penalties.\n\nLSU had been part of a unanimous 16-0 vote a day earlier to enforce rules against fielding athletes who dropped out of pro leagues.\n\nThe injunctions, including the Louisiana injunction, are against the NCAA. The SEC and Big Ten have interpreted them not to cover individual conferences. The Big Ten adopted similar penalties when it voted earlier Tuesday to disallow former pro athletes from returning to rosters.\n\nThe NCAA passed an age-based eligibility rule in June that gave athletes a five-year window to play but did not grandfather in Class of 2022 high school athletes who exhausted eligibility under the previous standard.\n\nThe players Kiffin recruited have not been identified, and it is unknown whether LSU will field them despite the penalties. Neither Kiffin, Wade nor LSU's administration has publicly commented since Tuesday night's SEC announcement. Lawyers for players said the SEC's rule put the NCAA in contempt, but had not filed suit against the SEC as of Wednesday afternoon.",
+        "pullQuote": "",
+        "primaryTeam": "lsu",
+        "teams": [
+          "lsu"
+        ],
+        "tags": [
+          "lsu",
+          "lane-kiffin",
+          "sec",
+          "eligibility",
+          "greg-sankey",
+          "will-wade"
+        ],
+        "seo": {
+          "title": "LSU Abstains as SEC Approves Penalties for Fielding Returning Pro Athletes",
+          "description": "SEC presidents approved a half-season coach suspension and a fine equal to 50% of a sport's operating budget. LSU, which has recruited players covered by a Louisiana injunction, abstained."
+        }
+      },
+      "words": 258,
+      "completedAt": "2026-08-28T04:04:14.742Z"
+    }
+  }
+]

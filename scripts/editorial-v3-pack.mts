@@ -13,30 +13,34 @@ type Run = import("../lib/editorial-v3/v3-types.ts").V3Run;
 
 const DIR = "fixtures/editorial-replay"; const OUT = "docs/review/v3-pack"; mkdirSync(OUT, { recursive: true });
 const SHOW = ["miami-acc", "portal-on-fire", "truth-2026", "boldest-2026", "final-predictions"];
+const ORDER = ["miami-acc", "final-predictions", "truth-2026", "portal-on-fire", "brewster-texas-tech", "sec-pro-penalties"];
 const REPORTED = ["brewster-texas-tech", "sec-pro-penalties"];
-const pack: { id: string; engine: string; episode?: string; run: Run }[] = [];
+const argv = process.argv; const argOf = (k: string) => { const i = argv.indexOf(k); return i !== -1 ? argv[i + 1] : undefined; };
+const APPEND = argv.includes("--append"); const ONLY = argOf("--only"); const ASSIGN = argOf("--assignment");
+const pack: { id: string; engine: string; episode?: string; run: Run }[] = APPEND && existsSync(`${OUT}/pack.json`) ? JSON.parse(readFileSync(`${OUT}/pack.json`, "utf8")) : [];
 
 import { existsSync } from "node:fs";
-if (existsSync(".superpowers/v3-miami-tightened.json")) {
+if (!APPEND && existsSync(".superpowers/v3-miami-tightened.json")) {
   const d = JSON.parse(readFileSync(".superpowers/v3-miami-tightened.json", "utf8"))[0];
   const runs = readFileSync(".superpowers/v3-josh-engine-latest.json", "utf8");
   void runs;
   pack.push({ id: "miami-acc", engine: "josh", episode: d.episode, run: { id: "reviewed", engine: "josh", sourceId: d.ytId, mode: "replay", status: "completed", startedAt: "", artifacts: { segment: { decision: "segment", segmentStart: "02:06", segmentEnd: "03:51", reason: "" }, quit: { neverWantedToQuit: true, reason: "none", didFinish: true, soundsLikeFootballPerson: true, worthTheTime: false, wouldClickAnother: true, wouldSend: false, note: "" }, smell: { pass: true, sentences: [], structural: false, note: "" }, fact: { verdict: "pass", claims: [], joshMisattribution: [] } }, final: d, words: d.bodyMarkdown.replace(/\[[^\]]*\]/g, " ").split(/\s+/).filter(Boolean).length - 2, calls: new Array(8).fill({ stage: "", role: "", vendor: "openai", model: "", inputTokens: 0, outputTokens: 0, costUsd: 0.038, ms: 0 }), totalCostUsd: 0.3 } as unknown as Run });
 }
-for (const id of SHOW) {
+for (const id of ONLY ? [ONLY] : SHOW) {
   if (id === "miami-acc" && pack.some((p) => p.id === "miami-acc")) continue;
-  if (pack.filter((p) => p.engine === "josh").length >= 4) break;
+  if (!ONLY && pack.filter((p) => p.engine === "josh").length >= 4) break;
   const fx = JSON.parse(readFileSync(`${DIR}/show-${id}.json`, "utf8"));
   const names = await rosterNames(fx.teams ?? []).catch(() => "");
-  const run = await runJoshEngine({ ytId: fx.episode.ytId, title: fx.episode.title, description: fx.episode.description, publishedAt: fx.episode.publishedAt, transcriptText: fx.transcriptText, factSheet: fx.factSheet, onRecord: fx.onRecord, assignment: fx.focus, rosterNames: names }, { mode: "replay", fixture: fx.id, log: (l) => console.log(`  ${id}: ${l}`) });
+  const run = await runJoshEngine({ ytId: fx.episode.ytId, title: fx.episode.title, description: fx.episode.description, publishedAt: fx.episode.publishedAt, transcriptText: fx.transcriptText, factSheet: fx.factSheet, onRecord: fx.onRecord, assignment: ASSIGN ?? fx.focus, rosterNames: names }, { mode: "replay", fixture: fx.id, log: (l) => console.log(`  ${id}: ${l}`) });
   if (run.status === "completed" && run.final) pack.push({ id, engine: "josh", episode: fx.episode.title, run });
   else console.log(`  ${id}: ${run.status} — ${run.error ?? run.artifacts.segment?.reason ?? ""}`);
 }
-for (const id of REPORTED) {
+for (const id of ONLY ? [] : REPORTED) {
   const fx = JSON.parse(readFileSync(`${DIR}/reported-${id}.json`, "utf8"));
   const run = await runReportedEngine({ sourceId: fx.id, sources: fx.sources, factSheet: fx.factSheet }, { mode: "replay", fixture: fx.id, log: (l) => console.log(`  ${id}: ${l}`) });
   if (run.status === "completed" && run.final) pack.push({ id, engine: "reported", run });
 }
+pack.sort((a, b) => ORDER.indexOf(a.id) - ORDER.indexOf(b.id));
 writeFileSync(`${OUT}/pack.json`, JSON.stringify(pack, null, 2));
 
 const esc = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
