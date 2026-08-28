@@ -86,6 +86,10 @@ export async function runReportedEngine(m: ReportedMaterial, opts: ReportedRunOp
     let draft = overCut ? w.draft : s.draft; run.artifacts.subtracted = s.draft; run.artifacts.repairs!.push(...s.cuts.map((c) => `cut: ${c}`));
     log(`subtraction (${s.call.model}): ${words(s.draft.bodyMarkdown)} words · ${s.cuts.length} cuts${overCut ? ` · below the ${b.brief.depth} floor (${floor}); kept the writer's ${words(w.draft.bodyMarkdown)}` : ""}`);
     const source = sourcesBlock(m);
+    // A pull quote the pack does not carry verbatim is dropped, not a reason
+    // to lose the story (the desk's quotes live in the body, attributed).
+    const normQ = (x: string) => x.toLowerCase().replace(/[^a-z0-9\s]/g, " ").replace(/\s+/g, " ").trim();
+    if (draft.pullQuote.trim() && !p.pack.quotes.some((q) => normQ(q.text).includes(normQ(draft.pullQuote)))) { draft = { ...draft, pullQuote: "", bodyMarkdown: draft.bodyMarkdown.replace(/\s*\[PULLQUOTE\]\s*/g, "\n\n") }; run.artifacts.repairs!.push("dropped a pull quote the sources did not carry verbatim"); }
     run.artifacts.policy = hardPolicyGates({ draft, lane: "standalone", suppliedQuotes: p.pack.quotes.map((q) => q.text) });
     const lift = liftReport(draft.bodyMarkdown, m.sources.map((x) => x.text)); const lv = liftVerdict(lift);
     run.artifacts.lift = { pct: lift.pct, longestRun: lift.runs.reduce((a, x) => Math.max(a, x.split(" ").length), 0), pass: lv.pass, reason: lv.reason };
