@@ -19,6 +19,8 @@ export interface JoshMaterial {
   factSheet: string;
   onRecord: string;
   assignment?: string;
+  /** Official roster spellings for caption repair (lib/editorial-v3/roster.ts). */
+  rosterNames?: string;
 }
 
 const SEGMENT_SCHEMA = obj({ decision: { type: "string", enum: ["segment", "no-article"] }, segmentStart: nullable(S), segmentEnd: nullable(S), centralThought: nullable(S), reason: S });
@@ -42,7 +44,7 @@ export async function selectSegment(m: JoshMaterial): Promise<{ decision: Segmen
 export async function buildJoshCut(m: JoshMaterial, seg: SegmentDecision): Promise<{ cut: JoshCut; call: StageCall }> {
   const text = segmentText(m.transcriptText, seg.segmentStart!, seg.segmentEnd!);
   if (!text.trim()) throw new Error(`segment ${seg.segmentStart}–${seg.segmentEnd} matched no transcript lines`);
-  const { data, call } = await callJSON<JoshCut>({ stage: "josh-cut", role: "joshCut", maxTokens: 8000, schemaName: "josh_cut", schema: CUT_SCHEMA as unknown as Record<string, unknown>, system: v3Prompt("josh-cut"), user: `CENTRAL THOUGHT: ${seg.centralThought}\nSEGMENT: ${seg.segmentStart}–${seg.segmentEnd}\n\nVERIFIED NAMES AND FACTS (for caption repair only):\n${m.factSheet.slice(0, 4000)}\n\nTRANSCRIPT SEGMENT:\n${text}` });
+  const { data, call } = await callJSON<JoshCut>({ stage: "josh-cut", role: "joshCut", maxTokens: 8000, schemaName: "josh_cut", schema: CUT_SCHEMA as unknown as Record<string, unknown>, system: v3Prompt("josh-cut"), user: `CENTRAL THOUGHT: ${seg.centralThought}\nSEGMENT: ${seg.segmentStart}–${seg.segmentEnd}\n\nVERIFIED NAMES AND FACTS (for caption repair only):\n${m.rosterNames ? `${m.rosterNames}\n\n` : ""}${m.factSheet.slice(0, 4000)}\n\nTRANSCRIPT SEGMENT:\n${text}` });
   return { cut: data, call };
 }
 
@@ -59,7 +61,7 @@ export async function lightProseEdit(cut: JoshCut, support: SupportFact[], m: Jo
   const { data, call } = await callJSON<ArticleDraft>({
     stage: "josh-prose-edit", role: "joshProseEdit", choice, maxTokens: 8000, schemaName: "article", schema: ARTICLE_SCHEMA as unknown as Record<string, unknown>,
     system: `${v3Prompt("josh-prose-edit")}\n\n${hardPolicyForLane("show")}`,
-    user: `EPISODE: ${m.title} (${m.publishedAt})\nSEGMENT STARTS AT: ${cut.segmentStart}\nCENTRAL THOUGHT: ${cut.centralThought}\n\nTHE JOSH CUT (his words, in his order; verified facts marked where they may help):\n${cutAsProse(cut, support)}\n\n${m.onRecord}`,
+    user: `EPISODE: ${m.title} (${m.publishedAt})\nSEGMENT STARTS AT: ${cut.segmentStart}\nCENTRAL THOUGHT: ${cut.centralThought}\n\nTHE JOSH CUT (his words, in his order; verified facts marked where they may help):\n${cutAsProse(cut, support)}\n\n${m.rosterNames ? `${m.rosterNames}\n\n` : ""}${m.onRecord}`,
   });
   return { draft: cleanDraft(data), call };
 }
