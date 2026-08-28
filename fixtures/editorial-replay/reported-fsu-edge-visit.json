@@ -1,0 +1,31 @@
+{
+  "id": "fsu-edge-visit",
+  "lane": "reported",
+  "shape": "simple item",
+  "note": "A recruiting visit note. V1 wrote a full seven-part story from it (the padding case).",
+  "frozenAt": "2026-08-28T03:11:48.778Z",
+  "sources": [
+    {
+      "key": "elite-edge-to-visit-florida-state-for-showdown-with-acc-rival",
+      "title": "Elite edge to visit Florida State for showdown with ACC rival",
+      "outlets": [
+        "Yahoo Sports"
+      ],
+      "urls": [
+        "https://sports.yahoo.com/articles/elite-edge-visit-florida-state-191515889.html"
+      ],
+      "text": "Florida State will have have one of the top edge prospects in the country on campus on Oct. 31 for their Halloween showdown against the Clemson Tigers. Four-star recruit Antonio Thomas Jr. will be on campus for the matchup per Zach Blostein of 247Sports . He has five other game visits locked in for the season. He'll go see the Kentucky Wildcats(Sept. 12), Florida Gators (Sept. 26), Georgia Tech Yellow Jackets (Oct. 10), Miami Hurricanes (Oct. 17), and the Georgia Bulldogs (Nov. 14). The 6-foot-3, 240-pounder is the No. 14 player nationally and the No. 3 in 247Sports composite rankings. He's also listed as the state of Florida's No. 4 recruit. Thomas was a big contributor on both sides of the ball as a sophomore. He finished with 54 tackles, 25 tackles for loss, 11.5 sacks, two pass breakups, and two forced fumbles on defense. On offense, Thomas registered 927 rushing yards and 15 touchdowns while averaging 9.3 yards per carry. Georgia, Florida, and Kentucky are the schools that are doing the best recruiting Thomas right now. He's also mentioned that the Texas Longhorns , Notre Dame Fighting Irish , Ohio State Buckeyes , and Oregon Ducks have made strides in his recruitment as well. FSU has some work to do to rise up the list of schools for Thomas. Contact/Follow us @FSUWire on X (formerly Twitter) and like our page on Facebook to follow ongoing coverage of Florida State news, notes and opinions. You can also follow Matthew on X @StarConscience This article originally appeared on FSU Wire: Elite edge to visit Florida State for showdown with ACC rival",
+      "storyId": "wireStory-elite-edge-to-visit-florida-state-for-showdown-with-acc-rival"
+    }
+  ],
+  "factSheet": "TEAM FACTS (verified from the live data feed as of 2026-08-28; use them to cash claims out with real games, dates and records; never contradict them, never go beyond them):\nFlorida State (ACC)\n  2025 record: 5-7 (2-6 conference)\n  2026 schedule:\n    SAT AUG 29 vs New Mexico State · 7:00 PM ET\n    MON SEP 7 vs SMU · 7:30 PM ET\n    SAT SEP 19 at Alabama · 3:30 PM ET\n    SAT SEP 26 vs Central Arkansas\n    SAT OCT 3 vs Virginia\n    FRI OCT 9 at Louisville · 7:00 PM ET\n    SAT OCT 17 at Miami\n    SAT OCT 31 vs Clemson\n    SAT NOV 7 at Boston College\n    FRI NOV 13 at Pittsburgh · 7:00 PM ET\n    SAT NOV 21 vs NC State\n    FRI NOV 27 vs Florida · 3:30 PM ET",
+  "knownOutputs": [
+    {
+      "label": "V1 Wire story",
+      "headline": "Four-Star Edge Antonio Thomas Jr. Plans Florida State Visit for Clemson Game",
+      "dek": "The Oct. 31 visit gives Florida State a chance to host one of the nation’s top edge prospects, but the Seminoles still have ground to make up in his recruitment.",
+      "bodyMarkdown": "Four-star edge prospect Antonio Thomas Jr. is reported to be scheduled for an Oct. 31 visit to Florida State for the Seminoles’ game against Clemson. The 6-foot-3, 240-pound Florida recruit ranks No. 14 nationally and No. 3 in composite rankings. Thomas also has visits scheduled for Kentucky on Sept. 12, Florida on Sept. 26, Georgia Tech on Oct. 10, Miami on Oct. 17, and Georgia on Nov. 14. Georgia, Florida, and Kentucky are currently among the schools recruiting him most successfully. Texas, Notre Dame, Ohio State, and Oregon have also made progress. Florida State has work to do to move higher on his list.",
+      "words": 104
+    }
+  ]
+}

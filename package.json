@@ -6,8 +6,9 @@
     "build": "next build",
     "start": "next start",
     "test": "vitest run",
-    "editorial:replay": "npx tsx scripts/editorial-replay.mts",
-    "editorial:freeze": "npx tsx scripts/editorial-freeze-fixtures.mts"
+    "editorial:freeze": "npx tsx scripts/editorial-freeze-fixtures.mts",
+    "editorial:v3-replay": "npx tsx scripts/editorial-v3-replay.mts",
+    "editorial:freeze-reported": "npx tsx scripts/editorial-freeze-reported.mts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.116.0",

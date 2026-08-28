@@ -26,8 +26,8 @@ const { extractQuotes } = await import("../lib/generate.ts");
 const { teamFactSheet } = await import("../lib/fact-sheet.ts");
 const { createAdminClient, isAdminConfigured } = await import("../lib/supabase/admin.ts");
 const { JOSH_BRACKET_FIELD, JOSH_BRACKET_FINAL, JOSH_BRACKET_LABEL } = await import("../lib/josh-bracket.ts");
-type ShowFixture = import("../lib/editorial-v2/types.ts").ShowFixture;
-type KnownOutput = import("../lib/editorial-v2/types.ts").KnownOutput;
+type ShowFixture = import("../lib/editorial-v3/types.ts").ShowFixture;
+type KnownOutput = import("../lib/editorial-v3/types.ts").KnownOutput;
 
 const OUT = "fixtures/editorial-replay";
 mkdirSync(OUT, { recursive: true });

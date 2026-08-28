@@ -1,0 +1,112 @@
+// Editorial Engine V3 — artifacts (brief §4–§16). Small on purpose.
+import type { ArticleDraft, FactCheckResult, PolicyResult, StageCall } from "./types";
+export type { ArticleDraft, FactCheckResult, PolicyResult, StageCall };
+
+// ---------------------------------------------------------------- Engine A
+export interface SegmentDecision {
+  decision: "segment" | "no-article";
+  segmentStart?: string;
+  segmentEnd?: string;
+  centralThought?: string;
+  reason: string;
+}
+
+export interface JoshCut {
+  segmentStart: string;
+  segmentEnd: string;
+  centralThought: string;
+  blocks: { text: string; sourceStart: string; sourceEnd: string }[];
+  removedBecauseRepetitive: string[];
+  removedBecauseOffTopic: string[];
+}
+
+export interface SupportFact {
+  fact: string;
+  sourceRef: string;
+  insertAfterBlock?: number;
+  whyUseful: string;
+}
+
+// ---------------------------------------------------------------- Engine B
+export interface ReportingPack {
+  development: string;
+  facts: { fact: string; sourceRef: string; status: "confirmed" | "reported" }[];
+  quotes: { speaker: string; text: string; sourceRef: string }[];
+  numbers: { value: string; meaning: string; sourceRef: string }[];
+  unknowns: string[];
+  relevantTeamContext: string[];
+}
+
+export type Depth = "item" | "brief" | "story" | "analysis";
+
+export interface FanBrief {
+  theNews: string;
+  whyAFanCares: string;
+  interestingDetail?: string;
+  footballAngle?: string;
+  importantUnknown?: string;
+  depth: Depth;
+  depthReason: string;
+}
+
+export const DEPTH_WORDS: Record<Depth, { min: number; max: number }> = {
+  item: { min: 75, max: 200 },
+  brief: { min: 200, max: 450 },
+  story: { min: 400, max: 750 },
+  analysis: { min: 600, max: 1300 },
+};
+
+// ---------------------------------------------------------------- Judges
+export type QuitReason = "repetitive" | "obvious" | "overexplained" | "generic" | "AI-sounding" | "abstract" | "irrelevant" | "too slow" | "confusing" | "no new information" | "none";
+
+export interface QuitReading {
+  neverWantedToQuit: boolean;
+  quitParagraphIndex?: number;
+  quitText?: string;
+  reason: QuitReason;
+  didFinish: boolean;
+  soundsLikeFootballPerson: boolean;
+  worthTheTime: boolean;
+  wouldClickAnother: boolean;
+  wouldSend: boolean;
+  note: string;
+}
+
+export interface AiSmell {
+  pass: boolean;
+  sentences: string[];
+  structural: boolean;
+  note: string;
+}
+
+// ---------------------------------------------------------------- Run
+export interface V3Run {
+  id: string;
+  engine: "josh" | "reported";
+  sourceId: string;
+  fixture?: string;
+  mode: "shadow" | "replay" | "live";
+  status: "completed" | "failed" | "no-article";
+  startedAt: string;
+  completedAt?: string;
+  artifacts: {
+    segment?: SegmentDecision;
+    cut?: JoshCut;
+    support?: SupportFact[];
+    pack?: ReportingPack;
+    brief?: FanBrief;
+    draft?: ArticleDraft;
+    subtracted?: ArticleDraft;
+    quit?: QuitReading;
+    quitAfterRepair?: QuitReading;
+    smell?: AiSmell;
+    fact?: FactCheckResult;
+    policy?: PolicyResult;
+    repairs?: string[];
+  };
+  final?: ArticleDraft;
+  words?: number;
+  calls: StageCall[];
+  totalCostUsd: number;
+  error?: string;
+}
