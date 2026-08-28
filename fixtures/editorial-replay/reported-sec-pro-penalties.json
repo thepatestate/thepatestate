@@ -1,0 +1,31 @@
+{
+  "id": "sec-pro-penalties",
+  "lane": "reported",
+  "shape": "real story (policy vote, two outlets)",
+  "note": "SEC schools except LSU approve penalties for signing returning pros. Richer source; should carry brief/story depth.",
+  "frozenAt": "2026-08-28T03:25:41.343Z",
+  "sources": [
+    {
+      "key": "sec-schools-except-lsu-approve-penalties-for-signing-returning-pro-athletes",
+      "title": "SEC schools — except LSU — approve penalties for signing returning pro athletes",
+      "outlets": [
+        "Yahoo Sports"
+      ],
+      "urls": [
+        "https://sports.yahoo.com/articles/sec-schools-except-lsu-approve-201605025.html"
+      ],
+      "text": "SEC presidents approved stiff penalties to deter schools from signing players with pro experience, with one notable school sitting out: LSU. LSU abstained from Wednesday’s vote on penalties, a source familiar with the vote confirmed. That came a day after the school was part of a unanimous, 16-0 vote to enforce rules against fielding athletes who dropped out of pro leagues . LSU football coach Lane Kiffin has recruited at least two players made NCAA eligible by a Louisiana court injunction , and LSU men’s basketball coach Will Wade was pursuing another player. Neither Kiffin, Wade nor LSU’s administration has offered public comments since the Tuesday night announcement by the SEC that it would enforce the bans against pros. That announcement said commissioner Greg Sankey was “authorized to enforce this expectation with penalties.”&nbsp; On Wednesday morning, schools were issued specifics: • The coach suspended for half of the season. • A fine of 50% of that fiscal year’s operating budget for that sport. • The school’s loss of voting privileges on conference business matters. • And any additional penalties the commissioner and presidents deem appropriate. Those penalties are similar to what the NCAA approved to penalize so-called ghost transfers — players who evade the transfer portal window by leaving one school and enrolling in another. The Big Ten put in similar penalties when it voted earlier Tuesday to not allow former pro athletes to return to its rosters. The issue is the latest off-field mess for college athletics, bubbling to the surface after various courts issued injunctions allowing fifth-year players to return to school. The NCAA passed an age-based eligibility rule in June that gave athletes a five-year window to play in college, but the rule did not grandfather in Class of 2022 high school athletes who exhausted their eligibility under the previous standard. Lawyers for players – and Kiffin – have argued they should have the right to come back, even if they signed a pro contract. The injunctions in state courts, including Louisiana, are against the NCAA. The SEC and Big Ten have interpreted the injunctions to not cover individual conferences. Lawyers for players said Tuesday night that the SEC’s rule put the NCAA in contempt, but as of Wednesday afternoon had not filed suit against the SEC. The Louisiana Attorney General’s Office has not been involved in the issue. SEC presidents and athletic directors were wrapping up their previously scheduled meetings in Birmingham, Ala., on Wednesday afternoon and so far have not issued any comment other than the announcement on Tuesday night. This article originally appeared in The Athletic . LSU Tigers, LSU Tigers, College Football, Men's College Basketball, Women's College Basketball, College Sports 2026 The Athletic Media Company",
+      "storyId": "wireStory-sec-schools-except-lsu-approve-penalties-for-signing-returning-pro-athletes"
+    }
+  ],
+  "factSheet": "TEAM FACTS (verified from the live data feed as of 2026-08-28; use them to cash claims out with real games, dates and records; never contradict them, never go beyond them):\nLSU (SEC)\n  2025 record: 7-6 (3-5 conference)\n  Preseason polls: AP Top 25 No. 11, AFCA Coaches No. 13\n  2026 schedule:\n    SAT SEP 5 vs Clemson · 7:30 PM ET\n    SAT SEP 12 vs Louisiana Tech · 7:30 PM ET\n    SAT SEP 19 at Ole Miss · 7:30 PM ET\n    SAT SEP 26 vs Texas A&M\n    SAT OCT 3 vs McNeese · 7:45 PM ET\n    SAT OCT 10 at Kentucky\n    SAT OCT 17 vs Mississippi State\n    SAT OCT 24 at Auburn · 12:00 PM ET\n    SAT NOV 7 vs Alabama\n    SAT NOV 14 vs Texas\n    SAT NOV 21 at Tennessee\n    SAT NOV 28 at Arkansas",
+  "knownOutputs": [
+    {
+      "label": "V1 Wire story",
+      "headline": "SEC Approves Penalties for Schools Signing Returning Pros, With LSU Abstaining",
+      "dek": "The vote targets a new eligibility path created by ongoing court fights. LSU’s decision to abstain matters because Lane Kiffin’s roster includes at least two players whose NCAA eligibility came through a Louisiana court injunction.",
+      "bodyMarkdown": "SEC presidents approved penalties Wednesday for schools that sign athletes with professional experience, according to reporting from Seth Emerson. LSU abstained from the vote. The action followed a unanimous 16-0 vote Tuesday to enforce conference rules against fielding athletes who left professional leagues and then tried to return to college competition. The policy covers players connected to the NFL, NBA or WNBA. LSU football coach Lane Kiffin has recruited at least two players whose NCAA eligibility was restored through a Louisiana court injunction. The vote does not establish the penalties’ details or announce a change to any player’s eligibility.\n\nThis matters because professional experience has become part of the roster conversation while the NCAA’s eligibility rules remain tied up in litigation. A former NFL, NBA or WNBA player is not simply another transfer. That athlete could bring a different level of experience to a college roster, which helps explain why conferences are trying to discourage schools from pursuing the option. LSU’s abstention gives the decision a direct Baton Rouge connection. The Tigers have players tied to the court-based eligibility fight, and the conference has now approved penalties while that legal dispute continues.",
+      "words": 192
+    }
+  ]
+}

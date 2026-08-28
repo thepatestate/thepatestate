@@ -11,6 +11,8 @@ const { teamFactSheet } = await import("../lib/fact-sheet.ts");
 const PICKS: { id: string; shape: string; keys: string[]; teams: string[]; note: string }[] = [
   { id: "fsu-edge-visit", shape: "simple item", keys: ["elite-edge-to-visit-florida-state-for-showdown-w"], teams: ["florida-state"], note: "A recruiting visit note. V1 wrote a full seven-part story from it (the padding case)." },
   { id: "alabama-beaman-acl", shape: "real story", keys: ["alabama-football-defensive-line-depth-suffers-ma"], teams: ["alabama"], note: "A season-ending injury with roster context. V1 wrote a 733-word house piece." },
+  { id: "sec-pro-penalties", shape: "real story (policy vote, two outlets)", keys: ["sec-schools-except-lsu-approve-penalties-for-sig"], teams: ["lsu"], note: "SEC schools except LSU approve penalties for signing returning pros. Richer source; should carry brief/story depth." },
+  { id: "brewster-texas-tech", shape: "real story (No. 1 recruit commits, two outlets)", keys: ["jalen-brewster-the-nation-8217-s-top-recruit-loc", "texas-tech-football-news-5-star-dl-jalen-brewste"], teams: ["texas-tech"], note: "The nation's top recruit commits to Texas Tech; two sources. Should carry story depth." },
   { id: "castellanos-texas-tech", shape: "analysis-worthy", keys: ["former-fsu-qb-tommy-castellanos-commits-to-texas", "texas-tech-football-news-will-tommy-castellanos-"], teams: ["texas-tech", "florida-state"], note: "A quarterback move with a real football question (does he start over Hammond). V1 wrote a 790-word house piece." },
 ];
 const H = { apikey: process.env.SUPABASE_SERVICE_ROLE_KEY!, authorization: `Bearer ${process.env.SUPABASE_SERVICE_ROLE_KEY}` };

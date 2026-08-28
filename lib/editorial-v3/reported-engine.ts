@@ -76,8 +76,12 @@ export async function runReportedEngine(m: ReportedMaterial, opts: ReportedRunOp
     const w = await writeReported(p.pack, b.brief); add(w.call); run.artifacts.draft = w.draft;
     log(`writer (${w.call.model}): ${words(w.draft.bodyMarkdown)} words`);
     const s = await subtractionEdit(w.draft, p.pack, b.brief); add(s.call);
-    let draft = s.draft; run.artifacts.subtracted = draft; run.artifacts.repairs!.push(...s.cuts.map((c) => `cut: ${c}`));
-    log(`subtraction (${s.call.model}): ${words(draft.bodyMarkdown)} words · ${s.cuts.length} cuts`);
+    // The range floor is real (brief §11): a cut that drops a brief below its
+    // own minimum has removed news, not padding. Keep the writer's draft then.
+    const floor = DEPTH_WORDS[b.brief.depth].min;
+    const overCut = words(s.draft.bodyMarkdown) < floor && words(w.draft.bodyMarkdown) >= floor;
+    let draft = overCut ? w.draft : s.draft; run.artifacts.subtracted = s.draft; run.artifacts.repairs!.push(...s.cuts.map((c) => `cut: ${c}`));
+    log(`subtraction (${s.call.model}): ${words(s.draft.bodyMarkdown)} words · ${s.cuts.length} cuts${overCut ? ` · below the ${b.brief.depth} floor (${floor}); kept the writer's ${words(w.draft.bodyMarkdown)}` : ""}`);
     const source = sourcesBlock(m);
     run.artifacts.policy = hardPolicyGates({ draft, lane: "standalone", suppliedQuotes: p.pack.quotes.map((q) => q.text) });
     const fc = await factCheckSources(draft, source); add(fc.call); run.artifacts.fact = fc.result;
@@ -88,7 +92,7 @@ export async function runReportedEngine(m: ReportedMaterial, opts: ReportedRunOp
       // Default repair: delete the paragraph where interest dropped (brief §15).
       const paras = draft.bodyMarkdown.split(/\n{2,}/);
       const idx = q1.result.quitParagraphIndex;
-      if (paras.length > 2 && idx < paras.length && idx > 0) {
+      if (paras.length > 2 && idx < paras.length && idx > 0 && words(paras.filter((_, i) => i !== idx).join("\n\n")) >= DEPTH_WORDS[b.brief.depth].min) {
         const trimmed: ArticleDraft = { ...draft, bodyMarkdown: paras.filter((_, i) => i !== idx).join("\n\n") };
         const fc2 = await factCheckSources(trimmed, source); add(fc2.call);
         const q2 = await quitReadingTest(trimmed, oppositeOf(w.call.vendor, "low")); add(q2.call); run.artifacts.quitAfterRepair = q2.result;
