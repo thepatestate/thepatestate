@@ -74,8 +74,8 @@ export async function lightProseEdit(cut: JoshCut, support: SupportFact[], m: Jo
 
 /** The tightening pass (Isaac, 2026-08-28): spoken texture → written prose,
  * his sentences kept, nothing added. A second edit, not a rewrite. */
-export async function tightenPass(draft: ArticleDraft, choice?: ModelChoice): Promise<{ draft: ArticleDraft; call: StageCall }> {
-  const { data, call } = await callJSON<ArticleDraft>({ stage: "josh-tighten", role: "joshProseEdit", choice, maxTokens: 8000, schemaName: "article", schema: ARTICLE_SCHEMA as unknown as Record<string, unknown>, system: `${v3Prompt("josh-tighten")}\n\n${hardPolicyForLane("show")}`, user: JSON.stringify(draft, null, 1) });
+export async function tightenPass(draft: ArticleDraft, choice?: ModelChoice, notes?: string[]): Promise<{ draft: ArticleDraft; call: StageCall }> {
+  const { data, call } = await callJSON<ArticleDraft>({ stage: notes ? "josh-local-repair" : "josh-tighten", role: "joshProseEdit", choice, maxTokens: 8000, schemaName: "article", schema: ARTICLE_SCHEMA as unknown as Record<string, unknown>, system: `${v3Prompt("josh-tighten")}\n\n${hardPolicyForLane("show")}`, user: `${notes?.length ? `LOCAL REPAIRS (fix exactly these, cutting or rewriting the named sentence in place; add nothing; touch nothing else):\n- ${notes.join("\n- ")}\n\n` : ""}${JSON.stringify(draft, null, 1)}` });
   return { draft: cleanDraft(data), call };
 }
 

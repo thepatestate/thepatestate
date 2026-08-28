@@ -104,6 +104,10 @@ export interface V3Run {
     fact?: FactCheckResult;
     policy?: PolicyResult;
     repairs?: string[];
+    /** Additive Josh's Read (2026-08-28). */
+    additions?: { addition: string; kind: string; sourceRef: string; changesWhat: string; newVsShow: boolean }[];
+    additive?: { additions: string[]; worthItForListener: boolean; replayPassage: string; note: string; overlapPct: number };
+    lift?: { pct: number; longestRun: number; pass: boolean; reason: string };
   };
   final?: ArticleDraft;
   words?: number;

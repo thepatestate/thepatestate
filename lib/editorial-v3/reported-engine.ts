@@ -8,6 +8,7 @@ import { hardPolicyGates } from "./policy-gates";
 import { factCheckSources } from "./fact-check";
 import { quitReadingTest, aiSmellTest } from "./judges";
 import { newRunId, recordV3Run } from "./telemetry";
+import { liftReport, liftVerdict } from "./lift-check";
 import { DEPTH_WORDS, type ArticleDraft, type FanBrief, type ReportingPack, type StageCall, type V3Run } from "./v3-types";
 
 export interface ReportedMaterial {
@@ -56,9 +57,9 @@ export async function writeReported(pack: ReportingPack, brief: FanBrief): Promi
   return { draft: cleanDraft(data), call };
 }
 
-export async function subtractionEdit(draft: ArticleDraft, pack: ReportingPack, brief: FanBrief): Promise<{ draft: ArticleDraft; cuts: string[]; call: StageCall }> {
+export async function subtractionEdit(draft: ArticleDraft, pack: ReportingPack, brief: FanBrief, liftedRuns?: string[]): Promise<{ draft: ArticleDraft; cuts: string[]; call: StageCall }> {
   const w = DEPTH_WORDS[brief.depth]; const n = words(draft.bodyMarkdown);
-  const { data, call } = await callJSON<{ cuts: string[]; draft: ArticleDraft }>({ stage: "subtraction-editor", role: "subtractionEditor", maxTokens: 6000, schemaName: "subtraction", schema: SUBTRACT_SCHEMA as unknown as Record<string, unknown>, system: `${v3Prompt("subtraction-editor")}\n\n${v3Prompt("desk-voice")}`, user: `${briefBlock(brief)}\n\nDRAFT LENGTH: ${n} words against a ${brief.depth} range of ${w.min}–${w.max}. ${n <= w.min ? "The draft is already at or under the range: subtraction here means removing over-explanation and repetition only; do not shorten for its own sake, and restore any pack fact the writer dropped." : "Cut toward the range."}\n\nREPORTING PACK:\n${JSON.stringify(pack, null, 1)}\n\nDRAFT:\n${JSON.stringify(draft, null, 1)}` });
+  const { data, call } = await callJSON<{ cuts: string[]; draft: ArticleDraft }>({ stage: "subtraction-editor", role: "subtractionEditor", maxTokens: 6000, schemaName: "subtraction", schema: SUBTRACT_SCHEMA as unknown as Record<string, unknown>, system: `${v3Prompt("subtraction-editor")}\n\n${v3Prompt("desk-voice")}`, user: `${briefBlock(brief)}\n\nDRAFT LENGTH: ${n} words against a ${brief.depth} range of ${w.min}–${w.max}. ${n <= w.min ? "The draft is already at or under the range: subtraction here means removing over-explanation and repetition only; do not shorten for its own sake, and restore any pack fact the writer dropped." : "Cut toward the range."}${liftedRuns?.length ? `\n\nVERBATIM LIFTS: these word runs are copied from the source outside quotation marks; rewrite each in the desk's own words, keeping the fact (lists of names may stay):\n- ${liftedRuns.map((r) => r.slice(0, 160)).join("\n- ")}` : ""}\n\nREPORTING PACK:\n${JSON.stringify(pack, null, 1)}\n\nDRAFT:\n${JSON.stringify(draft, null, 1)}` });
   return { draft: cleanDraft(data.draft), cuts: data.cuts, call };
 }
 
@@ -75,7 +76,9 @@ export async function runReportedEngine(m: ReportedMaterial, opts: ReportedRunOp
     log(`brief: depth ${b.brief.depth} — ${b.brief.depthReason.slice(0, 120)}`);
     const w = await writeReported(p.pack, b.brief); add(w.call); run.artifacts.draft = w.draft;
     log(`writer (${w.call.model}): ${words(w.draft.bodyMarkdown)} words`);
-    const s = await subtractionEdit(w.draft, p.pack, b.brief); add(s.call);
+    // Lift gate: the writer's sentences are its own; the sources' sentences are not.
+    const lift0 = liftReport(w.draft.bodyMarkdown, m.sources.map((x) => x.text));
+    const s = await subtractionEdit(w.draft, p.pack, b.brief, lift0.runs.length ? lift0.runs : undefined); add(s.call);
     // The range floor is real (brief §11): a cut that drops a brief below its
     // own minimum has removed news, not padding. Keep the writer's draft then.
     const floor = DEPTH_WORDS[b.brief.depth].min;
@@ -84,6 +87,10 @@ export async function runReportedEngine(m: ReportedMaterial, opts: ReportedRunOp
     log(`subtraction (${s.call.model}): ${words(s.draft.bodyMarkdown)} words · ${s.cuts.length} cuts${overCut ? ` · below the ${b.brief.depth} floor (${floor}); kept the writer's ${words(w.draft.bodyMarkdown)}` : ""}`);
     const source = sourcesBlock(m);
     run.artifacts.policy = hardPolicyGates({ draft, lane: "standalone", suppliedQuotes: p.pack.quotes.map((q) => q.text) });
+    const lift = liftReport(draft.bodyMarkdown, m.sources.map((x) => x.text)); const lv = liftVerdict(lift);
+    run.artifacts.lift = { pct: lift.pct, longestRun: lift.runs.reduce((a, x) => Math.max(a, x.split(" ").length), 0), pass: lv.pass, reason: lv.reason };
+    if (!lv.pass) run.artifacts.policy = { pass: false, violations: [...run.artifacts.policy.violations, `verbatim lift: ${lv.reason}`] };
+    log(`lift check: ${lv.reason}`);
     const fc = await factCheckSources(draft, source); add(fc.call); run.artifacts.fact = fc.result;
     log(`policy ${run.artifacts.policy.pass ? "pass" : run.artifacts.policy.violations.join("; ")} · fact ${fc.result.verdict}`);
     const q1 = await quitReadingTest(draft, oppositeOf(w.call.vendor, "low")); add(q1.call); run.artifacts.quit = q1.result;

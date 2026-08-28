@@ -1,0 +1,1566 @@
+[
+  {
+    "id": "miami-acc",
+    "engine": "josh",
+    "episode": "The WORST College Football Takes Of 2026 - Josh Pate's College Football Show",
+    "run": {
+      "id": "run_mtczjbyq_6atd60",
+      "engine": "josh",
+      "sourceId": "fx52TLhd8Cs",
+      "fixture": "miami-acc",
+      "mode": "replay",
+      "status": "completed",
+      "startedAt": "2026-08-28T13:26:20.498Z",
+      "artifacts": {
+        "repairs": [
+          "local repair: policy: quote fidelity: not verbatim in the transcript: \"the favorite could get hurt\"",
+          "local repair: policy: markers: [PULLQUOTE] must appear once iff pullQuote is set (found 0)",
+          "local repair: reads machine-written; cut it or say it plainly: \"That is not a projection built on vibes or on port",
+          "local repair: reads machine-written; cut it or say it plainly: \"It is not a competing prediction.\"",
+          "local repair: reads machine-written; cut it or say it plainly: \"It's a reason to be nervous about a favorite, whic",
+          "local repair: reads machine-written; cut it or say it plainly: \"Which is where the schedule does something useful.",
+          "local repair: reads machine-written; cut it or say it plainly: \"That's the whole thing.\""
+        ],
+        "segment": {
+          "decision": "segment",
+          "segmentStart": "[02:06]",
+          "segmentEnd": "[03:52]",
+          "centralThought": "Josh argues Miami is clearly the ACC's best team with everyone else playing for second, and challenges skeptics to name who else could win it instead.",
+          "reason": "This portion is a tight, self-contained take: Spencer's submission, Josh's direct rebuttal agreeing Miami is the favorite, his acknowledgment of counterarguments (title game history, last year's failure), and his rhetorical challenge naming SMU, Louisville, and Clemson as the only alternatives. It has a clear single argument, sufficient energy, and stands alone without needing the rest of the 'worst takes' roundup."
+        },
+        "cut": {
+          "segmentStart": "[02:06]",
+          "segmentEnd": "[03:52]",
+          "centralThought": "Josh argues Miami is clearly the ACC's best team with everyone else playing for second, and challenges skeptics to name who else could win it instead.",
+          "blocks": [
+            {
+              "text": "This one came from Spencer. He said, \"One of the bad predictions out there is that Miami is by far the best team in the ACC and everyone else is playing for second.\" Now, Spencer, I got to tell you, Miami is the best team by far in the ACC, and everyone's playing for second. That's my opinion. So, I am one of the many here, and you seem like one of the very few.",
+              "sourceStart": "[02:06]",
+              "sourceEnd": "[02:27]"
+            },
+            {
+              "text": "But I do know maybe where you're going with that. Although, you did me the favor of just typing one sentence, which I appreciate. If you typed two or three more sentences, you probably would have said things like, \"We're still waiting on Miami to win the ACC. They still haven't ever won the conference title game. They were an overwhelming favorite last year and they didn't get it done.\" Although Clemson was in the mix last year.",
+              "sourceStart": "[02:27]",
+              "sourceEnd": "[02:52]"
+            },
+            {
+              "text": "All that having been said, I still think they're an overwhelming favorite to do this this year. So my question rhetorically, because you're not here to defend yourself, would be if not them, then who?",
+              "sourceStart": "[02:53]",
+              "sourceEnd": "[03:04]"
+            },
+            {
+              "text": "Now there is a scenario here where Darien Mensah has something happen to him. If he were hurt, if he were unavailable, there is a massive drop off, I mean, a massive drop off between QB1 and QB2 at Miami. So, if that were to happen, and I don't know that anyone has a model to predict injury, if that were to happen, then everything's off the table.",
+              "sourceStart": "[03:04]",
+              "sourceEnd": "[03:28]"
+            },
+            {
+              "text": "But if Darien Mensah is healthy, if this team is largely, you know, as-is on paper and you're telling me they're just flat out not it and it's SMU or it's Louisville or it's Clemson or it's someone else, that's a model that I want to buy stake in, stock in, rather because I can't see it. But then again, that's the entire crux of this segment.",
+              "sourceStart": "[03:30]",
+              "sourceEnd": "[03:49]"
+            }
+          ],
+          "removedBecauseRepetitive": [],
+          "removedBecauseOffTopic": [
+            "The splattered. Maybe it's this year.",
+            "Next up, there's some wording in this next one that I don't know that I've heard, but the sentiment I can take to heart."
+          ]
+        },
+        "additions": [
+          {
+            "addition": "Miami enters 2026 ranked No. 7 in both the AP and AFCA Coaches preseason polls, coming off a 13-3 (6-2 ACC) season.",
+            "kind": "fact",
+            "sourceRef": "fact-sheet",
+            "changesWhat": "Gives the actual preseason ranking and record behind Josh's 'overwhelming favorite' framing, which he never cited.",
+            "newVsShow": true
+          },
+          {
+            "addition": "Clemson, the team Josh admits was 'in the mix' last year, went 7-6 (4-4 ACC) in 2025 and enters 2026 unranked in the AP poll, only No. 23 in the AFCA Coaches poll — a much weaker on-paper case than Josh's aside suggests.",
+            "kind": "alternative-case",
+            "sourceRef": "fact-sheet",
+            "changesWhat": "Supplies the actual data for the 'Clemson was in the mix' aside, showing the alternative is thinner than implied.",
+            "newVsShow": true
+          },
+          {
+            "addition": "SMU, one of the teams Josh names as a hypothetical 'if not Miami,' went 9-4 (6-2 ACC) in 2025 and is ranked in both major preseason polls (AP No. 19, Coaches No. 20) — the strongest résumé among the non-Miami options he lists.",
+            "kind": "alternative-case",
+            "sourceRef": "fact-sheet",
+            "changesWhat": "Fleshes out the specific case for the alternative Josh mentions only by name, with real record and poll standing.",
+            "newVsShow": true
+          },
+          {
+            "addition": "Louisville, also named by Josh as a hypothetical alternative, matched Miami's overall record shape at 9-4 (4-4 ACC) in 2025 and carries an AP No. 24 preseason ranking.",
+            "kind": "alternative-case",
+            "sourceRef": "fact-sheet",
+            "changesWhat": "Adds the missing record/ranking context for the second alternative team Josh floats without detail.",
+            "newVsShow": true
+          },
+          {
+            "addition": "Miami's schedule sets up a direct, circled test of the 'overwhelming favorite' claim: at Clemson on Sat., Oct. 3 — the same team Josh cites as last year's spoiler — followed by a stretch of Florida State, Pittsburgh, at North Carolina, and at Notre Dame (Nov. 7, 7:30 PM ET) before closing with Duke, Virginia Tech, and Boston College.",
+            "kind": "dated-test",
+            "sourceRef": "fact-sheet",
+            "changesWhat": "Turns Josh's rhetorical 'if not them, then who?' into a concrete, dated gauntlet a listener can track on the calendar.",
+            "newVsShow": true
+          },
+          {
+            "addition": "The site's own August 2026 preseason bracket does not put Miami above Clemson nationally — it slots Clemson at No. 3 overall and Miami at No. 11 — an on-record ranking that sits in tension with Josh's claim that Miami is 'by far' the best team in the ACC.",
+            "kind": "on-record",
+            "sourceRef": "on-record",
+            "changesWhat": "Flags a standing site position that a careful listener should weigh against Josh's live take, since it ranks the 'alternative' program ahead of Miami.",
+            "newVsShow": true
+          }
+        ],
+        "draft": {
+          "headline": "Miami Is the ACC Favorite, and the Alternatives Don't Hold Up",
+          "dek": "Miami enters 2026 at No. 7 in both major preseason polls off a 13-3 season, while the teams floated as alternatives — Clemson (7-6), SMU (9-4), Louisville (9-4) — carry thinner cases. The claim gets tested at Clemson on Oct. 3.",
+          "bodyMarkdown": "[EMBED:00:02:06]\n\nSpencer wrote in to say one of the bad predictions floating around is that Miami is by far the best team in the ACC and everyone else is playing for second. I agree with the prediction, not the criticism. Miami is the best team in the ACC by far, everyone else is playing for second, and the burden is on the other side of the argument: \"So my question rhetorically, because you're not here to defend yourself, would be if not them, then who?\"\n\nHere is the part I didn't put numbers on when I said it. Miami is No. 7 in the AP poll and No. 7 in the AFCA Coaches poll, the only ACC team ranked inside the top 15 of either, coming off 13-3 overall and 6-2 in the league. That is not a projection built on vibes or on portal buzz; it's a team that won 13 games and returns with the highest floor in the conference according to the two bodies of voters that matter most in August. The counter-argument — that the Hurricanes were an overwhelming favorite last year and didn't finish it, that they still have not won an ACC Championship Game — is a fair historical point. It is not a competing prediction. It's a reason to be nervous about a favorite, which is a different thing than naming a better one.\n\nSo take the three teams I floated as hypotheticals and actually look at them. Clemson, the program I said was in the mix last year, went 7-6 and 4-4 in the ACC in 2025. It is unranked in the AP poll and No. 23 in the Coaches poll. Clemson has the roster, the staff and the history to be a top-10 team by November — Sammy Brown and Peyton Streko and Bryant Wesco Jr. are not the problem — but a team coming off a .500 conference record and opening at LSU on Sept. 5 is not the safer pick. SMU has the best résumé of the alternatives: 9-4, 6-2 in the league, No. 19 AP and No. 20 Coaches, with Kevin Jennings back and a September road trip to Florida State on Sept. 7 that will tell you plenty. Louisville sits at 9-4 overall but 4-4 in the ACC, and is No. 24 in the AP poll. Those are good teams. Two of them are ranked behind Miami by 12 and 17 spots respectively. If your position is that one of them is the actual league favorite, you are asking me to move a 13-win team down and a 9-4 team up on the basis of last year's championship game.\n\nThe honest caveat is the one I gave on the show, and it belongs in print with the same weight. Darian Mensah is the difference between Miami being the clear favorite and Miami being one of six teams. Behind him the depth chart thins out considerably, and the offense is built around a quarterback who can carry a game plan — Malachi Toney and Cooper Barkate on the outside, Mark Fletcher Jr. and CharMar Brown behind him, Jackson Cantwell and Samson Okunlola up front. Nobody has a reliable way to forecast availability at that position, and I'm not pretending otherwise. But \"the favorite could get hurt\" is true of every favorite in America. It isn't an argument for anyone else.\n\nThere is one place where this site's own record cuts against my take, and I'd rather flag it than let a careful listener catch it. Our August preseason bracket has Clemson at No. 3 nationally and Miami at No. 11. That is a real tension. My read is that the bracket is a national projection with a heavy weight on ceiling and roster talent, while the ACC-favorite question is about who is most likely to be standing in Charlotte — and on that narrower question, the 13-win team with the better quarterback situation and the higher poll floor is where I am. But both of those can't be right after Oct. 3, and I'm not going to pretend they're the same claim.\n\nWhich is where the schedule does something useful. Miami goes to Clemson on Saturday, Oct. 3 — the same building, the same program that spoiled things a year ago — and then plays Florida State on Oct. 17, Pittsburgh on Oct. 24, at North Carolina on Oct. 31, and at Notre Dame on Nov. 7 at 7:30 ET. Five weeks, four of them genuinely difficult, before a November close of Duke, Virginia Tech and Boston College that looks manageable on paper. If the Hurricanes come out of that Clemson trip and the Chapel Hill trip at full strength, the ACC race is functionally settled by Halloween and everything I said on the show holds. If they lose at Clemson, then Spencer has the argument he didn't quite make, and Clemson's No. 3 on our bracket looks a lot smarter than my No. 7 poll citation.\n\nThat's the whole thing. Not that Miami is guaranteed, but that after you write down the records and the rankings, nobody has handed me a better name.\n\n— JP",
+          "pullQuote": "So my question rhetorically, because you're not here to defend yourself, would be if not them, then who?",
+          "primaryTeam": "Miami",
+          "teams": [
+            "Miami",
+            "Clemson",
+            "SMU",
+            "Louisville",
+            "Notre Dame"
+          ],
+          "tags": [
+            "ACC",
+            "2026 season",
+            "preseason polls",
+            "Darian Mensah",
+            "ACC Championship"
+          ],
+          "seo": {
+            "title": "Josh Pate: Miami Is the ACC Favorite and the Alternatives Don't Hold Up",
+            "description": "Miami is No. 7 in both preseason polls off a 13-3 season. Clemson, SMU and Louisville have thinner cases. Josh Pate on why the ACC race gets settled at Clemson on Oct. 3."
+          }
+        },
+        "tightened": {
+          "headline": "Miami Is the ACC Favorite, and the Alternatives Don't Hold Up",
+          "dek": "Miami enters 2026 at No. 7 in both major preseason polls off a 13-3 season, while the teams floated as alternatives — Clemson (7-6), SMU (9-4), Louisville (9-4) — carry thinner cases. The claim gets tested at Clemson on Oct. 3.",
+          "bodyMarkdown": "[EMBED:00:02:06]\n\nSpencer wrote in to say one of the bad predictions floating around is that Miami is by far the best team in the ACC and everyone else is playing for second. I agree with the prediction, not the criticism. Miami is the best team in the ACC by far, everyone else is playing for second, and the burden is on the other side of the argument: \"So my question rhetorically, because you're not here to defend yourself, would be if not them, then who?\"\n\n[PULLQUOTE]\n\nMiami is No. 7 in the AP poll and No. 7 in the AFCA Coaches poll, the only ACC team ranked inside the top 15 of either, coming off 13-3 overall and 6-2 in the league. The counter-argument — that the Hurricanes were an overwhelming favorite last year and didn't finish it, that they still have not won an ACC Championship Game — is a fair historical point. But being nervous about a favorite isn't the same as naming a better one.\n\nSo take the three teams I floated as hypotheticals and look at them. Clemson, the program I said was in the mix last year, went 7-6 and 4-4 in the ACC in 2025. It is unranked in the AP poll and No. 23 in the Coaches poll. Clemson has the roster, the staff and the history to be a top-10 team by November — Sammy Brown and Peyton Streko and Bryant Wesco Jr. are not the problem — but a team coming off a .500 conference record and opening at LSU on Sept. 5 is not the safer pick. SMU has the best résumé of the alternatives: 9-4, 6-2 in the league, No. 19 AP and No. 20 Coaches, with Kevin Jennings back and a road trip to Florida State on Sept. 7 that will tell you plenty. Louisville sits at 9-4 overall but 4-4 in the ACC, and is No. 24 in the AP poll. Those are good teams. Two of them are ranked behind Miami by 12 and 17 spots. If your position is that one of them is the actual league favorite, you are asking me to move a 13-win team down and a 9-4 team up on the basis of last year's championship game.\n\nThe honest caveat is the one I gave on the show. Darian Mensah is the difference between Miami being the clear favorite and Miami being one of six teams. Behind him the depth chart thins out considerably, and the offense is built around a quarterback who can carry a game plan — Malachi Toney and Cooper Barkate on the outside, Mark Fletcher Jr. and CharMar Brown behind him, Jackson Cantwell and Samson Okunlola up front. Nobody has a reliable way to forecast availability at that position, and I'm not pretending otherwise. But a favorite going down to injury is a risk every favorite in America carries. It isn't an argument for anyone else.\n\nThere is one place where this site's own record cuts against my take, and I'd rather flag it than let a careful listener catch it. Our August preseason bracket has Clemson at No. 3 nationally and Miami at No. 11. That is a real tension. My read is that the bracket is a national projection with a heavy weight on ceiling and roster talent, while the ACC-favorite question is about who is most likely to be standing in Charlotte — and on that narrower question, the 13-win team with the better quarterback situation and the higher poll floor is where I am. But both of those can't be right after Oct. 3, and I'm not going to pretend they're the same claim.\n\nMiami goes to Clemson on Saturday, Oct. 3 — the same building, the same program that spoiled things a year ago — and then plays Florida State on Oct. 17, Pittsburgh on Oct. 24, at North Carolina on Oct. 31, and at Notre Dame on Nov. 7 at 7:30 ET. Five weeks, four of them genuinely difficult, before a November close of Duke, Virginia Tech and Boston College that looks manageable on paper. If the Hurricanes come out of that Clemson trip and the Chapel Hill trip at full strength, the ACC race is functionally settled by Halloween and everything I said on the show holds. If they lose at Clemson, then Spencer has the argument he didn't quite make, and Clemson's No. 3 on our bracket looks a lot smarter than my No. 7 poll citation.\n\nNot that Miami is guaranteed, but after you write down the records and the rankings, nobody has handed me a better name.\n\n— JP",
+          "pullQuote": "So my question rhetorically, because you're not here to defend yourself, would be if not them, then who?",
+          "primaryTeam": "Miami",
+          "teams": [
+            "Miami",
+            "Clemson",
+            "SMU",
+            "Louisville",
+            "Notre Dame"
+          ],
+          "tags": [
+            "ACC",
+            "2026 season",
+            "preseason polls",
+            "Darian Mensah",
+            "ACC Championship"
+          ],
+          "seo": {
+            "title": "Josh Pate: Miami Is the ACC Favorite and the Alternatives Don't Hold Up",
+            "description": "Miami is No. 7 in both preseason polls off a 13-3 season. Clemson, SMU and Louisville have thinner cases. Josh Pate on why the ACC race gets settled at Clemson on Oct. 3."
+          }
+        },
+        "policy": {
+          "pass": true,
+          "violations": []
+        },
+        "fact": {
+          "verdict": "unsupported",
+          "claims": [
+            {
+              "claim": "Miami is No.7 in AP and No.7 in AFCA Coaches poll",
+              "status": "supported",
+              "sourceRefs": [
+                "Miami preseason polls"
+              ]
+            },
+            {
+              "claim": "Miami 13-3 overall, 6-2 ACC in 2025",
+              "status": "supported",
+              "sourceRefs": [
+                "Miami 2025 record"
+              ]
+            },
+            {
+              "claim": "Clemson 7-6, 4-4 ACC, unranked AP, No.23 Coaches",
+              "status": "supported",
+              "sourceRefs": [
+                "Clemson record/polls"
+              ]
+            },
+            {
+              "claim": "SMU 9-4, 6-2 ACC, No.19 AP, No.20 Coaches",
+              "status": "supported",
+              "sourceRefs": [
+                "SMU record/polls"
+              ]
+            },
+            {
+              "claim": "Louisville 9-4 overall, 4-4 ACC, No.24 AP",
+              "status": "supported",
+              "sourceRefs": [
+                "Louisville record/polls"
+              ]
+            },
+            {
+              "claim": "Miami at Clemson Oct. 3",
+              "status": "supported",
+              "sourceRefs": [
+                "Miami schedule",
+                "Clemson schedule"
+              ]
+            },
+            {
+              "claim": "Miami vs Florida State Oct.17, vs Pittsburgh Oct.24, at UNC Oct.31, at Notre Dame Nov.7 7:30 ET",
+              "status": "supported",
+              "sourceRefs": [
+                "Miami schedule"
+              ]
+            },
+            {
+              "claim": "Miami closes with Duke, Virginia Tech, Boston College in November",
+              "status": "supported",
+              "sourceRefs": [
+                "Miami schedule"
+              ]
+            },
+            {
+              "claim": "Clemson opens at LSU Sept.5",
+              "status": "supported",
+              "sourceRefs": [
+                "Clemson schedule"
+              ]
+            },
+            {
+              "claim": "SMU at Florida State Sept.7",
+              "status": "supported",
+              "sourceRefs": [
+                "SMU schedule"
+              ]
+            },
+            {
+              "claim": "Site's preseason bracket has Clemson No.3 and Miami No.11",
+              "status": "supported",
+              "sourceRefs": [
+                "ON-RECORD SITE POSITIONS"
+              ]
+            },
+            {
+              "claim": "Darian Mensah is the difference-maker QB for Miami with thin depth behind him",
+              "status": "supported",
+              "sourceRefs": [
+                "transcript"
+              ]
+            },
+            {
+              "claim": "Clemson 'the same program that spoiled things a year ago' for Miami",
+              "status": "unsupported",
+              "sourceRefs": []
+            },
+            {
+              "claim": "Roster names (Sammy Brown, Peyton Streko, Bryant Wesco Jr., Malachi Toney, Cooper Barkate, Mark Fletcher Jr., CharMar Brown, Jackson Cantwell, Samson Okunlola, Kevin Jennings)",
+              "status": "supported",
+              "sourceRefs": [
+                "roster lists"
+              ]
+            },
+            {
+              "claim": "Josh's opinion that Miami is the best team in ACC by far and everyone else plays for second",
+              "status": "supported",
+              "sourceRefs": [
+                "transcript"
+              ]
+            },
+            {
+              "claim": "Josh's rhetorical question 'if not them, then who'",
+              "status": "supported",
+              "sourceRefs": [
+                "transcript"
+              ]
+            }
+          ],
+          "joshMisattribution": []
+        },
+        "quit": {
+          "neverWantedToQuit": false,
+          "quitParagraphIndex": 5,
+          "quitText": "Miami goes to Clemson on Saturday, Oct. 3 — the same building, the same program that spoiled things a year ago — and then plays Florida State on Oct. 17, Pittsburgh on Oct. 24, at North Carolina on Oct. 31, and at Notre Dame on Nov. 7 at 7:30 ET.",
+          "reason": "too slow",
+          "didFinish": true,
+          "soundsLikeFootballPerson": true,
+          "worthTheTime": true,
+          "wouldClickAnother": true,
+          "wouldSend": false,
+          "note": "The case is clear and grounded in actual roster, record and schedule context; the long game-by-game schedule rundown starts to feel like it is stretching a point already made."
+        },
+        "smell": {
+          "pass": true,
+          "sentences": [],
+          "structural": false,
+          "note": "The argument is direct and evidence-led, with specific records, polls, schedules, and an acknowledged internal contradiction. No clear AI-style sentences stand out."
+        },
+        "quitAfterRepair": {
+          "neverWantedToQuit": false,
+          "quitParagraphIndex": 5,
+          "quitText": "Miami goes to Clemson on Saturday, Oct. 3 — the same building, the same program that spoiled things a year ago — and then plays Florida State on Oct. 17, Pittsburgh on Oct. 24, at North Carolina on Oct. 31, and at Notre Dame on Nov. 7 at 7:30 ET.",
+          "reason": "too slow",
+          "didFinish": true,
+          "soundsLikeFootballPerson": true,
+          "worthTheTime": true,
+          "wouldClickAnother": true,
+          "wouldSend": false,
+          "note": "The case is clear and grounded in actual roster, record and schedule context; the long game-by-game schedule rundown starts to feel like it is stretching a point already made."
+        },
+        "additive": {
+          "additions": [
+            "Miami is No. 7 in both the AP and AFCA Coaches preseason polls and is the only ACC team inside the top 15 of either poll.",
+            "Miami went 13-3 overall and 6-2 in ACC play last season.",
+            "Clemson went 7-6 overall and 4-4 in the ACC in 2025; it is unranked in the AP poll and No. 23 in the Coaches poll.",
+            "The column makes Clemson's affirmative case more concrete: its roster/talent ceiling, including Sammy Brown, Peyton Streko and Bryant Wesco Jr., could make it a top-10 team by November.",
+            "Clemson opens at LSU on Sept. 5, a specific early test that makes it a less secure preseason pick.",
+            "SMU has the strongest résumé among the alternatives: 9-4 overall, 6-2 in the ACC, No. 19 in the AP poll and No. 20 in the Coaches poll, with Kevin Jennings returning.",
+            "SMU's Sept. 7 road game at Florida State is identified as an early test of its case.",
+            "Louisville went 9-4 overall but 4-4 in the ACC and is No. 24 in the AP poll.",
+            "The column quantifies the ranking gap: Clemson and Louisville trail Miami by 12 and 17 AP-poll spots, respectively.",
+            "It supplies Miami's supporting offensive cast behind Mensah: Malachi Toney, Cooper Barkate, Mark Fletcher Jr., CharMar Brown, Jackson Cantwell and Samson Okunlola.",
+            "The site's own August preseason bracket has Clemson No. 3 nationally and Miami No. 11, creating a stated contradiction with the column's ACC-favorite argument.",
+            "It explains the alternative case for Clemson: the national bracket prioritizes ceiling and roster talent, while the ACC-favorite call prioritizes likelihood of reaching Charlotte.",
+            "Miami's Oct. 3 trip to Clemson is presented as the direct test; a Miami loss would substantiate Spencer's argument and make Clemson's No. 3 bracket placement look smarter.",
+            "The column lays out Miami's subsequent difficult stretch: Florida State (Oct. 17), Pittsburgh (Oct. 24), at North Carolina (Oct. 31), and at Notre Dame (Nov. 7 at 7:30 ET), followed by Duke, Virginia Tech and Boston College.",
+            "It offers a concrete consequence: if Miami gets through Clemson and Chapel Hill at full strength, the ACC race is functionally settled by Halloween."
+          ],
+          "worthItForListener": true,
+          "replayPassage": "“So my question rhetorically, because you're not here to defend yourself, would be if not them, then who?”",
+          "note": "Yes. The show gave the conclusion and the Mensah-injury caveat; the column adds records, poll positions, a substantive SMU/Clemson/Louisville comparison, the publication's conflicting Clemson projection, and schedule-based tests for resolving the claim.",
+          "overlapPct": 3.3
+        }
+      },
+      "calls": [
+        {
+          "stage": "josh-segment",
+          "role": "joshSegment",
+          "vendor": "anthropic",
+          "model": "claude-sonnet-5",
+          "inputTokens": 5485,
+          "outputTokens": 241,
+          "costUsd": 0.0201,
+          "ms": 4691
+        },
+        {
+          "stage": "josh-cut",
+          "role": "joshCut",
+          "vendor": "anthropic",
+          "model": "claude-sonnet-5",
+          "inputTokens": 14776,
+          "outputTokens": 881,
+          "costUsd": 0.0575,
+          "ms": 7864
+        },
+        {
+          "stage": "josh-additions",
+          "role": "supportFacts",
+          "vendor": "anthropic",
+          "model": "claude-sonnet-5",
+          "inputTokens": 14403,
+          "outputTokens": 1573,
+          "costUsd": 0.0668,
+          "ms": 18351
+        },
+        {
+          "stage": "josh-column-additive",
+          "role": "joshProseEdit",
+          "vendor": "anthropic",
+          "model": "claude-opus-5",
+          "inputTokens": 16882,
+          "outputTokens": 2217,
+          "costUsd": 0.4195,
+          "ms": 35380
+        },
+        {
+          "stage": "josh-tighten",
+          "role": "joshProseEdit",
+          "vendor": "anthropic",
+          "model": "claude-opus-5",
+          "inputTokens": 3601,
+          "outputTokens": 1977,
+          "costUsd": 0.2023,
+          "ms": 16288
+        },
+        {
+          "stage": "fact-check",
+          "role": "factCheck",
+          "vendor": "anthropic",
+          "model": "claude-sonnet-5",
+          "inputTokens": 0,
+          "outputTokens": 0,
+          "costUsd": 0,
+          "ms": 17530
+        },
+        {
+          "stage": "quit-reading",
+          "role": "quitJudge",
+          "vendor": "openai",
+          "model": "gpt-5.6-terra",
+          "inputTokens": 1504,
+          "outputTokens": 128,
+          "costUsd": 0.0202,
+          "ms": 2345
+        },
+        {
+          "stage": "ai-smell",
+          "role": "smellJudge",
+          "vendor": "openai",
+          "model": "gpt-5.6-terra",
+          "inputTokens": 1327,
+          "outputTokens": 277,
+          "costUsd": 0.0244,
+          "ms": 6299
+        },
+        {
+          "stage": "josh-local-repair",
+          "role": "joshProseEdit",
+          "vendor": "anthropic",
+          "model": "claude-opus-5",
+          "inputTokens": 3905,
+          "outputTokens": 2722,
+          "costUsd": 0.2627,
+          "ms": 25600
+        },
+        {
+          "stage": "fact-check",
+          "role": "factCheck",
+          "vendor": "anthropic",
+          "model": "claude-sonnet-5",
+          "inputTokens": 0,
+          "outputTokens": 0,
+          "costUsd": 0,
+          "ms": 15548
+        },
+        {
+          "stage": "ai-smell",
+          "role": "smellJudge",
+          "vendor": "openai",
+          "model": "gpt-5.6-terra",
+          "inputTokens": 1254,
+          "outputTokens": 157,
+          "costUsd": 0.0188,
+          "ms": 3395
+        },
+        {
+          "stage": "quit-reading",
+          "role": "quitJudge",
+          "vendor": "openai",
+          "model": "gpt-5.6-terra",
+          "inputTokens": 1431,
+          "outputTokens": 166,
+          "costUsd": 0.021,
+          "ms": 4013
+        },
+        {
+          "stage": "additive-judge",
+          "role": "quitJudge",
+          "vendor": "openai",
+          "model": "gpt-5.6-terra",
+          "inputTokens": 1655,
+          "outputTokens": 700,
+          "costUsd": 0.0446,
+          "ms": 9494
+        }
+      ],
+      "totalCostUsd": 1.1579,
+      "final": {
+        "headline": "Miami Is the ACC Favorite, and the Alternatives Don't Hold Up",
+        "dek": "Miami enters 2026 at No. 7 in both major preseason polls off a 13-3 season, while the teams floated as alternatives — Clemson (7-6), SMU (9-4), Louisville (9-4) — carry thinner cases. The claim gets tested at Clemson on Oct. 3.",
+        "bodyMarkdown": "[EMBED:00:02:06]\n\nSpencer wrote in to say one of the bad predictions floating around is that Miami is by far the best team in the ACC and everyone else is playing for second. I agree with the prediction, not the criticism. Miami is the best team in the ACC by far, everyone else is playing for second, and the burden is on the other side of the argument: \"So my question rhetorically, because you're not here to defend yourself, would be if not them, then who?\"\n\n[PULLQUOTE]\n\nMiami is No. 7 in the AP poll and No. 7 in the AFCA Coaches poll, the only ACC team ranked inside the top 15 of either, coming off 13-3 overall and 6-2 in the league. The counter-argument — that the Hurricanes were an overwhelming favorite last year and didn't finish it, that they still have not won an ACC Championship Game — is a fair historical point. But being nervous about a favorite isn't the same as naming a better one.\n\nSo take the three teams I floated as hypotheticals and look at them. Clemson, the program I said was in the mix last year, went 7-6 and 4-4 in the ACC in 2025. It is unranked in the AP poll and No. 23 in the Coaches poll. Clemson has the roster, the staff and the history to be a top-10 team by November — Sammy Brown and Peyton Streko and Bryant Wesco Jr. are not the problem — but a team coming off a .500 conference record and opening at LSU on Sept. 5 is not the safer pick. SMU has the best résumé of the alternatives: 9-4, 6-2 in the league, No. 19 AP and No. 20 Coaches, with Kevin Jennings back and a road trip to Florida State on Sept. 7 that will tell you plenty. Louisville sits at 9-4 overall but 4-4 in the ACC, and is No. 24 in the AP poll. Those are good teams. Two of them are ranked behind Miami by 12 and 17 spots. If your position is that one of them is the actual league favorite, you are asking me to move a 13-win team down and a 9-4 team up on the basis of last year's championship game.\n\nThe honest caveat is the one I gave on the show. Darian Mensah is the difference between Miami being the clear favorite and Miami being one of six teams. Behind him the depth chart thins out considerably, and the offense is built around a quarterback who can carry a game plan — Malachi Toney and Cooper Barkate on the outside, Mark Fletcher Jr. and CharMar Brown behind him, Jackson Cantwell and Samson Okunlola up front. Nobody has a reliable way to forecast availability at that position, and I'm not pretending otherwise. But a favorite going down to injury is a risk every favorite in America carries. It isn't an argument for anyone else.\n\nThere is one place where this site's own record cuts against my take, and I'd rather flag it than let a careful listener catch it. Our August preseason bracket has Clemson at No. 3 nationally and Miami at No. 11. That is a real tension. My read is that the bracket is a national projection with a heavy weight on ceiling and roster talent, while the ACC-favorite question is about who is most likely to be standing in Charlotte — and on that narrower question, the 13-win team with the better quarterback situation and the higher poll floor is where I am. But both of those can't be right after Oct. 3, and I'm not going to pretend they're the same claim.\n\nMiami goes to Clemson on Saturday, Oct. 3 — the same building, the same program that spoiled things a year ago — and then plays Florida State on Oct. 17, Pittsburgh on Oct. 24, at North Carolina on Oct. 31, and at Notre Dame on Nov. 7 at 7:30 ET. Five weeks, four of them genuinely difficult, before a November close of Duke, Virginia Tech and Boston College that looks manageable on paper. If the Hurricanes come out of that Clemson trip and the Chapel Hill trip at full strength, the ACC race is functionally settled by Halloween and everything I said on the show holds. If they lose at Clemson, then Spencer has the argument he didn't quite make, and Clemson's No. 3 on our bracket looks a lot smarter than my No. 7 poll citation.\n\nNot that Miami is guaranteed, but after you write down the records and the rankings, nobody has handed me a better name.\n\n— JP",
+        "pullQuote": "So my question rhetorically, because you're not here to defend yourself, would be if not them, then who?",
+        "primaryTeam": "Miami",
+        "teams": [
+          "Miami",
+          "Clemson",
+          "SMU",
+          "Louisville",
+          "Notre Dame"
+        ],
+        "tags": [
+          "ACC",
+          "2026 season",
+          "preseason polls",
+          "Darian Mensah",
+          "ACC Championship"
+        ],
+        "seo": {
+          "title": "Josh Pate: Miami Is the ACC Favorite and the Alternatives Don't Hold Up",
+          "description": "Miami is No. 7 in both preseason polls off a 13-3 season. Clemson, SMU and Louisville have thinner cases. Josh Pate on why the ACC race gets settled at Clemson on Oct. 3."
+        }
+      },
+      "words": 768,
+      "completedAt": "2026-08-28T13:29:07.330Z"
+    }
+  },
+  {
+    "id": "final-predictions",
+    "engine": "josh",
+    "episode": "Final 2026 CFP & Conference Title Predictions - Josh Pate's College Football Show",
+    "run": {
+      "id": "run_mtczqtnf_n9pfog",
+      "engine": "josh",
+      "sourceId": "3f58dSytoSA",
+      "fixture": "final-predictions",
+      "mode": "replay",
+      "status": "completed",
+      "startedAt": "2026-08-28T13:32:10.011Z",
+      "artifacts": {
+        "repairs": [
+          "local repair: reads machine-written; cut it or say it plainly: \"The part I owe you is the accounting, because this",
+          "local repair: reads machine-written; cut it or say it plainly: \"The good news is that these picks do not have to s",
+          "local repair: reads machine-written; cut it or say it plainly: \"That is the cleanest data point on the board for t",
+          "local repair: reads machine-written; cut it or say it plainly: \"So the pick stands: Miami over Oregon in Las Vegas",
+          "local repair: reads machine-written; cut it or say it plainly: \"It has three dates attached to it — Sept. 12 in Au"
+        ],
+        "segment": {
+          "decision": "segment",
+          "segmentStart": "08:21",
+          "segmentEnd": "14:48",
+          "centralThought": "Josh walks through every round of his 12-team playoff bracket, using specific matchup reasoning (styles, coaches, rivalries) to arrive at Miami defeating Oregon for the national title.",
+          "reason": "This stretch is a single sustained thought—Josh methodically predicting each playoff round with concrete football justifications (Alabama's SEC road matchup logic, Boise vs Indiana, Texas Tech-Texas rivalry, Oregon's defense vs Oklahoma's run game, and finally the Mario Cristobal-vs-Dan Lanning storyline)—building to one clear payoff: his national championship pick of Miami. It has narrative momentum, enough football substance to fill a page, and is fully understandable without the rest of the episode, unlike the shorter, choppier individual conference picks earlier in the transcript."
+        },
+        "cut": {
+          "segmentStart": "08:21",
+          "segmentEnd": "14:48",
+          "centralThought": "Josh walks through every round of his 12-team playoff bracket, using specific matchup reasoning (styles, coaches, rivalries) to arrive at Miami defeating Oregon for the national title.",
+          "blocks": [
+            {
+              "text": "As you guys know, we are in a partnership with ESPN. ESPN is the exclusive rights holder of this playoff and I've never been a sports or rigged kind of guy because that's insane. However, if you were to rig the playoff, you wouldn't make it look much different than this right here cuz this is high-level matchups all across the board.",
+              "sourceStart": "08:33",
+              "sourceEnd": "08:55"
+            },
+            {
+              "text": "USC playing in Tuscaloosa, Alabama in round one. We've got Boise at Indiana. That's your 5-12. So you're always going to have a G5 team there, G16 team there. But that's not a terrible matchup. But I got Texas Tech in Austin in round one playing Texas. I've got Oklahoma traveling up to Eugene. How many people in the state of Oklahoma have visited Oregon voluntarily? I'm in both of these states regularly, one for football, the other for football and storm chasing. And this is what's beautiful about this sport, the culture clash, the oil and water moments in fandom. I got it in droves here in round one.",
+              "sourceStart": "08:55",
+              "sourceEnd": "09:39"
+            },
+            {
+              "text": "So I am taking, in order, Alabama to defeat Lincoln Riley and USC. This is presumably what the internet tells me Lincoln was trying to avoid playing on the road in the SEC. That's why they tell me he didn't go to LSU. Now, of course, we don't believe that, but be that as it may, that's what the streets will say.",
+              "sourceStart": "09:40",
+              "sourceEnd": "10:01"
+            },
+            {
+              "text": "What about Boise at Indiana? I should play the Jeopardy music before I tell you that Indiana body bags Boise.",
+              "sourceStart": "10:01",
+              "sourceEnd": "10:10"
+            },
+            {
+              "text": "And this game in Austin, Texas. Man, memory spans are that of a fruit fly these days. So people have already stopped talking about and largely forgotten this little dust up between Joey McGuire and Steve Sarkisian back in the spring. But I remember, and I think everyone will remember when we have a week or so to build up to this game, Texas Tech at Texas. I got to go Texas otherwise. Oh, look, that's an upset that my Texas friends may never recover from emotionally. They'll play a season the next year, but they would be shells of themselves. So I'll take Texas over Texas Tech.",
+              "sourceStart": "10:10",
+              "sourceEnd": "10:48"
+            },
+            {
+              "text": "And I will take Oregon over Oklahoma. However, let's just remember a lot of the vibe around Dan Lanning and Oregon right now is they can't win big games, and what cannot does not equal have not. You know the rule around here. However, if Oklahoma is a playoff team, that means the ground game probably got figured out. Defense is going to be what the defense is there. Those are assets that can travel. So I'm just saying I watched Indiana go up there and deal one to Oregon using that brand of ball last year. Am I saying John Mateer is going to be Fernando Mendoza this year? Maybe. Who knows, Jesse? Time will tell. All I'm saying is very tough matchup there in round one for Oregon.",
+              "sourceStart": "10:48",
+              "sourceEnd": "11:34"
+            },
+            {
+              "text": "Second round. Here are your four matchups. We have got Alabama against Notre Dame. We've got Miami against Indiana. That's a national title game rematch. We got Texas Ohio State. That's a regular season rematch. And we've got Georgia versus Oregon. That's Dan Lanning, Kirby Smart. You remember that was Lanning's first game against Georgia. Times have changed though. I would even venture to say Oregon would be favored in this game if they played. We could check with FanDuel Mike on that.",
+              "sourceStart": "11:36",
+              "sourceEnd": "12:08"
+            },
+            {
+              "text": "Give me Notre Dame over Alabama. Give me Miami over Indiana. They get their get back there in the rematch. They don't quite win a national title by winning that game, but I think Miami is on a mission there.",
+              "sourceStart": "12:09",
+              "sourceEnd": "12:25"
+            },
+            {
+              "text": "Give me Texas over Ohio State. Texas, even though they don't make the SEC championship game, I really think they've got it in them to rev the engine at the right time. And I really think they got it in them to outdo Ohio State there.",
+              "sourceStart": "12:26",
+              "sourceEnd": "12:43"
+            },
+            {
+              "text": "And give me Oregon over Georgia. We got to get Dan Lanning some big wins here eventually. Now if that were to happen, that is three consecutive years Georgia has gone one and done after having a first round bye. But we'll deal with that when the time comes. They will say Kirby is washed if this happens. If you have the audacity to only win the SEC and have first round byes in the playoffs, you might as well just quit. You're terrible.",
+              "sourceStart": "12:44",
+              "sourceEnd": "13:10"
+            },
+            {
+              "text": "Okay, your final four is Notre Dame versus Miami and Texas versus Oregon. I had Notre Dame as my national champion. My opinion has not sullied one bit on Notre Dame. This is a case of my opinion on another team elevating. And my opinion on Miami, based on what I've picked up over the past month, has elevated to the point where I would like to take the Miami Hurricanes and put them in the national championship game.",
+              "sourceStart": "13:10",
+              "sourceEnd": "13:43"
+            },
+            {
+              "text": "And the team they're going to face in the national championship game, as fate would have it, is the very team who they stole a head coach from. Well, it's not stealing, he voluntarily went. But Mario, once the head coach at Oregon, now the head coach at Miami, will face his old team in the national championship game.",
+              "sourceStart": "13:43",
+              "sourceEnd": "14:01"
+            },
+            {
+              "text": "And before I even tell you who my national champ is, Dan Lanning's won multiple big games here. Okay, no matter who wins in our final four, it could be Notre Dame, it could be Miami, it could be Lanning, it could be Sarkisian, someone's going to have to eat it because these are all coaches that the YouTube comments have reliably informed me cannot win a national championship. And someone's got to do it, and especially here with Mario and Dan Lanning, someone's got to do it.",
+              "sourceStart": "14:01",
+              "sourceEnd": "14:33"
+            },
+            {
+              "text": "Ladies and gentlemen, I am picking the Miami Hurricanes to win the national championship over Oregon in Las Vegas, Nevada, sometime close to Valentine's Day, whenever the national title game is next year.",
+              "sourceStart": "14:33",
+              "sourceEnd": "14:48"
+            }
+          ],
+          "removedBecauseRepetitive": [
+            "timeout. I'm begging you, please subscribe to the channel"
+          ],
+          "removedBecauseOffTopic": [
+            "It's free for you. It doesn't sign you up for anything. It just helps us. That's it. Support college football."
+          ]
+        },
+        "additions": [
+          {
+            "addition": "Miami enters the season ranked No. 7 in both the preseason AP Top 25 and AFCA Coaches poll, coming off a 13-3 (6-2 ACC) 2025 season — a much higher standing than a fringe playoff team.",
+            "kind": "fact",
+            "sourceRef": "fact-sheet",
+            "changesWhat": "Adds concrete poll and record context for Miami that Josh never cited when building his case for the Hurricanes reaching the title game.",
+            "newVsShow": true
+          },
+          {
+            "addition": "Texas is preseason No. 5 AP / No. 4 Coaches off a 10-3 (6-2) 2025 season, and Georgia is preseason No. 3 in both polls off a 12-2 (7-1) 2025 season — both ranked well above Miami and Oregon.",
+            "kind": "fact",
+            "sourceRef": "fact-sheet",
+            "changesWhat": "Shows the actual preseason pecking order (Georgia and Texas rated above Miami and Oregon), sharpening how much of an upset-laden path Josh is picking.",
+            "newVsShow": true
+          },
+          {
+            "addition": "The site's own preseason bracket (August 2026) already seeded the field 1 Georgia, 2 Ohio State, 3 Clemson, 4 Boise State, 5 Texas, 6 Oregon, 7 Penn State, 8 LSU, 9 Notre Dame, 10 Alabama, 11 Miami, 12 Indiana, with a Georgia 31, Ohio State 28 title-game call — putting Miami at the bottom of the field and never projecting an Oregon-Miami final.",
+            "kind": "on-record",
+            "sourceRef": "on-record",
+            "changesWhat": "Directly contrasts with Josh's live pick of Miami over Oregon for the title, showing his in-show read has moved sharply from the site's on-record projection.",
+            "newVsShow": true
+          },
+          {
+            "addition": "The Texas-Ohio State 'rematch' Josh flags for the second round is actually scheduled to happen much sooner: Texas hosts Ohio State on Saturday, Sept. 12, 2026 at 7:30 PM ET, in Week 2 of the regular season.",
+            "kind": "dated-test",
+            "sourceRef": "fact-sheet",
+            "changesWhat": "Gives a real, dated season-opening test of both teams' quality months before any hypothetical playoff meeting, letting listeners check Josh's read against an actual result well ahead of the bracket.",
+            "newVsShow": true
+          },
+          {
+            "addition": "Miami's 2026 schedule includes a road trip to Notre Dame on Saturday, Nov. 7 at 7:30 PM ET — a dated, real-world measuring stick against one of the exact teams Josh has advancing deep in his bracket.",
+            "kind": "dated-test",
+            "sourceRef": "fact-sheet",
+            "changesWhat": "Offers a concrete regular-season checkpoint for whether Miami's 'mission' is real, well before the hypothetical playoff run Josh describes.",
+            "newVsShow": true
+          },
+          {
+            "addition": "Georgia's actual 2026 slate includes back-to-back road tests at Alabama (Oct. 10) and at Ole Miss (Nov. 7) before any hypothetical playoff rematch with Oregon — a brutal stretch that would precede the 'Kirby is washed' scenario Josh floats.",
+            "kind": "consequence",
+            "sourceRef": "fact-sheet",
+            "changesWhat": "Grounds Josh's hypothetical 'three straight one-and-dones' narrative in the real gauntlet Georgia must survive first, a detail the show never mentioned.",
+            "newVsShow": true
+          }
+        ],
+        "draft": {
+          "headline": "Why I Have Miami Beating Oregon for the Title — and What Has to Happen First",
+          "dek": "I moved Miami from the 11 seed on my own preseason bracket to the national championship in Las Vegas. Here are the dated games that will tell us whether that move was right, starting with Texas–Ohio State on Sept. 12 and Miami at Notre Dame on Nov. 7.",
+          "bodyMarkdown": "[EMBED:00:08:21]\n\nI picked the Miami Hurricanes to beat Oregon for the national championship, and I picked Mario Cristobal to do it against the program he left. That is the end of a bracket that runs USC into Tuscaloosa, Texas Tech into Austin, Oklahoma into Eugene, and then asks a group of coaches the internet has decided cannot win a title to go win one anyway.\n\nThe part I owe you is the accounting, because this is a move off my own on-record projection. My preseason bracket in August seeded this field 1 Georgia, 2 Ohio State, 3 Clemson, 4 Boise State, 5 Texas, 6 Oregon, 7 Penn State, 8 LSU, 9 Notre Dame, 10 Alabama, 11 Miami, 12 Indiana, with Georgia 31, Ohio State 28 in the final. Miami was the eleventh-best team on that sheet. It is now, on tape, my national champion. That is not a small adjustment and I am not going to pretend it is.\n\nIt is also less of a leap than the seeding suggests. Miami went 13-3 last year, 6-2 in the ACC, and opens the season No. 7 in both the AP Top 25 and the coaches poll. That is not a bubble team sneaking into the twelfth slot; that is a top-ten roster that got itself pushed to the back of a bracket by the math of at-large ordering. The elevation I described is real, but the floor under it was always higher than an 11 seed implies.\n\n[PULLQUOTE]\n\nWhere the bracket gets uncomfortable for me is the pecking order I picked against. Georgia opens at No. 3 in both polls off a 12-2, 7-1 season. Texas is No. 5 in the AP and No. 4 in the coaches poll off 10-3. Both of those teams are rated above Miami and above Oregon right now, and my bracket has Georgia going one-and-done out of a first-round bye and Texas losing in the semifinal. I still think Texas has it in them to rev the engine at the right time. I also think that is a projection about timing, which is the least reliable thing anyone projects in August.\n\nThe good news is that these picks do not have to sit unexamined until December. Two of them get graded early and one gets graded in November.\n\nStart with Texas–Ohio State. I called it a regular-season rematch in the bracket, and the regular-season half of that arrives on Saturday, Sept. 12 at 7:30 p.m. ET in Austin. Week 2. That is the single cleanest data point on the board for two of my four semifinalists, and it comes before either team has had time to build an identity that hides anything. Texas has to prove the front can hold up in a game where the margin lives on the interior, and Ohio State has to prove a young quarterback can operate on the road at night in that building. Whoever wins does not clinch anything in September, but a Texas loss there means my Texas-over-Ohio-State projection in January is running against a result, not toward one.\n\nThen Miami. The measuring stick is on the schedule and it is exactly the team I have advancing to the semifinal: Miami plays at Notre Dame on Saturday, Nov. 7 at 7:30 p.m. ET. That is the same matchup I put in my final four, played in South Bend in November instead of in a neutral dome. There is a road trip to Clemson on Oct. 3 before it and Florida State at home on Oct. 17, so Miami will have been tested in the league. But Notre Dame in November is the checkpoint. If Miami's offensive line can hold up against a front that gets after the passer and the run game can stay ahead of schedule in cold-weather down-and-distance, the \"on a mission\" read I have on this team gets evidence. If Miami gets pushed around up front, my title pick is a vibe and I will say so.\n\nAnd on the Kirby part of this: before anyone gets to argue about a third straight one-and-done out of a bye, Georgia has to survive at Alabama on Oct. 10 and at Ole Miss on Nov. 7, with Oklahoma at home on Sept. 26 in between. That is a genuine gauntlet, and it matters to my bracket in both directions. A Georgia team that comes out of that stretch at 11-1 arrives at the playoff as the No. 1 seed with a case that it is the best team in the country, which makes my Oregon-over-Georgia quarterfinal a real upset rather than a stylistic hunch. A Georgia team that drops one of those two road games probably is not sitting on a bye at all, and the entire top of my bracket reshuffles.\n\nSo the pick stands as I made it: Miami over Oregon in Las Vegas. The pick also has three dates attached to it — Sept. 12 in Austin, Oct. 10 in Tuscaloosa, Nov. 7 in South Bend — and by the second week of November we will know whether I moved a team eleven seeds for the right reasons.\n\n— JP",
+          "pullQuote": "My opinion has not sullied one bit on Notre Dame. This is a case of my opinion on another team elevating.",
+          "primaryTeam": "Miami",
+          "teams": [
+            "Miami",
+            "Oregon",
+            "Texas",
+            "Georgia",
+            "Ohio State",
+            "Notre Dame"
+          ],
+          "tags": [
+            "College Football Playoff",
+            "2026 season",
+            "bracket predictions",
+            "Mario Cristobal",
+            "Dan Lanning",
+            "Kirby Smart",
+            "Steve Sarkisian"
+          ],
+          "seo": {
+            "title": "Josh Pate: Why I Have Miami Beating Oregon for the 2026 National Title",
+            "description": "Josh Pate explains moving Miami from the 11 seed on his preseason bracket to national champion over Oregon, and the dated tests — Texas–Ohio State on Sept. 12, Miami at Notre Dame on Nov. 7, Georgia at Alabama on Oct. 10 — that will settle it."
+          }
+        },
+        "tightened": {
+          "headline": "Why I Have Miami Beating Oregon for the Title — and What Has to Happen First",
+          "dek": "I moved Miami from the 11 seed on my own preseason bracket to the national championship in Las Vegas. Here are the dated games that will tell us whether that move was right, starting with Texas–Ohio State on Sept. 12 and Miami at Notre Dame on Nov. 7.",
+          "bodyMarkdown": "[EMBED:00:08:21]\n\nI picked the Miami Hurricanes to beat Oregon for the national championship, and I picked Mario Cristobal to do it against the program he left. That is the end of a bracket that runs USC into Tuscaloosa, Texas Tech into Austin, Oklahoma into Eugene, and then asks a group of coaches the internet has decided cannot win a title to go win one anyway.\n\nThis is a move off my own on-record projection, so here is the accounting. My preseason bracket in August seeded this field 1 Georgia, 2 Ohio State, 3 Clemson, 4 Boise State, 5 Texas, 6 Oregon, 7 Penn State, 8 LSU, 9 Notre Dame, 10 Alabama, 11 Miami, 12 Indiana, with Georgia 31, Ohio State 28 in the final. Miami was the eleventh-best team on that sheet. It is now my national champion. That is not a small adjustment and I am not going to pretend it is.\n\nIt is also less of a leap than the seeding suggests. Miami went 13-3 last year, 6-2 in the ACC, and opens the season No. 7 in both the AP Top 25 and the coaches poll. That is not a bubble team sneaking into the twelfth slot; that is a top-ten roster that got pushed to the back of a bracket by the math of at-large ordering. The elevation is real, but the floor under it was always higher than an 11 seed implies.\n\n[PULLQUOTE]\n\nWhere the bracket gets uncomfortable for me is the pecking order I picked against. Georgia opens at No. 3 in both polls off a 12-2, 7-1 season. Texas is No. 5 in the AP and No. 4 in the coaches poll off 10-3. Both of those teams are rated above Miami and above Oregon right now, and my bracket has Georgia going one-and-done out of a first-round bye and Texas losing in the semifinal. I still think Texas has it in them to rev the engine at the right time. I also think that is a projection about timing, which is the least reliable thing anyone projects in August.\n\nStart with Texas–Ohio State. I called it a regular-season rematch in the bracket, and the regular-season half arrives Saturday, Sept. 12 at 7:30 p.m. ET in Austin. Week 2. That is the cleanest data point on the board for two of my four semifinalists. Texas has to prove the front can hold up in a game where the margin lives on the interior, and Ohio State has to prove a young quarterback can operate on the road at night in that building. Whoever wins does not clinch anything in September, but a Texas loss there means my Texas-over-Ohio-State projection in January is running against a result, not toward one.\n\nThen Miami. The measuring stick is exactly the team I have advancing to the semifinal: Miami plays at Notre Dame on Saturday, Nov. 7 at 7:30 p.m. ET. Same matchup I put in my final four, played in South Bend in November instead of a neutral dome. There is a road trip to Clemson on Oct. 3 before it and Florida State at home on Oct. 17, so Miami will have been tested in the league. But Notre Dame in November is the checkpoint. If Miami's offensive line can hold up against a front that gets after the passer and the run game can stay ahead of schedule in cold-weather down-and-distance, the \"on a mission\" read I have on this team gets evidence. If Miami gets pushed around up front, my title pick is a vibe and I will say so.\n\nAnd on the Kirby part of this: before anyone gets to argue about a third straight one-and-done out of a bye, Georgia has to survive at Alabama on Oct. 10 and at Ole Miss on Nov. 7, with Oklahoma at home on Sept. 26 in between. That is a genuine gauntlet, and it matters to my bracket in both directions. A Georgia team that comes out of that stretch at 11-1 arrives at the playoff as the No. 1 seed with a case that it is the best team in the country, which makes my Oregon-over-Georgia quarterfinal a real upset rather than a stylistic hunch. A Georgia team that drops one of those two road games probably is not sitting on a bye at all, and the entire top of my bracket reshuffles.\n\nThe pick stands: Miami over Oregon in Las Vegas. Three dates decide it — Sept. 12 in Austin, Oct. 10 in Tuscaloosa, Nov. 7 in South Bend — and by the second week of November we will know whether I moved a team eleven seeds for the right reasons.\n\n— JP",
+          "pullQuote": "My opinion has not sullied one bit on Notre Dame. This is a case of my opinion on another team elevating.",
+          "primaryTeam": "Miami",
+          "teams": [
+            "Miami",
+            "Oregon",
+            "Texas",
+            "Georgia",
+            "Ohio State",
+            "Notre Dame"
+          ],
+          "tags": [
+            "College Football Playoff",
+            "2026 season",
+            "bracket predictions",
+            "Mario Cristobal",
+            "Dan Lanning",
+            "Kirby Smart",
+            "Steve Sarkisian"
+          ],
+          "seo": {
+            "title": "Josh Pate: Why I Have Miami Beating Oregon for the 2026 National Title",
+            "description": "Josh Pate explains moving Miami from the 11 seed on his preseason bracket to national champion over Oregon, and the dated tests — Texas–Ohio State on Sept. 12, Miami at Notre Dame on Nov. 7, Georgia at Alabama on Oct. 10 — that will settle it."
+          }
+        },
+        "policy": {
+          "pass": true,
+          "violations": []
+        },
+        "fact": {
+          "verdict": "pass",
+          "claims": [
+            {
+              "claim": "Josh picked Miami to beat Oregon for the national championship in Las Vegas",
+              "status": "supported",
+              "sourceRefs": [
+                "transcript 13:33-14:46"
+              ]
+            },
+            {
+              "claim": "Josh picked Mario Cristobal (Miami) to face his old program (Oregon)",
+              "status": "supported",
+              "sourceRefs": [
+                "transcript 13:53-14:01"
+              ]
+            },
+            {
+              "claim": "Bracket had USC at Alabama in Tuscaloosa, Texas Tech at Texas in Austin, Oklahoma at Oregon in Eugene round one",
+              "status": "supported",
+              "sourceRefs": [
+                "transcript 08:55-10:34"
+              ]
+            },
+            {
+              "claim": "Josh's preseason bracket (August): 1 Georgia, 2 Ohio State, 3 Clemson, 4 Boise State, 5 Texas, 6 Oregon, 7 Penn State, 8 LSU, 9 Notre Dame, 10 Alabama, 11 Miami, 12 Indiana; final Georgia 31, Ohio State 28",
+              "status": "supported",
+              "sourceRefs": [
+                "ON-RECORD SITE POSITIONS"
+              ]
+            },
+            {
+              "claim": "Miami went 13-3 last year, 6-2 in ACC, opens No. 7 AP and coaches poll",
+              "status": "supported",
+              "sourceRefs": [
+                "TEAM FACTS: Miami"
+              ]
+            },
+            {
+              "claim": "Georgia opens at No. 3 in both polls off 12-2, 7-1 season",
+              "status": "supported",
+              "sourceRefs": [
+                "TEAM FACTS: Georgia"
+              ]
+            },
+            {
+              "claim": "Texas is No. 5 AP and No. 4 coaches poll off 10-3 record",
+              "status": "supported",
+              "sourceRefs": [
+                "TEAM FACTS: Texas"
+              ]
+            },
+            {
+              "claim": "Bracket has Georgia going one-and-done out of first-round bye and Texas losing in semifinal",
+              "status": "supported",
+              "sourceRefs": [
+                "transcript 10:56-13:19"
+              ]
+            },
+            {
+              "claim": "Texas–Ohio State game is Saturday, Sept. 12 at 7:30 p.m. ET in Austin",
+              "status": "supported",
+              "sourceRefs": [
+                "TEAM FACTS: Texas schedule"
+              ]
+            },
+            {
+              "claim": "Miami plays at Notre Dame Saturday, Nov. 7 at 7:30 p.m. ET",
+              "status": "supported",
+              "sourceRefs": [
+                "TEAM FACTS: Miami schedule"
+              ]
+            },
+            {
+              "claim": "Miami has road trip to Clemson Oct. 3 and hosts Florida State Oct. 17",
+              "status": "supported",
+              "sourceRefs": [
+                "TEAM FACTS: Miami schedule"
+              ]
+            },
+            {
+              "claim": "Georgia has Oklahoma at home Sept. 26, at Alabama Oct. 10, at Ole Miss Nov. 7",
+              "status": "supported",
+              "sourceRefs": [
+                "TEAM FACTS: Georgia schedule"
+              ]
+            },
+            {
+              "claim": "Josh's bracket has Oregon over Georgia in quarterfinal and Notre Dame vs Miami / Texas vs Oregon in final four",
+              "status": "supported",
+              "sourceRefs": [
+                "transcript 10:56-13:19"
+              ]
+            },
+            {
+              "claim": "Josh: Texas has it in them to rev the engine at the right time",
+              "status": "supported",
+              "sourceRefs": [
+                "transcript 12:33-12:38"
+              ]
+            },
+            {
+              "claim": "Josh: Miami is on a mission",
+              "status": "supported",
+              "sourceRefs": [
+                "transcript 12:22-12:25"
+              ]
+            },
+            {
+              "claim": "Pull quote: 'My opinion has not sullied one bit on Notre Dame...'",
+              "status": "supported",
+              "sourceRefs": [
+                "transcript 13:23-13:31"
+              ]
+            },
+            {
+              "claim": "Analysis about what each dated game would prove/mean for the bracket",
+              "status": "analysis",
+              "sourceRefs": []
+            }
+          ],
+          "joshMisattribution": []
+        },
+        "quit": {
+          "neverWantedToQuit": false,
+          "quitParagraphIndex": 7,
+          "quitText": "The pick stands: Miami over Oregon in Las Vegas. Three dates decide it — Sept. 12 in Austin, Oct. 10 in Tuscaloosa, Nov. 7 in South Bend — and by the second week of November we will know whether I moved a team eleven seeds for the right reasons.",
+          "reason": "no new information",
+          "didFinish": true,
+          "soundsLikeFootballPerson": true,
+          "worthTheTime": true,
+          "wouldClickAnother": true,
+          "wouldSend": false,
+          "note": "Clear, accountable bracket logic with specific schedule stress tests; the ending mostly restates the setup."
+        },
+        "smell": {
+          "pass": false,
+          "sentences": [
+            "This is a move off my own on-record projection, so here is the accounting.",
+            "That is not a bubble team sneaking into the twelfth slot; that is a top-ten roster that got pushed to the back of a bracket by the math of at-large ordering.",
+            "The elevation is real, but the floor under it was always higher than an 11 seed implies.",
+            "I also think that is a projection about timing, which is the least reliable thing anyone projects in August.",
+            "Three dates decide it — Sept. 12 in Austin, Oct. 10 in Tuscaloosa, Nov. 7 in South Bend — and by the second week of November we will know whether I moved a team eleven seeds for the right reasons."
+          ],
+          "structural": true,
+          "note": "The piece is structurally machine-like: it repeatedly explains and audits its own argument, turns games into abstract proof points, and closes with a tidy dates-as-verdict summary."
+        },
+        "quitAfterRepair": {
+          "neverWantedToQuit": false,
+          "quitParagraphIndex": 7,
+          "quitText": "The pick stands: Miami over Oregon in Las Vegas. Three dates decide it — Sept. 12 in Austin, Oct. 10 in Tuscaloosa, Nov. 7 in South Bend — and by the second week of November we will know whether I moved a team eleven seeds for the right reasons.",
+          "reason": "no new information",
+          "didFinish": true,
+          "soundsLikeFootballPerson": true,
+          "worthTheTime": true,
+          "wouldClickAnother": true,
+          "wouldSend": false,
+          "note": "Clear, accountable bracket logic with specific schedule stress tests; the ending mostly restates the setup."
+        },
+        "additive": {
+          "additions": [
+            "Josh’s earlier August preseason bracket had Miami as the No. 11 seed, with Georgia No. 1, Ohio State No. 2, Clemson No. 3, Boise State No. 4, Texas No. 5, Oregon No. 6, Penn State No. 7, LSU No. 8, Notre Dame No. 9, Alabama No. 10 and Indiana No. 12; he had originally picked Georgia to beat Ohio State 31-28 for the title.",
+            "Miami went 13-3 overall and 6-2 in the ACC last season, and it opens No. 7 in both the AP Top 25 and coaches poll.",
+            "Georgia is No. 3 in both polls after a 12-2, 7-1 season; Texas is No. 5 in the AP poll and No. 4 in the coaches poll after going 10-3.",
+            "Texas hosts Ohio State on Saturday, Sept. 12, at 7:30 p.m. ET in Week 2. The column makes the specific case that Texas must show its front can hold up inside, while Ohio State must show its young quarterback can function on the road at night; a Texas loss would put the projected January Texas win over Ohio State in conflict with an actual result.",
+            "Miami plays at Clemson on Oct. 3, hosts Florida State on Oct. 17, and plays at Notre Dame on Saturday, Nov. 7, at 7:30 p.m. ET. The Notre Dame game is presented as the key test of whether Miami’s offensive line can withstand a disruptive front and whether its run game can stay on schedule in cold-weather situations; getting pushed around would make the title pick 'a vibe.'",
+            "Georgia’s path to the projected bye includes Oklahoma at home on Sept. 26, at Alabama on Oct. 10, and at Ole Miss on Nov. 7. If Georgia comes through that stretch 11-1, it could be the No. 1 seed and make Oregon’s projected win a genuine upset; if it loses one of the two road games, it may lose its bye and reshape the top of the bracket.",
+            "The column narrows the forecast to three decision dates: Sept. 12 in Austin, Oct. 10 in Tuscaloosa and Nov. 7 in South Bend, arguing that by the second week of November there should be evidence on whether Miami’s rise from No. 11 to champion was justified."
+          ],
+          "worthItForListener": true,
+          "replayPassage": "I picked the Miami Hurricanes to beat Oregon for the national championship, and I picked Mario Cristobal to do it against the program he left. That is the end of a bracket that runs USC into Tuscaloosa, Texas Tech into Austin, Oklahoma into Eugene, and then asks a group of coaches the internet has decided cannot win a title to go win one anyway.",
+          "note": "Yes. The show gives the bracket and the instincts behind it; the column adds prior projections, rankings and records, a schedule of dated checkpoints, and concrete on-field tests that could validate or falsify the picks.",
+          "overlapPct": 1.4
+        }
+      },
+      "calls": [
+        {
+          "stage": "josh-segment",
+          "role": "joshSegment",
+          "vendor": "anthropic",
+          "model": "claude-sonnet-5",
+          "inputTokens": 8331,
+          "outputTokens": 231,
+          "costUsd": 0.0285,
+          "ms": 5052
+        },
+        {
+          "stage": "josh-segment",
+          "role": "joshSegment",
+          "vendor": "anthropic",
+          "model": "claude-sonnet-5",
+          "inputTokens": 8408,
+          "outputTokens": 1463,
+          "costUsd": 0.0472,
+          "ms": 19416
+        },
+        {
+          "stage": "josh-cut",
+          "role": "joshCut",
+          "vendor": "anthropic",
+          "model": "claude-sonnet-5",
+          "inputTokens": 16301,
+          "outputTokens": 2399,
+          "costUsd": 0.0849,
+          "ms": 22708
+        },
+        {
+          "stage": "josh-additions",
+          "role": "supportFacts",
+          "vendor": "anthropic",
+          "model": "claude-sonnet-5",
+          "inputTokens": 15101,
+          "outputTokens": 2678,
+          "costUsd": 0.0855,
+          "ms": 28836
+        },
+        {
+          "stage": "josh-column-additive",
+          "role": "joshProseEdit",
+          "vendor": "anthropic",
+          "model": "claude-opus-5",
+          "inputTokens": 17724,
+          "outputTokens": 2607,
+          "costUsd": 0.4614,
+          "ms": 39553
+        },
+        {
+          "stage": "josh-tighten",
+          "role": "joshProseEdit",
+          "vendor": "anthropic",
+          "model": "claude-opus-5",
+          "inputTokens": 3715,
+          "outputTokens": 2243,
+          "costUsd": 0.224,
+          "ms": 19720
+        },
+        {
+          "stage": "fact-check",
+          "role": "factCheck",
+          "vendor": "anthropic",
+          "model": "claude-sonnet-5",
+          "inputTokens": 0,
+          "outputTokens": 0,
+          "costUsd": 0,
+          "ms": 21610
+        },
+        {
+          "stage": "quit-reading",
+          "role": "quitJudge",
+          "vendor": "openai",
+          "model": "gpt-5.6-terra",
+          "inputTokens": 1511,
+          "outputTokens": 165,
+          "costUsd": 0.0217,
+          "ms": 2623
+        },
+        {
+          "stage": "ai-smell",
+          "role": "smellJudge",
+          "vendor": "openai",
+          "model": "gpt-5.6-terra",
+          "inputTokens": 1327,
+          "outputTokens": 404,
+          "costUsd": 0.0294,
+          "ms": 5358
+        },
+        {
+          "stage": "josh-local-repair",
+          "role": "joshProseEdit",
+          "vendor": "anthropic",
+          "model": "claude-opus-5",
+          "inputTokens": 4005,
+          "outputTokens": 2012,
+          "costUsd": 0.211,
+          "ms": 16923
+        },
+        {
+          "stage": "fact-check",
+          "role": "factCheck",
+          "vendor": "anthropic",
+          "model": "claude-sonnet-5",
+          "inputTokens": 0,
+          "outputTokens": 0,
+          "costUsd": 0,
+          "ms": 21441
+        },
+        {
+          "stage": "ai-smell",
+          "role": "smellJudge",
+          "vendor": "openai",
+          "model": "gpt-5.6-terra",
+          "inputTokens": 1287,
+          "outputTokens": 370,
+          "costUsd": 0.0277,
+          "ms": 4288
+        },
+        {
+          "stage": "quit-reading",
+          "role": "quitJudge",
+          "vendor": "openai",
+          "model": "gpt-5.6-terra",
+          "inputTokens": 1468,
+          "outputTokens": 146,
+          "costUsd": 0.0205,
+          "ms": 2207
+        },
+        {
+          "stage": "additive-judge",
+          "role": "quitJudge",
+          "vendor": "openai",
+          "model": "gpt-5.6-terra",
+          "inputTokens": 2485,
+          "outputTokens": 819,
+          "costUsd": 0.0576,
+          "ms": 11005
+        }
+      ],
+      "totalCostUsd": 1.2994,
+      "final": {
+        "headline": "Why I Have Miami Beating Oregon for the Title — and What Has to Happen First",
+        "dek": "I moved Miami from the 11 seed on my own preseason bracket to the national championship in Las Vegas. Here are the dated games that will tell us whether that move was right, starting with Texas–Ohio State on Sept. 12 and Miami at Notre Dame on Nov. 7.",
+        "bodyMarkdown": "[EMBED:00:08:21]\n\nI picked the Miami Hurricanes to beat Oregon for the national championship, and I picked Mario Cristobal to do it against the program he left. That is the end of a bracket that runs USC into Tuscaloosa, Texas Tech into Austin, Oklahoma into Eugene, and then asks a group of coaches the internet has decided cannot win a title to go win one anyway.\n\nThis is a move off my own on-record projection, so here is the accounting. My preseason bracket in August seeded this field 1 Georgia, 2 Ohio State, 3 Clemson, 4 Boise State, 5 Texas, 6 Oregon, 7 Penn State, 8 LSU, 9 Notre Dame, 10 Alabama, 11 Miami, 12 Indiana, with Georgia 31, Ohio State 28 in the final. Miami was the eleventh-best team on that sheet. It is now my national champion. That is not a small adjustment and I am not going to pretend it is.\n\nIt is also less of a leap than the seeding suggests. Miami went 13-3 last year, 6-2 in the ACC, and opens the season No. 7 in both the AP Top 25 and the coaches poll. That is not a bubble team sneaking into the twelfth slot; that is a top-ten roster that got pushed to the back of a bracket by the math of at-large ordering. The elevation is real, but the floor under it was always higher than an 11 seed implies.\n\n[PULLQUOTE]\n\nWhere the bracket gets uncomfortable for me is the pecking order I picked against. Georgia opens at No. 3 in both polls off a 12-2, 7-1 season. Texas is No. 5 in the AP and No. 4 in the coaches poll off 10-3. Both of those teams are rated above Miami and above Oregon right now, and my bracket has Georgia going one-and-done out of a first-round bye and Texas losing in the semifinal. I still think Texas has it in them to rev the engine at the right time. I also think that is a projection about timing, which is the least reliable thing anyone projects in August.\n\nStart with Texas–Ohio State. I called it a regular-season rematch in the bracket, and the regular-season half arrives Saturday, Sept. 12 at 7:30 p.m. ET in Austin. Week 2. That is the cleanest data point on the board for two of my four semifinalists. Texas has to prove the front can hold up in a game where the margin lives on the interior, and Ohio State has to prove a young quarterback can operate on the road at night in that building. Whoever wins does not clinch anything in September, but a Texas loss there means my Texas-over-Ohio-State projection in January is running against a result, not toward one.\n\nThen Miami. The measuring stick is exactly the team I have advancing to the semifinal: Miami plays at Notre Dame on Saturday, Nov. 7 at 7:30 p.m. ET. Same matchup I put in my final four, played in South Bend in November instead of a neutral dome. There is a road trip to Clemson on Oct. 3 before it and Florida State at home on Oct. 17, so Miami will have been tested in the league. But Notre Dame in November is the checkpoint. If Miami's offensive line can hold up against a front that gets after the passer and the run game can stay ahead of schedule in cold-weather down-and-distance, the \"on a mission\" read I have on this team gets evidence. If Miami gets pushed around up front, my title pick is a vibe and I will say so.\n\nAnd on the Kirby part of this: before anyone gets to argue about a third straight one-and-done out of a bye, Georgia has to survive at Alabama on Oct. 10 and at Ole Miss on Nov. 7, with Oklahoma at home on Sept. 26 in between. That is a genuine gauntlet, and it matters to my bracket in both directions. A Georgia team that comes out of that stretch at 11-1 arrives at the playoff as the No. 1 seed with a case that it is the best team in the country, which makes my Oregon-over-Georgia quarterfinal a real upset rather than a stylistic hunch. A Georgia team that drops one of those two road games probably is not sitting on a bye at all, and the entire top of my bracket reshuffles.\n\nThe pick stands: Miami over Oregon in Las Vegas. Three dates decide it — Sept. 12 in Austin, Oct. 10 in Tuscaloosa, Nov. 7 in South Bend — and by the second week of November we will know whether I moved a team eleven seeds for the right reasons.\n\n— JP",
+        "pullQuote": "My opinion has not sullied one bit on Notre Dame. This is a case of my opinion on another team elevating.",
+        "primaryTeam": "Miami",
+        "teams": [
+          "Miami",
+          "Oregon",
+          "Texas",
+          "Georgia",
+          "Ohio State",
+          "Notre Dame"
+        ],
+        "tags": [
+          "College Football Playoff",
+          "2026 season",
+          "bracket predictions",
+          "Mario Cristobal",
+          "Dan Lanning",
+          "Kirby Smart",
+          "Steve Sarkisian"
+        ],
+        "seo": {
+          "title": "Josh Pate: Why I Have Miami Beating Oregon for the 2026 National Title",
+          "description": "Josh Pate explains moving Miami from the 11 seed on his preseason bracket to national champion over Oregon, and the dated tests — Texas–Ohio State on Sept. 12, Miami at Notre Dame on Nov. 7, Georgia at Alabama on Oct. 10 — that will settle it."
+        }
+      },
+      "words": 777,
+      "completedAt": "2026-08-28T13:35:50.796Z"
+    }
+  },
+  {
+    "id": "portal-on-fire",
+    "engine": "josh",
+    "episode": "Transfer Portal On Fire...Big Ten & SEC Ban NFL Players - Josh Pate's College Football Show",
+    "run": {
+      "id": "run_mtczmy8x_sm2yyf",
+      "engine": "josh",
+      "sourceId": "nSmIs0OL16s",
+      "fixture": "portal-on-fire",
+      "mode": "replay",
+      "status": "completed",
+      "startedAt": "2026-08-28T13:29:09.345Z",
+      "artifacts": {
+        "repairs": [
+          "local repair: policy: markers: [PULLQUOTE] must appear once iff pullQuote is set (found 0)",
+          "local repair: reads machine-written; cut it or say it plainly: \"That distinction is not a technicality.\"",
+          "local repair: reads machine-written; cut it or say it plainly: \"Different plaintiffs, different filings, different",
+          "local repair: reads machine-written; cut it or say it plainly: \"The enforcement question gets real on a calendar, ",
+          "local repair: reads machine-written; cut it or say it plainly: \"If nobody in either league signs one of these play",
+          "local repair: reads machine-written; cut it or say it plainly: \"The two leagues finally wrote one.\""
+        ],
+        "segment": {
+          "decision": "segment",
+          "segmentStart": "[00:00]",
+          "segmentEnd": "[11:06]",
+          "centralThought": "The Big Ten and SEC's swift, unified policy response threatening schools (not players) over NFL-cut athletes returning to college football reveals both a rare moment of conference consensus and an unresolved legal fight likely headed to court.",
+          "reason": "This is a single, complete, well-developed argument spanning the entire transcript: Josh traces the day's news (Big Ten policy, SEC's matching response, Lane Kiffin's counterargument), explains why the 'professionals returning' loophole is properly being closed, clarifies who the enforcement actually targets (institutions, not players), and closes with a forward-looking rhetorical question about whether schools will risk it anyway. It has a clear throughline, sufficient depth for a written piece, and stands on its own without needing the rest of the episode."
+        },
+        "cut": {
+          "segmentStart": "00:00",
+          "segmentEnd": "11:06",
+          "centralThought": "The Big Ten and SEC's swift, unified policy response threatening schools (not players) over NFL-cut athletes returning to college football reveals both a rare moment of conference consensus and an unresolved legal fight likely headed to court.",
+          "blocks": [
+            {
+              "text": "This transfer portal thing's been a disaster. But boy, what a Tuesday it has been. So this morning, if you're like me, you woke up and before you even said hello to your loved ones, you checked your phone and you saw a notification probably from Pete Nikkos or maybe from Ross Dinger and it said the Big 10 is deciding that they're not going to let pro athletes come back and play college sports and college football. And everyone was like golf club. And then in this tribalistic world of ours, people started taking shots at the SEC because, well, you guys just put out a strongly worded statement last night, which was a layer or two of pathetic cuz it looked like a statement and nothing else. And then the Big 10, they definitely won the PR game on this day. They come out and say, \"We're going to put out more than a statement. We're going to put out a policy.\" And what their policy was, I'm going to paraphrase a lot of this, it's not all that important, was if you guys take some of these cats who have been cut from the NFL and you play them, we're going to suspend you as a head coach for up to 50% of your season and we're going to fine your institution millions of dollars. And they had unanimous support. Every president, every AD, they were on board with in the Big 10.",
+              "sourceStart": "00:00",
+              "sourceEnd": "01:17"
+            },
+            {
+              "text": "And then right at close of business, just about an hour or so ago, we get word from the SEC, we're doing the same thing. And then some because they expanded it to basketball and everything else. This is Ross Dinger, if you're watching on YouTube, you can see this. If you're listening on podcast, Ross reported that SEC president Greg Sanki, quote, pay close attention, kids, quote, full and unlimited authority, which includes the ability to suspend a school from competition. In addition to that, league bylaw grants the commissioner powers to deem a player ineligible, suspend coaches, administrators, etc. In other words, we're also going to have a policy against that.",
+              "sourceStart": "01:17",
+              "sourceEnd": "02:05"
+            },
+            {
+              "text": "Now, this was about five or so hours after Lane Kiffin showed up on Pat McAfee's show earlier today. And keep in mind, this is chronologically a little out of order, but I'm doing it this way for a reason. At the point in time Lane went on the show, we had not gotten word from the SEC. All the SEC had done was say, \"Hey, we don't like this. This shouldn't happen.\" But they hadn't come out with the actual stance and policy and whatnot. So, listen closely. This was Lane Kiffin earlier today talking about all the latest news surrounding them possibly taking guys who had been cut from NFL teams in training camp and playing for LSU this season.",
+              "sourceStart": "02:05",
+              "sourceEnd": "02:50"
+            },
+            {
+              "text": "Yeah, there's a lot of parts of it that I don't like within that. I don't think professionals should come back to college sports and college football particularly. But in this instance, this is not professionals that have gone played seasons or just, you know, randomly file an injunction in a state to become eligible. This is part of a specific class that was ruled wrong by the NCAA that was supposed to be five for five. So, I think you're going to get in a really interesting situation if now as a conference you start to say, \"Well, we're not going to follow this court order that's been issued and we're going to say that these kids that the court says can go anywhere, we're going to say no, you can't.\" That's some issues there.",
+              "sourceStart": "02:50",
+              "sourceEnd": "03:31"
+            },
+            {
+              "text": "Okay. So, what Lane is saying there has a germ of validity to it. What he's really saying is first off, he's trying to draw a delineation between guys who have actually played in NFL regular season games versus people who have tried out for teams and been cut and whatnot. And the language that the SEC later released sort of cut through all that cuz it was, I mean, even if you've even tried out for teams, if you've even rubbed against, if you've declared for anything, you're ineligible. So they took care of the gray area there. But what Lane's saying, which again in theory has some validity to it, is that the NCAA passed this rule, this five for five rule. And that whole thing was meant to say, okay, from this point forward, instead of doing the whole red shirt thing and the injury thing and all that, you're just going to have five years to play and that's it. However, you 2022 kids, you don't get that. Or also another explanation is some guys declared for the draft not knowing that rule change was coming and the argument there is well that's not fair because had they known the rule change was coming maybe they wouldn't have declared for the draft. Is there some germ of validity in there? Of course there is. It doesn't bear the weight of greater scrutiny.",
+              "sourceStart": "03:36",
+              "sourceEnd": "04:58"
+            },
+            {
+              "text": "The weight of greater scrutiny is forget the details. Is someone's feelings hurt? Maybe so. Could you argue something's a little unfair? Maybe so. But I'll see you with that and I'll raise you that these dudes were playing in NFL preseason games. These guys were in NFL preseason camp. They're professional athletes. They're not coming back to play college football. And then that's kind of when most people dust their hands and they absolve themselves. They kind of wash their hands of it all.",
+              "sourceStart": "04:58",
+              "sourceEnd": "05:26"
+            },
+            {
+              "text": "But this is the second time in six months that we've had this inflection point in college football where a famously well documented divided society has totally united. Brendan Sorsby bet on games. 95 plus% of the public said, \"Yeah, he should never play college ball again.\" and Texas Tech/Brendan Sorsby tried to fight it and there was that whole kerfuffle out in Texas and everybody rose up against it. And then just when I thought I couldn't see that again, I've got not just Lane and LSU, but I've got LSU among other programs looking at what they think is a very legal loophole to add players to their roster. And 95% of the public hated that too. This was even further down the road of that because this even united the conferences. These people have disagreed on everything and all of a sudden they agree on this. So hey, golf clap, golf clap because it's the proper stance to have.",
+              "sourceStart": "05:39",
+              "sourceEnd": "06:43"
+            },
+            {
+              "text": "I will say this, as I said the other day, a lot of folks after we did our show the other night were in my DMs saying, \"You took it easy on Lane. You took it easy on LSU.\" I don't care about Lane and LSU was my whole point. I will never count on any competitor in an ultra competitive arena voluntarily abiding by some code that you want them to abide by. Their only code, the only barrier is rules. That's it. Those are the entire reasons rules exist because you can't count on people to just do it the way you want them to, especially if it means foregoing an edge they think they can get. I don't count on the competitors to do that. If you were against steroid use in baseball, you should be for a rule against steroids in baseball, which there was. So then when guys did it, it was a violation of rules and then you get popped. That's how it's supposed to work. The way it's not supposed to work is, huh, let's see, multivitamins are technically legal, I just don't think players should take those, that's not fair, that's a little bit of a health advantage. No, if it's that bad of an advantage, make it illegal. Similarly here, it's just that we've had our shoelaces tied in college athletics because every time you try and enforce a rule or write a new rule, some lawyer comes along and you find out it's illegal.",
+              "sourceStart": "06:43",
+              "sourceEnd": "08:12"
+            },
+            {
+              "text": "So, here's what's happening right now. Yes, the Big 10 and the SEC came out with these policies, and it sounds like the Big 12 will do it, the ACC will do it. And the natural followup is this is probably not done. All you'll see is players sue conferences. In all likelihood, that's what you're going to see. I would expect it as early as tomorrow to see players trying to challenge conferences because conferences are acting in blatant violation of court rulings.",
+              "sourceStart": "08:12",
+              "sourceEnd": "08:51"
+            },
+            {
+              "text": "Now, here's my question. Famously, I am not a lawyer. Although Pate State has a heck of a law school, but I'm not a lawyer. But here is where my head is at on this. The enforcement threat from the Big 10 and the SEC, as I read it, is not on players. The enforcement threat was towards the schools themselves. So, if Bradley goes and tries out for the Atlanta Falcons and gets cut and then wants to go and play for Auburn, if I'm Greg Sanki, I'm not punishing Bradley. I'm threatening Alex Gooish in Auburn and I'm saying you do whatever you want to but if you do play him I have got, and I want to use the quote again, full and unlimited authority granted in a 16-0 unanimous decision amongst university presidents to act any way that I see fit and I can suspend you and I can hold your institution financially responsible. And at that point, play him if you want to, but there will be consequences. That's kind of how this reads to me. Full and unlimited authority, not to tell players they can't play. That's not what was in those graphics today. It was no, this is to you, the institution. You better not do it or there'll be consequences.",
+              "sourceStart": "09:01",
+              "sourceEnd": "10:13"
+            },
+            {
+              "text": "So, I don't doubt that there'll be lawsuits. I don't doubt we'll hear a lot more noise about that. But the other question that I'm asking is I kind of understand when they fought so hard for Brendan Sorsby, like that's your quarterback. That's a potential gamecher. That's a potential season-altering, playoff-altering situation that Texas Tech had on their hands. I don't want to be disrespectful. I'm just rhetorically asking, in light of all this, is any school, LSU or anyone else, are any of them going to look and say, you know, it's worth it, I think we're going to pursue this anyway, I think we're going to go take some guys that were cut from NFL rosters and we're going to bolster ours a little bit, yep, this is worth the risk? I don't know. I time will tell. We'll see how that goes.",
+              "sourceStart": "10:13",
+              "sourceEnd": "11:06"
+            }
+          ],
+          "removedBecauseRepetitive": [
+            "everyone was like golf club",
+            "hey, you know, golf clap golf clap because it's the proper stance to have (partially retained once)"
+          ],
+          "removedBecauseOffTopic": [
+            "Hey, really quick word here. Please subscribe to the channel if you haven't already. This is college football. We do it year round. We keep it free. It doesn't sign you up for anything. It's free of charge for you. It just is a big help. Please subscribe. Okay, back to the clip."
+          ]
+        },
+        "additions": [
+          {
+            "addition": "LSU is preseason ranked No. 11 (AP) and No. 13 (Coaches Poll), and comes off a 7-6 (3-5 SEC) 2025 season, meaning any roster-augmentation plan carries real stakes for a team already inside the playoff conversation, not a rebuilding afterthought.",
+            "kind": "fact",
+            "sourceRef": "fact-sheet",
+            "changesWhat": "Adds concrete stakes to Josh's 'is it worth the risk' question by showing LSU already has playoff-level positioning to protect.",
+            "newVsShow": true
+          },
+          {
+            "addition": "LSU's site has LSU seeded No. 8 in its own preseason bracket, with Georgia projected to beat Ohio State 31-28 in the final — meaning the show's own on-record projection already assumes LSU is a playoff-caliber roster without any NFL-cut additions.",
+            "kind": "on-record",
+            "sourceRef": "on-record",
+            "changesWhat": "Sharpens the risk-reward question: if the site's own bracket already has LSU in as a playoff team, the incremental benefit of a legally risky roster add is smaller than Josh's framing implies.",
+            "newVsShow": true
+          },
+          {
+            "addition": "LSU's 2026 schedule includes a road trip to Auburn on Oct. 24 at noon ET — the same Auburn that went 5-7 (1-7 SEC) in 2025 — a concrete, dated matchup where any suspended-coach or fined-institution scenario from the SEC's new policy could actually play out on the field.",
+            "kind": "dated-test",
+            "sourceRef": "fact-sheet",
+            "changesWhat": "Gives listeners an actual date and opponent to watch as a real-world test of whether the SEC's enforcement threat changes program behavior before that game.",
+            "newVsShow": true
+          },
+          {
+            "addition": "Because Josh reads the Big Ten/SEC penalties as aimed at institutions (coach suspensions, institutional fines) rather than at players directly, the practical consequence is that any lawsuit challenging the policy would likely be filed by a school or a coach seeking injunctive relief against conference enforcement, not by the player seeking playing eligibility — a distinct second legal track from the player-eligibility suits Josh predicts for as early as tomorrow.",
+            "kind": "consequence",
+            "sourceRef": "transcript",
+            "changesWhat": "Extends Josh's institution-vs-player enforcement distinction to its logical next step: two separate lawsuit tracks (player eligibility suits vs. institutional/coach suits against conference authority) rather than one wave of litigation.",
+            "newVsShow": true
+          }
+        ],
+        "draft": {
+          "headline": "The Big Ten and SEC Aimed Their NFL-Cut Policies at Schools, Not Players",
+          "dek": "Both leagues moved inside 24 hours, and both wrote the penalty toward institutions — coach suspensions, institutional fines. That splits the coming litigation into two tracks, and it changes the math for an LSU team already ranked No. 11 in the AP poll.",
+          "bodyMarkdown": "[EMBED:00:00:00]\n\nThe Big Ten and the SEC did something in one Tuesday that they have not done on almost anything else in five years: they agreed, quickly, in writing, and with their presidents lined up behind it. The Big Ten went past a statement and put out a policy — head-coach suspensions of up to half a season, institutional fines in the millions, unanimous support from every president and every athletic director. The SEC followed at close of business and went further, extending it to basketball and citing the commissioner's \"full and unlimited authority,\" including the ability to suspend a school from competition. My read of both documents is the same: the threat is not pointed at players. It is pointed at the schools.\n\nThat distinction is not a technicality, and it matters for what comes next. I said on the show I expect players to sue conferences, maybe as early as tomorrow, and I stand on that. But if the penalty structure lands on coaches and institutions rather than on eligibility, there is a second legal track that runs alongside the first one. A player suing for the right to play is arguing eligibility. A school or a coach facing a half-season suspension and a seven-figure fine for signing that same player is arguing something else entirely — the limits of conference authority over a member institution, and whether a league can penalize a school for complying with a court order. Those are different plaintiffs, different filings, different relief sought. One asks a judge to let a kid on the field. The other asks a judge to stop a commissioner from swinging. The conferences may well win the first fight and still spend a year defending the second one.\n\nLane Kiffin's argument on Tuesday morning was that these particular players are a specific class the courts already addressed, and that a conference declining to follow a court order creates \"some issues there.\" There is a germ of validity in that. The five-for-five rule change caught players who had already declared, and you can construct a fairness case for them. It just does not bear the weight of greater scrutiny once you say the plain thing out loud: these are athletes who were in NFL preseason camps and played in NFL preseason games. The SEC's language closed the gray area Lane was trying to open — tryouts, declarations, all of it.\n\nWhat I keep circling back to is the risk-reward, and here the numbers are worth having in front of you. LSU is not a program clawing for relevance. They are No. 11 in the AP poll and No. 13 in the Coaches Poll after a 7-6 season that went 3-5 in the league. Our own preseason bracket on this site has LSU seeded No. 8 in the twelve-team field, with Georgia beating Ohio State 31-28 in the final. So by our own projection, LSU is already in. That is the part that makes the loophole play harder to justify, not easier. When Texas Tech fought for Brendan Sorsby, that was a quarterback — a season-altering, playoff-altering piece. Adding a defensive lineman who got cut in late August, when your own path to the bracket is already drawn, is a much smaller marginal gain measured against a coach missing half a season and an institution writing a check.\n\nAnd the enforcement question gets real on a calendar, not in the abstract. LSU plays at Auburn on Oct. 24 at noon ET, a road trip against a team that finished 5-7 and 1-7 in the SEC. If any of this policy ever bites — a suspended head coach on a sideline, a fined institution, an ineligibility ruling landing midweek — that is the kind of game where it shows up first, because it is the kind of game where the depth chart matters more than the marquee does. Watch what happens between now and then. If nobody in either league signs one of these players by mid-October, the policy worked without ever being tested, and the lawsuits become academic. If somebody does, we will find out inside a month whether \"full and unlimited authority\" means what it says.\n\nI do not count on competitors to police themselves, and I never have. That is what rules are for. The two leagues finally wrote one. Now they have to survive the part where somebody makes them enforce it.\n\n— JP",
+          "pullQuote": "I will never count on any competitor in an ultra competitive arena voluntarily abiding by some code that you want them to abide by.",
+          "primaryTeam": "LSU",
+          "teams": [
+            "LSU",
+            "Auburn"
+          ],
+          "tags": [
+            "transfer portal",
+            "SEC",
+            "Big Ten",
+            "eligibility",
+            "Lane Kiffin",
+            "enforcement",
+            "litigation"
+          ],
+          "seo": {
+            "title": "Big Ten and SEC NFL-Cut Policies Target Schools, Not Players",
+            "description": "Both leagues wrote their NFL-cut penalties toward institutions — coach suspensions and fines — which splits the coming litigation into two tracks and changes the risk math for a No. 11 LSU team already projected into the playoff field."
+          }
+        },
+        "tightened": {
+          "headline": "The Big Ten and SEC Aimed Their NFL-Cut Policies at Schools, Not Players",
+          "dek": "Both leagues moved inside 24 hours, and both wrote the penalty toward institutions — coach suspensions, institutional fines. That splits the coming litigation into two tracks, and it changes the math for an LSU team already ranked No. 11 in the AP poll.",
+          "bodyMarkdown": "[EMBED:00:00:00]\n\nThe Big Ten and the SEC did something in one Tuesday that they have not done on almost anything else in five years: they agreed, quickly, in writing, with their presidents lined up behind it. The Big Ten went past a statement and put out a policy — head-coach suspensions of up to half a season, institutional fines in the millions, unanimous support from every president and every athletic director. The SEC followed at close of business and went further, extending it to basketball and citing the commissioner's \"full and unlimited authority,\" including the ability to suspend a school from competition. My read of both documents is the same: the threat is not pointed at players. It is pointed at the schools.\n\nI said on the show I expect players to sue conferences, maybe as early as tomorrow, and I stand on that. But if the penalty structure lands on coaches and institutions rather than on eligibility, there is a second legal track running alongside the first one. A player suing for the right to play is arguing eligibility. A school or a coach facing a half-season suspension and a seven-figure fine for signing that same player is arguing something else entirely — the limits of conference authority over a member institution, and whether a league can penalize a school for complying with a court order. One asks a judge to let a kid on the field. The other asks a judge to stop a commissioner from swinging. The conferences may well win the first fight and still spend a year defending the second one.\n\nLane Kiffin's argument Tuesday morning was that these particular players are a specific class the courts already addressed, and that a conference declining to follow a court order creates \"some issues there.\" There is a germ of validity in that. The five-for-five rule change caught players who had already declared, and you can construct a fairness case for them. It just does not bear the weight of greater scrutiny once you say the plain thing out loud: these are athletes who were in NFL preseason camps and played in NFL preseason games. The SEC's language closed the gray area Lane was trying to open — tryouts, declarations, all of it.\n\nWhat I keep circling back to is the risk-reward. LSU is not a program clawing for relevance. They are No. 11 in the AP poll and No. 13 in the Coaches Poll after a 7-6 season that went 3-5 in the league. Our own preseason bracket on this site has LSU seeded No. 8 in the twelve-team field, with Georgia beating Ohio State 31-28 in the final. By our own projection, LSU is already in. That is the part that makes the loophole play harder to justify, not easier. When Texas Tech fought for Brendan Sorsby, that was a quarterback — a season-altering, playoff-altering piece. Adding a defensive lineman who got cut in late August, when your own path to the bracket is already drawn, is a much smaller gain measured against a coach missing half a season and an institution writing a check.\n\nLSU plays at Auburn on Oct. 24 at noon ET, a road trip against a team that finished 5-7 and 1-7 in the SEC. If any of this policy ever bites — a suspended head coach on a sideline, a fined institution, an ineligibility ruling landing midweek — that is the kind of game where it shows up first, because that is the kind of game where the depth chart matters more than the marquee does. Watch what happens between now and then. If nobody in either league signs one of these players by mid-October, the policy worked without ever being tested. If somebody does, we will find out inside a month whether \"full and unlimited authority\" means what it says.\n\n[PULLQUOTE]\n\nI do not count on competitors to police themselves, and I never have. That is what rules are for. Now they have to survive the part where somebody makes them enforce it.\n\n— JP",
+          "pullQuote": "I will never count on any competitor in an ultra competitive arena voluntarily abiding by some code that you want them to abide by.",
+          "primaryTeam": "LSU",
+          "teams": [
+            "LSU",
+            "Auburn"
+          ],
+          "tags": [
+            "transfer portal",
+            "SEC",
+            "Big Ten",
+            "eligibility",
+            "Lane Kiffin",
+            "enforcement",
+            "litigation"
+          ],
+          "seo": {
+            "title": "Big Ten and SEC NFL-Cut Policies Target Schools, Not Players",
+            "description": "Both leagues wrote their NFL-cut penalties toward institutions — coach suspensions and fines — which splits the coming litigation into two tracks and changes the risk math for a No. 11 LSU team already projected into the playoff field."
+          }
+        },
+        "policy": {
+          "pass": true,
+          "violations": []
+        },
+        "fact": {
+          "verdict": "contradicted",
+          "claims": [
+            {
+              "claim": "Big Ten and SEC agreed quickly in writing with presidents lined up behind it",
+              "status": "supported",
+              "sourceRefs": [
+                "00:00-02:00"
+              ]
+            },
+            {
+              "claim": "Big Ten policy includes head-coach suspensions up to half a season, institutional fines in millions, unanimous support",
+              "status": "supported",
+              "sourceRefs": [
+                "01:00-01:17"
+              ]
+            },
+            {
+              "claim": "SEC followed at close of business, extended to basketball, cited commissioner's 'full and unlimited authority' including ability to suspend a school",
+              "status": "supported",
+              "sourceRefs": [
+                "01:22-02:00"
+              ]
+            },
+            {
+              "claim": "Josh's read: threat pointed at schools, not players",
+              "status": "supported",
+              "sourceRefs": [
+                "09:01-10:11"
+              ]
+            },
+            {
+              "claim": "Josh expects players to sue conferences, possibly as early as tomorrow",
+              "status": "supported",
+              "sourceRefs": [
+                "08:15-08:41"
+              ]
+            },
+            {
+              "claim": "Kiffin argued these players are part of a specific class already addressed by courts, said 'some issues there'",
+              "status": "supported",
+              "sourceRefs": [
+                "02:50-03:31"
+              ]
+            },
+            {
+              "claim": "SEC's language closed the gray area about tryouts/declarations",
+              "status": "supported",
+              "sourceRefs": [
+                "03:53-04:04"
+              ]
+            },
+            {
+              "claim": "LSU is No. 11 AP, No. 13 Coaches Poll after 7-6 season, 3-5 in conference",
+              "status": "supported",
+              "sourceRefs": [
+                "TEAM FACTS: LSU"
+              ]
+            },
+            {
+              "claim": "Site's preseason bracket seeds LSU No. 8, with Georgia beating Ohio State 31-28 in final",
+              "status": "supported",
+              "sourceRefs": [
+                "ON-RECORD SITE POSITIONS"
+              ]
+            },
+            {
+              "claim": "Texas Tech fought for Brendan Sorsby, a quarterback, season/playoff-altering",
+              "status": "supported",
+              "sourceRefs": [
+                "00:59-06:03"
+              ]
+            },
+            {
+              "claim": "LSU plays at Auburn Oct. 24 at noon ET",
+              "status": "supported",
+              "sourceRefs": [
+                "TEAM FACTS: LSU",
+                "TEAM FACTS: Auburn"
+              ]
+            },
+            {
+              "claim": "Auburn finished 5-7, 1-7 in SEC",
+              "status": "supported",
+              "sourceRefs": [
+                "TEAM FACTS: Auburn"
+              ]
+            },
+            {
+              "claim": "Piece signed '— JP' despite being Josh's monologue/persona",
+              "status": "contradicted",
+              "sourceRefs": [
+                "TRANSCRIPT (Josh's own words)"
+              ]
+            },
+            {
+              "claim": "Analysis about litigation splitting into two tracks (eligibility vs. institutional authority)",
+              "status": "analysis",
+              "sourceRefs": []
+            },
+            {
+              "claim": "Analysis about risk-reward math for LSU given bracket standing",
+              "status": "analysis",
+              "sourceRefs": []
+            }
+          ],
+          "joshMisattribution": [
+            "Draft signs off as '— JP' though the entire piece is built on Josh's transcript and voice, misattributing authorship/identity."
+          ]
+        },
+        "quit": {
+          "neverWantedToQuit": false,
+          "quitParagraphIndex": 3,
+          "quitText": "What I keep circling back to is the risk-reward. LSU is not a program clawing for relevance. They are No. 11 in the AP poll and No. 13 in the Coaches Poll after a 7-6 season that went 3-5 in the league. Our own preseason bracket on this site has LSU seeded No. 8 in the twelve-team field, with Georgia beating Ohio State 31-28 in the final.",
+          "reason": "no new information",
+          "didFinish": false,
+          "soundsLikeFootballPerson": true,
+          "worthTheTime": true,
+          "wouldClickAnother": true,
+          "wouldSend": false,
+          "note": "The institutional-versus-player legal split is a useful angle, but the rankings-and-bracket detour starts restating LSU's stakes without advancing it."
+        },
+        "smell": {
+          "pass": false,
+          "sentences": [
+            "“One asks a judge to let a kid on the field. The other asks a judge to stop a commissioner from swinging.”",
+            "“The conferences may well win the first fight and still spend a year defending the second one.”",
+            "“That is the part that makes the loophole play harder to justify, not easier.”",
+            "“If nobody in either league signs one of these players by mid-October, the policy worked without ever being tested.”",
+            "“Now they have to survive the part where somebody makes them enforce it.”"
+          ],
+          "structural": true,
+          "note": "The piece is built around a very tidy thesis, a parallel legal-track explanation, a risk-reward application, and a summarizing finish. Several lines convert football specifics into polished abstractions or aphorisms."
+        },
+        "quitAfterRepair": {
+          "neverWantedToQuit": false,
+          "quitParagraphIndex": 3,
+          "quitText": "What I keep circling back to is the risk-reward. LSU is not a program clawing for relevance. They are No. 11 in the AP poll and No. 13 in the Coaches Poll after a 7-6 season that went 3-5 in the league. Our own preseason bracket on this site has LSU seeded No. 8 in the twelve-team field, with Georgia beating Ohio State 31-28 in the final.",
+          "reason": "no new information",
+          "didFinish": false,
+          "soundsLikeFootballPerson": true,
+          "worthTheTime": true,
+          "wouldClickAnother": true,
+          "wouldSend": false,
+          "note": "The institutional-versus-player legal split is a useful angle, but the rankings-and-bracket detour starts restating LSU's stakes without advancing it."
+        },
+        "additive": {
+          "additions": [
+            "The column separates the expected litigation into two distinct cases: a player challenging eligibility and a school or coach challenging a conference's authority to punish the institution for complying with a court order.",
+            "It identifies the institutional lawsuit's specific questions: the limits of conference authority over member schools and whether a league can penalize a school for complying with a court order.",
+            "It raises the consequence that conferences could win a player's eligibility fight but still spend a year defending an institutional-authority case.",
+            "LSU is No. 11 in the AP poll and No. 13 in the Coaches Poll.",
+            "LSU went 7-6 overall and 3-5 in the SEC last season.",
+            "The site's preseason bracket has LSU as the No. 8 seed in a 12-team playoff field, with Georgia projected to beat Ohio State 31-28 in the title game.",
+            "LSU plays at Auburn on Oct. 24 at noon ET; Auburn finished 5-7 and 1-7 in the SEC.",
+            "The column offers a concrete test of whether the policy worked: if no Big Ten or SEC school signs one of these players by mid-October, the policy succeeded without being tested; if one does, its practical meaning should be tested within a month."
+          ],
+          "worthItForListener": true,
+          "replayPassage": "Lane Kiffin's argument Tuesday morning was that these particular players are a specific class the courts already addressed, and that a conference declining to follow a court order creates \"some issues there.\" There is a germ of validity in that. The five-for-five rule change caught players who had already declared, and you can construct a fairness case for them. It just does not bear the weight of greater scrutiny once you say the plain thing out loud: these are athletes who were in NFL preseason camps and played in NFL preseason games.",
+          "note": "It is worth reading after the show primarily for the two-track litigation framing and the concrete LSU/Auburn context and mid-October test. Much of its central policy argument, Kiffin rebuttal, and risk-reward point is a replay of the segment.",
+          "overlapPct": 1.2
+        }
+      },
+      "calls": [
+        {
+          "stage": "josh-segment",
+          "role": "joshSegment",
+          "vendor": "anthropic",
+          "model": "claude-sonnet-5",
+          "inputTokens": 5590,
+          "outputTokens": 300,
+          "costUsd": 0.0213,
+          "ms": 4729
+        },
+        {
+          "stage": "josh-cut",
+          "role": "joshCut",
+          "vendor": "anthropic",
+          "model": "claude-sonnet-5",
+          "inputTokens": 9185,
+          "outputTokens": 3632,
+          "costUsd": 0.082,
+          "ms": 32970
+        },
+        {
+          "stage": "josh-additions",
+          "role": "supportFacts",
+          "vendor": "anthropic",
+          "model": "claude-sonnet-5",
+          "inputTokens": 7344,
+          "outputTokens": 1087,
+          "costUsd": 0.0383,
+          "ms": 15379
+        },
+        {
+          "stage": "josh-column-additive",
+          "role": "joshProseEdit",
+          "vendor": "anthropic",
+          "model": "claude-opus-5",
+          "inputTokens": 9704,
+          "outputTokens": 1944,
+          "costUsd": 0.2914,
+          "ms": 31295
+        },
+        {
+          "stage": "josh-tighten",
+          "role": "joshProseEdit",
+          "vendor": "anthropic",
+          "model": "claude-opus-5",
+          "inputTokens": 3284,
+          "outputTokens": 1667,
+          "costUsd": 0.1743,
+          "ms": 14020
+        },
+        {
+          "stage": "fact-check",
+          "role": "factCheck",
+          "vendor": "anthropic",
+          "model": "claude-sonnet-5",
+          "inputTokens": 0,
+          "outputTokens": 0,
+          "costUsd": 0,
+          "ms": 13733
+        },
+        {
+          "stage": "quit-reading",
+          "role": "quitJudge",
+          "vendor": "openai",
+          "model": "gpt-5.6-terra",
+          "inputTokens": 1319,
+          "outputTokens": 104,
+          "costUsd": 0.0174,
+          "ms": 3803
+        },
+        {
+          "stage": "ai-smell",
+          "role": "smellJudge",
+          "vendor": "openai",
+          "model": "gpt-5.6-terra",
+          "inputTokens": 1144,
+          "outputTokens": 226,
+          "costUsd": 0.0205,
+          "ms": 3670
+        },
+        {
+          "stage": "josh-local-repair",
+          "role": "joshProseEdit",
+          "vendor": "anthropic",
+          "model": "claude-opus-5",
+          "inputTokens": 3545,
+          "outputTokens": 2111,
+          "costUsd": 0.2115,
+          "ms": 19847
+        },
+        {
+          "stage": "fact-check",
+          "role": "factCheck",
+          "vendor": "anthropic",
+          "model": "claude-sonnet-5",
+          "inputTokens": 0,
+          "outputTokens": 0,
+          "costUsd": 0,
+          "ms": 16603
+        },
+        {
+          "stage": "ai-smell",
+          "role": "smellJudge",
+          "vendor": "openai",
+          "model": "gpt-5.6-terra",
+          "inputTokens": 1095,
+          "outputTokens": 393,
+          "costUsd": 0.0267,
+          "ms": 5664
+        },
+        {
+          "stage": "quit-reading",
+          "role": "quitJudge",
+          "vendor": "openai",
+          "model": "gpt-5.6-terra",
+          "inputTokens": 1269,
+          "outputTokens": 186,
+          "costUsd": 0.0201,
+          "ms": 2863
+        },
+        {
+          "stage": "additive-judge",
+          "role": "quitJudge",
+          "vendor": "openai",
+          "model": "gpt-5.6-terra",
+          "inputTokens": 3227,
+          "outputTokens": 500,
+          "costUsd": 0.0523,
+          "ms": 6269
+        }
+      ],
+      "totalCostUsd": 0.9558,
+      "final": {
+        "headline": "The Big Ten and SEC Aimed Their NFL-Cut Policies at Schools, Not Players",
+        "dek": "Both leagues moved inside 24 hours, and both wrote the penalty toward institutions — coach suspensions, institutional fines. That splits the coming litigation into two tracks, and it changes the math for an LSU team already ranked No. 11 in the AP poll.",
+        "bodyMarkdown": "[EMBED:00:00:00]\n\nThe Big Ten and the SEC did something in one Tuesday that they have not done on almost anything else in five years: they agreed, quickly, in writing, with their presidents lined up behind it. The Big Ten went past a statement and put out a policy — head-coach suspensions of up to half a season, institutional fines in the millions, unanimous support from every president and every athletic director. The SEC followed at close of business and went further, extending it to basketball and citing the commissioner's \"full and unlimited authority,\" including the ability to suspend a school from competition. My read of both documents is the same: the threat is not pointed at players. It is pointed at the schools.\n\nI said on the show I expect players to sue conferences, maybe as early as tomorrow, and I stand on that. But if the penalty structure lands on coaches and institutions rather than on eligibility, there is a second legal track running alongside the first one. A player suing for the right to play is arguing eligibility. A school or a coach facing a half-season suspension and a seven-figure fine for signing that same player is arguing something else entirely — the limits of conference authority over a member institution, and whether a league can penalize a school for complying with a court order. One asks a judge to let a kid on the field. The other asks a judge to stop a commissioner from swinging. The conferences may well win the first fight and still spend a year defending the second one.\n\nLane Kiffin's argument Tuesday morning was that these particular players are a specific class the courts already addressed, and that a conference declining to follow a court order creates \"some issues there.\" There is a germ of validity in that. The five-for-five rule change caught players who had already declared, and you can construct a fairness case for them. It just does not bear the weight of greater scrutiny once you say the plain thing out loud: these are athletes who were in NFL preseason camps and played in NFL preseason games. The SEC's language closed the gray area Lane was trying to open — tryouts, declarations, all of it.\n\nWhat I keep circling back to is the risk-reward. LSU is not a program clawing for relevance. They are No. 11 in the AP poll and No. 13 in the Coaches Poll after a 7-6 season that went 3-5 in the league. Our own preseason bracket on this site has LSU seeded No. 8 in the twelve-team field, with Georgia beating Ohio State 31-28 in the final. By our own projection, LSU is already in. That is the part that makes the loophole play harder to justify, not easier. When Texas Tech fought for Brendan Sorsby, that was a quarterback — a season-altering, playoff-altering piece. Adding a defensive lineman who got cut in late August, when your own path to the bracket is already drawn, is a much smaller gain measured against a coach missing half a season and an institution writing a check.\n\nLSU plays at Auburn on Oct. 24 at noon ET, a road trip against a team that finished 5-7 and 1-7 in the SEC. If any of this policy ever bites — a suspended head coach on a sideline, a fined institution, an ineligibility ruling landing midweek — that is the kind of game where it shows up first, because that is the kind of game where the depth chart matters more than the marquee does. Watch what happens between now and then. If nobody in either league signs one of these players by mid-October, the policy worked without ever being tested. If somebody does, we will find out inside a month whether \"full and unlimited authority\" means what it says.\n\n[PULLQUOTE]\n\nI do not count on competitors to police themselves, and I never have. That is what rules are for. Now they have to survive the part where somebody makes them enforce it.\n\n— JP",
+        "pullQuote": "I will never count on any competitor in an ultra competitive arena voluntarily abiding by some code that you want them to abide by.",
+        "primaryTeam": "LSU",
+        "teams": [
+          "LSU",
+          "Auburn"
+        ],
+        "tags": [
+          "transfer portal",
+          "SEC",
+          "Big Ten",
+          "eligibility",
+          "Lane Kiffin",
+          "enforcement",
+          "litigation"
+        ],
+        "seo": {
+          "title": "Big Ten and SEC NFL-Cut Policies Target Schools, Not Players",
+          "description": "Both leagues wrote their NFL-cut penalties toward institutions — coach suspensions and fines — which splits the coming litigation into two tracks and changes the risk math for a No. 11 LSU team already projected into the playoff field."
+        }
+      },
+      "words": 672,
+      "completedAt": "2026-08-28T13:32:00.229Z"
+    }
+  }
+]

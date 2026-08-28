@@ -7,6 +7,7 @@ import { join } from "node:path";
 for (const l of readFileSync(join(process.cwd(), ".env.local"), "utf8").split("\n")) { const i = l.indexOf("="); if (i > 0 && !l.startsWith("#")) process.env[l.slice(0, i).trim()] ??= l.slice(i + 1).trim(); }
 process.env.EDITORIAL_V3_ENABLED ??= "true";
 const { runJoshEngine } = await import("../lib/editorial-v3/josh-engine.ts");
+const { runJoshAdditive } = await import("../lib/editorial-v3/josh-additive.ts");
 const { runReportedEngine } = await import("../lib/editorial-v3/reported-engine.ts");
 const { rosterNames } = await import("../lib/editorial-v3/roster.ts");
 type Run = import("../lib/editorial-v3/v3-types.ts").V3Run;
@@ -21,18 +22,19 @@ const APPEND = argv.includes("--append"); const SKIP_SHOW = argv.includes("--no-
 const pack: { id: string; engine: string; episode?: string; run: Run }[] = APPEND && existsSync(`${OUT}/${PAGE}.json`) ? JSON.parse(readFileSync(`${OUT}/${PAGE}.json`, "utf8")) : [];
 
 import { existsSync } from "node:fs";
-if (!APPEND && !SKIP_SHOW && existsSync(".superpowers/v3-miami-tightened.json")) {
+if (!APPEND && !SKIP_SHOW && !ONLY && existsSync(".superpowers/v3-miami-tightened.json")) {
   const d = JSON.parse(readFileSync(".superpowers/v3-miami-tightened.json", "utf8"))[0];
   const runs = readFileSync(".superpowers/v3-josh-engine-latest.json", "utf8");
   void runs;
   pack.push({ id: "miami-acc", engine: "josh", episode: d.episode, run: { id: "reviewed", engine: "josh", sourceId: d.ytId, mode: "replay", status: "completed", startedAt: "", artifacts: { segment: { decision: "segment", segmentStart: "02:06", segmentEnd: "03:51", reason: "" }, quit: { neverWantedToQuit: true, reason: "none", didFinish: true, soundsLikeFootballPerson: true, worthTheTime: false, wouldClickAnother: true, wouldSend: false, note: "" }, smell: { pass: true, sentences: [], structural: false, note: "" }, fact: { verdict: "pass", claims: [], joshMisattribution: [] } }, final: d, words: d.bodyMarkdown.replace(/\[[^\]]*\]/g, " ").split(/\s+/).filter(Boolean).length - 2, calls: new Array(8).fill({ stage: "", role: "", vendor: "openai", model: "", inputTokens: 0, outputTokens: 0, costUsd: 0.038, ms: 0 }), totalCostUsd: 0.3 } as unknown as Run });
 }
-for (const id of SKIP_SHOW ? [] : ONLY ? [ONLY] : SHOW) {
+for (const id of ONLY ? [ONLY] : SKIP_SHOW ? [] : SHOW) {
   if (id === "miami-acc" && pack.some((p) => p.id === "miami-acc")) continue;
   if (!ONLY && pack.filter((p) => p.engine === "josh").length >= 4) break;
   const fx = JSON.parse(readFileSync(`${DIR}/show-${id}.json`, "utf8"));
   const names = await rosterNames(fx.teams ?? []).catch(() => "");
-  const run = await runJoshEngine({ ytId: fx.episode.ytId, title: fx.episode.title, description: fx.episode.description, publishedAt: fx.episode.publishedAt, transcriptText: fx.transcriptText, factSheet: fx.factSheet, onRecord: fx.onRecord, assignment: ASSIGN ?? fx.focus, rosterNames: names }, { mode: "replay", fixture: fx.id, log: (l) => console.log(`  ${id}: ${l}`) });
+  const runner = argv.includes("--josh-additive") ? runJoshAdditive : runJoshEngine;
+  const run = await runner({ ytId: fx.episode.ytId, title: fx.episode.title, description: fx.episode.description, publishedAt: fx.episode.publishedAt, transcriptText: fx.transcriptText, factSheet: fx.factSheet, onRecord: fx.onRecord, assignment: ASSIGN ?? fx.focus, rosterNames: names }, { mode: "replay", fixture: fx.id, log: (l) => console.log(`  ${id}: ${l}`) });
   if (run.status === "completed" && run.final) pack.push({ id, engine: "josh", episode: fx.episode.title, run });
   else console.log(`  ${id}: ${run.status} — ${run.error ?? run.artifacts.segment?.reason ?? ""}`);
 }
@@ -72,7 +74,7 @@ h3{font:700 20px/1.2 "Barlow Condensed",sans-serif;margin:24px 0 4px}
 <h1>${esc(TITLE)}</h1>
 <p class="lede">${argv.includes("--no-show") ? "Editorial Engine V3, Aug 28. Desk pieces written from today's outlet reporting: a reporting pack, a fan brief that decides how much story there is, one writer on the desk voice, a subtraction editor, the reader tests. Third person, no imitation of anyone. None is published." : "Editorial Engine V3, Aug 28. Four are your own segments edited down (your words, your order; verified facts folded in; a tightening pass; nothing invented). Two are desk pieces written from outlet reporting. None is published. Read them as a reader; the numbers underneath are just what the machine's reader test said."}</p>
 <nav>${pack.map((p, i) => `<a href="#a${i}">${i + 1}. ${esc(p.run.final!.headline)}</a><br>`).join("")}</nav>
-${pack.map((p, i) => { const r = p.run; const q = r.artifacts.quit; return `<article id="a${i}" class="${p.engine}"><div class="tag">${p.engine === "josh" ? "Josh's Read · from the show" : "The desk · reported"} · ${r.words} words</div><h2>${esc(r.final!.headline)}</h2>${r.final!.dek ? `<p class="dek">${esc(r.final!.dek)}</p>` : ""}${para(r.final!.bodyMarkdown)}<p class="meta">${p.episode ? `Source: ${esc(p.episode)}${r.artifacts.segment?.segmentStart ? ` · segment ${esc(r.artifacts.segment.segmentStart)}–${esc(r.artifacts.segment.segmentEnd ?? "")}` : ""}` : `Source: outlet reporting (${esc(p.id)})${r.artifacts.brief ? ` · depth: ${r.artifacts.brief.depth}` : ""}`} · reader test: ${q?.neverWantedToQuit ? "never wanted to quit" : `would skim at ¶${q?.quitParagraphIndex} (${q?.reason})`}, ${q?.worthTheTime ? "worth the time" : "not worth the time"} · AI smell ${r.artifacts.smell?.pass ? "pass" : `${r.artifacts.smell?.sentences.length} flagged`} · facts ${r.artifacts.fact?.verdict} · ${r.calls.length} calls, $${r.totalCostUsd.toFixed(2)}</p></article>`; }).join("\n")}
+${pack.map((p, i) => { const r = p.run; const q = r.artifacts.quit; return `<article id="a${i}" class="${p.engine}"><div class="tag">${p.engine === "josh" ? (r.artifacts.additive ? "Josh's Read · built on the show, additive" : "Josh's Read · from the show") : "The desk · reported"} · ${r.words} words</div><h2>${esc(r.final!.headline)}</h2>${r.final!.dek ? `<p class="dek">${esc(r.final!.dek)}</p>` : ""}${para(r.final!.bodyMarkdown)}<p class="meta">${p.episode ? `Source: ${esc(p.episode)}${r.artifacts.segment?.segmentStart ? ` · segment ${esc(r.artifacts.segment.segmentStart)}–${esc(r.artifacts.segment.segmentEnd ?? "")}` : ""}` : `Source: outlet reporting (${esc(p.id)})${r.artifacts.brief ? ` · depth: ${r.artifacts.brief.depth}` : ""}`} · reader test: ${q?.neverWantedToQuit ? "never wanted to quit" : `would skim at ¶${q?.quitParagraphIndex} (${q?.reason})`}, ${q?.worthTheTime ? "worth the time" : "not worth the time"}${r.artifacts.additive ? ` · for a listener: ${r.artifacts.additive.worthItForListener ? "worth it" : "not worth it"}, ${r.artifacts.additive.additions.length} new things, ${r.artifacts.additive.overlapPct}% shared with the tape` : ""}${r.artifacts.lift ? ` · lift check ${r.artifacts.lift.pct}%` : ""} · AI smell ${r.artifacts.smell?.pass ? "pass" : `${r.artifacts.smell?.sentences.length} flagged`} · facts ${r.artifacts.fact?.verdict} · ${r.calls.length} calls, $${r.totalCostUsd.toFixed(2)}</p></article>`; }).join("\n")}
 </div>`;
 writeFileSync(`${OUT}/${PAGE}.html`, html);
 console.log(`\nPACK (${pack.length}):`);
