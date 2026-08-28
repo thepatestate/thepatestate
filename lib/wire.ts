@@ -13,6 +13,8 @@ import { slugify } from "@/lib/slug";
 import { writeJSON } from "@/lib/writer";
 import { boilerplateViolations, scoreDraft, editorialSystem, voiceMatch, circles, restatements, attributedInSentenceOne, proseWords } from "@/lib/editorial";
 import { judgeJSON } from "@/lib/judge";
+import { v3MayWrite } from "@/lib/editorial-v3/flags";
+import { v3WireStory } from "@/lib/editorial-v3/production";
 import { teamFactSheet } from "@/lib/fact-sheet";
 
 const MODEL = "claude-sonnet-5";
@@ -142,7 +144,7 @@ export async function fetchFeeds(): Promise<FeedEntry[]> {
 // National CFB feeds carry other sports (Yahoo's especially: wrestling
 // schedules, hoops recruiting, high-school previews). The Wire is college
 // football only — kill off-topic entries before they cost a scoring call.
-const OFF_TOPIC = /\b(wrestl\w*|basketball|hoops|baseball|softball|volleyball|gymnastics|hockey|lacrosse|soccer|golf|tennis|track and field|swimming|wnba|nba|nfl|mlb|nhl|high school|prep football|truck series|cup series|xfinity|pace lap|lap \\d+|spotter|wave[- ]around|caution (flag|period|laps?)|pit road|restart zone|daytona|talladega|speedway|backcourt|frontcourt|point guard|shooting guard|power forward|nascar|indycar|formula one|motocross|real american freestyle|boxing|mma|ufc)\b/i;
+const OFF_TOPIC = /\b(wrestl\w*|basketball|hoops|baseball|softball|volleyball|gymnastics|hockey|lacrosse|soccer|golf|tennis|track and field|swimming|wnba|nba|nfl|mlb|nhl|high school|prep football|browns|patriots|packers|bengals|steelers|bills|dolphins|buccaneers|commanders|colts|chiefs|saints|seahawks|49ers|chargers|ravens|jets|texans|giants|vikings|titans|las vegas raiders|preseason finale|53-man|roster cuts?|final cuts|practice squad|premier league|league two|league one|efl|truck series|cup series|xfinity|pace lap|lap \\d+|spotter|wave[- ]around|caution (flag|period|laps?)|pit road|restart zone|daytona|talladega|speedway|backcourt|frontcourt|point guard|shooting guard|power forward|nascar|indycar|formula one|motocross|real american freestyle|boxing|mma|ufc)\b/i;
 
 /** True when an entry clearly isn't college football. Exported for tests.
  * 400 chars of body text — 160 missed sport mentions that arrive a sentence
@@ -585,6 +587,13 @@ export async function generateWireStory(
   anthropic: Anthropic,
   job: StoryJob,
 ): Promise<{ ok: true; fields: Record<string, unknown> } | { ok: false; reason: string }> {
+  // Editorial Engine V3 (2026-08-28): the desk writes the news from the
+  // fetched sources at the depth the reporting supports; the seven-part
+  // skeleton and the 600-word floor are V1 and stay behind the flag.
+  if (v3MayWrite("reported")) {
+    const v3 = await v3WireStory({ clusterKey: job.clusterKey, teams: job.teams, refs: job.sources.map((s) => ({ outlet: s.outlet, url: s.url, feedText: job.sourceBlock })), mode: "live" });
+    return v3.ok ? { ok: true, fields: v3.fields } : { ok: false, reason: v3.reason };
+  }
   let receipt = await findReceipt(job.teams, job.receiptKeywords);
   if (receipt && !(await receiptIsRelevant(anthropic, receipt, job))) receipt = null;
   // Kit v4 spec 04 §2.1: a Wire story under 600 words does not ship, and

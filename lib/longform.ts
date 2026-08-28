@@ -25,6 +25,8 @@ import { pickArchitecture, boilerplateViolations, scoreDraft, editorialSystem, v
 import { hasFirstPersonProse } from "@/lib/wire";
 import { judgeJSON } from "@/lib/judge";
 import { teamFactSheet } from "@/lib/fact-sheet";
+import { v3MayWrite } from "@/lib/editorial-v3/flags";
+import { v3ReactionArticle } from "@/lib/editorial-v3/production";
 
 const MODEL = "claude-sonnet-5";
 
@@ -204,6 +206,18 @@ export async function draftLongformArticle(
     // overrides → the JSON contract in standalone-article.md.
     const product = productForType(sel.typeId);
     const joshLane = product === "feature";
+    // Editorial Engine V3 (2026-08-28): the house reaction is written by the
+    // desk from the selected stories' own sources. Josh's Read is built only
+    // on his show (lib/ingest.ts); the daily lane does not manufacture it.
+    if (v3MayWrite("reported")) {
+      if (joshLane) return { error: "v3:josh-lane-needs-show-source" };
+      const srcDocs = await writeClient.fetch<{ _id: string; sources?: { outlet?: string; url?: string }[]; whatHappened?: string }[]>(`*[_id in $ids]{ _id, sources, whatHappened }`, { ids: sel.wireStoryIds });
+      const refs = srcDocs.flatMap((d) => (d.sources ?? []).filter((s) => s.url).map((s) => ({ outlet: s.outlet ?? "web", url: s.url!, feedText: d.whatHappened })));
+      const v3 = await v3ReactionArticle({ sourceId: `longform-${sel.wireStoryIds.join("+")}`, refs, teams: sel.teams, mode: "live" });
+      if (!v3.ok) return { error: v3.reason };
+      const f = v3.fields as { headline: string; dek: string; bodyMarkdown: string; pullQuote: string; primaryTeam: string; teams: string[]; tags: string[]; seoTitle: string; seoDescription: string };
+      return { draft: { typeId: sel.typeId, topic: sel.topic, angle: sel.angle, product, archKey: arch.key, headline: f.headline, dek: f.dek, bodyMarkdown: f.bodyMarkdown, pullQuote: "", primaryTeam: f.primaryTeam, teams: f.teams, tags: f.tags, seo: { title: f.seoTitle, description: f.seoDescription } } };
+    }
     const floor = joshLane ? 800 : 600;
     const system = editorialSystem(product, prompt(joshLane ? "josh-column.md" : "news-reaction.md"));
     let raw = "";

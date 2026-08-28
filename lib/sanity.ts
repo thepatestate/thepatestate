@@ -166,6 +166,8 @@ export interface SanityWireStory {
   category?: string;
   teams?: string[];
   whatHappened?: string;
+  /** Editorial Engine V3: the whole story as one body (the modules stay empty). */
+  bodyMarkdown?: string;
   whyItMatters?: string[];
   // Production Guide v1.2 fields (new-format stories; legacy stories lack them)
   deck?: string;
@@ -197,7 +199,7 @@ export interface SanityWireStory {
   corrections?: { at: string; note: string }[];
 }
 
-const WIRE_STORY_FIELDS = `_id, headline, slug, verification, category, teams, whatHappened,
+const WIRE_STORY_FIELDS = `_id, headline, slug, verification, category, teams, whatHappened, bodyMarkdown,
   whyItMatters, deck, impact, impactRationale, stats, whyBody, missing, section04Title, section04Body,
   chessboard, openTitle, whyTitle, missingTitle, chessboardTitle,
   board, watching, facts, callout, joshReceipt, readLabel, readBody, whatsNext, sources,

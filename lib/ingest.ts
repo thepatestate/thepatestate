@@ -7,6 +7,9 @@ import { teamFactSheet } from "@/lib/fact-sheet";
 import { storeQuotes } from "@/lib/quotes";
 import { generateArticleHero } from "@/lib/hero-image";
 import { slugify } from "@/lib/slug";
+import { v3MayWrite } from "@/lib/editorial-v3/flags";
+import { v3JoshColumn } from "@/lib/editorial-v3/production";
+import { JOSH_BRACKET_FIELD, JOSH_BRACKET_FINAL, JOSH_BRACKET_LABEL } from "@/lib/josh-bracket";
 
 export interface IngestVideo extends Video {
   description?: string;
@@ -93,11 +96,25 @@ export async function ingestEpisode(v: IngestVideo): Promise<IngestResult> {
     ).catch(() => [] as string[]);
     const arch = pickArchitecture((recentArch ?? []).map((t) => t.replace(/^arch:/, "")), weekCount + dayCount);
     const factSheet = await teamFactSheet(quotes.flatMap((q) => q.teams)).catch(() => "");
-    const draft = await draftCompanion({
-      title: v.title, description: v.description ?? "", publishedAt: v.published,
-      series: series ?? "general", transcriptText, extractedQuotes: quotes,
-      architecture: arch, factSheet,
-    });
+    // Editorial Engine V3 (2026-08-28): Josh's Read is built on the show,
+    // additive — his take as the premise, the column from verified facts the
+    // show did not have. No segment or nothing to add → no column.
+    let draft: Awaited<ReturnType<typeof draftCompanion>> = null;
+    let v3Tags: string[] = [];
+    if (v3MayWrite("josh") && transcriptText) {
+      const onRecord = `ON-RECORD SITE POSITIONS (never contradict silently): ${JOSH_BRACKET_LABEL} — field: ${JOSH_BRACKET_FIELD.map((t) => `${t.seed} ${t.name}`).join(", ")}; final on record: ${JOSH_BRACKET_FINAL}.`;
+      const v3 = await v3JoshColumn({ ytId: v.id, title: v.title, description: v.description ?? "", publishedAt: v.published, transcriptText, teams: [...new Set(quotes.flatMap((q) => q.teams))], onRecord, mode: "live" });
+      if (!v3.ok) { console.log(`[ingest:v3] ${v.id}: ${v3.reason}`); return "episode-only"; }
+      const f = v3.fields as { headline: string; dek: string; bodyMarkdown: string; pullQuote: string; primaryTeam: string; teams: string[]; tags: string[]; seoTitle: string; seoDescription: string };
+      draft = { headline: f.headline, dek: f.dek, bodyMarkdown: f.bodyMarkdown, pullQuote: f.pullQuote, primaryTeam: f.primaryTeam, teams: f.teams, tags: [], seo: { title: f.seoTitle, description: f.seoDescription }, lowConfidence: v3.lowConfidence };
+      v3Tags = f.tags;
+    } else {
+      draft = await draftCompanion({
+        title: v.title, description: v.description ?? "", publishedAt: v.published,
+        series: series ?? "general", transcriptText, extractedQuotes: quotes,
+        architecture: arch, factSheet,
+      });
+    }
     if (!draft) return "episode-only"; // poll cycle retries later
 
     // 5. Article in the approval queue — NEVER any state but ai-drafted here.
@@ -123,7 +140,7 @@ export async function ingestEpisode(v: IngestVideo): Promise<IngestResult> {
       lowConfidence: !transcriptText || draft.lowConfidence === true,
       primaryTeam: draft.primaryTeam,
       teams: draft.teams,
-      tags: [...draft.tags, `arch:${arch.key}`],
+      tags: [...draft.tags, ...v3Tags, `arch:${arch.key}`],
       seoTitle: draft.seo.title,
       seoDescription: draft.seo.description,
     });

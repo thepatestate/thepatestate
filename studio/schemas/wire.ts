@@ -42,6 +42,7 @@ export const wireStory = defineType({
     }),
     defineField({ name: "category", type: "string" }),
     defineField({ name: "teams", type: "array", of: [{ type: "string" }] }),
+    defineField({ name: "bodyMarkdown", title: "Body (Editorial Engine V3 — one story at the depth the reporting supports)", type: "text", rows: 18 }),
     defineField({ name: "whatHappened", type: "text", description: "100–175 words of verified facts — official source or named reporter, never another website (Production Guide §5)" }),
     defineField({ name: "whyItMatters", type: "array", of: [{ type: "string" }], description: "LEGACY bullets (pre-v1.2 stories)" }),
     // Production Guide v1.2 fields (reference: docs/content/wire-kansas-state-pastore-v3.html)

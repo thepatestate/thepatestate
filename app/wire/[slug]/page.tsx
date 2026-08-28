@@ -177,8 +177,18 @@ export default async function WireStoryPage({ params }: { params: Promise<{ slug
           <div className="a-body">
             {/* Wire Editorial System v2.0 §47–48: headers adapt to the story; the
                 writer's title wins, the label below is the fallback. */}
-            <SectionHead n={next()} kicker="The News" title={story.openTitle || "What Happened"} />
-            <p>{story.whatHappened}</p>
+            {story.bodyMarkdown ? (
+              // Editorial Engine V3: the desk's story is one body at the depth
+              // the reporting supported; the modules below stay empty.
+              story.bodyMarkdown.split(/\n{2,}/).map((p, i) => p.trim()).filter(Boolean).map((p, i) => (
+                p.startsWith("## ") ? <h2 key={i}>{p.slice(3)}</h2> : <p key={i}>{p.replace(/\*\*(.+?)\*\*/g, "$1")}</p>
+              ))
+            ) : (
+              <>
+                <SectionHead n={next()} kicker="The News" title={story.openTitle || "What Happened"} />
+                <p>{story.whatHappened}</p>
+              </>
+            )}
 
             {(story.whyBody || (story.whyItMatters?.length ?? 0) > 0) && (
               <>
