@@ -36,9 +36,15 @@ export function segmentText(transcriptText: string, start: string, end: string):
   return transcriptText.split("\n").filter((line) => { const m = line.match(/^\[(\d{1,2}:\d{2}(?::\d{2})?)\]/); if (!m) return false; const s = tsToSec(m[1]); return s >= a - 5 && s <= b + 5; }).join("\n");
 }
 
-export async function selectSegment(m: JoshMaterial): Promise<{ decision: SegmentDecision; call: StageCall }> {
-  const { data, call } = await callJSON<SegmentDecision>({ stage: "josh-segment", role: "joshSegment", maxTokens: 2000, schemaName: "segment_decision", schema: SEGMENT_SCHEMA as unknown as Record<string, unknown>, system: v3Prompt("josh-segment"), user: `${m.assignment ? `ASSIGNMENT: ${m.assignment}\n\n` : ""}EPISODE: ${m.title}\nDESCRIPTION: ${m.description.slice(0, 1500)}\n\nTRANSCRIPT (auto-captioned):\n${m.transcriptText}` });
+export const MAX_SEGMENT_SECONDS = 12 * 60;
+
+export async function selectSegment(m: JoshMaterial, constraint?: string): Promise<{ decision: SegmentDecision; call: StageCall }> {
+  const { data, call } = await callJSON<SegmentDecision>({ stage: "josh-segment", role: "joshSegment", maxTokens: 2000, schemaName: "segment_decision", schema: SEGMENT_SCHEMA as unknown as Record<string, unknown>, system: v3Prompt("josh-segment"), user: `${m.assignment ? `ASSIGNMENT: ${m.assignment}\n\n` : ""}${constraint ? `CONSTRAINT: ${constraint}\n\n` : ""}EPISODE: ${m.title}\nDESCRIPTION: ${m.description.slice(0, 1500)}\n\nTRANSCRIPT (auto-captioned):\n${m.transcriptText}` });
   return { decision: data, call };
+}
+
+export function segmentSeconds(d: SegmentDecision): number {
+  return d.segmentStart && d.segmentEnd ? tsToSec(d.segmentEnd) - tsToSec(d.segmentStart) : 0;
 }
 
 export async function buildJoshCut(m: JoshMaterial, seg: SegmentDecision): Promise<{ cut: JoshCut; call: StageCall }> {
@@ -86,7 +92,15 @@ export async function runJoshEngine(m: JoshMaterial, opts: JoshRunOptions): Prom
   const run: V3Run = { id: newRunId(), engine: "josh", sourceId: m.ytId, fixture: opts.fixture, mode: opts.mode, status: "completed", startedAt: new Date().toISOString(), artifacts: { repairs: [] }, calls: [], totalCostUsd: 0 };
   const add = (...cs: StageCall[]) => { for (const c of cs) { run.calls.push(c); run.totalCostUsd = Math.round((run.totalCostUsd + c.costUsd) * 10000) / 10000; } };
   try {
-    const seg = await selectSegment(m); add(seg.call); run.artifacts.segment = seg.decision;
+    let seg = await selectSegment(m); add(seg.call); run.artifacts.segment = seg.decision;
+    // A segment is one thought, 3–12 minutes. A whole-episode selection is the
+    // listicle the brief forbids; ask once more for the single strongest
+    // stretch inside it, and give up if that is still too long.
+    if (seg.decision.decision === "segment" && segmentSeconds(seg.decision) > MAX_SEGMENT_SECONDS) {
+      log(`segment too long (${Math.round(segmentSeconds(seg.decision) / 60)} min); re-selecting inside ${seg.decision.segmentStart}–${seg.decision.segmentEnd}`);
+      seg = await selectSegment(m, `The stretch ${seg.decision.segmentStart}–${seg.decision.segmentEnd} is the whole episode, not a segment. Choose the single strongest contiguous 3–10 minute stretch inside it where Josh is on ONE thought with football reasons behind it; every other take is out.`); add(seg.call); run.artifacts.segment = seg.decision;
+      if (seg.decision.decision === "segment" && segmentSeconds(seg.decision) > MAX_SEGMENT_SECONDS) seg.decision = { decision: "no-article", reason: `no single segment under 12 minutes (${seg.decision.segmentStart}–${seg.decision.segmentEnd})` };
+    }
     log(`segment: ${seg.decision.decision} ${seg.decision.segmentStart ?? ""}–${seg.decision.segmentEnd ?? ""} · ${seg.decision.centralThought ?? seg.decision.reason}`);
     if (seg.decision.decision !== "segment" || !seg.decision.segmentStart || !seg.decision.segmentEnd) { run.status = "no-article"; run.completedAt = new Date().toISOString(); await recordV3Run(run); return run; }
     const cut = await buildJoshCut(m, seg.decision); add(cut.call); run.artifacts.cut = cut.cut;
@@ -103,7 +117,7 @@ export async function runJoshEngine(m: JoshMaterial, opts: JoshRunOptions): Prom
       draft = t.draft; run.artifacts.tightened = draft;
     }
     // Hard gates + fact/quote check (the cut's segment is the source universe).
-    const source = `TRANSCRIPT SEGMENT:\n${segmentText(m.transcriptText, cut.cut.segmentStart, cut.cut.segmentEnd)}\n\nVERIFIED TEAM FACTS:\n${m.factSheet}\n\n${m.onRecord}`;
+    const source = `TRANSCRIPT SEGMENT (auto-captioned; the roster block below carries the official spellings):\n${segmentText(m.transcriptText, cut.cut.segmentStart, cut.cut.segmentEnd)}\n\n${m.rosterNames ?? ""}\n\nVERIFIED TEAM FACTS:\n${m.factSheet}\n\n${m.onRecord}`;
     const gate = () => hardPolicyGates({ draft, lane: "show", transcriptText: `${m.transcriptText}\n${cut.cut.blocks.map((b) => b.text).join("\n")}` });
     run.artifacts.policy = gate();
     const fc = await factCheckSources(draft, source); add(fc.call); run.artifacts.fact = fc.result;

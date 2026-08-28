@@ -17,7 +17,8 @@ export function hardPolicyGates(input: PolicyInput): PolicyResult {
   const body = input.draft.bodyMarkdown;
   const prose = body.replace(/\[QUOTE:[\d:]+\][\s\S]*?\[\/QUOTE\]/g, "");
   // Lane / person
-  const firstPerson = hasFirstPersonProse(prose);
+  // Quoted speech is somebody else's first person; strip it before the lane check.
+  const firstPerson = hasFirstPersonProse(prose.replace(/"[^"]{3,}"|“[^”]{3,}”/g, " "));
   if (input.lane === "show" && !firstPerson) v.push("lane: Josh's column must be first person");
   if (input.lane !== "show" && firstPerson) v.push("lane: staff/Wire prose carries no first person");
   if (input.lane === "show" && !/—\s*JP\s*$/.test(body.trimEnd())) v.push("lane: Josh's column signs off — JP");
@@ -42,6 +43,6 @@ export function hardPolicyGates(input: PolicyInput): PolicyResult {
   const embeds = (body.match(/\[EMBED:\d{2}:\d{2}:\d{2}\]/g) ?? []).length;
   if (input.lane === "show" && embeds !== 1) v.push(`markers: exactly one [EMBED:HH:MM:SS] required (found ${embeds})`);
   const pq = (body.match(/\[PULLQUOTE\]/g) ?? []).length;
-  if (input.draft.pullQuote.trim() ? pq !== 1 : pq !== 0) v.push(`markers: [PULLQUOTE] must appear once iff pullQuote is set (found ${pq})`);
+  if (input.lane === "show" && (input.draft.pullQuote.trim() ? pq !== 1 : pq !== 0)) v.push(`markers: [PULLQUOTE] must appear once iff pullQuote is set (found ${pq})`);
   return { pass: v.length === 0, violations: v };
 }

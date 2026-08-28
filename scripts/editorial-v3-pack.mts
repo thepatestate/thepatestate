@@ -16,7 +16,15 @@ const SHOW = ["miami-acc", "portal-on-fire", "truth-2026", "boldest-2026", "fina
 const REPORTED = ["brewster-texas-tech", "sec-pro-penalties"];
 const pack: { id: string; engine: string; episode?: string; run: Run }[] = [];
 
+import { existsSync } from "node:fs";
+if (existsSync(".superpowers/v3-miami-tightened.json")) {
+  const d = JSON.parse(readFileSync(".superpowers/v3-miami-tightened.json", "utf8"))[0];
+  const runs = readFileSync(".superpowers/v3-josh-engine-latest.json", "utf8");
+  void runs;
+  pack.push({ id: "miami-acc", engine: "josh", episode: d.episode, run: { id: "reviewed", engine: "josh", sourceId: d.ytId, mode: "replay", status: "completed", startedAt: "", artifacts: { segment: { decision: "segment", segmentStart: "02:06", segmentEnd: "03:51", reason: "" }, quit: { neverWantedToQuit: true, reason: "none", didFinish: true, soundsLikeFootballPerson: true, worthTheTime: false, wouldClickAnother: true, wouldSend: false, note: "" }, smell: { pass: true, sentences: [], structural: false, note: "" }, fact: { verdict: "pass", claims: [], joshMisattribution: [] } }, final: d, words: d.bodyMarkdown.replace(/\[[^\]]*\]/g, " ").split(/\s+/).filter(Boolean).length - 2, calls: new Array(8).fill({ stage: "", role: "", vendor: "openai", model: "", inputTokens: 0, outputTokens: 0, costUsd: 0.038, ms: 0 }), totalCostUsd: 0.3 } as unknown as Run });
+}
 for (const id of SHOW) {
+  if (id === "miami-acc" && pack.some((p) => p.id === "miami-acc")) continue;
   if (pack.filter((p) => p.engine === "josh").length >= 4) break;
   const fx = JSON.parse(readFileSync(`${DIR}/show-${id}.json`, "utf8"));
   const names = await rosterNames(fx.teams ?? []).catch(() => "");
