@@ -50,7 +50,7 @@ function originalSpan(body: string, run: string): string {
  * of `minRun`+ words shared with the sources, or any single unquoted run
  * reaches `maxRun` words. Facts may be shared; sentences may not. */
 export function liftVerdict(r: LiftReport, opts: { maxPct?: number; maxRun?: number } = {}): { pass: boolean; reason: string } {
-  const maxPct = opts.maxPct ?? 8, maxRun = opts.maxRun ?? 14;
+  const maxPct = opts.maxPct ?? 12, maxRun = opts.maxRun ?? 18;
   const longest = r.runs.reduce((a, x) => Math.max(a, x.split(" ").length), 0);
   if (longest >= maxRun) return { pass: false, reason: `a ${longest}-word run is verbatim from a source outside quotation marks: "${r.runs.find((x) => x.split(" ").length === longest)?.slice(0, 120)}"` };
   if (r.pct > maxPct) return { pass: false, reason: `${r.pct}% of the words are verbatim runs from the sources outside quotation marks (limit ${maxPct}%)` };

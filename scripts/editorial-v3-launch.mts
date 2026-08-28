@@ -12,7 +12,7 @@ for (const l of readFileSync(join(process.cwd(), ".env.local"), "utf8").split("\
 process.env.EDITORIAL_V3_ENABLED = "true"; process.env.EDITORIAL_V3_REPORTED_ENABLED = "true"; process.env.EDITORIAL_V3_JOSH_ENABLED = "true"; process.env.EDITORIAL_V3_SHADOW_MODE = "false";
 const arg = (k: string) => { const i = process.argv.indexOf(k); return i !== -1 ? process.argv[i + 1] : undefined; };
 const SINCE = arg("--since") ?? "2026-08-27T04:00:00Z";
-const DRY = process.argv.includes("--dry");
+const DRY = process.argv.includes("--dry"); const ARTICLES_ONLY = process.argv.includes("--articles-only");
 const { writeClient } = await import("../lib/sanity.ts");
 const { isOffTopic } = await import("../lib/wire.ts");
 const { v3WireStory, v3ReactionArticle } = await import("../lib/editorial-v3/production.ts");
@@ -23,9 +23,9 @@ const say = (l: string) => { console.log(l); report.push(l); };
 // --- Wire stories -----------------------------------------------------------
 const stories = await writeClient.fetch<{ _id: string; headline: string; publishedAt: string; category?: string; teams?: string[]; whatHappened?: string; deck?: string; sources?: { outlet?: string; url?: string }[]; "item": { _id: string; sourceUrls?: string[]; sourceOutlets?: string[] } | null }[]>(
   `*[_type=="wireStory" && publishedAt >= $since] | order(publishedAt asc){ _id, headline, publishedAt, category, teams, whatHappened, deck, sources, "item": *[_type=="wireItem" && references(^._id)][0]{ _id, sourceUrls, sourceOutlets } }`, { since: SINCE });
-say(`Wire stories since ${SINCE}: ${stories.length}`);
+say(`Wire stories since ${SINCE}: ${stories.length}${ARTICLES_ONLY ? " (skipped: --articles-only)" : ""}`);
 const offSport: string[] = [];
-for (const s of stories) {
+for (const s of ARTICLES_ONLY ? [] : stories) {
   if (isOffTopic(s.headline, `${s.deck ?? ""} ${s.whatHappened ?? ""}`)) { offSport.push(`${s.publishedAt.slice(0, 16)} ${s.headline}`); continue; }
   const urls = s.item?.sourceUrls?.length ? s.item.sourceUrls : (s.sources ?? []).map((x) => x.url!).filter(Boolean);
   const outlets = s.item?.sourceOutlets ?? (s.sources ?? []).map((x) => x.outlet ?? "web");
