@@ -65,7 +65,7 @@ export function cutAsProse(cut: JoshCut, support: SupportFact[] = []): string {
 
 export async function lightProseEdit(cut: JoshCut, support: SupportFact[], m: JoshMaterial, choice?: ModelChoice): Promise<{ draft: ArticleDraft; call: StageCall }> {
   const { data, call } = await callJSON<ArticleDraft>({
-    stage: "josh-prose-edit", role: "joshProseEdit", choice, maxTokens: 8000, schemaName: "article", schema: ARTICLE_SCHEMA as unknown as Record<string, unknown>,
+    stage: "josh-prose-edit", role: "joshColumnWriter", choice, maxTokens: 8000, schemaName: "article", schema: ARTICLE_SCHEMA as unknown as Record<string, unknown>,
     system: `${v3Prompt("josh-prose-edit")}\n\n${hardPolicyForLane("show")}`,
     user: `EPISODE: ${m.title} (${m.publishedAt})\nSEGMENT STARTS AT: ${cut.segmentStart}\nCENTRAL THOUGHT: ${cut.centralThought}\n\nTHE JOSH CUT (his words, in his order; verified facts marked where they may help):\n${cutAsProse(cut, support)}\n\n${m.rosterNames ? `${m.rosterNames}\n\n` : ""}${m.onRecord}`,
   });

@@ -19,7 +19,12 @@ export type Role =
   | "fanJudgeA" | "fanJudgeB" | "humanityJudge" | "finalEic"
   // V3 (brief §18): a few meaningful calls, not a committee.
   | "joshSegment" | "joshCut" | "supportFacts" | "joshProseEdit" | "joshSubtraction"
-  | "packExtract" | "fanBrief" | "reportedWriter" | "subtractionEditor" | "quitJudge" | "smellJudge";
+  | "packExtract" | "fanBrief" | "reportedWriter" | "subtractionEditor" | "quitJudge" | "smellJudge"
+  // 2026-08-28 (Isaac): initial drafts come from ChatGPT Sol only; Opus and
+  // Sonnet edit after the fact. joshColumnWriter = the first draft of Josh's
+  // Read (additive column, light edit); deskEditor = the craft edit after
+  // the reporter's draft; craftReview = the sports-desk-editor skill's judge.
+  | "joshColumnWriter" | "deskEditor" | "craftReview";
 
 export interface ModelChoice { vendor: Vendor; model: string; effort: Effort; fallbacks: { vendor: Vendor; model: string }[] }
 
@@ -31,6 +36,9 @@ const ANTHROPIC_STRONG = () => env("EDITORIAL_ANTHROPIC_STRONG_MODEL", "claude-o
 const ANTHROPIC_FAST = () => env("EDITORIAL_ANTHROPIC_FAST_MODEL", "claude-sonnet-5");
 
 const oStrong = (effort: Effort): ModelChoice => ({ vendor: "openai", model: OPENAI_STRONG(), effort, fallbacks: [{ vendor: "openai", model: OPENAI_ALT() }, { vendor: "openai", model: OPENAI_FAST() }, { vendor: "anthropic", model: ANTHROPIC_STRONG() }] });
+/** ChatGPT Sol for every first draft. Fallbacks stay inside OpenAI so an
+ * Anthropic model is never the initial writer, even when Sol is down. */
+const oSol = (effort: Effort): ModelChoice => ({ vendor: "openai", model: OPENAI_ALT(), effort, fallbacks: [{ vendor: "openai", model: OPENAI_STRONG() }, { vendor: "openai", model: OPENAI_FAST() }] });
 const oFast = (effort: Effort): ModelChoice => ({ vendor: "openai", model: OPENAI_FAST(), effort, fallbacks: [{ vendor: "openai", model: OPENAI_ALT() }, { vendor: "anthropic", model: ANTHROPIC_FAST() }] });
 const aStrong = (effort: Effort): ModelChoice => ({ vendor: "anthropic", model: ANTHROPIC_STRONG(), effort, fallbacks: [{ vendor: "anthropic", model: ANTHROPIC_FAST() }, { vendor: "openai", model: OPENAI_STRONG() }] });
 const aFast = (effort: Effort): ModelChoice => ({ vendor: "anthropic", model: ANTHROPIC_FAST(), effort, fallbacks: [{ vendor: "anthropic", model: ANTHROPIC_STRONG() }, { vendor: "openai", model: OPENAI_FAST() }] });
@@ -64,12 +72,15 @@ export function modelForRole(role: Role): ModelChoice {
     case "joshSegment": return aFast("medium");
     case "joshCut": return aFast("medium");
     case "supportFacts": return aFast("low");
-    case "joshProseEdit": return aStrong("medium");
+    case "joshProseEdit": return aStrong("medium"); // tighten + local repair: an edit, not a draft
+    case "joshColumnWriter": return oSol("medium");
     case "joshSubtraction": return aStrong("low");
     // V3 reported lane.
     case "packExtract": return aFast("low");
     case "fanBrief": return oStrong("medium");
-    case "reportedWriter": return aStrong("medium");
+    case "reportedWriter": return oSol("medium");
+    case "deskEditor": return aStrong("medium");
+    case "craftReview": return aStrong("low");
     case "subtractionEditor": return oStrong("medium");
     case "quitJudge": return oStrong("medium");
     case "smellJudge": return oStrong("low");

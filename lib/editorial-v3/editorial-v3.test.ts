@@ -40,9 +40,17 @@ describe("model routing", () => {
     __setTransportForTests(async () => { throw new Error("down"); });
     await expect(callJSON({ stage: "t", role: "joshCut", system: "s", user: "u", schema: {}, schemaName: "t", maxTokens: 10 })).rejects.toThrow(/every model failed/);
   });
-  it("V3 uses a few calls, not a committee: the quit judge is the opposite family of the writer", () => {
-    expect(modelForRole("reportedWriter").vendor).not.toBe(modelForRole("subtractionEditor").vendor);
+  it("V3 uses a few calls, not a committee: the desk editor is the opposite family of the reporter", () => {
+    expect(modelForRole("reportedWriter").vendor).not.toBe(modelForRole("deskEditor").vendor);
     expect(oppositeOf(modelForRole("joshProseEdit").vendor).vendor).not.toBe(modelForRole("joshProseEdit").vendor);
+  });
+  it("2026-08-28: every first draft is ChatGPT Sol, with OpenAI-only fallbacks; Opus and Sonnet only edit", () => {
+    for (const role of ["reportedWriter", "joshColumnWriter"] as const) {
+      const c = modelForRole(role);
+      expect(c.vendor).toBe("openai"); expect(c.model).toBe("gpt-5.6-sol");
+      expect(c.fallbacks.every((f) => f.vendor === "openai")).toBe(true);
+    }
+    for (const role of ["deskEditor", "joshProseEdit", "joshSubtraction"] as const) expect(modelForRole(role).vendor).toBe("anthropic");
   });
 });
 
@@ -76,10 +84,25 @@ describe("reported engine", () => {
     expect(DEPTH_WORDS.item).toEqual({ min: 75, max: 200 });
     expect(DEPTH_WORDS.story.max).toBeLessThan(DEPTH_WORDS.analysis.max);
     const p = v3Prompt("reported-writer");
-    expect(p).toMatch(/stop at 280 words/);
-    expect(p).toMatch(/catchphrases/);
+    expect(p).toMatch(/ends at 140 words/);
+    expect(p).toMatch(/Never end on the schedule/);
+    expect(p).toMatch(/the reporting does not establish/);
+    expect(p).toMatch(/as Josh Pate/);
     expect(v3Prompt("desk-voice")).toMatch(/DO NOT EXPLAIN A NORMAL FOOTBALL THING/);
-    expect(v3Prompt("subtraction-editor")).toMatch(/first job is subtraction/);
+    expect(v3Prompt("desk-editor")).toMatch(/THE LEAD/);
+    expect(v3Prompt("desk-editor")).toMatch(/may not add a fact/);
+    expect(v3Prompt("fan-brief")).toMatch(/WOULD A NATIONAL COLLEGE FOOTBALL DESK RUN THIS/);
+    expect(v3Prompt("craft-review")).toMatch(/20 subject no national desk would run/);
+  });
+});
+
+describe("lift gate", () => {
+  it("a stat line shared with the source is a fact, not a lift", async () => {
+    const { liftReport, mostlyNumbers } = await import("./lift-check");
+    const src = "He finished last season completing 58.3% of his passes for 2,760 yards, 15 touchdowns and nine interceptions, he said.";
+    expect(mostlyNumbers("last season completing 58 3 of his passes for 2 760 yards 15 touchdowns and nine interceptions")).toBe(true);
+    expect(liftReport("Castellanos spent last season completing 58.3% of his passes for 2,760 yards, 15 touchdowns and nine interceptions before he left.", [src]).runs).toEqual([]);
+    expect(liftReport("The rule bans coaches from half of the games and carries a financial penalty on the school equal to a fifth of its budget in every case.", ["The rule bans coaches from half of the games and carries a financial penalty on the school equal to a fifth of its budget in every case."]).runs.length).toBe(1);
   });
 });
 

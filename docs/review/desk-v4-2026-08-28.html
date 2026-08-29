@@ -1,0 +1,171 @@
+<title>Desk v4 Before and After</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Sans:wght@400;600&family=IBM+Plex+Mono&display=swap">
+<style>
+:root{--bg:#F6F4EE;--ink:#1F2124;--mute:#6A6E73;--rule:#D9D6CC;--card:#FFFFFF;--acc:#8A2F1C;--good:#2F6B3D;--bad:#8A2F1C;--pre:#EFECE3}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#17191C;--ink:#ECEAE3;--mute:#9A9EA3;--rule:#2F3338;--card:#1F2226;--acc:#E0846C;--good:#7CC68E;--bad:#E0846C;--pre:#24272B}}
+:root[data-theme="dark"]{--bg:#17191C;--ink:#ECEAE3;--mute:#9A9EA3;--rule:#2F3338;--card:#1F2226;--acc:#E0846C;--good:#7CC68E;--bad:#E0846C;--pre:#24272B}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.55 "Source Serif 4",Georgia,serif}
+.wrap{max-width:1180px;margin:0 auto;padding:40px 24px 90px}
+h1{font:600 38px/1.05 "IBM Plex Sans","Helvetica Neue",Arial,sans-serif;margin:0 0 10px;text-wrap:balance;max-width:20ch}
+.lede{color:var(--mute);font:16px/1.5 "IBM Plex Sans",Arial,sans-serif;max-width:70ch}
+.intro{max-width:72ch;margin:26px 0 10px}
+.intro h2{font:600 22px/1.2 "IBM Plex Sans",Arial,sans-serif;margin:28px 0 8px}
+.intro p, .intro li{font-size:16px}
+.intro ol,.intro ul{padding-left:22px}
+.intro table{border-collapse:collapse;font:14px/1.4 "IBM Plex Sans",Arial,sans-serif;width:100%;margin:10px 0}
+.intro td,.intro th{border-top:1px solid var(--rule);padding:7px 8px;text-align:left;vertical-align:top}
+.intro th{color:var(--mute);font-weight:600;letter-spacing:.06em;text-transform:uppercase;font-size:12px}
+.pair{border-top:3px solid var(--acc);margin-top:54px;padding-top:12px}
+.pair h2{font:600 26px/1.15 "IBM Plex Sans",Arial,sans-serif;margin:6px 0 4px}
+.note{color:var(--mute);font:15px/1.5 "IBM Plex Sans",Arial,sans-serif;margin:0 0 16px;max-width:80ch}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+@media (max-width:860px){.cols{grid-template-columns:1fr}}
+article{background:var(--card);border:1px solid var(--rule);border-radius:6px;padding:20px 22px}
+.tag{font:600 12px/1 "IBM Plex Sans",Arial,sans-serif;letter-spacing:.12em;text-transform:uppercase;margin-bottom:10px}
+.before .tag{color:var(--bad)}.after .tag{color:var(--good)}
+article h3{font:600 21px/1.2 "IBM Plex Sans",Arial,sans-serif;margin:0 0 6px;text-wrap:balance}
+.dek{color:var(--mute);font-style:italic;margin:0 0 14px}
+article p{margin:0 0 14px}
+.metrics{background:var(--pre);border-radius:4px;padding:10px 12px;font:12.5px/1.5 "IBM Plex Mono",Menlo,monospace;white-space:pre-wrap;overflow-x:auto;color:var(--ink);margin-top:8px}
+code{font:14px "IBM Plex Mono",Menlo,monospace}
+</style>
+<div class="wrap">
+<h1>Desk v4: the craft rewrite</h1>
+<p class="lede">What changed in how The Pate State writes, why the old copy read like a machine, and the same engine's output before and after — August 28, 2026.</p>
+<div class="intro">
+<h2>What I read</h2>
+<p>Twenty-eight pieces fetched, sixteen read whole: AP news, game and feature stories; CBS Sports reporting (Zenitz, Marcello); Pat Forde's columns at SI; Ross Dellenger's reported features at Yahoo; Nicole Auerbach's Big Ten preview at NBC; Dennis Dodd's farewell; The Ringer's season primer. The notes live in the repo as a Claude Code skill, <code>.claude/skills/sports-desk-editor/</code>, with the fifteen moves those writers make (attributed excerpts), the twenty machine tells found in our own live copy, and a review format. <code>npx tsx scripts/desk-review.mts &lt;slug&gt;</code> prints any live piece with its metrics; <code>--model</code> adds a model-run review on the same rubric.</p>
+
+<h2>Why the copy read like a machine</h2>
+<p>It was structural, not cosmetic. Four things in the pipeline produced the register you hated:</p>
+<ol>
+<li><b>The writer never saw the story.</b> It wrote from a JSON "reporting pack" — atomized facts, one-line quotes, numbers — never the source text and never the date. That is why every lead was a statistic, every quote was a one-line proof, and nothing said "Tuesday." The AP lead carries what happened, when, and what it pushes against in one sentence; ours could not, because the writer did not know when it was.</li>
+<li><b>The prompts were thirty prohibitions.</b> A model writing under "do not, do not, do not" produces the cautious, symmetrical, hedged register — 2–3 sentences per paragraph, 18–24 words per sentence, "if A… if not…" pairs, "will show whether" endings. Journalists work from moves, not bans.</li>
+<li><b>The subtraction editor compressed everything into fact-bricks.</b> Cutting 20–40% after the draft removed the rhythm along with the padding; the corpus mixes one-sentence paragraphs with five-sentence ones.</li>
+<li><b>The schema asked for the headline and dek before the body.</b> The model filled in a form; the body came last.</li>
+</ol>
+
+<h2>What changed</h2>
+<table>
+<tr><th>Piece</th><th>Before</th><th>After</th></tr>
+<tr><td>First draft</td><td>Claude Opus (desk) / Opus (Josh's Read), from the pack</td><td><b>ChatGPT Sol only</b> (gpt-5.6-sol; fallbacks stay inside OpenAI: Terra, then Luna). Sol gets the raw sources, the pack as a checklist, and today's date.</td></tr>
+<tr><td>Edit after the draft</td><td>Subtraction editor (Terra): cut 20–40%</td><td><b>Desk editor (Opus)</b>: rebuild the lead, put the clock in, restore the best quote to its full length, pair the numbers, fix the rhythm, cut the known, rewrite lifts, end on a person. Adds nothing. Josh's Read: Opus tightens after Sol writes.</td></tr>
+<tr><td>Writer prompt</td><td>Rules and bans</td><td>The corpus's moves, in order: lead, distinction, one characterization, the quote as a person, numbers in pairs, memory, texture, a dated next step, the kicker.</td></tr>
+<tr><td>Unknowns</td><td>"The reporting does not establish…"</td><td>"LSU has not said…" — the fact checker now treats plain characterization as analysis, not as an unsourced claim.</td></tr>
+<tr><td>Floor guard</td><td>A desk edit under the word floor was thrown away — in every replay it was the best version</td><td>15% tolerance, then one retry with the floor stated, before the reporter's draft is kept</td></tr>
+<tr><td>Lift gate</td><td>Tripped on stat lines ("58.3% … 2,760 yards, 15 touchdowns")</td><td>A run that is a third numbers is a fact, not a lift</td></tr>
+<tr><td>Subject</td><td>Anything the feed carried (Dakota Wesleyan, Indiana high-school previews, a Purdue reader poll, Kentucky's title odds)</td><td>The fan brief now answers "would a national college football desk run this?" It is logged today and enforced with <code>EDITORIAL_V3_DESK_GATE=true</code> — your call, since it will cut Wire volume.</td></tr>
+<tr><td>Josh's Read additions</td><td>Schedule-heavy "dated tests" → paragraphs that were schedules</td><td>Comparisons and prior results first; at most one schedule item; never a paragraph that is a schedule</td></tr>
+</table>
+
+<h2>What to know before reading the pairs</h2>
+<ul>
+<li>The Anthropic account ran out of credits during this work (fourth time this week), so in the replays below the Opus desk editor fell back to OpenAI Terra. The routing is correct in code; Opus takes the edit the moment credits are back. Sol wrote every first draft.</li>
+<li>The metrics under each piece come from the skill's script: sentence-length spread (pros &gt; 9, machine 4–6), paragraph sizes, time anchors, share of sentences on a stative verb (pros &lt; 25%), abstract-noun hits, quote share.</li>
+<li>The quit and smell judges are still stingy (they flag kickers as "tidy"); they are diagnostics, not scores. Read the pieces.</li>
+</ul>
+</div>
+
+<section class="pair"><h2>A Wire item: a quarterback commits</h2><p class="note">Before: a live Wire item from Aug. 29 (the Mateer/Austin story) written by the old pipeline. After: the Castellanos fixture through the new pipeline — Sol writes from the sources with the date; the desk edit rebuilt the lead. Different stories, same engine, same day.</p><div class="cols">
+<article class="before"><div class="tag">Before — live on the site, old pipeline</div><h3>Analyst Says Mateer’s Decision-Making Issues Predated Thumb Injury</h3><p class="dek">Brooks Austin said Oklahoma quarterback John Mateer showed turn-downs on tape before his throwing-hand thumb injury, citing a missed opportunity against Alabama.</p><p>Brooks Austin said John Mateer’s decision-making concerns predated the Oklahoma quarterback’s throwing-hand thumb injury and extended back to Washington State.</p>
+<p>Austin cited an Alabama play on which he believed Mateer passed up Isaiah Sategna open down the middle for a potential touchdown. “Even when he was healthy, man, I saw some turn-downs on tape that I didn't necessarily love,” Austin said.</p>
+<p>The injury was announced after Oklahoma’s fourth game. Through that stretch, Mateer threw for 1,215 yards, six touchdowns and three interceptions and rushed for 190 yards and five scores. He had followed offensive coordinator Ben Arbuckle to Norman.</p><pre class="metrics">METRICS  99 words · 6 sentences · mean 16.5 words/sentence · spread (sd) 5.7 (pros &gt; 9; machine 4–6)
+         paragraphs 1/2/3 sentences · time anchors 0 (pros ≥ 1 per 100 words) · stative-verb sentences 50% (pros &lt; 25%) · abstract nouns 0 · quote share 17% (news 20–40%)
+
+TELLS
+  #15  Analyst Says Mateer’s Decision-Making Issues Predated Thumb Injury
+  #12  no weekday, no 'days before', no dated clause anywhere in the body</pre></article>
+<article class="after"><div class="tag">After — new pipeline, replay</div><h3>Tommy Castellanos joins Texas Tech behind Will Hammond</h3><p class="dek">The former Florida State starter gives No. 12 Texas Tech an experienced backup while Hammond recovers from the ACL tear that ended his 2025 season.</p><p>Former Florida State starter Tommy Castellanos committed to No. 12 Texas Tech on Wednesday, eight days before the Red Raiders' opener, giving them a 12-game starter behind Will Hammond as Hammond recovers from the ACL tear that cut short his 2025 season.</p>
+<p>Pete Nakos reported Castellanos will open as Hammond's backup. “Castellanos will arrive at Texas Tech as Will Hammond’s backup,” Nakos said.</p>
+<p>Castellanos started all 12 games for Florida State last season, completing 58.3% of his passes for 2,760 yards, 15 touchdowns and nine interceptions. He also led the Seminoles with 557 rushing yards and nine touchdowns on 137 carries.</p>
+<p>He can play a fifth college season after a Kentucky court granted an injunction in his lawsuit against the NCAA following the 2026 NFL Draft, when he went undrafted. The injunction let Castellanos enter the transfer portal after its usual window had closed.</p>
+<p>Texas Tech has not announced a timetable for Hammond's return or said whether Castellanos could play a position other than quarterback. The Red Raiders, who went 12-2 and won the Big 12 last season, now carry a quarterback with 38 career games at UCF, Boston College and Florida State.</p><pre class="metrics">193 words · gpt-5.6-sol wrote · gpt-5.6-terra edited · $0.2171
+METRICS  193 words · 9 sentences · mean 21.4 words/sentence · spread (sd) 9.8 (pros &gt; 9; machine 4–6)
+         paragraphs 1/2/2/2/2 sentences · time anchors 2 (pros ≥ 1 per 100 words) · stative-verb sentences 11% (pros &lt; 25%) · abstract nouns 0 · quote share 5% (news 20–40%)
+
+TELLS
+  #1  paragraph sizes 1/2/2/2/2 — all 2–3 sentences</pre></article></div></section><section class="pair"><h2>A Wire item: a senator, a coach, an injury</h2><p class="note">Before: the live Kennedy/Kiffin item (the skill’s model review called it a non-story for a national desk and found the Waffle House line the writer left in the source). After: the Beaman ACL fixture — the lead now carries the clock (“eight days before the Sept. 5 opener”) and the unknowns read as who has not said what.</p><div class="cols">
+<article class="before"><div class="tag">Before — live on the site, old pipeline</div><h3>Sen. John Kennedy says Lane Kiffin ‘better win’ at LSU</h3><p class="dek">Kennedy tied his criticism to Kiffin’s reported compensation as LSU enters 2026 ranked No. 11 after a 7-6 season.</p><p>Louisiana Sen. John Kennedy said Lane Kiffin “better win” at LSU, citing the coach’s reported compensation and what Kennedy described as taxpayer-money concerns.</p>
+<p>Kennedy said he has never met Kiffin and did not hire him. The reporting does not establish Kiffin’s exact compensation or how it is funded. “When he's making this kind of money, he better win,” Kennedy said.</p>
+<p>Kiffin said LSU will win a national championship but gave no timetable. LSU went 7-6 overall and 3-5 in SEC play in 2025. The Tigers open 2026 No. 11 in the AP poll and No. 13 in the Coaches Poll, hosting Clemson on Sept. 5 before traveling to Ole Miss on Sept. 19.</p><pre class="metrics">METRICS  113 words · 7 sentences · mean 16.1 words/sentence · spread (sd) 6.8 (pros &gt; 9; machine 4–6)
+         paragraphs 1/3/3 sentences · time anchors 2 (pros ≥ 1 per 100 words) · stative-verb sentences 29% (pros &lt; 25%) · abstract nouns 0 · quote share 11% (news 20–40%)
+
+TELLS
+  #3  The reporting does not establish Kiffin’s exact compensation or how it is funded.
+  #8  Kiffin said LSU will win a national championship but gave no timetable. LSU went 7-6 overall and 3-5 in SEC play in 2025. The Tigers open 2026 No. 11 in the AP</pre></article>
+<article class="after"><div class="tag">After — new pipeline, replay</div><h3>Alabama loses Jeremiah Beaman to reported season-ending ACL tear</h3><p class="dek">The third-year defensive lineman reportedly tore his left ACL in Sunday practice and had surgery Tuesday, eight days before Alabama opens against East Carolina.</p><p>Alabama defensive lineman Jeremiah Beaman reportedly will miss the 2026 season after tearing his left ACL in Sunday practice, taking a 6-foot-4, 301-pound third-year player out of the Crimson Tide’s front eight days before the Sept. 5 opener against East Carolina.</p>
+<p>Coach Kalen DeBoer confirmed Monday that Beaman had been injured in practice. Further testing reportedly identified the tear, and Beaman underwent surgery Tuesday at UAB St. Vincent’s, where Dr. Lyle Cain performed the procedure.</p>
+<p>Beaman opened Alabama’s 2025 season as a starter against Florida State, then sustained a season-ending ACL injury in practice the following week. He now faces another season lost to the same injury.</p>
+<p>Alabama has not identified Beaman’s replacement or said how it will divide the defensive-line snaps. The Crimson Tide went 11-4, including 7-1 in the SEC, last season and enters 2026 ranked No. 13 in the AP Top 25 and No. 11 in the AFCA Coaches poll.</p>
+<p>Alabama opens Saturday, Sept. 5, against East Carolina at noon ET. Beaman begins a second ACL recovery in two seasons.</p><pre class="metrics">173 words · gpt-5.6-sol wrote · gpt-5.6-terra edited · $0.1743
+METRICS  173 words · 9 sentences · mean 19.2 words/sentence · spread (sd) 10.3 (pros &gt; 9; machine 4–6)
+         paragraphs 1/2/2/2/2 sentences · time anchors 7 (pros ≥ 1 per 100 words) · stative-verb sentences 22% (pros &lt; 25%) · abstract nouns 0 · quote share 0% (news 20–40%)
+
+TELLS
+  #1  paragraph sizes 1/2/2/2/2 — all 2–3 sentences
+  #8  Alabama opens Saturday, Sept. 5, against East Carolina at noon ET. Beaman begins a second ACL recovery in two seasons.</pre></article></div></section><section class="pair"><h2>A story: the SEC’s penalties and LSU’s abstention</h2><p class="note">Before: the live Texas A&amp;M column, the piece with seven abstract nouns and a “will show whether” ending. After: the SEC pro-player penalties fixture through the new desk — a built lead with “Wednesday,” the distinction second, the half-season-equals-six-games pairing, a dated next step, a kicker. This is the one I would put in front of a real desk.</p><div class="cols">
+<article class="before"><div class="tag">Before — live on the site, old pipeline (Josh’s Read)</div><h3>Why Texas A&amp;M's arrow still points up entering 2026</h3><p class="dek">The Aggies are No. 8 after an 11–2 season, but a revamped offensive line, a remade backfield and a closing run through Alabama, South Carolina, Tennessee, Oklahoma and Texas make 9–3 a realistic playoff-bubble outcome.</p><p>“The arrow is still pointing up for the program.”</p>
+<p>I’m not moving off that because Texas A&amp;M loses 10 players to the draft or because the path back to the playoff is narrower. The Aggies went 11–2 and 7–1 in the SEC last year, and they enter 2026 ranked No. 8 in both major preseason polls. This is a top-eight team after substantial personnel turnover.</p>
+<p>Marcel Reed gives A&amp;M a quarterback ceiling most teams cannot manufacture. He threw for more than 3,100 yards, added 500 on the ground and accounted for 31 touchdowns last season. The next step is more dependable short and intermediate throws and fewer empty drives.</p>
+<p>Mario Craver returns after nearly reaching 1,000 yards, and Isaiah Horton arrives as a big-bodied target with red-zone and big-play utility. Ashton Bethel-Roman and Terry Bussey are part of a receiver group with more than one answer. A quarterback who can distribute quickly to a deep receiving corps does not eliminate offensive-line questions, but it can keep every protection issue from becoming a third-and-long issue.</p>
+<p>Offensive line is the central roster question. Only the center returns from last year’s group, and A&amp;M went to the portal for what could be three or four starters. The staff believed in the spring it could get seven or eight linemen to a winning standard, but that has to become September evidence. Missouri State opens the season Sept. 5, Arizona State comes to College Station on Sept. 12, and Kentucky follows on Sept. 19. By the time A&amp;M goes to LSU on Sept. 26, the Aggies should know whether they can run the ball and protect Reed without asking him to create every difficult answer himself.</p>
+<p>With Le’Veon Moss, EJ Smith and Amari Daniels gone, A&amp;M needs Rueben Owens II to provide more than depth. The former five-star tailback has the talent to give the offense a runner it can ride, but the offensive line and running game are connected questions. If A&amp;M can stay on schedule, Reed’s passing game becomes harder to defend. If it cannot, the new front will be tested in obvious passing situations before the schedule reaches its hardest stretch.</p>
+<p>I expect the defensive line to remain a strength despite losing three of four starters. CJ Mims and Anto Saka join the group as transfers. A&amp;M finished second in sacks but produced only three interceptions. The backend has to turn pressure into possessions, field position and, occasionally, points.</p>
+<p>The Aggies have Arkansas on Oct. 3, Missouri on Oct. 10 and The Citadel on Oct. 17 before hosting Alabama on Oct. 24. The closing test begins after that: at South Carolina on Nov. 7, Tennessee at home on Nov. 14, at Oklahoma on Nov. 21 and Texas in College Station on Nov. 27. That is five consequential conference games in the final six weeks, including two road trips and a rivalry game to finish.</p>
+<p>My preseason bracket does not include A&amp;M, while LSU is No. 8 and Alabama is No. 10. A&amp;M will have direct chances to change the comparison. LSU comes early, Alabama arrives Oct. 24, and the Texas game closes the regular season under the lights. A 9–3 A&amp;M team would have to make those games part of a resume strong enough to separate itself from other three-loss SEC teams.</p>
+<p>I think 9–3 is the most likely landing spot, and it would not tell me Texas A&amp;M is sliding backward. With this quarterback, this receiver room and a defense capable of preserving its front-seven identity, 11–1 remains a legitimate best-case outcome. Arizona State and LSU will show whether the new offensive core is ready. The closing run will show whether the playoff case survives.</p>
+<p>— JP</p><pre class="metrics">METRICS  614 words · 34 sentences · mean 18.1 words/sentence · spread (sd) 6.6 (pros &gt; 9; machine 4–6)
+         paragraphs 1/3/3/3/5/4/4/3/4/4 sentences · time anchors 13 (pros ≥ 1 per 100 words) · stative-verb sentences 41% (pros &lt; 25%) · abstract nouns 7 · quote share 1% (news 20–40%)
+
+TELLS
+  #5  The closing run will show whether the playoff case survives.
+  #6  ceiling
+  #6  utility
+  #6  evidence
+  #6  comparison
+  #6  resume
+  #6  identity
+  #6  outcome</pre></article>
+<article class="after"><div class="tag">After — new pipeline, replay (desk)</div><h3>LSU abstained as SEC approved severe penalties for signing former pros</h3><p class="dek">Lane Kiffin has recruited at least two players covered by a Louisiana injunction, but LSU has not said it signed either one and faces no penalty yet.</p><p>SEC presidents approved severe penalties Wednesday for schools that sign athletes returning from professional leagues, while LSU abstained one day after joining a unanimous vote to enforce the conference’s underlying eligibility ban.</p>
+<p>The split leaves LSU alone on the penalty vote as coach Lane Kiffin recruits at least two players made NCAA-eligible by a Louisiana court injunction. The players were not identified, and LSU has not said it signed either of them. No penalty has been imposed.</p>
+<p>The SEC’s Tuesday announcement said commissioner Greg Sankey was “authorized to enforce this expectation with penalties.” Presidents then approved sanctions that include suspending the coach for half the season, fining the school 50% of that sport’s fiscal-year operating budget and stripping the school of its voting privileges in conference business. The commissioner and presidents also could add penalties.</p>
+<p>LSU joined the other 15 schools Tuesday in a 16-0 vote to enforce rules against fielding athletes who left professional leagues. It abstained when the conference voted on the consequences Wednesday, according to a person familiar with the vote. LSU, Kiffin and school administrators had not publicly explained that distinction. Men’s basketball coach Will Wade, who had pursued another player affected by the eligibility dispute, also had not commented.</p>
+<p>The dispute grew from court injunctions allowing some fifth-year players to return to college. The NCAA adopted an age-based rule in June that gave athletes five years to play but did not grandfather in members of the 2022 high school class who exhausted their eligibility under the previous rule. Lawyers for players, along with Kiffin, have argued that those athletes should retain the right to return after signing professional contracts.</p>
+<p>The injunctions, including the order from a Louisiana court, run against the NCAA. The SEC and Big Ten have taken the position that those orders do not bind individual conferences. As of Wednesday afternoon, the players’ lawyers had not sued the SEC.</p>
+<p>The sanctions could reach directly into LSU’s football season if the school signs and fields one of the affected players and the conference acts. A half-season suspension would remove Kiffin for six games from a 12-game schedule. LSU opens against Clemson on Sept. 5, eight days from Friday, after going 7-6 overall and 3-5 in the SEC last season. The Tigers start this season ranked No. 11 by the AP and No. 13 by the coaches.</p>
+<p>The SEC has not said whether it will impose penalties before the opener, and LSU has not said whether it will challenge the rule in court. For now, Kiffin’s recruitment of the two players has put LSU closest to the new sanctions without establishing that the school violated the rule.</p><pre class="metrics">442 words · gpt-5.6-sol wrote · gpt-5.6-terra edited · $0.2473
+METRICS  442 words · 23 sentences · mean 19.2 words/sentence · spread (sd) 7.7 (pros &gt; 9; machine 4–6)
+         paragraphs 1/3/3/4/3/3/4/2 sentences · time anchors 8 (pros ≥ 1 per 100 words) · stative-verb sentences 30% (pros &lt; 25%) · abstract nouns 0 · quote share 2% (news 20–40%)
+
+TELLS  none by the quick checks (read it anyway)</pre></article></div></section><section class="pair"><h2>Josh’s Read: Miami and the ACC, same segment</h2><p class="note">Same episode, same segment, same additive rules. Before: the Opus column from the Aug. 28 pack. After: Sol writes, the tighten pass edits, with the schedule-heavy additions reined in. Better rhythm and paired records; still the weakest of the four — the smell judge flags five sentences and it repeats “gives me something to respect.” The column lane needs another pass once Opus is back on the edit.</p><div class="cols">
+<article class="before"><div class="tag">Before — Aug. 28 additive column (Opus)</div><h3>Miami Is the ACC Favorite, and the Alternatives Don't Hold Up</h3><p class="dek">Miami enters 2026 at No. 7 in both major preseason polls off a 13-3 season, while the teams floated as alternatives — Clemson (7-6), SMU (9-4), Louisville (9-4) — carry thinner cases. The claim gets tested at Clemson on Oct. 3.</p><p>Spencer wrote in to say one of the bad predictions floating around is that Miami is by far the best team in the ACC and everyone else is playing for second. I agree with the prediction, not the criticism. Miami is the best team in the ACC by far, everyone else is playing for second, and the burden is on the other side of the argument: "So my question rhetorically, because you're not here to defend yourself, would be if not them, then who?"</p>
+<p>Miami is No. 7 in the AP poll and No. 7 in the AFCA Coaches poll, the only ACC team ranked inside the top 15 of either, coming off 13-3 overall and 6-2 in the league. The counter-argument — that the Hurricanes were an overwhelming favorite last year and didn't finish it, that they still have not won an ACC Championship Game — is a fair historical point. But being nervous about a favorite isn't the same as naming a better one.</p>
+<p>So take the three teams I floated as hypotheticals and look at them. Clemson, the program I said was in the mix last year, went 7-6 and 4-4 in the ACC in 2025. It is unranked in the AP poll and No. 23 in the Coaches poll. Clemson has the roster, the staff and the history to be a top-10 team by November — Sammy Brown and Peyton Streko and Bryant Wesco Jr. are not the problem — but a team coming off a .500 conference record and opening at LSU on Sept. 5 is not the safer pick. SMU has the best résumé of the alternatives: 9-4, 6-2 in the league, No. 19 AP and No. 20 Coaches, with Kevin Jennings back and a road trip to Florida State on Sept. 7 that will tell you plenty. Louisville sits at 9-4 overall but 4-4 in the ACC, and is No. 24 in the AP poll. Those are good teams. Two of them are ranked behind Miami by 12 and 17 spots. If your position is that one of them is the actual league favorite, you are asking me to move a 13-win team down and a 9-4 team up on the basis of last year's championship game.</p>
+<p>The honest caveat is the one I gave on the show. Darian Mensah is the difference between Miami being the clear favorite and Miami being one of six teams. Behind him the depth chart thins out considerably, and the offense is built around a quarterback who can carry a game plan — Malachi Toney and Cooper Barkate on the outside, Mark Fletcher Jr. and CharMar Brown behind him, Jackson Cantwell and Samson Okunlola up front. Nobody has a reliable way to forecast availability at that position, and I'm not pretending otherwise. But a favorite going down to injury is a risk every favorite in America carries. It isn't an argument for anyone else.</p>
+<p>There is one place where this site's own record cuts against my take, and I'd rather flag it than let a careful listener catch it. Our August preseason bracket has Clemson at No. 3 nationally and Miami at No. 11. That is a real tension. My read is that the bracket is a national projection with a heavy weight on ceiling and roster talent, while the ACC-favorite question is about who is most likely to be standing in Charlotte — and on that narrower question, the 13-win team with the better quarterback situation and the higher poll floor is where I am. But both of those can't be right after Oct. 3, and I'm not going to pretend they're the same claim.</p>
+<p>Miami goes to Clemson on Saturday, Oct. 3 — the same building, the same program that spoiled things a year ago — and then plays Florida State on Oct. 17, Pittsburgh on Oct. 24, at North Carolina on Oct. 31, and at Notre Dame on Nov. 7 at 7:30 ET. Five weeks, four of them genuinely difficult, before a November close of Duke, Virginia Tech and Boston College that looks manageable on paper. If the Hurricanes come out of that Clemson trip and the Chapel Hill trip at full strength, the ACC race is functionally settled by Halloween and everything I said on the show holds. If they lose at Clemson, then Spencer has the argument he didn't quite make, and Clemson's No. 3 on our bracket looks a lot smarter than my No. 7 poll citation.</p>
+<p>Not that Miami is guaranteed, but after you write down the records and the rankings, nobody has handed me a better name.</p>
+<p>— JP</p><pre class="metrics">METRICS  768 words · 31 sentences · mean 24.8 words/sentence · spread (sd) 14.5 (pros &gt; 9; machine 4–6)
+         paragraphs 3/3/9/6/5/4/1 sentences · time anchors 9 (pros ≥ 1 per 100 words) · stative-verb sentences 65% (pros &lt; 25%) · abstract nouns 2 · quote share 2% (news 20–40%)
+
+TELLS
+  #6  ceiling
+  #6  floor
+  #15  Miami Is the ACC Favorite, and the Alternatives Don't Hold Up</pre></article>
+<article class="after"><div class="tag">After — new pipeline, replay (Sol + tighten)</div><h3>I still have Miami clearly ahead of the ACC</h3><p class="dek">Miami matched SMU at 6-2 in ACC play last season, but its 13-3 overall record and No. 7 preseason ranking separate it from the league’s other contenders. Clemson gets the first direct chance to change my order on October 3.</p><p>Miami is the best team in the ACC.</p>
+<p>That’s still my position. The Hurricanes have the best team in the conference on paper, and the burden belongs to anybody arguing for SMU, Clemson or Louisville instead.</p>
+<p>Miami finished 13-3 but went 6-2 in ACC play. SMU finished 9-4 and also went 6-2 in the league. Miami separated itself across the full season, but not from SMU over eight conference games.</p>
+<p>Louisville went 9-4 overall but 4-4 in the ACC. Clemson went 7-6 and 4-4. Each would have to make up two conference games on Miami’s 2025 mark, and Clemson would have to reverse a six-game difference in the overall standings.</p>
+<p>The Hurricanes are No. 7 in both major polls. SMU is No. 19 in the media poll and No. 20 with the coaches. Clemson is No. 23 with the coaches, while Louisville is No. 24 in the media poll. Miami is ranked higher than the ACC teams trying to catch it.</p>
+<p>Notre Dame went 10-2 last season and begins 2026 ranked No. 4 in the media poll and No. 5 with the coaches, ahead of Miami in both. Notre Dame cannot finish first or second in the ACC, so it is not an alternative conference champion. Their November 7 meeting gives that argument a direct answer.</p>
+<p>Our preseason bracket placed Clemson third, Notre Dame ninth and Miami 11th. That board was more bullish on Clemson and less bullish on Miami than I am here. The bracket has Clemson eight spots ahead of Miami; my conference judgment has Miami clearly ahead of Clemson.</p>
+<p>Miami still has not won the ACC championship game, and it failed to finish the job as an overwhelming favorite last season. It does not make a 7-6 Clemson team or a four-loss Louisville team the better choice for 2026.</p>
+<p>Clemson gets Miami at home on October 3. Clemson can change the order at home.</p>
+<p>The specific Miami vulnerability remains Darian Mensah. There is a massive drop from Miami’s first quarterback to its second, making his availability more consequential here. I’m judging the team as it stands on paper, with Mensah available.</p>
+<p>SMU’s matching 6-2 conference record gives me something to respect. Notre Dame’s 10-2 record and higher preseason ranking give me something to respect nationally. Clemson and Louisville still have far more to prove. Miami is still first in my ACC order.</p>
+<p>— JP</p><pre class="metrics">395 words · gpt-5.6-sol wrote · gpt-5.6-terra edited · $0.384
+METRICS  395 words · 30 sentences · mean 13.2 words/sentence · spread (sd) 6 (pros &gt; 9; machine 4–6)
+         paragraphs 1/2/3/3/4/3/3/2/2/3/4 sentences · time anchors 2 (pros ≥ 1 per 100 words) · stative-verb sentences 60% (pros &lt; 25%) · abstract nouns 0 · quote share 0% (news 20–40%)
+
+TELLS  none by the quick checks (read it anyway)</pre></article></div></section>
+</div>

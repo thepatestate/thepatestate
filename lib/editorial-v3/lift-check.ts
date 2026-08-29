@@ -25,12 +25,21 @@ function mostlyNames(run: string, original: string): boolean {
   return caps / run.split(" ").length >= 0.5;
 }
 
+/** A stat line ("58.3% of his passes for 2,760 yards, 15 touchdowns and nine
+ * interceptions") has one honest way to be written; it is a fact, not a
+ * sentence, so a run that is a third numbers is not a lift (2026-08-28). */
+export function mostlyNumbers(run: string): boolean {
+  const toks = run.split(" ");
+  const nums = toks.filter((t) => /^\d/.test(t) || /^(one|two|three|four|five|six|seven|eight|nine|ten|yards?|touchdowns?|interceptions?|passes|carries|tackles|sacks|points|tds?|ints?|percent)$/.test(t)).length;
+  return nums / toks.length >= 0.34;
+}
+
 export function liftReport(body: string, sources: string[], n = 8): LiftReport {
   const source = sources.join("\n");
   const quoted = (body.match(/"[^"]{20,}"|“[^”]{20,}”/g) ?? []).map(norm);
   const all = sharedRuns(body, source, n);
   const quotedRuns = all.filter((r) => quoted.some((q) => q.includes(r)));
-  const runs = all.filter((r) => !quotedRuns.includes(r) && !mostlyNames(r, originalSpan(body, r)));
+  const runs = all.filter((r) => !quotedRuns.includes(r) && !mostlyNames(r, originalSpan(body, r)) && !mostlyNumbers(r));
   const words = norm(body).split(" ").length;
   const liftedWords = runs.reduce((a, r) => a + r.split(" ").length, 0);
   return { words, liftedWords, pct: Math.round((liftedWords / Math.max(1, words)) * 1000) / 10, runs, quotedRuns };

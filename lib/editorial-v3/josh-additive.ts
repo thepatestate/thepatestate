@@ -5,10 +5,10 @@
 // dated test — in the Voice Bible's blend (50% national journalist / 30%
 // Josh / 20% football analyst), with his on-camera register turned down.
 //
-//   segment → Josh Cut → additions (verifier) → column (Opus) → tightening
+//   segment → Josh Cut → additions (verifier) → column (ChatGPT Sol; Opus tightens after)
 //   → gates → fact check → quit test → smell → additive judge + overlap
 import { callJSON, modelForRole, oppositeOf } from "./models";
-import { v3Prompt, S, arr, obj, ARTICLE_SCHEMA, cleanDraft, words, hardPolicyForLane } from "./v3-context";
+import { v3Prompt, S, arr, obj, ARTICLE_SCHEMA, cleanDraft, words, hardPolicyForLane, dateLine } from "./v3-context";
 import { selectSegment, buildJoshCut, segmentText, segmentSeconds, MAX_SEGMENT_SECONDS, tightenPass, type JoshMaterial, type JoshRunOptions } from "./josh-engine";
 import { hardPolicyGates } from "./policy-gates";
 import { factCheckSources, factRepair } from "./fact-check";
@@ -30,9 +30,9 @@ export async function findAdditions(cut: JoshCut, m: JoshMaterial): Promise<{ ad
 
 export async function writeAdditiveColumn(cut: JoshCut, additions: Addition[], m: JoshMaterial): Promise<{ draft: ArticleDraft; call: StageCall }> {
   const { data, call } = await callJSON<ArticleDraft>({
-    stage: "josh-column-additive", role: "joshProseEdit", maxTokens: 8000, schemaName: "article", schema: ARTICLE_SCHEMA as unknown as Record<string, unknown>,
+    stage: "josh-column-additive", role: "joshColumnWriter", maxTokens: 8000, schemaName: "article", schema: ARTICLE_SCHEMA as unknown as Record<string, unknown>,
     system: `${v3Prompt("josh-column-additive")}\n\n${hardPolicyForLane("show")}`,
-    user: `EPISODE: ${m.title} (${m.publishedAt})\nSEGMENT STARTS AT: ${cut.segmentStart}\nHIS TAKE, IN ONE LINE: ${cut.centralThought}\n\nTHE JOSH CUT (the premise; listeners heard this — quote at most one line of it):\n${cutProse(cut)}\n\nTHE ADDITIONS (what the show did not have; the column is built from these):\n${additions.map((a, i) => `${i + 1}. [${a.kind}] ${a.addition} (${a.sourceRef}) — ${a.changesWhat}`).join("\n")}\n\nVERIFIED TEAM FACTS [sourceRef: fact-sheet]:\n${m.factSheet}\n\n${m.rosterNames ?? ""}\n\n${m.onRecord}`,
+    user: `${dateLine()}\nEPISODE: ${m.title} (${m.publishedAt})\nSEGMENT STARTS AT: ${cut.segmentStart}\nHIS TAKE, IN ONE LINE: ${cut.centralThought}\n\nTHE JOSH CUT (the premise; listeners heard this — quote at most one line of it):\n${cutProse(cut)}\n\nTHE ADDITIONS (what the show did not have; the column is built from these):\n${additions.map((a, i) => `${i + 1}. [${a.kind}] ${a.addition} (${a.sourceRef}) — ${a.changesWhat}`).join("\n")}\n\nVERIFIED TEAM FACTS [sourceRef: fact-sheet]:\n${m.factSheet}\n\n${m.rosterNames ?? ""}\n\n${m.onRecord}`,
   });
   return { draft: cleanDraft(data), call };
 }

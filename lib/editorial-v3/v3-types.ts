@@ -47,6 +47,10 @@ export interface FanBrief {
   importantUnknown?: string;
   depth: Depth;
   depthReason: string;
+  /** Would a national college-football desk run this at all? (2026-08-28;
+   * enforced only with EDITORIAL_V3_DESK_GATE=true, otherwise logged.) */
+  nationalDeskWouldRun?: boolean;
+  deskReason?: string;
 }
 
 export const DEPTH_WORDS: Record<Depth, { min: number; max: number }> = {
