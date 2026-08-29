@@ -14,7 +14,8 @@ import { writeJSON } from "@/lib/writer";
 import { boilerplateViolations, scoreDraft, editorialSystem, voiceMatch, circles, restatements, attributedInSentenceOne, proseWords } from "@/lib/editorial";
 import { judgeJSON } from "@/lib/judge";
 import { v3MayWrite } from "@/lib/editorial-v3/flags";
-import { v3WireStory } from "@/lib/editorial-v3/production";
+import { v3WireStory, deskGateOn } from "@/lib/editorial-v3/production";
+import { deskGate } from "@/lib/editorial-v3/desk-gate";
 import { teamFactSheet } from "@/lib/fact-sheet";
 
 const MODEL = "claude-sonnet-5";
@@ -23,6 +24,21 @@ const MODEL = "claude-sonnet-5";
 // against a runaway pass, not coverage.
 const MAX_STORIES_PER_RUN = 6;
 const MAX_ITEMS_PER_RUN = 6;
+/** Daily cap on Wire stories (Isaac, 2026-08-28: "limit it to a maximum
+ * number of articles a day"). Soft cap from EDITORIAL_WIRE_DAILY_CAP
+ * (default 20); big news (importance ≥ 8) may run past it up to 1.5×. */
+const DAILY_CAP = () => Math.max(1, Number(process.env.EDITORIAL_WIRE_DAILY_CAP ?? 20));
+const HARD_CAP = () => Math.ceil(DAILY_CAP() * 1.5);
+/** Midnight Eastern, as an ISO instant. */
+export function easternMidnightIso(now = new Date()): string {
+  const et = new Date(now.toLocaleString("en-US", { timeZone: "America/New_York" }));
+  const offset = now.getTime() - et.getTime();
+  et.setHours(0, 0, 0, 0);
+  return new Date(et.getTime() + offset).toISOString();
+}
+export async function wireStoriesToday(): Promise<number> {
+  return writeClient.fetch<number>(`count(*[_type == "wireStory" && !(_id in path("drafts.**")) && publishedAt >= $since])`, { since: easternMidnightIso() });
+}
 
 // §20 source network, RSS tier. Detection AND sourcing (Tier 1/2 only — every
 // feed here is a named national outlet, so the source-tier gate is inherent:
@@ -144,13 +160,18 @@ export async function fetchFeeds(): Promise<FeedEntry[]> {
 // National CFB feeds carry other sports (Yahoo's especially: wrestling
 // schedules, hoops recruiting, high-school previews). The Wire is college
 // football only — kill off-topic entries before they cost a scoring call.
-const OFF_TOPIC = /\b(wrestl\w*|basketball|hoops|baseball|softball|volleyball|gymnastics|hockey|lacrosse|soccer|golf|tennis|track and field|swimming|wnba|nba|nfl|mlb|nhl|high school|prep football|browns|patriots|packers|bengals|steelers|bills|dolphins|buccaneers|commanders|colts|chiefs|saints|seahawks|49ers|chargers|ravens|jets|texans|giants|vikings|titans|las vegas raiders|preseason finale|53-man|roster cuts?|final cuts|practice squad|premier league|league two|league one|efl|rupp arena|at rupp|tip-?off|hardwood|men.s basketball|women.s basketball|truck series|cup series|xfinity|pace lap|lap \\d+|spotter|wave[- ]around|caution (flag|period|laps?)|pit road|restart zone|daytona|talladega|speedway|backcourt|frontcourt|point guard|shooting guard|power forward|nascar|indycar|formula one|motocross|real american freestyle|boxing|mma|ufc)\b/i;
-
-/** True when an entry clearly isn't college football. Exported for tests.
- * 400 chars of body text — 160 missed sport mentions that arrive a sentence
- * or two in (a basketball portal story slipped through on 2026-08-20). */
+// Other sports are always off the Wire. Pro-league words (NFL teams, roster
+// cuts) are off the Wire UNLESS the headline carries a college signal — the
+// "Big Ten, SEC ban NFL players from returning" story is college football,
+// and the desk gate (lib/editorial-v3/desk-gate.ts) makes the final call.
+const OFF_SPORT = /\b(wrestl\w*|basketball|hoops|baseball|softball|volleyball|gymnastics|hockey|lacrosse|soccer|golf|tennis|track and field|swimming|wnba|nba|mlb|nhl|high school|prep football|premier league|league two|league one|efl|rupp arena|at rupp|tip-?off|hardwood|men.s basketball|women.s basketball|truck series|cup series|xfinity|pace lap|lap \d+|spotter|wave[- ]around|caution (flag|period|laps?)|pit road|restart zone|daytona|talladega|speedway|backcourt|frontcourt|point guard|shooting guard|power forward|nascar|indycar|formula one|motocross|real american freestyle|boxing|mma|ufc|naia|division ii|division iii|d-?ii\b|d-?iii\b|junior college|juco|gpac|frontier conference|readers? (react|poll)|reader poll|odds to win|betting odds|best bets|parlay|props? bets?|prediction:|vs\.? .{2,40} prediction|fantasy football)\b/i;
+const PRO_LEAGUE = /\b(nfl|browns|patriots|packers|bengals|steelers|bills|dolphins|buccaneers|commanders|colts|chiefs|saints|seahawks|49ers|chargers|ravens|jets|texans|giants|vikings|titans|las vegas raiders|preseason finale|53-man|roster cuts?|final cuts|practice squad)\b/i;
+const COLLEGE_SIGNAL = /\b(college|ncaa|cfp|playoff|big ten|big 12|big twelve|sec\b|acc\b|american athletic|mountain west|sun belt|conference usa|mac\b|fbs|fcs|eligib\w*|transfer portal|recruit\w*|commit\w*|heisman|bowl|sooners|longhorns|crimson tide|buckeyes|wolverines|bulldogs|tigers|aggies|hurricanes|fighting irish|ducks|trojans|hoosiers|volunteers|rebels|gators|seminoles|nittany lions|cornhuskers|badgers|hawkeyes|jayhawks|cougars|utes|red raiders|horned frogs|wildcats|cardinals|cavaliers|tar heels|blue devils|yellow jackets|mustangs|golden eagles)\b/i;
 export function isOffTopic(title: string, description = ""): boolean {
-  return OFF_TOPIC.test(title) || OFF_TOPIC.test(description.slice(0, 400));
+  const text = `${title} ${description.slice(0, 400)}`;
+  if (OFF_SPORT.test(title) || OFF_SPORT.test(description.slice(0, 400))) return true;
+  if (PRO_LEAGUE.test(text) && !COLLEGE_SIGNAL.test(title)) return true;
+  return false;
 }
 
 const STOPWORDS = new Set([
@@ -591,7 +612,9 @@ export async function generateWireStory(
   // fetched sources at the depth the reporting supports; the seven-part
   // skeleton and the 600-word floor are V1 and stay behind the flag.
   if (v3MayWrite("reported")) {
-    const v3 = await v3WireStory({ clusterKey: job.clusterKey, teams: job.teams, refs: job.sources.map((s) => ({ outlet: s.outlet, url: s.url, feedText: job.sourceBlock })), mode: "live" });
+    // The monitor already ran the desk gate on the feed text; the fan brief's
+    // own "would a national desk run this" stays on as the second layer.
+    const v3 = await v3WireStory({ clusterKey: job.clusterKey, teams: job.teams, refs: job.sources.map((s) => ({ outlet: s.outlet, url: s.url, feedText: job.sourceBlock })), mode: "live", gate: false });
     return v3.ok ? { ok: true, fields: v3.fields } : { ok: false, reason: v3.reason };
   }
   let receipt = await findReceipt(job.teams, job.receiptKeywords);
@@ -961,10 +984,24 @@ export async function runWireMonitor(): Promise<{
       (OUTLET_PRIORITY[a.entries[0].outlet] ?? 9) - (OUTLET_PRIORITY[b.entries[0].outlet] ?? 9),
   );
 
+  let todayCount = await wireStoriesToday().catch(() => 0);
   for (const cluster of fresh.slice(0, MAX_ITEMS_PER_RUN)) {
     try {
       const outlets = [...new Set(cluster.entries.map((e) => e.outlet))];
       const urls = [...new Set(cluster.entries.map((e) => e.link).filter(Boolean))];
+      const clusterKey0 = slugify(cluster.title).slice(0, 80);
+      if (todayCount >= HARD_CAP()) { summary.skipped.push(`daily-cap:${clusterKey0}`); continue; }
+      // The desk gate: one cheap call on the feed text before a headline
+      // becomes an item. A rejected cluster is still recorded so it is never
+      // re-scored, but it never becomes a dead headline on the Wire.
+      if (deskGateOn()) {
+        const g = await deskGate({ headline: cluster.title, text: cluster.entries.map((e) => `${e.title}\n${e.content || e.description}`).join("\n\n") });
+        if (!g.pass) {
+          await db.from("wire_clusters").insert({ cluster_key: clusterKey0, title: cluster.title, source_urls: urls.slice(0, 10), source_outlets: outlets, importance: 0 });
+          summary.skipped.push(`gate:${g.result.level}:${clusterKey0.slice(0, 40)}:${g.result.reason.slice(0, 60)}`);
+          continue;
+        }
+      }
       // Feed-provided article text (content:encoded) grounds the story far
       // better than a 500-char description — and for On3 it's the only
       // grounding, since their pages block our fetcher.
@@ -1016,6 +1053,11 @@ export async function runWireMonitor(): Promise<{
         summary.skipped.push(`${item.importance <= 2 ? "low" : "capped"}:${clusterKey}`);
         continue;
       }
+      // Daily cap: past the soft cap only big news (importance ≥ 8) runs.
+      if (todayCount >= DAILY_CAP() && item.importance < 8) {
+        summary.skipped.push(`daily-cap:${clusterKey}`);
+        continue;
+      }
       outletItemCount[primaryOutlet] = (outletItemCount[primaryOutlet] ?? 0) + 1;
 
       const itemId = `wireItem-${clusterKey}`;
@@ -1047,7 +1089,7 @@ export async function runWireMonitor(): Promise<{
           receiptKeywords: [...titleKeywords(cluster.title)],
           itemId,
         });
-        if (result === "ok") summary.stories++;
+        if (result === "ok") { summary.stories++; todayCount++; }
         else summary.skipped.push(result);
       }
     } catch (err) {
@@ -1060,9 +1102,10 @@ export async function runWireMonitor(): Promise<{
   // backlog so dead headlines drain instead of accumulating between manual
   // backfills. The attempt cap above keeps hopeless items from burning the
   // budget every run.
-  if (summary.stories < MAX_STORIES_PER_RUN) {
+  const backlogBudget = Math.min(MAX_STORIES_PER_RUN - summary.stories, Math.max(0, DAILY_CAP() - todayCount));
+  if (backlogBudget > 0) {
     try {
-      const extra = await backfillWireStories(MAX_STORIES_PER_RUN - summary.stories);
+      const extra = await backfillWireStories(backlogBudget);
       summary.stories += extra.stories;
       summary.skipped.push(...extra.skipped.map((s) => `bf-${s}`));
     } catch (err) {

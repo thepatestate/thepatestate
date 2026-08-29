@@ -96,6 +96,39 @@ describe("reported engine", () => {
   });
 });
 
+describe("tiers, gate and cap (2026-08-28)", () => {
+  it("economy tier: Luna writes, Sonnet edits, no Opus/Sol anywhere; premium unchanged", async () => {
+    const { choiceFor } = await import("./models");
+    expect(choiceFor("reportedWriter", "economy").model).toBe("gpt-5.6-luna");
+    expect(choiceFor("deskEditor", "economy").model).toBe("claude-sonnet-5");
+    expect(choiceFor("quitJudge", "economy").model).toBe("gpt-5.6-luna");
+    expect(choiceFor("reportedWriter", "premium").model).toBe("gpt-5.6-sol");
+    expect(choiceFor("deskEditor").model).toBe("claude-opus-5");
+    expect(choiceFor("joshColumnWriter", "economy").model).toBe("gpt-5.6-sol"); // Josh's Read has no economy mode
+  });
+  it("the desk gate prompt names what a national desk does not run", () => {
+    const p = v3Prompt("desk-gate");
+    for (const k of ["NAIA", "reader poll", "betting-odds", "high-school", "NFL"]) expect(p).toContain(k);
+  });
+  it("the keyword filter catches NAIA, reader polls and odds listings; FBS news passes", async () => {
+    const { isOffTopic } = await import("@/lib/wire");
+    expect(isOffTopic("DWU football gameday: Tigers travel to rival Trojans", "NAIA opener")).toBe(true);
+    expect(isOffTopic("Hammer and Rails readers react: predicting Purdue's Big Ten wins")).toBe(true);
+    expect(isOffTopic("The odds to win 2026 SEC championship and where Kentucky stands")).toBe(true);
+    expect(isOffTopic("Kansas vs. LIU prediction: the Jayhawks need this tune-up")).toBe(true);
+    expect(isOffTopic("Tennessee names Faizon Brandon starting QB")).toBe(false);
+    expect(isOffTopic("Big Ten, SEC ban NFL players from returning to play")).toBe(false); // college signal beats the NFL word; the desk gate decides
+    expect(isOffTopic("Browns cut former Ohio State receiver on final roster day")).toBe(true);
+    expect(isOffTopic("Kentucky basketball: Wildcats open at Rupp Arena")).toBe(true);
+  });
+  it("the daily cap counts from midnight Eastern", async () => {
+    const { easternMidnightIso } = await import("@/lib/wire");
+    const iso = easternMidnightIso(new Date("2026-08-29T03:30:00Z")); // 11:30pm ET Aug 28
+    expect(iso).toBe("2026-08-28T04:00:00.000Z");
+    expect(easternMidnightIso(new Date("2026-08-29T05:10:00Z"))).toBe("2026-08-29T04:00:00.000Z"); // 1:10am ET Aug 29
+  });
+});
+
 describe("lift gate", () => {
   it("a stat line shared with the source is a fact, not a lift", async () => {
     const { liftReport, mostlyNumbers } = await import("./lift-check");

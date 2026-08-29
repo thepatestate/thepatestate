@@ -24,7 +24,13 @@ export type Role =
   // Sonnet edit after the fact. joshColumnWriter = the first draft of Josh's
   // Read (additive column, light edit); deskEditor = the craft edit after
   // the reporter's draft; craftReview = the sports-desk-editor skill's judge.
-  | "joshColumnWriter" | "deskEditor" | "craftReview";
+  | "joshColumnWriter" | "deskEditor" | "craftReview" | "deskGate";
+
+/** Two tiers (Isaac, 2026-08-28): "premium" for Josh's Read and the house
+ * reaction (Sol writes, Opus edits); "economy" for the Wire's basic reporting
+ * (Luna writes, Sonnet edits, Luna judges, no smell judge) at roughly a
+ * quarter of the cost. */
+export type Tier = "premium" | "economy";
 
 export interface ModelChoice { vendor: Vendor; model: string; effort: Effort; fallbacks: { vendor: Vendor; model: string }[] }
 
@@ -81,10 +87,25 @@ export function modelForRole(role: Role): ModelChoice {
     case "reportedWriter": return oSol("medium");
     case "deskEditor": return aStrong("medium");
     case "craftReview": return aStrong("low");
+    case "deskGate": return oFast("low");
     case "subtractionEditor": return oStrong("medium");
     case "quitJudge": return oStrong("medium");
     case "smellJudge": return oStrong("low");
   }
+}
+
+const ECONOMY: Partial<Record<Role, () => ModelChoice>> = {
+  packExtract: () => oFast("low"),
+  fanBrief: () => oFast("medium"),
+  reportedWriter: () => oFast("medium"),
+  deskEditor: () => aFast("medium"),
+  quitJudge: () => oFast("low"),
+  smellJudge: () => oFast("low"),
+  deskGate: () => oFast("low"),
+};
+/** The model for a role at a tier; premium is modelForRole. */
+export function choiceFor(role: Role, tier: Tier = "premium"): ModelChoice {
+  return tier === "economy" && ECONOMY[role] ? ECONOMY[role]!() : modelForRole(role);
 }
 
 /** The strongest model in the other vendor family — used so the editor and

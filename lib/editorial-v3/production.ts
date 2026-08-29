@@ -15,6 +15,12 @@ import { getTeamDirectory } from "@/lib/cfbd";
 import { resolveTeamSlug } from "@/lib/wire";
 import type { JoshMaterial } from "./josh-engine";
 import type { V3Run } from "./v3-types";
+import type { Tier } from "./models";
+
+/** The Wire's tier: economy unless EDITORIAL_WIRE_TIER=premium (Isaac, 2026-08-28: "for the basic reporting we need a much cheaper pipeline"). */
+export const wireTier = (): Tier => (process.env.EDITORIAL_WIRE_TIER === "premium" ? "premium" : "economy");
+/** The desk gate is on unless EDITORIAL_V3_DESK_GATE=false. */
+export const deskGateOn = (): boolean => process.env.EDITORIAL_V3_DESK_GATE !== "false";
 
 export interface SourceRef { outlet: string; url: string; feedText?: string; title?: string }
 
@@ -33,11 +39,12 @@ export async function gatherSources(refs: SourceRef[]): Promise<ReportedMaterial
 const paragraphs = (body: string) => body.replace(/\[EMBED:[^\]]*\]\s*|\[PULLQUOTE\]\s*/g, "").split(/\n{2,}/).map((p) => p.trim()).filter(Boolean);
 
 /** The Wire story fields for a cluster, or a skip reason. */
-export async function v3WireStory(input: { clusterKey: string; teams: string[]; refs: SourceRef[]; category?: string; mode: V3Run["mode"] }): Promise<{ ok: true; fields: Record<string, unknown>; run: V3Run } | { ok: false; reason: string; run?: V3Run }> {
+export async function v3WireStory(input: { clusterKey: string; teams: string[]; refs: SourceRef[]; category?: string; mode: V3Run["mode"]; tier?: Tier; gate?: boolean }): Promise<{ ok: true; fields: Record<string, unknown>; run: V3Run } | { ok: false; reason: string; run?: V3Run }> {
   const sources = await gatherSources(input.refs);
   if (sources.length === 0) return { ok: false, reason: `no-source-text:${input.clusterKey}` };
   const factSheet = await teamFactSheet(input.teams.slice(0, 4), { games: 8 }).catch(() => "");
-  const run = await runReportedEngine({ sourceId: input.clusterKey, sources, factSheet }, { mode: input.mode, log: (l) => console.log(`[v3:wire:${input.clusterKey}] ${l}`) });
+  const run = await runReportedEngine({ sourceId: input.clusterKey, sources, factSheet }, { mode: input.mode, tier: input.tier ?? wireTier(), gate: input.gate ?? deskGateOn(), log: (l) => console.log(`[v3:wire:${input.clusterKey}] ${l}`) });
+  if (run.status === "no-article") return { ok: false, reason: run.error ?? "desk gate", run };
   if (run.status !== "completed" || !run.final) return { ok: false, reason: `v3-${run.status}:${run.error ?? input.clusterKey}`, run };
   if (!run.artifacts.policy?.pass) return { ok: false, reason: `policy:${run.artifacts.policy?.violations[0] ?? "?"}`, run };
   if (run.artifacts.fact?.verdict !== "pass") return { ok: false, reason: `factcheck-${run.artifacts.fact?.verdict}:${input.clusterKey}`, run };
