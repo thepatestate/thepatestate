@@ -120,6 +120,12 @@ describe("tiers, gate and cap (2026-08-28)", () => {
     expect(isOffTopic("Big Ten, SEC ban NFL players from returning to play")).toBe(false); // college signal beats the NFL word; the desk gate decides
     expect(isOffTopic("Browns cut former Ohio State receiver on final roster day")).toBe(true);
     expect(isOffTopic("Kentucky basketball: Wildcats open at Rupp Arena")).toBe(true);
+    // description-only hits do not sink a football story
+    expect(isOffTopic("Nebraska's Running Back Race Opens With Jamal Rule in the Mix", "The junior led the Huskers in 2025 before an NFL Draft decision by the starter.")).toBe(false);
+    expect(isOffTopic("Kentucky's 2026 roster churn puts 38 former Wildcats across FBS", "Several are NFL hopefuls; two joined the basketball staff.")).toBe(false);
+    expect(isOffTopic("2022 Athletes Could Gain a Fifth Season Under Class-Wide NCAA Injunction", "Football and basketball players in the 2022 class would benefit.")).toBe(false);
+    expect(isOffTopic("Kentucky adds Jemma Amoore for 2026-27 backcourt depth", "The guard transfers from Ohio.")).toBe(true);
+    expect(isOffTopic("Rams bring back Tutu Atwell to reinforce receiver depth", "The former Louisville wide receiver returns.")).toBe(true);
   });
   it("the daily cap counts from midnight Eastern", async () => {
     const { easternMidnightIso } = await import("@/lib/wire");

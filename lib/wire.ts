@@ -164,13 +164,27 @@ export async function fetchFeeds(): Promise<FeedEntry[]> {
 // cuts) are off the Wire UNLESS the headline carries a college signal — the
 // "Big Ten, SEC ban NFL players from returning" story is college football,
 // and the desk gate (lib/editorial-v3/desk-gate.ts) makes the final call.
-const OFF_SPORT = /\b(wrestl\w*|basketball|hoops|baseball|softball|volleyball|gymnastics|hockey|lacrosse|soccer|golf|tennis|track and field|swimming|wnba|nba|mlb|nhl|high school|prep football|premier league|league two|league one|efl|rupp arena|at rupp|tip-?off|hardwood|men.s basketball|women.s basketball|truck series|cup series|xfinity|pace lap|lap \d+|spotter|wave[- ]around|caution (flag|period|laps?)|pit road|restart zone|daytona|talladega|speedway|backcourt|frontcourt|point guard|shooting guard|power forward|nascar|indycar|formula one|motocross|real american freestyle|boxing|mma|ufc|naia|division ii|division iii|d-?ii\b|d-?iii\b|junior college|juco|gpac|frontier conference|readers? (react|poll)|reader poll|odds to win|betting odds|best bets|parlay|props? bets?|prediction:|vs\.? .{2,40} prediction|fantasy football)\b/i;
-const PRO_LEAGUE = /\b(nfl|browns|patriots|packers|bengals|steelers|bills|dolphins|buccaneers|commanders|colts|chiefs|saints|seahawks|49ers|chargers|ravens|jets|texans|giants|vikings|titans|las vegas raiders|preseason finale|53-man|roster cuts?|final cuts|practice squad)\b/i;
-const COLLEGE_SIGNAL = /\b(college|ncaa|cfp|playoff|big ten|big 12|big twelve|sec\b|acc\b|american athletic|mountain west|sun belt|conference usa|mac\b|fbs|fcs|eligib\w*|transfer portal|recruit\w*|commit\w*|heisman|bowl|sooners|longhorns|crimson tide|buckeyes|wolverines|bulldogs|tigers|aggies|hurricanes|fighting irish|ducks|trojans|hoosiers|volunteers|rebels|gators|seminoles|nittany lions|cornhuskers|badgers|hawkeyes|jayhawks|cougars|utes|red raiders|horned frogs|wildcats|cardinals|cavaliers|tar heels|blue devils|yellow jackets|mustangs|golden eagles)\b/i;
+const OFF_SPORT = /\b(wrestl\w*|basketball|hoops|baseball|softball|volleyball|gymnastics|hockey|lacrosse|soccer|golf|tennis|track and field|swimming|wnba|nba|mlb|nhl|premier league|league two|league one|efl|rupp arena|at rupp|tip-?off|hardwood|men.s basketball|women.s basketball|truck series|cup series|xfinity|pace lap|lap \d+|spotter|wave[- ]around|caution (flag|period|laps?)|pit road|restart zone|daytona|talladega|speedway|backcourt|frontcourt|point guard|shooting guard|power forward|nascar|indycar|formula one|motocross|real american freestyle|boxing|mma|ufc)\b/i;
+// Level and format markers are definitive wherever they appear: NAIA football is
+// still football, and still not the Wire.
+const OFF_LEVEL = /\b(naia|division ii|division iii|d-?ii\b|d-?iii\b|junior college|juco|gpac|frontier conference|high school|prep football|readers? (react|poll)|reader poll|odds to win|betting odds|best bets|parlay|props? bets?|prediction:|vs\.? .{2,40} prediction|fantasy football)\b/i;
+const PRO_LEAGUE = /\b(nfl|rams|lions|cowboys|broncos|falcons|jaguars|eagles|bears|panthers|browns|patriots|packers|bengals|steelers|bills|dolphins|buccaneers|commanders|colts|chiefs|saints|seahawks|49ers|chargers|ravens|jets|texans|giants|vikings|titans|las vegas raiders|preseason finale|53-man|roster cuts?|final cuts|practice squad)\b/i;
+const COLLEGE_SIGNAL = /\b(college|ncaa|cfp|playoff|oklahoma state|boise state|colorado state|air force|south alabama|baylor|penn state|boston college|pitt\b|pittsburgh panthers|big ten|big 12|big twelve|sec\b|acc\b|american athletic|mountain west|sun belt|conference usa|mac\b|fbs|fcs|eligib\w*|transfer portal|recruit\w*|commit\w*|heisman|bowl|sooners|longhorns|crimson tide|buckeyes|wolverines|bulldogs|tigers|aggies|hurricanes|fighting irish|ducks|trojans|hoosiers|volunteers|rebels|gators|seminoles|nittany lions|cornhuskers|badgers|hawkeyes|jayhawks|cougars|utes|red raiders|horned frogs|wildcats|cardinals|cavaliers|tar heels|blue devils|yellow jackets|mustangs|golden eagles)\b/i;
+// Words that mark a story as football even when its description wanders into
+// another sport or the NFL ("38 former Wildcats across FBS", a running back
+// race whose deck mentions the draft). A title hit on OFF_SPORT is always
+// definitive; a description-only hit is not when the story is plainly
+// football. (2026-08-28: the first deletion pass used the old rule and took
+// CFB stories with it — restored from snapshots.)
+const FOOTBALL_STRONG = /\b(football|quarterback|qb|fbs|fcs|cfp|heisman|offensive line|defensive line|linebacker|wide receiver|running back|cornerback|tight end|edge rusher|kickoff|touchdown|bowl|depth chart|fall camp|spring game|sec media days|big ten media days)\b/i;
 export function isOffTopic(title: string, description = ""): boolean {
-  const text = `${title} ${description.slice(0, 400)}`;
-  if (OFF_SPORT.test(title) || OFF_SPORT.test(description.slice(0, 400))) return true;
-  if (PRO_LEAGUE.test(text) && !COLLEGE_SIGNAL.test(title)) return true;
+  const desc = description.slice(0, 400);
+  const text = `${title} ${desc}`;
+  if (OFF_SPORT.test(title) || OFF_LEVEL.test(text)) return true;
+  const football = FOOTBALL_STRONG.test(text) || COLLEGE_SIGNAL.test(title);
+  if (OFF_SPORT.test(desc) && !football) return true;
+  if (PRO_LEAGUE.test(title) && !COLLEGE_SIGNAL.test(text) && !FOOTBALL_STRONG.test(title)) return true;
+  if (PRO_LEAGUE.test(desc) && !football) return true;
   return false;
 }
 
