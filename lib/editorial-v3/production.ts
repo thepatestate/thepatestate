@@ -45,6 +45,7 @@ export async function v3WireStory(input: { clusterKey: string; teams: string[]; 
   const factSheet = await teamFactSheet(input.teams.slice(0, 4), { games: 8 }).catch(() => "");
   const run = await runReportedEngine({ sourceId: input.clusterKey, sources, factSheet }, { mode: input.mode, tier: input.tier ?? wireTier(), gate: input.gate ?? deskGateOn(), log: (l) => console.log(`[v3:wire:${input.clusterKey}] ${l}`) });
   if (run.status === "no-article") return { ok: false, reason: run.error ?? "desk gate", run };
+  if (run.final && (!run.final.headline.trim() || !run.final.bodyMarkdown.trim())) return { ok: false, reason: `empty-${run.final.headline.trim() ? "body" : "headline"}:${input.clusterKey}`, run };
   if (run.status !== "completed" || !run.final) return { ok: false, reason: `v3-${run.status}:${run.error ?? input.clusterKey}`, run };
   if (!run.artifacts.policy?.pass) return { ok: false, reason: `policy:${run.artifacts.policy?.violations[0] ?? "?"}`, run };
   if (run.artifacts.fact?.verdict !== "pass") return { ok: false, reason: `factcheck-${run.artifacts.fact?.verdict}:${input.clusterKey}`, run };
