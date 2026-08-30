@@ -7,7 +7,7 @@ import { teamFactSheet } from "@/lib/fact-sheet";
 import { storeQuotes } from "@/lib/quotes";
 import { generateArticleHero } from "@/lib/hero-image";
 import { slugify } from "@/lib/slug";
-import { v3MayWrite } from "@/lib/editorial-v3/flags";
+import { v3MayWrite, joshAutoPublish } from "@/lib/editorial-v3/flags";
 import { v3JoshColumn } from "@/lib/editorial-v3/production";
 import { JOSH_BRACKET_FIELD, JOSH_BRACKET_FINAL, JOSH_BRACKET_LABEL } from "@/lib/josh-bracket";
 
@@ -101,6 +101,9 @@ export async function ingestEpisode(v: IngestVideo): Promise<IngestResult> {
     // show did not have. No segment or nothing to add → no column.
     let draft: Awaited<ReturnType<typeof draftCompanion>> = null;
     let v3Tags: string[] = [];
+    // Set only on the V3 path when every gate passed (policy, fact check,
+    // additive judge) — those columns publish themselves after the hero lands.
+    let autoPublish = false;
     if (v3MayWrite("josh") && transcriptText) {
       // Consistency ledger, not material (2026-08-30: every rebuilt column was
       // pivoting to the bracket because this read as a source of additions).
@@ -110,6 +113,7 @@ export async function ingestEpisode(v: IngestVideo): Promise<IngestResult> {
       const f = v3.fields as { headline: string; dek: string; bodyMarkdown: string; pullQuote: string; primaryTeam: string; teams: string[]; tags: string[]; seoTitle: string; seoDescription: string };
       draft = { headline: f.headline, dek: f.dek, bodyMarkdown: f.bodyMarkdown, pullQuote: f.pullQuote, primaryTeam: f.primaryTeam, teams: f.teams, tags: [], seo: { title: f.seoTitle, description: f.seoDescription }, lowConfidence: v3.lowConfidence };
       v3Tags = f.tags;
+      autoPublish = joshAutoPublish() && !v3.lowConfidence;
     } else {
       draft = await draftCompanion({
         title: v.title, description: v.description ?? "", publishedAt: v.published,
@@ -135,9 +139,11 @@ export async function ingestEpisode(v: IngestVideo): Promise<IngestResult> {
       // byline in his first person, matching the approved Three Boards
       // column. This is his direct instruction and outranks the kit's §3.
       byline: "Josh Pate",
-      // Kit v4 Constitution §3 (Josh, 2026-08-26): no Josh-byline piece
-      // publishes without an explicit human approval click. Every column
-      // waits in ai-drafted; Josh's team publishes from Studio.
+      // Kit v4 Constitution §3 (Josh, 2026-08-26) wanted a human approval
+      // click. Isaac, 2026-08-30: "It doesn't make sense to gate on a human,
+      // there is no human to check it right now" — a V3 column that passed
+      // every gate is promoted to published below (step 7), after the hero;
+      // anything low-confidence still waits here.
       workflowState: "ai-drafted",
       lowConfidence: !transcriptText || draft.lowConfidence === true,
       primaryTeam: draft.primaryTeam,
@@ -158,6 +164,17 @@ export async function ingestEpisode(v: IngestVideo): Promise<IngestResult> {
       }
     } catch (err) {
       console.error("[ingest:hero]", v.id, err);
+    }
+
+    // 7. Auto-publish the gated V3 column (see the workflowState note above).
+    if (autoPublish) {
+      await writeClient.patch(articleId).set({ workflowState: "published", publishedAt: new Date().toISOString() }).commit();
+      console.log(`[ingest:v3] ${v.id}: auto-published "${draft.headline}"`);
+      // Best-effort: ask the site to drop its 5-minute article cache now.
+      const site = process.env.NEXT_PUBLIC_SITE_URL ?? "https://thepatestate.com";
+      if (process.env.REVALIDATE_SECRET) {
+        try { await fetch(`${site}/api/revalidate`, { method: "POST", headers: { "x-revalidate-secret": process.env.REVALIDATE_SECRET } }); } catch (err) { console.error("[ingest:revalidate]", err); }
+      }
     }
 
     return "created";

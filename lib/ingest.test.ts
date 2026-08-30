@@ -12,6 +12,10 @@ const mocks = vi.hoisted(() => ({
   classifySeries: vi.fn(),
   draftCompanion: vi.fn(),
   fetchTranscript: vi.fn(),
+  patchSetMock: vi.fn(),
+  v3JoshColumn: vi.fn(),
+  v3MayWrite: vi.fn(() => false),
+  joshAutoPublish: vi.fn(() => true),
 }));
 
 vi.mock("@/lib/sanity", () => ({
@@ -19,20 +23,29 @@ vi.mock("@/lib/sanity", () => ({
   writeClient: {
     fetch: mocks.fetchMock,
     createIfNotExists: mocks.createIfNotExistsMock,
-    patch: () => ({ set: () => ({ commit: mocks.patchCommitMock }) }),
+    patch: (id: string) => ({ set: (fields: Record<string, unknown>) => { mocks.patchSetMock(id, fields); return { commit: mocks.patchCommitMock }; } }),
   },
   articleExistsForEpisode: mocks.articleExistsForEpisode,
+  uploadHeroImage: vi.fn(async () => null),
+  setArticleHeroImage: vi.fn(async () => undefined),
 }));
+
+vi.mock("@/lib/editorial-v3/flags", () => ({ v3MayWrite: mocks.v3MayWrite, joshAutoPublish: mocks.joshAutoPublish }));
+vi.mock("@/lib/editorial-v3/production", () => ({ v3JoshColumn: mocks.v3JoshColumn }));
+vi.mock("@/lib/hero-image", () => ({ generateArticleHero: vi.fn(async () => null) }));
+vi.mock("@/lib/fact-sheet", () => ({ teamFactSheet: vi.fn(async () => "") }));
+vi.mock("@/lib/quotes", () => ({ storeQuotes: vi.fn(async () => undefined) }));
 
 vi.mock("@/lib/generate", () => ({
   BYLINE_STAFF: "The Pate State Staff",
   classifySeries: mocks.classifySeries,
   draftCompanion: mocks.draftCompanion,
+  extractQuotes: vi.fn(async () => []),
 }));
 
 vi.mock("@/lib/transcript", () => ({
   fetchTranscript: mocks.fetchTranscript,
-  transcriptToPromptText: vi.fn(() => ""),
+  transcriptToPromptText: vi.fn(() => "[00:00] Josh talks ball for a while."),
 }));
 
 const video = {
@@ -117,5 +130,40 @@ describe("ingestEpisode", () => {
     mocks.draftCompanion.mockRejectedValue(new Error("anthropic boom"));
     const result = await ingestEpisode(video);
     expect(result).toBe("failed");
+  });
+// Isaac, 2026-08-30: "I want to auto publish. It doesn't make sense to gate
+  // on a human, there is no human to check it right now." A V3 column that
+  // passed every gate is promoted to published after creation; a
+  // low-confidence one keeps waiting in ai-drafted.
+  describe("V3 Josh column auto-publish", () => {
+    beforeEach(() => {
+      mocks.v3MayWrite.mockReturnValue(true);
+      mocks.joshAutoPublish.mockReturnValue(true);
+      mocks.fetchTranscript.mockResolvedValue([{ start: 0, dur: 5, text: "Josh talks ball." }]);
+    });
+
+    it("publishes a column whose gates all passed", async () => {
+      mocks.v3JoshColumn.mockResolvedValue({ ok: true, lowConfidence: false, fields: { headline: "Sol Headline", dek: "Sol dek.", bodyMarkdown: "Body. [PULLQUOTE] More.", pullQuote: "Quote.", primaryTeam: "georgia", teams: ["georgia"], tags: ["engine:v3-additive"], seoTitle: "Sol Headline", seoDescription: "Desc." }, run: {} });
+      expect(await ingestEpisode(video)).toBe("created");
+      const created = mocks.createIfNotExistsMock.mock.calls.find((c: unknown[]) => (c[0] as { _type?: string })._type === "article")![0] as Record<string, unknown>;
+      expect(created.workflowState).toBe("ai-drafted"); // always created drafted first
+      const publish = mocks.patchSetMock.mock.calls.find((c: unknown[]) => (c[1] as { workflowState?: string }).workflowState === "published");
+      expect(publish).toBeTruthy();
+      expect(publish![0]).toBe(created._id);
+      expect(typeof (publish![1] as { publishedAt?: string }).publishedAt).toBe("string");
+    });
+
+    it("leaves a low-confidence column in ai-drafted", async () => {
+      mocks.v3JoshColumn.mockResolvedValue({ ok: true, lowConfidence: true, fields: { headline: "Sol Headline", dek: "Sol dek.", bodyMarkdown: "Body. [PULLQUOTE] More.", pullQuote: "Quote.", primaryTeam: "georgia", teams: ["georgia"], tags: ["engine:v3-additive"], seoTitle: "Sol Headline", seoDescription: "Desc." }, run: {} });
+      expect(await ingestEpisode(video)).toBe("created");
+      expect(mocks.patchSetMock.mock.calls.some((c: unknown[]) => (c[1] as { workflowState?: string }).workflowState === "published")).toBe(false);
+    });
+
+    it("respects EDITORIAL_JOSH_AUTOPUBLISH=false", async () => {
+      mocks.joshAutoPublish.mockReturnValue(false);
+      mocks.v3JoshColumn.mockResolvedValue({ ok: true, lowConfidence: false, fields: { headline: "Sol Headline", dek: "Sol dek.", bodyMarkdown: "Body. [PULLQUOTE] More.", pullQuote: "Quote.", primaryTeam: "georgia", teams: ["georgia"], tags: ["engine:v3-additive"], seoTitle: "Sol Headline", seoDescription: "Desc." }, run: {} });
+      expect(await ingestEpisode(video)).toBe("created");
+      expect(mocks.patchSetMock.mock.calls.some((c: unknown[]) => (c[1] as { workflowState?: string }).workflowState === "published")).toBe(false);
+    });
   });
 });

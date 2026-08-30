@@ -26,3 +26,10 @@ export function v3MayWrite(lane: "josh" | "reported", env: Record<string, string
   const f = editorialV3Flags(env);
   return f[lane] && !f.shadow;
 }
+
+/** Josh's Read auto-publish (Isaac, 2026-08-30: "It doesn't make sense to
+ * gate on a human, there is no human to check it right now"). Default ON;
+ * EDITORIAL_JOSH_AUTOPUBLISH=false restores the Studio approval click. */
+export function joshAutoPublish(env: Record<string, string | undefined> = process.env): boolean {
+  return env.EDITORIAL_JOSH_AUTOPUBLISH === undefined ? true : on(env.EDITORIAL_JOSH_AUTOPUBLISH);
+}
