@@ -33,18 +33,16 @@ export function AnnualsSection() {
         <div className="sect-head">
           <div>
             <div className="eyebrow">The Preseason Annuals · JP&apos;s Top Five</div>
-            <h2>Every contender, receipts included</h2>
+            <h2>The Case for the Top Teams</h2>
           </div>
           <Link className="more" href="/poll#bracket">Josh&apos;s Bracket — All 12 Seeds →</Link>
         </div>
         <div className="tg-grid an-grid">
           {ANNUALS.map((a) => {
-            const logo = teamLogoUrl(a.slug);
             return (
               <a className="tg photo" href={`/annual/${a.slug}.html`} key={a.slug}>
                 <span className="tg-photo" style={{ backgroundImage: `url(/img/helmets/${a.slug}.jpg)` }} />
-                {logo && <Image className="chip" src={logo} alt="" width={38} height={38} />}
-                <span className="seed">{a.seed}</span>
+                <span className="seed">No. {a.seed}</span>
                 <div className="venue">{a.name}</div>
                 <div className="k">{a.k}</div>
               </a>

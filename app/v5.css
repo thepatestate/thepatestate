@@ -417,7 +417,7 @@
 .v5-page .an-grid{grid-template-columns:repeat(5,1fr)}
 .v5-page .an-grid .tg.photo{aspect-ratio:3/3.6}
 .v5-page .an-grid .tg-photo{background-position:center 30%}
-.v5-page .an-grid .seed{position:absolute;top:14px;right:14px;z-index:1;width:30px;height:30px;border-radius:50%;background:var(--gold);color:var(--mast);font:800 14px/30px var(--cond);text-align:center;box-shadow:0 4px 10px rgba(0,0,0,.4)}
+.v5-page .an-grid .seed{position:absolute;top:14px;left:14px;z-index:1;height:28px;padding:0 12px;border-radius:14px;background:var(--gold);color:var(--mast);font:800 12.5px/28px var(--cond);letter-spacing:.1em;text-transform:uppercase;white-space:nowrap;box-shadow:0 4px 10px rgba(0,0,0,.4)}
 @media(max-width:1080px){.v5-page .an-grid{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:760px){.v5-page .an-grid{grid-template-columns:1fr 1fr}}
 .v5-page .tg-photo.p1{background-image:url("/img/tailgate-night.jpg")}
