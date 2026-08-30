@@ -99,6 +99,17 @@ export async function getPublishedArticles(limit = 20): Promise<SanityArticle[]>
   );
 }
 
+/** Josh-bylined articles, newest first. The homepage Notebook holds its
+ * feature card and first stack row for these (Isaac, 2026-08-30: "we need to
+ * hold 1–2 slots for Josh articles" — staff analysis was crowding them out). */
+export async function getJoshArticles(limit = 2): Promise<SanityArticle[]> {
+  return await readClient.fetch(
+    `*[_type == "article" && workflowState == "published" && byline == "Josh Pate"] | order(publishedAt desc)[0...$limit]{ ${ARTICLE_FIELDS} }`,
+    { limit },
+    { next: { revalidate: 300, tags: ["articles"] } } as never
+  );
+}
+
 export async function getArticleBySlug(slug: string): Promise<SanityArticle | null> {
   return await readClient.fetch(
     `*[_type == "article" && workflowState == "published" && slug.current == $slug][0]{ ${ARTICLE_FIELDS} }`,

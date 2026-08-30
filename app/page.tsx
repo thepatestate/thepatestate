@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { getVideos, isEpisode, getShorts, getChannelStats, compactCount } from "@/lib/youtube";
-import { getPublishedArticles, getWireItems } from "@/lib/sanity";
+import { getPublishedArticles, getJoshArticles, getWireItems } from "@/lib/sanity";
 import { getSlateGames, getTeamDirectory } from "@/lib/cfbd";
 import { getThreads, publicClient } from "@/lib/community";
 import { getLatestPublished, getBoardResults } from "@/lib/jp-poll";
@@ -21,10 +21,11 @@ export const metadata: Metadata = { alternates: { canonical: "/" } };
 // 2026-08-17-v3-site-rollout-design.md). Every section degrades honestly:
 // dead feed → EmptyState or nothing; fictional content only in DEMO_MODE.
 export default async function Home() {
-  const [videos, shorts, articles, wire, slate, stats, threads, jpBoard] = await Promise.all([
+  const [videos, shorts, articles, joshArticles, wire, slate, stats, threads, jpBoard] = await Promise.all([
     getVideos().catch(() => []),
     getShorts(6).catch(() => []),
     getPublishedArticles(12).catch(() => []),
+    getJoshArticles(2).catch(() => []),
     // 40-deep so the Latest rail's clickable + non-low-impact filter still
     // fills five slots on brief-heavy news days.
     getWireItems(40).catch(() => []),
@@ -35,6 +36,17 @@ export default async function Home() {
     (async () => getThreads(publicClient(), { limit: 4 }))().catch(() => []),
     getLatestPublished().catch(() => null),
   ]);
+  // The Notebook holds two slots for Josh: his newest column is the feature
+  // card, his second-newest takes the first stack row; staff analysis fills
+  // the rest (Isaac, 2026-08-30). Falls back to the plain newest-first order
+  // when no Josh-bylined article exists.
+  const joshIds = new Set(joshArticles.map((a) => a._id));
+  const staffArticles = articles.filter((a) => !joshIds.has(a._id));
+  const notebookLead = joshArticles[0] ?? articles[0] ?? null;
+  const notebookStack = [joshArticles[1], ...staffArticles].filter((a): a is NonNullable<typeof a> => Boolean(a)).filter((a) => a._id !== notebookLead?._id).slice(0, 4);
+  const usedIds = new Set([notebookLead?._id, ...notebookStack.map((a) => a._id)]);
+  const notebookRest = articles.filter((a) => !usedIds.has(a._id));
+  const notebookTrending = notebookRest.length >= 3 ? notebookRest.slice(0, 5) : articles.slice(0, 5);
   const episodes = videos.filter(isEpisode);
   const featured = episodes[0] ?? videos[0] ?? null;
   const showEpisodes = episodes.filter((v) => v.id !== featured?.id);
@@ -73,9 +85,9 @@ export default async function Home() {
       {/* Josh, 2026-08-21: Your Saturday removed; The Notebook sits above
           The People's Games. */}
       <NotebookTrending
-        lead={articles[0] ?? null}
-        stack={articles.slice(1, 5)}
-        trending={articles.slice(5, 10).length >= 3 ? articles.slice(5, 10) : articles.slice(0, 5)}
+        lead={notebookLead}
+        stack={notebookStack}
+        trending={notebookTrending}
         seeds={seeds}
         seedSource={seedSource}
       />
