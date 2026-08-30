@@ -135,6 +135,15 @@ describe("tiers, gate and cap (2026-08-28)", () => {
   });
 });
 
+describe("first-person gate", () => {
+  it("roman numerals are not first person; real first person still is", async () => {
+    const { hasFirstPersonProse } = await import("@/lib/wire");
+    expect(hasFirstPersonProse("The dispute traces to a June vote by the NCAA's Division I board.")).toBe(false);
+    expect(hasFirstPersonProse("It was a Title I school in an I-AA league.")).toBe(false);
+    expect(hasFirstPersonProse("I think the board got this wrong, and I'm not alone.")).toBe(true);
+  });
+});
+
 describe("lift gate", () => {
   it("a quote split by an attribution is still a quote, not a lift", async () => {
     const { liftReport } = await import("./lift-check");

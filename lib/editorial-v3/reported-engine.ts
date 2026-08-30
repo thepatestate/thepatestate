@@ -123,6 +123,17 @@ export async function runReportedEngine(m: ReportedMaterial, opts: ReportedRunOp
       log(`desk edit retry (${retry.call.model}): ${words(s.draft.bodyMarkdown)} → ${words(retry.draft.bodyMarkdown)} words`);
       if (!under(retry.draft)) s = retry;
     }
+    // Lift retry (2026-08-30): if the edited draft still carries verbatim runs,
+    // one more desk pass with those runs named — Luna lifts more than Sol.
+    if (!under(s.draft)) {
+      const lift1 = liftReport(s.draft.bodyMarkdown, m.sources.map((x) => x.text));
+      if (!liftVerdict(lift1).pass) {
+        const fix = await deskEdit(s.draft, p.pack, b.brief, lift1.runs, sourcesBlock(m), `Your edit still carries ${lift1.pct}% verbatim source text outside quotation marks (limit 12%; longest run ${lift1.runs.reduce((a2, x) => Math.max(a2, x.split(" ").length), 0)} words). Rewrite every run listed under VERBATIM LIFTS in the desk's own sentences — keep the facts, change the words — and change nothing else.`, tier); add(fix.call);
+        const lift2 = liftReport(fix.draft.bodyMarkdown, m.sources.map((x) => x.text));
+        log(`lift retry (${fix.call.model}): ${lift1.pct}% → ${lift2.pct}%`);
+        if (!under(fix.draft) && lift2.pct <= lift1.pct) s = fix;
+      }
+    }
     const overCut = under(s.draft);
     let draft = overCut ? w.draft : s.draft; run.artifacts.subtracted = s.draft; run.artifacts.repairs!.push(...s.cuts.map((c) => `cut: ${c}`));
     log(`desk edit (${s.call.model}): ${words(s.draft.bodyMarkdown)} words · ${s.cuts.length} changes${overCut ? ` · below the ${b.brief.depth} floor (${floor}); kept the reporter's ${words(w.draft.bodyMarkdown)}` : ""}`);
@@ -144,7 +155,10 @@ export async function runReportedEngine(m: ReportedMaterial, opts: ReportedRunOp
     if (fc.result.verdict !== "pass" && fc.result.claims.some((c) => c.status === "unsupported" || c.status === "contradicted")) {
       const rp = await factRepair(draft, fc.result, { subject: b.brief.theNews, teams: run.final?.teams ?? [], coreDevelopment: p.pack.development, confirmedFacts: p.pack.facts.map((f) => ({ fact: f.fact, sourceRef: f.sourceRef, confidence: f.status === "confirmed" ? "confirmed" as const : "reported" as const })), uncertainOrMissing: p.pack.unknowns.map((u) => ({ item: u, whyItMatters: "" })), numbers: p.pack.numbers.map((x) => ({ value: x.value, meaning: x.meaning, sourceRef: x.sourceRef })), quotes: p.pack.quotes.map((q) => ({ speaker: q.speaker, text: q.text, sourceRef: q.sourceRef, role: "evidence" as const })), joshOnRecord: [], footballMechanisms: [], tensions: [], contradictions: [], fanObjections: [], secondOrderConsequences: [], observableTests: [], thingsActuallyInteresting: [], sourceSufficiency: { score: 0, canSupportBrief: true, canSupportReaction: true, canSupportPremiumColumn: false, reason: "" } }); add(rp.call);
       if (rp.draft.bodyMarkdown.trim() && words(rp.draft.bodyMarkdown) >= Math.round(DEPTH_WORDS[b.brief.depth].min * 0.7)) {
-        draft = cleanDraft(rp.draft); run.artifacts.repairs!.push(...rp.removed.map((r) => `fact repair: ${r}`));
+        // The repair model sometimes returns the body alone; the headline, dek
+        // and metadata carry over from the draft it repaired.
+        draft = cleanDraft({ ...draft, ...rp.draft, headline: rp.draft.headline?.trim() || draft.headline, dek: rp.draft.dek?.trim() || draft.dek, primaryTeam: rp.draft.primaryTeam || draft.primaryTeam, teams: rp.draft.teams?.length ? rp.draft.teams : draft.teams, tags: rp.draft.tags?.length ? rp.draft.tags : draft.tags, seo: rp.draft.seo?.title ? rp.draft.seo : draft.seo });
+        run.artifacts.repairs!.push(...rp.removed.map((r) => `fact repair: ${r}`));
         run.artifacts.policy = hardPolicyGates({ draft, lane: "standalone", suppliedQuotes: p.pack.quotes.map((q) => q.text) });
         fc = await factCheckSources(draft, source); add(fc.call); run.artifacts.fact = fc.result;
         log(`fact repair: removed ${rp.removed.length} · re-check ${fc.result.verdict} · ${words(draft.bodyMarkdown)} words`);

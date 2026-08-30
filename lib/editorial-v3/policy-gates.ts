@@ -20,9 +20,13 @@ export function hardPolicyGates(input: PolicyInput): PolicyResult {
   // Quoted speech is somebody else's first person; strip it before the lane check.
   // A multi-paragraph quote leaves its opening mark unclosed at the end of
   // the paragraph (newspaper convention); strip that too (2026-08-30).
-  const firstPerson = hasFirstPersonProse(prose.replace(/"[^"]{3,}"|“[^”]{3,}”/g, " ").replace(/[“"][^”"\n]*$/gm, " "));
+  const unquoted = prose.replace(/"[^"]{3,}"|“[^”]{3,}”/g, " ").replace(/[“"][^”"\n]*$/gm, " ");
+  const firstPerson = hasFirstPersonProse(unquoted);
   if (input.lane === "show" && !firstPerson) v.push("lane: Josh's column must be first person");
-  if (input.lane !== "show" && firstPerson) v.push("lane: staff/Wire prose carries no first person");
+  if (input.lane !== "show" && firstPerson) {
+    const hit = unquoted.split(/(?<=[.!?])\s+/).find((sen) => hasFirstPersonProse(sen)) ?? "";
+    v.push(`lane: staff/Wire prose carries no first person${hit ? ` ("${hit.slice(0, 140)}")` : ""}`);
+  }
   if (input.lane === "show" && !/—\s*JP\s*$/.test(body.trimEnd())) v.push("lane: Josh's column signs off — JP");
   // Quote fidelity
   if (input.transcriptText) {

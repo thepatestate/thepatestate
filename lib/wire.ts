@@ -542,7 +542,10 @@ export function hasAttributionOpener(text: string): boolean {
  * story is a fabricated voice — the receipt module is the only place a
  * person speaks. Exported for tests. */
 export function hasFirstPersonProse(text: string): boolean {
-  return /(?:^|[\s“"(])(I|I'm|I've|I'd|I'll|my|me|we're|we've)(?=[\s,.!?'’])/m.test(text) && /\bI\b|I'm|I've|I'd|I'll/.test(text);
+  // Roman numerals are not first person: "Division I board", "Title I",
+  // "I-AA", "Class I" (2026-08-30: the SEC court-order story failed on this).
+  const t = text.replace(/\b(Division|Title|Class|Phase|Type|Article|Group|Level|Tier|Round|Stage|Part|Chapter|Section|Super Bowl|World War|Pope|King|Queen)\s+I\b/g, "$1 ONE").replace(/\bI-A{1,3}\b/g, "ONE-A").replace(/\bI\s*\.\s*[A-Z]\./g, "").replace(/\b[A-Z]\.\s*I\./g, "");
+  return /(?:^|[\s“"(])(I|I'm|I've|I'd|I'll|my|me|we're|we've)(?=[\s,.!?'’])/m.test(t) && /\bI\b|I'm|I've|I'd|I'll/.test(t);
 }
 
 /** Isaac, 2026-08-21: the prose must never narrate its own sourcing —
