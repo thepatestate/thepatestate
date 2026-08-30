@@ -102,7 +102,9 @@ export async function ingestEpisode(v: IngestVideo): Promise<IngestResult> {
     let draft: Awaited<ReturnType<typeof draftCompanion>> = null;
     let v3Tags: string[] = [];
     if (v3MayWrite("josh") && transcriptText) {
-      const onRecord = `ON-RECORD SITE POSITIONS (never contradict silently): ${JOSH_BRACKET_LABEL} — field: ${JOSH_BRACKET_FIELD.map((t) => `${t.seed} ${t.name}`).join(", ")}; final on record: ${JOSH_BRACKET_FINAL}.`;
+      // Consistency ledger, not material (2026-08-30: every rebuilt column was
+      // pivoting to the bracket because this read as a source of additions).
+      const onRecord = `CONSISTENCY LEDGER — the site's on-record positions, supplied so the column never contradicts them. Cite at most one, and only if the segment itself is about rankings, the bracket, the playoff field or the champion pick; otherwise do not mention it. ${JOSH_BRACKET_LABEL} — field: ${JOSH_BRACKET_FIELD.map((t) => `${t.seed} ${t.name}`).join(", ")}; final on record: ${JOSH_BRACKET_FINAL}.`;
       const v3 = await v3JoshColumn({ ytId: v.id, title: v.title, description: v.description ?? "", publishedAt: v.published, transcriptText, teams: [...new Set(quotes.flatMap((q) => q.teams))], onRecord, mode: "live" });
       if (!v3.ok) { console.log(`[ingest:v3] ${v.id}: ${v3.reason}`); return "episode-only"; }
       const f = v3.fields as { headline: string; dek: string; bodyMarkdown: string; pullQuote: string; primaryTeam: string; teams: string[]; tags: string[]; seoTitle: string; seoDescription: string };
