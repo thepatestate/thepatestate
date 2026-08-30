@@ -94,11 +94,17 @@ export function modelForRole(role: Role): ModelChoice {
   }
 }
 
+// 2026-08-30 (Isaac: the economy Wire "feels like Claude writers; the Sol
+// articles sounded FAR less AI"): the first economy tier had Luna write and
+// Sonnet edit, so every Wire story was a Claude rewrite. Now nothing in the
+// Wire's writing path is Anthropic — Sol writes, Luna edits and repairs; the
+// fact CHECKER (judgeJSON, Sonnet) only judges and never touches prose.
 const ECONOMY: Partial<Record<Role, () => ModelChoice>> = {
   packExtract: () => oFast("low"),
   fanBrief: () => oFast("medium"),
-  reportedWriter: () => oFast("medium"),
-  deskEditor: () => aFast("medium"),
+  reportedWriter: () => oSol("medium"),
+  deskEditor: () => oFast("medium"),
+  factRepair: () => oFast("low"),
   quitJudge: () => oFast("low"),
   smellJudge: () => oFast("low"),
   deskGate: () => oFast("low"),

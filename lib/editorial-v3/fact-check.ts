@@ -3,7 +3,7 @@
 // universe; analysis may extend from them; facts may not.
 import Anthropic from "@anthropic-ai/sdk";
 import { judgeJSON } from "@/lib/judge";
-import { callJSON } from "./models";
+import { callJSON , type ModelChoice } from "./models";
 import { v3Prompt as v2Prompt } from "./v3-context";
 import { ARTICLE_SCHEMA, cleanDraft } from "./v3-context";
 import type { ArticleDraft, EditorialDossier, FactCheckResult, StageCall } from "./types";
@@ -66,10 +66,10 @@ export async function factCheckSources(draft: ArticleDraft, sources: string): Pr
 }
 
 /** Brief §17: fact repair is a separate job from prose repair. */
-export async function factRepair(draft: ArticleDraft, result: FactCheckResult, dossier: EditorialDossier): Promise<{ draft: ArticleDraft; removed: string[]; call: StageCall }> {
+export async function factRepair(draft: ArticleDraft, result: FactCheckResult, dossier: EditorialDossier, choice?: ModelChoice): Promise<{ draft: ArticleDraft; removed: string[]; call: StageCall }> {
   const flagged = [...result.claims.filter((c) => c.status !== "supported" && c.status !== "analysis").map((c) => `${c.status.toUpperCase()}: ${c.claim}`), ...result.joshMisattribution.map((m) => `JOSH MISATTRIBUTED: ${m}`)];
   const { data, call } = await callJSON<{ removed: string[]; draft: ArticleDraft }>({
-    stage: "fact-repair", role: "factRepair", maxTokens: 9000,
+    stage: "fact-repair", role: "factRepair", choice, maxTokens: 9000,
     schemaName: "fact_repair", schema: REPAIR_SCHEMA as unknown as Record<string, unknown>,
     system: v2Prompt("fact-repair"),
     user: `FLAGGED CLAIMS:\n${flagged.map((f) => `- ${f}`).join("\n")}\n\nWHAT THE SOURCES SUPPORT (dossier):\n${JSON.stringify({ confirmedFacts: dossier.confirmedFacts, numbers: dossier.numbers, joshOnRecord: dossier.joshOnRecord, quotes: dossier.quotes }, null, 1)}\n\nDRAFT:\n${JSON.stringify(draft, null, 1)}`,

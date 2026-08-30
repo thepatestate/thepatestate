@@ -24,7 +24,7 @@ export function CFLSection() {
           </div>
           <Link className="more" href="/tailgate">Full Tailgate Guide — 136 Stadiums →</Link>
         </div>
-        {/* PHOTO SLOTS: .tg-photo gradients are stylized placeholders sized for
+        {/* PHOTO SLOTS: the four tailgate photos already used on /tailgate (2026-08-30);
             licensed stadium photography (portrait, ~3:3.8) — swap via CSS
             background-image when the photo set lands. */}
         <div className="tg-grid">

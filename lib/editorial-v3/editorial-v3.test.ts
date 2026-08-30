@@ -97,10 +97,13 @@ describe("reported engine", () => {
 });
 
 describe("tiers, gate and cap (2026-08-28)", () => {
-  it("economy tier: Luna writes, Sonnet edits, no Opus/Sol anywhere; premium unchanged", async () => {
+  it("economy tier: Sol writes, Luna edits, no Anthropic in the writing path; premium unchanged", async () => {
     const { choiceFor } = await import("./models");
-    expect(choiceFor("reportedWriter", "economy").model).toBe("gpt-5.6-luna");
-    expect(choiceFor("deskEditor", "economy").model).toBe("claude-sonnet-5");
+    expect(choiceFor("reportedWriter", "economy").model).toBe("gpt-5.6-sol");
+    expect(choiceFor("deskEditor", "economy").model).toBe("gpt-5.6-luna");
+    expect(choiceFor("factRepair", "economy").vendor).toBe("openai");
+    // nothing Anthropic writes in the economy Wire path
+    for (const role of ["reportedWriter", "deskEditor", "factRepair", "packExtract", "fanBrief"] as const) expect(choiceFor(role, "economy").vendor).toBe("openai");
     expect(choiceFor("quitJudge", "economy").model).toBe("gpt-5.6-luna");
     expect(choiceFor("reportedWriter", "premium").model).toBe("gpt-5.6-sol");
     expect(choiceFor("deskEditor").model).toBe("claude-opus-5");

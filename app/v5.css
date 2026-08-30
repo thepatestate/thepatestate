@@ -414,10 +414,10 @@
 .v5-page .tg.photo{aspect-ratio:3/3.8;padding:16px}
 .v5-page .tg-photo{position:absolute;inset:0;background-size:cover;background-position:center}
 .v5-page .tg-photo::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,23,48,.15) 0%,rgba(10,23,48,.35) 55%,rgba(10,23,48,.92) 100%)}
-.v5-page .tg-photo.p1{background-image:radial-gradient(500px 340px at 50% 8%,rgba(255,214,120,.5),transparent 55%),linear-gradient(180deg,#2A1E4F 0%,#3D2A63 34%,#7A4A2E 72%,#1A1230 100%)}
-.v5-page .tg-photo.p2{background-image:radial-gradient(460px 300px at 30% 12%,rgba(255,236,170,.55),transparent 60%),linear-gradient(180deg,#5A7A9E 0%,#8FA86F 48%,#3E5C3A 78%,#24331F 100%)}
-.v5-page .tg-photo.p3{background-image:radial-gradient(520px 340px at 65% 6%,rgba(255,255,255,.4),transparent 58%),linear-gradient(180deg,#7E93AC 0%,#9AA6B4 36%,#8C2F3B 74%,#3A1219 100%)}
-.v5-page .tg-photo.p4{background-image:radial-gradient(480px 320px at 45% 10%,rgba(255,220,140,.45),transparent 55%),linear-gradient(180deg,#B0453A 0%,#8C2F2F 42%,#5E1F27 76%,#26101A 100%)}
+.v5-page .tg-photo.p1{background-image:url("/img/tailgate-night.jpg")}
+.v5-page .tg-photo.p2{background-image:url("/img/tailgate-grove.jpg")}
+.v5-page .tg-photo.p3{background-image:url("/img/tailgate-horseshoe.jpg")}
+.v5-page .tg-photo.p4{background-image:url("/img/tailgate-jump.jpg")}
 .v5-page .tg img.chip{width:38px;height:38px;position:relative;filter:drop-shadow(0 4px 10px rgba(0,0,0,.5));z-index:1}
 .v5-page .tg .venue{font:800 19px/1.1 var(--slab);color:#fff;margin-top:auto;position:relative;z-index:1}
 .v5-page .tg .k{font:700 9.5px/1.5 var(--cond);letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin-top:7px;position:relative;z-index:1}
