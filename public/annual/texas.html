@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Texas 2026 — The Pate State Preseason Annual</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,500;0,600;0,700;0,800;1,700&family=Public+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --team:#BF5700; --team-dk:#9A4600; --team-deep:#3E1C00;
+  --black:#000000; --coal:#000000; --coal2:#0B0B0B;
+  --paper:#FDFCF8; --parch:#F7F3E9; --line:#E4DFD2; --line-d:#2E2E33;
+  --gold:#FFFFFF; --gold-dk:#6E6E68; --sprk:#3FBF6F;
+  --green:#1E7D3E; --green-bg:#EAF6EE; --field:#1C5B38; --field-dk:#154A2D;
+  --ink:#17160F; --mut:#6B675C; --gray:#9BA1A8;
+  --cond:'Barlow Condensed',sans-serif; --body:'Public Sans',sans-serif;
+  --sh:0 30px 80px rgba(0,0,0,.5);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:#000;font-family:var(--body);color:var(--ink);-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+img{display:block}
+
+/* site chrome */
+.mast{background:var(--black);position:sticky;top:0;z-index:60;box-shadow:0 2px 14px rgba(0,0,0,.5)}
+.mast .in{max-width:1160px;margin:0 auto;padding:0 24px;display:flex;align-items:center;height:58px}
+.logo{color:#fff;font:800 23px/1 var(--cond);letter-spacing:.04em;text-transform:uppercase}
+.logo em{font-style:italic;color:var(--gold)}
+.join{margin-left:auto;background:var(--gold);color:var(--black);font:800 12px/1 var(--cond);letter-spacing:.12em;text-transform:uppercase;padding:10px 16px;border-radius:4px}
+.chapters{position:sticky;top:58px;z-index:59;background:rgba(10,10,11,.94);backdrop-filter:blur(6px);border-bottom:1px solid var(--line-d)}
+.chapters .in{max-width:1160px;margin:0 auto;display:flex;gap:6px;overflow-x:auto;padding:9px 24px;scrollbar-width:none}
+.chapters a{flex:none;font:800 10.5px/1 var(--cond);letter-spacing:.1em;text-transform:uppercase;color:var(--gray);border:1px solid var(--line-d);padding:8px 12px;border-radius:20px}
+.chapters a b{color:var(--gold);margin-right:5px}
+.chapters a:hover{border-color:var(--gold);color:#fff}
+
+/* magazine page scaffold */
+.page{max-width:1120px;margin:26px auto;background:var(--paper);box-shadow:var(--sh);position:relative;overflow:hidden}
+.folio{display:flex;justify-content:space-between;align-items:center;padding:15px 46px;font:700 10px/1 var(--cond);letter-spacing:.24em;text-transform:uppercase;color:var(--mut);border-bottom:1px solid var(--line)}
+.folio.bottom{border-bottom:none;border-top:1px solid var(--line)}
+.folio b{color:var(--team)}
+.dark .folio{color:var(--gray);border-color:var(--line-d)}
+.dark .folio b{color:var(--gold)}
+.pin{padding:0 46px}
+@media(max-width:760px){.pin{padding:0 22px}.folio{padding:13px 22px}}
+
+.spread{display:flex;align-items:baseline;justify-content:space-between;gap:20px;border-bottom:3px solid var(--ink);padding-bottom:13px;margin:0 0 30px}
+.spread h3{font:800 clamp(28px,4.2vw,44px)/0.92 var(--cond);text-transform:uppercase;letter-spacing:.01em}
+.spread .tag{font:700 10px/1.4 var(--cond);letter-spacing:.2em;color:var(--team);text-transform:uppercase;text-align:right}
+.dark .spread{border-color:var(--gold-dk)}
+.dark .spread h3{color:#fff}
+.dark .spread .tag{color:var(--gold)}
+.subhead{display:flex;align-items:baseline;gap:14px;margin:38px 0 16px}
+.subhead h4{font:800 24px/1 var(--cond);text-transform:uppercase;letter-spacing:.02em;color:var(--ink)}
+.subhead .ln{flex:1;height:1px;background:var(--line)}
+.subhead .tg{font:700 9.5px/1.3 var(--cond);letter-spacing:.18em;text-transform:uppercase;color:var(--mut)}
+
+/* editorial prose w/ photo */
+.cols{columns:2;column-gap:52px;column-rule:1px solid var(--line)}
+@media(max-width:840px){.cols{columns:1}}
+.cols p{font:400 16px/1.74 var(--body);color:#26241C;margin-bottom:18px;break-inside:avoid-column}
+.cols p.lead::first-letter{font:800 58px/0.82 var(--cond);float:left;padding:7px 11px 0 0;color:var(--team)}
+.cols b{font-weight:700}
+.pullq{break-inside:avoid;border-top:3px solid var(--team);border-bottom:1px solid var(--line);padding:18px 4px;margin:8px 0 22px;font:800 25px/1.08 var(--cond);text-transform:uppercase;color:var(--ink)}
+.pullq .attr{display:block;font:700 10px/1 var(--cond);letter-spacing:.18em;color:var(--mut);margin-top:11px}
+.watch{display:block;background:#FCF9EF;border:1px dashed rgba(46,158,91,.55);padding:11px 15px;margin:4px 0 22px;font:600 13px/1.55 var(--body);color:var(--ink);break-inside:avoid}
+.watch b{font:800 10px/1 var(--cond);letter-spacing:.16em;text-transform:uppercase;color:var(--green);display:block;margin-bottom:4px}
+.photo{position:relative;background:radial-gradient(70% 90% at 30% 10%,rgba(187,0,0,.75),#4A060C 60%,#1E0206 100%);border:1px solid var(--line)}
+.photo.gm{background:radial-gradient(70% 90% at 30% 10%,rgba(70,70,76,.9),#1A1A1D 60%,#0A0A0B 100%)}
+.photo b{position:absolute;left:14px;bottom:11px;font:800 12px/1.35 var(--cond);letter-spacing:.1em;text-transform:uppercase;color:#fff}
+.photo b small{display:block;font:700 8.5px/1.4 var(--cond);letter-spacing:.2em;color:rgba(255,255,255,.6)}
+.photo i{position:absolute;right:11px;top:9px;font:700 8px/1 var(--cond);letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.5);font-style:normal}
+.col-photo{break-inside:avoid;margin:4px 0 20px}
+.col-photo .photo{aspect-ratio:16/11}
+.col-photo .cap{font:500 11.5px/1.55 var(--body);color:var(--mut);margin-top:8px}
+.col-photo .cap b{color:var(--ink);font-weight:600}
+
+/* opener */
+.opener{background:linear-gradient(150deg,#8F0000 0%,var(--team) 42%,var(--team-deep) 100%);color:#FDF1F1;position:relative}
+.opener .pin{padding-top:58px;padding-bottom:60px;position:relative;z-index:1}
+.ghost{position:absolute;top:-48px;right:-28px;font:800 clamp(300px,44vw,560px)/0.8 var(--cond);color:transparent;-webkit-text-stroke:2px rgba(255,255,255,.14);pointer-events:none;z-index:0}
+.rankline{display:flex;align-items:center;gap:16px;flex-wrap:wrap;position:relative;z-index:2}
+.rankline img{width:50px;height:50px;filter:drop-shadow(0 8px 18px rgba(0,0,0,.45))}
+.chip{font:800 14px/1 var(--cond);letter-spacing:.18em;text-transform:uppercase;background:#fff;color:var(--team);padding:9px 15px}
+.rankline .conf{font:700 11px/1.5 var(--cond);letter-spacing:.24em;text-transform:uppercase;color:#F0BDBD}
+.opener h1{font:800 clamp(64px,11vw,138px)/0.86 var(--cond);text-transform:uppercase;margin:18px 0 4px;color:#fff;position:relative;z-index:2}
+.opener h1 em{font-style:italic;color:var(--gold)}
+.dek{font:400 clamp(16px,2vw,20px)/1.55 var(--body);color:#F3D9D9;max-width:62ch;position:relative;z-index:2}
+.dek b{color:#fff;font-weight:700}
+.numrail{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.2);margin-top:36px;position:relative;z-index:2}
+@media(max-width:760px){.numrail{grid-template-columns:1fr 1fr}}
+.numrail div{background:rgba(30,2,5,.85);padding:18px 16px}
+.numrail .v{font:800 38px/1 var(--cond);color:var(--gold)}
+.numrail .l{font:700 9.5px/1.5 var(--cond);letter-spacing:.13em;color:#E4A9A9;text-transform:uppercase;margin-top:7px}
+.bystrip{margin-top:24px;font:700 11px/1.7 var(--cond);letter-spacing:.2em;color:#E4A9A9;text-transform:uppercase;position:relative;z-index:2}
+.bystrip b{color:#fff}
+.heroph{margin-top:24px;position:relative;z-index:2;aspect-ratio:16/6.2;background:radial-gradient(600px 300px at 70% 20%,rgba(255,255,255,.2),transparent 60%),linear-gradient(150deg,#5A0007 0%,#26030a 100%);border:1px solid rgba(255,255,255,.28)}
+.heroph b{position:absolute;left:16px;bottom:12px;font:800 13px/1.4 var(--cond);letter-spacing:.12em;text-transform:uppercase;color:#fff}
+.heroph i{position:absolute;right:12px;top:10px;font:700 8.5px/1 var(--cond);letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.5);font-style:normal}
+
+/* dark pages */
+.darkpg{background:#000;color:#EDECE4}
+.darkpg .pin{padding-top:50px;padding-bottom:56px}
+.vgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line-d);border:1.5px solid #fff}
+@media(max-width:760px){.vgrid{grid-template-columns:1fr}}
+.vc{background:rgba(10,10,11,.85);padding:18px 20px}
+.vc .k{font:800 9.5px/1 var(--cond);letter-spacing:.22em;color:var(--gold);text-transform:uppercase}
+.vc .v{font:800 27px/1 var(--cond);text-transform:uppercase;color:#fff;margin-top:8px}
+.vc .v.g{color:var(--sprk)}
+.vc .v.gr{color:#8CE99A}
+.vc .s{font:400 13px/1.6 var(--body);color:var(--gray);margin-top:7px}
+.q3{margin-top:26px;border-top:1px solid var(--line-d);padding-top:20px;display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media(max-width:760px){.q3{grid-template-columns:1fr}}
+.q3 div{font:500 14px/1.6 var(--body);color:#CFD3D8;padding-left:15px;border-left:3px solid var(--team)}
+.q3 b{display:block;font:800 22px/1 var(--cond);color:var(--team);margin-bottom:4px}
+.jvm{margin-top:30px;display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line-d);border:1px solid var(--line-d);position:relative}
+@media(max-width:760px){.jvm{grid-template-columns:1fr}}
+.jvm .col{background:rgba(10,10,11,.8);padding:24px 26px}
+.jvm .vsmed{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:50px;height:50px;border-radius:50%;background:var(--gold);color:var(--black);font:800 15px/50px var(--cond);text-align:center;z-index:2;box-shadow:0 8px 20px rgba(0,0,0,.4)}
+@media(max-width:760px){.jvm .vsmed{display:none}}
+.jvm h4{font:800 20px/1 var(--cond);letter-spacing:.08em;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
+.jvm .big{font:800 38px/1 var(--cond);color:#fff}
+.jvm .big small{font:700 13px/1 var(--cond);color:var(--gray);margin-left:8px;letter-spacing:.08em}
+.jvm ul{list-style:none;margin-top:12px}
+.jvm li{font:400 13.5px/1.7 var(--body);color:#CFD3D8;padding-left:15px;position:relative}
+.jvm li::before{content:"";position:absolute;left:0;top:11px;width:8px;height:2px;background:var(--team)}
+.jvm .crown{margin-top:12px;font:800 11px/1.5 var(--cond);letter-spacing:.14em;text-transform:uppercase;color:#8CE99A}
+.jvm .crown.no{color:#F0A3AE}
+.rnote{margin-top:24px;background:rgba(187,0,0,.14);border-left:4px solid var(--team);padding:17px 21px;font:400 15px/1.7 var(--body);color:#E6E1D2}
+.rnote b{color:var(--gold);font-weight:700}
+
+/* autopsy visuals */
+.au{display:grid;grid-template-columns:1fr 80px 1fr;border:1px solid var(--line);margin:4px 0 16px;background:#fff}
+@media(max-width:760px){.au{grid-template-columns:1fr}}
+.au .side{padding:28px 24px;text-align:center}
+.au .side.bad{background:#FBEDED}
+.au b{display:block;font:800 11px/1 var(--cond);letter-spacing:.2em;text-transform:uppercase;color:var(--mut);margin-bottom:8px}
+.au i{font:800 84px/0.85 var(--cond);font-style:normal}
+.au .side.bad i{color:var(--team)}
+.au span{display:block;font:700 11px/1.4 var(--cond);letter-spacing:.12em;text-transform:uppercase;color:var(--mut);margin-top:9px}
+.au .vs{display:flex;align-items:center;justify-content:center;font:800 16px/1 var(--cond);color:#C9C3B2;background:var(--parch)}
+.trio{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:1px solid var(--line);border-top:0;margin:0 0 26px;background:#fff}
+@media(max-width:760px){.trio{grid-template-columns:1fr}}
+.trio div{padding:14px 18px;border-right:1px solid var(--line);font:500 12.5px/1.55 var(--body);color:var(--mut)}
+.trio div:last-child{border-right:none}
+.trio b{display:block;font:800 22px/1 var(--cond);color:var(--ink);margin-bottom:4px}
+.trio .bad b{color:var(--team)}
+.turn{display:grid;grid-template-columns:1fr 64px 1fr;border:1px solid var(--line);background:#fff;margin:4px 0 8px}
+@media(max-width:760px){.turn{grid-template-columns:1fr}}
+.turn .side{padding:20px 22px}
+.turn h4{font:800 13px/1 var(--cond);letter-spacing:.2em;text-transform:uppercase;margin-bottom:11px}
+.turn .out h4{color:var(--team)}
+.turn .in h4{color:var(--green)}
+.turn ul{list-style:none}
+.turn li{font:500 13.5px/1.55 var(--body);color:#26241C;padding:6px 0;border-top:1px dotted #D8D2BF}
+.turn li:first-child{border-top:0;padding-top:0}
+.turn li b{font:800 18px/1 var(--cond);margin-right:6px}
+.turn .mid{display:flex;align-items:center;justify-content:center;font:800 24px/1 var(--cond);color:#C9C3B2}
+.fineprint{font:700 10px/1.7 var(--cond);letter-spacing:.1em;text-transform:uppercase;color:var(--mut);margin:8px 0 0}
+
+/* bars, gravity, domino, clock */
+.bars{border:1px solid var(--line);background:#fff;padding:20px 24px;margin:4px 0 24px;break-inside:avoid}
+.bars .k{font:800 11px/1 var(--cond);letter-spacing:.22em;color:var(--team);text-transform:uppercase;margin-bottom:15px}
+.brow{display:grid;grid-template-columns:180px 1fr 70px;gap:14px;align-items:center;padding:7px 0}
+@media(max-width:760px){.brow{grid-template-columns:104px 1fr 54px}}
+.brow b{font:800 14px/1.25 var(--cond);letter-spacing:.05em;text-transform:uppercase}
+.brow b small{display:block;font:700 9px/1.4 var(--cond);color:var(--mut);letter-spacing:.08em}
+.bar{height:13px;background:var(--parch);border:1px solid var(--line)}
+.bar i{display:block;height:100%}
+.bar .good{background:var(--green)}
+.bar .bad{background:var(--team)}
+.brow .v{font:800 19px/1 var(--cond);text-align:right}
+.brow .v.r{color:var(--team)}
+.gravity{background:linear-gradient(180deg,var(--field) 0%,var(--field-dk) 100%);padding:24px 22px 18px;margin:4px 0 24px;position:relative;overflow:hidden;border:1px solid var(--line)}
+.gravity::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent 0 calc(10% - 1px),rgba(255,255,255,.12) calc(10% - 1px) 10%)}
+.gravity .k{font:800 11px/1 var(--cond);letter-spacing:.22em;text-transform:uppercase;color:#EAD588;margin-bottom:16px;position:relative}
+.gfield{position:relative;z-index:2}
+.grow2{display:flex;justify-content:space-around;align-items:flex-start;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.gp{background:#fff;color:var(--ink);font:800 12px/1.1 var(--cond);letter-spacing:.05em;text-transform:uppercase;padding:8px 11px;border-radius:18px;text-align:center}
+.gp.star{background:var(--gold);color:var(--black)}
+.gp.ghosted{background:rgba(255,255,255,.18);color:#fff;border:1px dashed rgba(255,255,255,.5)}
+.gp small{display:block;font:700 8px/1.3 var(--cond);letter-spacing:.1em;opacity:.8}
+.garr{text-align:center;font:800 15px/1.5 var(--cond);color:#EAD588;letter-spacing:.06em;text-transform:uppercase;margin:2px 0 10px}
+.gcap{position:relative;z-index:2;margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,.28);font:500 13px/1.6 var(--body);color:#EAF3ED}
+.gcap b{color:#fff}
+.domino{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);background:#fff;margin:4px 0 8px}
+@media(max-width:760px){.domino{grid-template-columns:1fr}}
+.domino .sc{padding:20px 22px}
+.domino .sc.a{border-right:1px solid var(--line)}
+.domino h4{font:800 16px/1.2 var(--cond);letter-spacing:.08em;text-transform:uppercase}
+.domino .sc.a h4{color:var(--green)}
+.domino .sc.b h4{color:var(--team)}
+.domino .line{display:flex;gap:6px;margin:12px 0}
+.domino .pos{flex:1;text-align:center;font:800 12px/1.15 var(--cond);letter-spacing:.03em;text-transform:uppercase;padding:9px 4px;border:1.5px solid var(--line)}
+.domino .pos small{display:block;font:700 8px/1.3 var(--cond);letter-spacing:.08em;color:var(--mut);margin-top:2px}
+.domino .sc.a .pos{background:var(--green-bg);border-color:#BCD8C4}
+.domino .sc.b .pos{background:#FBEDED;border-color:#E4B9B9}
+.domino p{font:400 13.5px/1.6 var(--body);color:#3C3A33}
+.clock{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--line);background:#fff;margin:4px 0 8px}
+@media(max-width:760px){.clock{grid-template-columns:1fr 1fr}}
+.clock div{padding:18px 16px;border-right:1px solid var(--line)}
+.clock div:last-child{border-right:none}
+.clock small{font:700 9px/1.4 var(--cond);letter-spacing:.16em;text-transform:uppercase;color:var(--gold-dk)}
+.clock b{display:block;font:800 21px/1 var(--cond);text-transform:uppercase;margin:4px 0 6px}
+.clock div:last-child b{color:var(--team)}
+.clock p{font:400 12.5px/1.55 var(--body);color:var(--mut)}
+.ltb{display:grid;grid-template-columns:0.85fr 1.4fr;border:1px solid var(--line);background:#fff;margin:4px 0 8px}
+@media(max-width:840px){.ltb{grid-template-columns:1fr}}
+.ltb .ph{position:relative;min-height:280px}
+.ltb .bd{padding:22px 26px}
+.ltb .bd p{font:400 14.5px/1.68 var(--body);color:#26241C;margin-bottom:14px}
+.ltb .bd p b{font-weight:700}
+.oc{display:grid;grid-template-columns:150px 1fr;gap:14px;padding:12px 0;border-top:1px solid var(--line);align-items:baseline}
+@media(max-width:500px){.oc{grid-template-columns:1fr}}
+.oc b{font:800 13px/1.35 var(--cond);letter-spacing:.08em;text-transform:uppercase}
+.oc.good b{color:var(--green)}
+.oc.bad b{color:var(--team)}
+.oc p{font:400 13px/1.6 var(--body);color:#3C3A33;margin:0 !important}
+
+/* THE MARQUEE — player profiles */
+.prof{display:grid;grid-template-columns:0.9fr 1.35fr;gap:0;border:1px solid var(--line);background:#fff;margin:0 0 30px}
+@media(max-width:840px){.prof{grid-template-columns:1fr}}
+.prof .ph{position:relative;min-height:340px}
+.prof .ph .jersey{position:absolute;top:-14px;right:8px;font:800 170px/1 var(--cond);color:rgba(255,255,255,.13)}
+.prof .body{padding:24px 28px 20px}
+.prof .role{font:800 10px/1 var(--cond);letter-spacing:.24em;color:var(--team);text-transform:uppercase}
+.prof h4{font:800 40px/0.95 var(--cond);text-transform:uppercase;margin:6px 0 2px}
+.prof .meta{font:700 11px/1.6 var(--cond);letter-spacing:.14em;text-transform:uppercase;color:var(--mut)}
+.prof .statline{font:800 12px/1.6 var(--cond);letter-spacing:.06em;color:var(--team-dk);border-top:1px dotted #D8D2BF;border-bottom:1px dotted #D8D2BF;padding:10px 0;margin:12px 0;text-transform:uppercase}
+.prof p{font:400 14.5px/1.66 var(--body);color:#26241C;margin-bottom:12px}
+.swrow{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:4px 0 12px}
+@media(max-width:760px){.swrow{grid-template-columns:1fr}}
+.swrow div{font:400 12.5px/1.6 var(--body);color:#3C3A33}
+.swrow b{display:block;font:800 10px/1 var(--cond);letter-spacing:.18em;text-transform:uppercase;margin-bottom:5px}
+.swrow .s b{color:var(--green)}
+.swrow .w b{color:var(--team)}
+.comp{background:var(--parch);border-left:3px solid var(--team);padding:11px 15px;font:500 13px/1.6 var(--body);color:#26241C;margin:0 0 12px}
+.comp b{font:800 9.5px/1 var(--cond);letter-spacing:.18em;text-transform:uppercase;color:var(--team);display:block;margin-bottom:4px}
+.prof .foot{display:flex;justify-content:space-between;align-items:center;gap:12px;border-top:2px solid var(--ink);padding-top:12px;flex-wrap:wrap}
+.gradechip{font:800 15px/1 var(--cond);letter-spacing:.06em;background:var(--ink);color:var(--gold);padding:9px 13px;text-transform:uppercase}
+.prof .wd{font:800 10px/1.5 var(--cond);letter-spacing:.14em;text-transform:uppercase;color:var(--green)}
+.qgrid{display:grid;grid-template-columns:1fr 1fr;gap:26px}
+@media(max-width:840px){.qgrid{grid-template-columns:1fr}}
+.qp{border:1px solid var(--line);background:#fff;display:grid;grid-template-columns:120px 1fr}
+@media(max-width:500px){.qp{grid-template-columns:1fr}}
+.qp .ph{position:relative;min-height:150px}
+.qp .body{padding:15px 18px 13px}
+.qp .role{font:800 8.5px/1 var(--cond);letter-spacing:.2em;color:var(--team);text-transform:uppercase}
+.qp h5{font:800 22px/1 var(--cond);text-transform:uppercase;margin:4px 0 2px}
+.qp .meta{font:700 9.5px/1.5 var(--cond);letter-spacing:.1em;text-transform:uppercase;color:var(--mut)}
+.qp p{font:400 12.5px/1.58 var(--body);color:#3C3A33;margin:8px 0}
+.qp p b{font-weight:700;color:var(--ink)}
+.qp .comp{margin:0 0 9px;padding:8px 11px;font-size:12px}
+.qp .foot{display:flex;justify-content:space-between;align-items:center;border-top:1.5px solid var(--ink);padding-top:9px;gap:8px;flex-wrap:wrap}
+.qp .gradechip{font-size:13px;padding:7px 10px}
+.qp .wd{font:800 8.5px/1.4 var(--cond);letter-spacing:.1em;text-transform:uppercase;color:var(--green)}
+.cast{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--line);background:#fff;margin-top:30px}
+@media(max-width:840px){.cast{grid-template-columns:1fr 1fr}}
+.cast div{padding:14px 16px;border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
+.cast div:nth-child(4n){border-right:none}
+@media(max-width:840px){.cast div:nth-child(2n){border-right:none}}
+.cast h6{font:800 16px/1 var(--cond);text-transform:uppercase}
+.cast small{font:700 8.5px/1.6 var(--cond);letter-spacing:.14em;text-transform:uppercase;color:var(--team)}
+.cast p{font:400 11.5px/1.55 var(--body);color:var(--mut);margin-top:5px}
+
+/* projected 22 field */
+.fieldwrap{background:linear-gradient(180deg,var(--field) 0%,var(--field-dk) 100%);padding:26px 18px 16px;position:relative;overflow:hidden;border:1px solid var(--line);margin:0 0 8px}
+.fieldwrap::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(180deg,transparent 0 52px,rgba(255,255,255,.11) 52px 53px)}
+.flab{position:relative;font:800 12px/1 var(--cond);letter-spacing:.26em;text-transform:uppercase;color:#EAD588;text-align:center;margin:4px 0 16px;z-index:2}
+.frow{position:relative;display:flex;justify-content:center;align-items:flex-start;gap:8px;flex-wrap:wrap;margin-bottom:12px;z-index:2}
+.frow.spread-row{justify-content:space-between;padding:0 2%}
+.fp{font:800 11.5px/1.15 var(--cond);letter-spacing:.03em;text-transform:uppercase;padding:8px 9px;min-width:64px;text-align:center;box-shadow:0 3px 8px rgba(0,0,0,.3)}
+.fp small{display:block;font:700 8px/1.25 var(--cond);letter-spacing:.07em;margin-top:2px;opacity:.9}
+.fp.lock{background:#0E4227;color:#fff;border:1.5px solid #0A2F1C}
+.fp.new{background:#8FD3A8;color:#0E3B22;border:1.5px solid #5CAB7B}
+.fp.lead{background:#F3D46B;color:#5A4300;border:1.5px solid #D9B33C}
+.fp.battle{background:#F2A65E;color:#5C2E00;border:1.5px solid #D8863B}
+.flegend{position:relative;display:flex;justify-content:center;gap:16px;flex-wrap:wrap;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,.28);font:700 9.5px/1 var(--cond);letter-spacing:.12em;text-transform:uppercase;color:#EAF3ED;z-index:2}
+.flegend i{display:inline-block;width:11px;height:11px;margin-right:5px;vertical-align:-1px}
+.backups{border:1px solid var(--line);border-top:0;background:var(--parch);padding:14px 20px;margin:0 0 26px}
+.backups .k{font:800 10.5px/1 var(--cond);letter-spacing:.22em;text-transform:uppercase;color:var(--team);margin-bottom:9px}
+.backups .row{display:flex;gap:8px;flex-wrap:wrap}
+.backups span{font:700 11px/1 var(--cond);letter-spacing:.06em;text-transform:uppercase;background:#fff;border:1px solid var(--line);padding:8px 11px;color:var(--ink)}
+.backups span small{color:var(--mut);margin-left:5px;letter-spacing:.1em}
+.gstrip{display:grid;grid-template-columns:repeat(12,1fr);gap:8px;margin:4px 0 8px}
+@media(max-width:900px){.gstrip{grid-template-columns:repeat(6,1fr)}}
+.gs{background:#fff;border:1px solid var(--line);padding:11px 6px;text-align:center}
+.gs b{display:block;font:800 9px/1.3 var(--cond);letter-spacing:.1em;text-transform:uppercase;color:var(--mut);margin-bottom:4px}
+.gs i{font:800 21px/1 var(--cond);font-style:normal}
+.gs.hi i{color:var(--green)}
+.gs.lo i{color:#B4530A}
+.gsum{display:flex;gap:12px;flex-wrap:wrap;margin:8px 0 22px}
+.gsum div{flex:1;min-width:230px;background:#FCF9EF;border:1px solid rgba(0,0,0,.16);padding:12px 15px;font:600 12.5px/1.55 var(--body);color:var(--ink)}
+.gsum b{font:800 15px/1 var(--cond);color:var(--team);letter-spacing:.05em}
+.watch4{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:1px solid var(--line);background:#fff;margin:0 0 8px}
+@media(max-width:840px){.watch4{grid-template-columns:1fr 1fr}}
+.watch4 div{padding:14px 16px;border-right:1px solid var(--line);border-left:4px solid var(--green)}
+.watch4 div:last-child{border-right:none}
+.watch4 b{display:block;font:800 16px/1 var(--cond);letter-spacing:.05em;text-transform:uppercase;margin-bottom:5px}
+.watch4 p{font:500 12px/1.5 var(--body);color:var(--mut)}
+
+/* blueprint + flip */
+.bp{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);background:#fff;margin:0 0 22px}
+@media(max-width:760px){.bp{grid-template-columns:1fr}}
+.bpc{padding:20px 22px;border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
+.bpc:nth-child(even){border-right:none}
+.bpc h4{font:800 19px/1 var(--cond);text-transform:uppercase}
+.bpc h4 span{color:var(--team);margin-right:9px}
+.bpc .sb{display:flex;gap:8px;margin:10px 0;font:800 9.5px/1 var(--cond);letter-spacing:.1em;text-transform:uppercase;flex-wrap:wrap}
+.bpc .sb span{padding:6px 9px}
+.bpc .sb .show{background:var(--parch);color:var(--mut)}
+.bpc .sb .ar{color:#C9C3B2;padding:6px 0}
+.bpc .sb .bring{background:#FBEDED;color:var(--team)}
+.bpc p{font:400 13px/1.6 var(--body);color:#3C3A33}
+.breaks{background:var(--green-bg);border-left:4px solid var(--green);padding:16px 20px;margin:0 0 26px;font:500 13.5px/1.7 var(--body);color:#17492B}
+.breaks b{font:800 10px/1 var(--cond);letter-spacing:.2em;text-transform:uppercase;color:var(--green);display:block;margin-bottom:7px}
+.flip{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);background:#fff;margin:0 0 8px}
+@media(max-width:760px){.flip{grid-template-columns:1fr}}
+.flip .col{padding:18px 20px}
+.flip .col.up{background:#F3FAF4;border-right:1px solid var(--line)}
+.flip .col.dn{background:#FCF1F1}
+.flip h4{font:800 14px/1.2 var(--cond);letter-spacing:.14em;text-transform:uppercase;margin-bottom:9px}
+.flip .up h4{color:var(--green)}
+.flip .dn h4{color:var(--team)}
+.flip ul{list-style:none}
+.flip li{font:500 13px/1.6 var(--body);color:#26241C;padding:4px 0 4px 14px;position:relative}
+.flip li::before{content:"";position:absolute;left:0;top:12px;width:7px;height:2px;background:var(--mut)}
+
+/* road + stress */
+.roadgrid{display:grid;grid-template-columns:1fr 300px;gap:30px;align-items:start;margin:0 0 8px}
+@media(max-width:900px){.roadgrid{grid-template-columns:1fr}}
+.road{position:relative;padding-left:26px}
+.road::before{content:"";position:absolute;left:8px;top:10px;bottom:10px;width:2.5px;background:var(--line)}
+.stop{position:relative;padding:0 0 14px 8px}
+.stop::before{content:"";position:absolute;left:-24px;top:4px;width:13px;height:13px;border-radius:50%;background:#fff;border:3px solid var(--mut)}
+.stop.g::before{border-color:#2E9E5B}
+.stop.y::before{border-color:#D9B33C}
+.stop.o::before{border-color:#E07B2E}
+.stop.r::before{border-color:var(--team);background:var(--team)}
+.stop .d{font:700 10px/1 var(--cond);letter-spacing:.12em;text-transform:uppercase;color:var(--mut)}
+.stop h5{font:800 17px/1.15 var(--cond);letter-spacing:.03em;text-transform:uppercase}
+.stop h5 .pick{font:800 11px/1 var(--cond);padding:3px 7px;margin-left:8px;vertical-align:2px}
+.stop h5 .pick.w{background:var(--green-bg);color:var(--green)}
+.stop h5 .pick.l{background:#FBEDED;color:var(--team)}
+.stop p{font:400 12px/1.5 var(--body);color:var(--mut);margin-top:2px;max-width:46ch}
+.stop.zone{background:#FBEDED;padding:10px 12px;margin:2px 0 14px -4px}
+.stop.zone::before{top:14px}
+.stress{background:#fff;border:1px solid var(--line);padding:18px 20px;position:sticky;top:118px}
+.stress .k{font:800 10.5px/1 var(--cond);letter-spacing:.22em;text-transform:uppercase;color:var(--team);margin-bottom:13px}
+.sti{padding:10px 0;border-top:1px solid var(--line)}
+.sti:first-of-type{border-top:0;padding-top:0}
+.sti b{font:800 14px/1.3 var(--cond);letter-spacing:.06em;text-transform:uppercase;display:block}
+.sti p{font:400 12px/1.55 var(--body);color:var(--mut);margin-top:2px}
+.sti.dz{background:#FBEDED;padding:11px 12px;border-top:0;margin:8px 0}
+.sti.dz b{color:var(--team)}
+.sti.dz .score{font:800 24px/1 var(--cond);color:var(--team)}
+.meter{height:9px;background:rgba(200,16,46,.12);overflow:hidden;margin-top:8px}
+.meter i{display:block;height:100%;width:94%;background:linear-gradient(90deg,#E8A33D,var(--team))}
+.marquee4{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--line);background:#fff;margin:0 0 22px}
+@media(max-width:840px){.marquee4{grid-template-columns:1fr 1fr}}
+.mq{padding:16px 18px;border-right:1px solid var(--line)}
+.mq:last-child{border-right:none}
+.mq small{font:700 9px/1 var(--cond);letter-spacing:.16em;text-transform:uppercase;color:var(--team)}
+.mq b{display:block;font:800 21px/1 var(--cond);text-transform:uppercase;margin:4px 0 2px}
+.mq em{display:block;font:800 9.5px/1.4 var(--cond);letter-spacing:.12em;text-transform:uppercase;color:var(--gold-dk);font-style:normal;margin-bottom:6px}
+.mq p{font:400 12.5px/1.55 var(--body);color:var(--mut)}
+.seasonline{background:#FCF9EF;border:1.5px solid rgba(168,134,27,.5);padding:13px 18px;margin:0 0 8px;display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px}
+.seasonline b{font:800 26px/1 var(--cond)}
+.seasonline span{font:600 12px/1.5 var(--body);color:var(--mut)}
+
+/* ledger + five things + margins */
+.ledger{border:1px solid var(--line);background:#fff}
+.lr{display:grid;grid-template-columns:88px 1fr 118px 66px;align-items:center;border-bottom:1px solid var(--line);padding:11px 20px;gap:12px}
+.lr:last-child{border-bottom:none}
+@media(max-width:760px){.lr{grid-template-columns:70px 1fr 56px}.lr .tv{display:none}}
+.lr .d{font:800 11.5px/1 var(--cond);letter-spacing:.1em;color:var(--team)}
+.lr .opp{font:400 15px/1.4 var(--body)}
+.lr .opp b{font-weight:700}
+.lr .opp .st{color:var(--team);font:800 10.5px/1 var(--cond);letter-spacing:.08em}
+.lr .tv{font:700 10.5px/1 var(--cond);letter-spacing:.08em;color:var(--mut);text-align:right}
+.lr .res{font:800 19px/1 var(--cond);text-align:right}
+.lr .res.w{color:var(--green)}
+.lr .res.l{color:var(--team)}
+.lr.dz{background:linear-gradient(90deg,rgba(187,0,0,.06),transparent 70%)}
+.lfoot{padding:13px 20px;font:700 10.5px/1.6 var(--cond);letter-spacing:.12em;color:var(--mut);text-transform:uppercase;border-top:2px solid var(--ink);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.lfoot b{color:var(--team)}
+.five{counter-reset:ft}
+.ft{display:flex;gap:20px;padding:17px 0;border-bottom:1px solid var(--line);align-items:flex-start}
+.ft::before{counter-increment:ft;content:counter(ft,decimal-leading-zero);font:800 32px/1 var(--cond);color:var(--team);flex:0 0 52px}
+.ft h4{font:800 20px/1.15 var(--cond);text-transform:uppercase;margin-bottom:4px}
+.ft p{font:400 14px/1.62 var(--body);color:#3C3A33}
+.mrg{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);background:#fff;margin:0 0 8px}
+@media(max-width:760px){.mrg{grid-template-columns:1fr}}
+.mg{padding:20px 22px;border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
+.mg:nth-child(even){border-right:none}
+.mg small{font:700 9.5px/1 var(--cond);letter-spacing:.2em;text-transform:uppercase;color:var(--mut)}
+.mg b{display:block;font:800 27px/1 var(--cond);color:var(--team);margin:6px 0 4px}
+.mg h4{font:800 16px/1.2 var(--cond);letter-spacing:.04em;text-transform:uppercase;margin-bottom:6px}
+.mg p{font:400 13px/1.6 var(--body);color:#3C3A33}
+.mg .w{margin-top:9px;font:800 9.5px/1.5 var(--cond);letter-spacing:.12em;text-transform:uppercase;color:var(--green)}
+
+/* close */
+.seasons{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:0 0 26px}
+@media(max-width:760px){.seasons{grid-template-columns:1fr}}
+.sea{padding:20px;color:#fff;display:flex;flex-direction:column}
+.sea.c{background:linear-gradient(165deg,#1E7D3E,#0F4A23)}
+.sea.p{background:linear-gradient(165deg,#BB0000,#6E0000)}
+.sea.f{background:linear-gradient(165deg,#2A2A2E,#121214)}
+.sea .k{font:800 10px/1 var(--cond);letter-spacing:.22em;text-transform:uppercase;opacity:.85}
+.sea .rec{font:800 52px/1 var(--cond);margin:8px 0 2px}
+.sea .sub{font:800 11px/1.5 var(--cond);letter-spacing:.12em;text-transform:uppercase;opacity:.9}
+.sea ul{list-style:none;margin-top:13px;border-top:1px solid rgba(255,255,255,.3);padding-top:11px;display:grid;gap:5px}
+.sea li{font:500 12px/1.55 var(--body);color:rgba(255,255,255,.92)}
+.mtest{display:grid;grid-template-columns:repeat(3,1fr);border:1.5px solid #2F2F33;margin:0 0 26px}
+@media(max-width:760px){.mtest{grid-template-columns:1fr}}
+.mtest div{padding:18px 20px;border-right:1px solid var(--line-d)}
+.mtest div:last-child{border-right:none}
+.mtest small{font:700 9.5px/1 var(--cond);letter-spacing:.22em;text-transform:uppercase;color:var(--gray)}
+.mtest b{display:block;font:800 27px/1 var(--cond);letter-spacing:.04em;text-transform:uppercase;color:var(--gold);margin:5px 0}
+.mtest p{font:400 12.5px/1.6 var(--body);color:#CFD3D8}
+.flag{background:linear-gradient(180deg,#FCF9EF 0%,#F3EDE0 100%);border:2px solid var(--team);padding:26px;margin:0 0 30px;position:relative;color:var(--ink)}
+.flag::before{content:"🧾";position:absolute;top:-17px;left:22px;background:var(--team);width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:17px}
+.flag .k{font:800 11px/1 var(--cond);letter-spacing:.24em;text-transform:uppercase;color:var(--team);margin-bottom:11px}
+.flag .rec{font:800 56px/1 var(--cond)}
+.flag .grid{display:grid;grid-template-columns:1fr 1fr;gap:7px 18px;margin-top:15px}
+@media(max-width:760px){.flag .grid{grid-template-columns:1fr}}
+.flag .grid div{font:400 13.5px/1.55 var(--body);color:#26241C}
+.flag .grid b{font-weight:800}
+.flag .status{margin-top:16px;padding-top:13px;border-top:1.5px dashed rgba(187,0,0,.4);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;font:800 11.5px/1 var(--cond);letter-spacing:.14em;text-transform:uppercase}
+.flag .status .open{color:#B4530A}
+.flag .status .gd{color:var(--mut)}
+.ballot{border:2px solid #fff;background:rgba(255,255,255,.03);padding:26px 28px;position:relative;margin:0 0 30px}
+.ballot::before{content:"OFFICIAL PORCH BALLOT";position:absolute;top:-10px;left:24px;background:var(--coal);padding:0 10px;font:800 10px/1 var(--cond);letter-spacing:.26em;color:var(--gold)}
+.ballot h4{font:800 clamp(22px,3.2vw,29px)/1.08 var(--cond);text-transform:uppercase;color:#fff}
+.ballot .sub{font:700 10.5px/1.5 var(--cond);letter-spacing:.14em;color:var(--gray);text-transform:uppercase;margin-top:8px}
+.bopts{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:18px 0 14px}
+@media(max-width:760px){.bopts{grid-template-columns:1fr}}
+.bbtn{font:800 15px/1 var(--cond);letter-spacing:.08em;text-transform:uppercase;padding:15px;border:2px solid var(--gray);background:transparent;color:#fff;cursor:pointer;transition:all .15s}
+.bbtn:hover{border-color:var(--gold);color:var(--gold)}
+.bbtn.picked{background:var(--team);border-color:var(--team);color:#fff}
+.bbar{height:12px;background:rgba(255,255,255,.1);border:1px solid var(--line-d);overflow:hidden;margin:4px 0 6px}
+.bbar i{display:block;height:100%;width:44%;background:linear-gradient(90deg,#2E9E5B,#1E7D3E);transition:width .5s ease}
+.blab{display:flex;justify-content:space-between;font:700 11px/1 var(--cond);letter-spacing:.1em;text-transform:uppercase;color:var(--gray)}
+.blab b{color:#fff}
+.threeway{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--line-d);margin-top:14px}
+.threeway div{padding:12px;text-align:center;border-right:1px solid var(--line-d)}
+.threeway div:last-child{border-right:none}
+.threeway small{font:700 9px/1 var(--cond);letter-spacing:.2em;text-transform:uppercase;color:var(--gray)}
+.threeway b{display:block;font:800 22px/1 var(--cond);color:#fff;margin-top:4px}
+.threeway div:last-child b{color:var(--sprk)}
+.ballot .ftr{margin-top:12px;font:italic 400 13.5px/1.65 var(--body);color:#CFD3D8}
+.ctas{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 28px}
+.cta{font:800 12.5px/1 var(--cond);letter-spacing:.1em;text-transform:uppercase;padding:14px 18px}
+.cta.gold{background:var(--gold);color:var(--black)}
+.cta.ghost{border:1.5px solid #fff;color:#fff}
+.src{font:400 12px/1.7 var(--body);color:var(--gray);padding-top:22px;border-top:1px solid var(--line-d)}
+.src b{color:#EDECE4;font-weight:700}
+.src .status{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.src .status span{font:800 8.5px/1 var(--cond);letter-spacing:.14em;text-transform:uppercase;padding:6px 9px;border:1px solid var(--line-d)}
+.src .status .ok{color:#8CE99A}
+.src .status .pp{color:#fff}
+.src .status .dm{color:#F0A3AE}
+footer{background:var(--black);color:var(--gray);padding:32px 0}
+footer .in{max-width:1160px;margin:0 auto;padding:0 24px}
+.flogo{color:#fff;font:800 22px/1 var(--cond);letter-spacing:.04em;text-transform:uppercase;margin-bottom:13px}
+.flogo em{font-style:italic;color:var(--gold)}
+.fbase{font:500 11.5px/1 var(--body);display:flex;gap:18px;flex-wrap:wrap}
+.fbase a:hover{color:#fff}
+@media print{body{background:#fff}.page{box-shadow:none;margin:0;page-break-after:always}.mast,.chapters{display:none}}
+
+.draftnote{max-width:1120px;margin:18px auto 0;padding:12px 18px;background:#1a1a1c;color:#d7d3c8;font:500 13px/1.5 var(--body);border:1px solid #333}.draftnote b{color:#fff}
+.fact-flag{background:#FFF4E5;border-left:4px solid #E09A2B;padding:10px 14px;margin:14px 0;font:500 12.5px/1.5 var(--body);color:#5a3d00}</style>
+</head>
+<body>
+
+
+
+<header class="mast"><div class="in"><a class="logo" href="/">The Pate <em>State</em></a><a class="join" href="/join">Join Free</a></div></header>
+<nav class="chapters"><div class="in"><a href="#p1"><b>01</b>Verdict</a><a href="#p2"><b>02</b>Autopsy</a><a href="#p3"><b>03</b>Offense</a><a href="#p4"><b>04</b>Defense</a><a href="#p5"><b>05</b>The Marquee</a><a href="#p8"><b>06</b>Projected 22</a><a href="#p9"><b>07</b>Film Room</a><a href="#p10"><b>08</b>Schedule</a><a href="#p11"><b>09</b>Ledger</a><a href="#p13"><b>10</b>Flag Plant</a></div></nav>
+<div class="draftnote"><b>Review draft — produced by the Sol pipeline on Aug 30, 2026.</b> Written by ChatGPT Sol from a verified fact pack (CFBD, the site's fact sheet, reporting sources), edited by Terra, fact-checked section by section. Photo slots are placeholders, as in the Ohio State reference build.</div><section class="page opener dark" id="p1"><div class="folio"><span>The Pate State Preseason Annual · Vol. I</span><b>No. 05 · The Team Capsule</b></div><div class="ghost" aria-hidden="true">05</div><div class="pin">
+<div class="rankline"><span class="chip">No. 5 seed in Josh's bracket</span><span class="conf">SEC · 2025: 10–3 · The Model: No. 6</span></div>
+<h1>Tex<em>as</em></h1><p class="dek"><b>Texas has enough to win the SEC.</b> Six days before the opener, Texas brings back 72.1% of its production but replaces the four backs behind 1,794 rushing yards in 13 games. Manning and Colin Simmons set the Championship Ceiling. The new backfield and interior line face Ohio State on Sept. 12.</p>
+<div class="numrail"><div><div class="v">72.1%</div><div class="l">Overall returning production, with the churn concentrated around Manning.</div></div><div><div class="v">3,163</div><div class="l">Manning’s 2025 passing yards, with 26 touchdowns and seven interceptions in his first full season starting.</div></div><div><div class="v">1,794</div><div class="l">Rushing yards in 13 games — 138.0 per game — before the backfield reset.</div></div><div><div class="v">39</div><div class="l">Sacks produced last season — 12 by Simmons — as Texas replaces three draft picks in its back seven.</div></div></div>
+<div class="bystrip">Written by <b>Josh Pate</b> · Charted by the Pate State Database · 90 sec · 8 min · 25 min layers · All picks → <b>The Ledger</b> · Draft of Aug 30, 2026</div>
+<div class="heroph" style="background:linear-gradient(180deg,#9A4600 0%,#3E1C00 60%,#000 100%)"><i>Pate State original art</i><b>Ohio State arrives in Austin on Sept. 12, six days after Texas State and with a new backfield and reworked offensive front in place.</b></div></div><div class="folio bottom"><span>At No. 5, Texas has Arch Manning and four leading running backs replaced through the portal.</span><span>Pages 1–2</span></div></section>
+<section class="page dark darkpg"><div class="folio"><span>No. 05 · Texas</span><b>The Verdict</b></div><div class="pin"><div class="spread"><h3>The Verdict</h3><span class="tag">Where Josh stands, six days before Texas State</span></div>
+<div class="vgrid"><div class="vc"><div class="k">The JP poll</div><div class="v g">No. 5</div><div class="s">My fifth-ranked team and projected No. 5 playoff seed.</div></div><div class="vc"><div class="k">The Pate State Model</div><div class="v g">No. 6</div><div class="s">One spot below my ballot and inside the national contender tier.</div></div><div class="vc"><div class="k">Josh’s record</div><div class="v">10–2</div><div class="s">Every regular-season game gets called in The Ledger; the losses are at Tennessee and LSU.</div></div><div class="vc"><div class="k">The SEC</div><div class="v gr">Outside Atlanta</div><div class="s">A projected 7–2 conference record leaves Texas near the title game without putting it in.</div></div><div class="vc"><div class="k">The Playoff</div><div class="v g">Host</div><div class="s">The No. 5 seed brings a first-round game to Austin. Texas advances, then exits before the championship game.</div></div><div class="vc"><div class="k">Championship Ceiling</div><div class="v g"></div><div class="s">Manning, Simmons and a 985.17 talent composite give Texas enough to beat anyone on the schedule.</div></div><div class="vc"><div class="k">The Linchpin</div><div class="v">Raleek Brown</div><div class="s">The 1,000-yard transfer averaged 6.1 per carry in 2025. If he makes light boxes expensive, Manning gets the balanced offense he lacked.</div></div><div class="vc"><div class="k">The biggest risk</div><div class="v gr">The portal backfield bet</div><div class="s">Texas replaced its four leading running backs with Brown, Hollywood Smothers and a new rotation. The group must create reliable early-down efficiency against Ohio State on Sept. 12.</div></div><div class="vc"><div class="k">The flag plant</div><div class="v g">10–2 · CFP host</div><div class="s">Texas beats Ohio State in Austin, misses the SEC title game and earns the No. 5 seed. Logged Aug. 30 and graded in January.</div></div></div>
+<div class="q3"><div><b>1</b>Does the rebuilt backfield match 138.0 rushing yards per game beside Manning?</div><div><b>2</b>Can Texas replace three draft picks — Anthony Hill Jr., Malik Muhammad and Michael Taaffe — without losing communication or tackling in the middle of the defense?</div><div><b>3</b>Does the reworked offensive line keep Manning below last season’s 23 sacks allowed when Ohio State arrives Sept. 12?</div></div>
+<div class="jvm"><div class="col"><h4>Josh Says</h4><div class="big">No. 5 seed <small>10–2 · CFP YES</small></div><ul><li>Manning’s second year starting follows 3,163 yards and 26 touchdowns.</li><li>Brown and Smothers join a new rotation that faces Ohio State.</li><li>Simmons returns after 12 sacks for a defense that produced 39.</li><li>The two losses are Tennessee on Sept. 26 and LSU on Nov. 14.</li></ul><div class="crown no">✗ ✗ Not the champion — my pick is Georgia</div></div><div class="vsmed">VS</div><div class="col"><h4>The Model Says</h4><div class="big">No. 6 <small>CFP YES</small></div><ul><li>Texas returns 72.1% of its overall production and 85.4% of its passing production.</li><li>The 985.17 team talent composite keeps the roster in the championship class.</li><li>Manning, Ryan Wingo and Cam Coleman give the passing game production and matchup ability.</li><li>A defense that produced 39 sacks retains Simmons, Jelani McDonald and Graceson Littleton.</li></ul><div class="crown no">✗ ✗ Not the champion — the Model crowns Ohio State</div></div></div></div><div class="folio bottom"><span>JP Preseason Annual · 2026</span><span>Pages 3–4</span></div></section><section class="page" id="p2"><div class="folio"><span>No. 05 · Texas</span><b>The Autopsy</b></div><div class="pin"><div class="spread"><h3>Start with the autopsy</h3><span class="tag">Why 2025 ended · What the offseason answered</span></div><div class="cols"><p class="lead">Texas went 10–3 in 2025, scoring 35.8 points per game in its 10 wins and 12.7 in its three losses. Six days before the opener, Arch Manning’s second year is the easy story. The 23.1-point split is why Texas rebuilt through the portal and has a top-five ranking to answer for.</p><p>The losses came early and late. Texas opened August 30 with a 14–7 loss at Ohio State, scoring one touchdown with a first-year starting quarterback. Florida won 29–21 on October 4. Georgia finished the run on November 16, 35–10. Texas scored 38 points in the three losses, never reaching 22 or its 30.5-point season average.</p><div class="col-photo"><div class="photo gm"><i>Photo slot</i><b>November 16 · Athens<small>Georgia 35, Texas 10</small></b></div><div class="cap"><b>The night the playoff case collapsed.</b> Texas scored 10 points in its third loss. In Athens, the offense again leaned on Manning when the run game did not carry its share.</div></div><p>Georgia made the run-game problem plain. Texas had 1,794 rushing yards in 13 games, 4.2 per carry and five games below 100 rushing yards. Manning had 399 rushing yards and 10 of the team’s 17 rushing touchdowns. He helped Texas escape Kentucky 16–13 and Vanderbilt 34–31, but the quarterback carried too much of the short-yardage load.</p><p>Texas still beat Oklahoma 23–6, Texas A&amp;M 27–17 and Michigan 41–27. The defense had 39 sacks, 82 tackles for loss and 23 takeaways. The offense gained 5,053 yards, but Texas also threw 16 interceptions, took 108 penalties for 906 yards and held the ball for 28 minutes per game.</p><div class="pullq">Texas scored 35.8 points per game in 10 wins and 12.7 in three losses. The rebuild starts with that gap.<span class="attr">— Josh Pate</span></div><p>The offseason changed the roster fast. Six Longhorns were drafted, including Anthony Hill Jr. at No. 60, Malik Muhammad at No. 124, Trey Moore at No. 130 and Michael Taaffe at No. 158. Twenty-seven players entered the portal, including four backs who produced 1,181 rushing yards and receivers Parker Livingstone and DeAndre Moore Jr., who combined for 1,048 yards and 10 touchdowns. Texas signed 22 transfers, adding Raleek Brown and Hollywood Smothers at running back; Cam Coleman and Sterling Berkhalter at receiver; and Melvin Siani, Laurence Seymore III, Dylan Sikorski and Paris Patterson on the offensive line.</p><p>Manning returns after 3,163 passing yards and 26 touchdowns, and Ryan Wingo returns after 834 receiving yards and seven scores. Trevor Goosby is back at left tackle. Colin Simmons returns after 12 sacks and 15.5 tackles for loss. New defensive coordinator Will Muschamp inherits Simmons, Jelani McDonald, Graceson Littleton and a deeper front, then adds Rasheem Biles, Bo Mascoe, Ian Geffrard and Zion Williams. Brown and Smothers need to give Texas a steadier run game behind a remodeled interior. Ohio State on September 12 is the first look.</p></div><div class="subhead"><h4>Why 2025 ended</h4><div class="ln"></div><span class="tg">The scoring split behind the rebuild</span></div><div class="au"><div class="side"><b>Ten wins</b><i>35.8</i><span>Points per game · 358 points</span></div><div class="vs">VS</div><div class="side bad"><b>Three losses</b><i>12.7</i><span>Points per game · 38 points</span></div></div><div class="trio"><div class="bad"><b>1,794</b>Rushing yards in 13 games · 138.0 per game</div><div class="bad"><b>108</b>Penalties · 906 yards surrendered</div><div class="bad"><b>28:00</b>Average time of possession per game</div></div><div class="subhead"><h4>The rebuild, by the numbers</h4><div class="ln"></div><span class="tg">The rebuild, by the numbers</span></div><div class="turn"><div class="side out"><h4>Out</h4><ul><li><b>6</b>NFL draft picks, led by Anthony Hill Jr. in Round 2</li><li><b>27</b>Portal departures across the roster</li><li><b>1,181</b>Rushing yards produced by the four departing backs</li></ul></div><div class="mid">→</div><div class="side in"><h4>In</h4><ul><li><b>22</b>Portal additions at RB, WR, OL and LB</li><li><b>72.1%</b>Overall returning production by CFBD PPA share</li><li><b>985.17</b>Team talent composite behind a top-five ranking</li></ul></div></div><p class="fineprint">Verified offensive returning-starter figure: six.</p></div><div class="folio bottom"><span>JP Preseason Annual · 2026</span><span>Pages 5–6</span></div></section><section class="page" id="p3"><div class="folio"><span>No. 05 · Texas</span><b>The Offense</b></div><div class="pin"><div class="spread"><h3>The championship case</h3><span class="tag">Manning · The call sheet · New weapons · The interior bet</span></div><div class="cols"><p class="lead">Arch Manning’s 3,163 passing yards, 26 touchdowns, seven interceptions and 61.4 percent completion rate set a solid baseline, but Texas averaged 35.8 points in 10 wins and 12.7 in three losses. Better rushing, steadier interior protection and a new skill group have to close that gap before the schedule accelerates.</p><p>Six days before Saturday’s opener against Texas State, Manning is the certainty in an offense returning six starters. He averaged 7.8 yards per attempt in his first full season as the starter and added 399 rushing yards with 10 touchdowns. When the run game stalled, Texas had too many obvious passing downs.</p><div class="col-photo"><div class="photo"><i>Photo slot</i><b>Arch Manning<small>Game photo · Second-year starter, full command required</small></b></div><div class="cap"><b>The résumé is real. Control is next.</b> Manning accounted for 3,562 yards and 36 touchdowns passing and rushing in 2025. Texas needs his command to settle an overhauled supporting cast.</div></div><p>Manning has to handle more before the snap in his second season. Manning needs to identify leverage, set protection and punish rotations without waiting for a clean picture.</p><p>Texas rushed for 1,794 yards and averaged 138.0 per game. After the first fall scrimmage, Sarkisian said the staff had been “harping on physicality” and running the ball, then praised the first offensive-line unit for its protection and continuity. Texas can’t leave both safeties available for the pass on third down.</p><p>The backfield was rebuilt after Quintrevion Wisner, CJ Baxter Jr., Jerrick Gibson and Christian Clark transferred. Raleek Brown arrived after surpassing 1,000 yards at Arizona State while averaging 6.1 per carry, and Hollywood Smothers produced four 100-yard games at NC State. Freshman Derrek Cooper is pushing for work.</p><p>Cam Coleman gives Texas an X receiver, Ryan Wingo returns after 54 catches for 834 yards and seven touchdowns, and Emmett Mosley V brings 28 catches for 408 yards into the slot. Tight end is less settled after Jack Endries’ departure. Michael Masunas brought portal experience, while 6-foot-7, 260-pound Spencer Shannon has pushed the competition in camp and gives Manning a red-zone target.</p></div><span class="watch"><b>⏱ Watch This</b>⏱ Watch this: Texas vs. Ohio State, Sept. 12 — early-down rushing efficiency, interior pressure allowed, Manning’s protection checks and whether Coleman’s alignment forces the safety to declare before the snap.</span><div class="subhead"><h4>The 2025 stress split</h4><div class="ln"></div><span class="tg">What changed in losses</span></div><div class="bars"><div class="k">Points per game in the first two rows; third-down conversion rate in the third.</div><div class="brow"><b>Scoring in wins<small>10 games · 358 points</small></b><div class="bar"><i class="good" style="width:35.8%"></i></div><span class="v">35.8 PPG</span></div><div class="brow"><b>Scoring in losses<small>Ohio State · Florida · Georgia</small></b><div class="bar"><i class="bad" style="width:12.7%"></i></div><span class="v r">12.7 PPG</span></div><div class="brow"><b>Third downs<small>69 conversions on 176 attempts</small></b><div class="bar"><i class="bad" style="width:39.2%"></i></div><span class="v r">39.2%</span></div></div><div class="subhead"><h4>Cam Coleman’s boundary gravity</h4><div class="ln"></div><span class="tg">How Coleman changes the box</span></div><div class="gravity"><div class="k">Coleman does not need every target. He needs defenses to account for him on every snap.</div><div class="gfield"><div class="grow2"><span class="gp star">Cam Coleman<small>X receiver · Boundary size and vertical threat</small></span><span class="gp ghosted">Boundary corner<small>Plays isolated or gets help</small></span><span class="gp ghosted">Free safety<small>Shades toward Coleman’s vertical access</small></span><span class="gp ghosted">Nickel<small>Protects the slot seam and inside release</small></span><span class="gp ghosted">Linebacker<small>Widens under crossers and glance routes</small></span></div><div class="garr">Safety width plus second-level expansion → lighter box, cleaner slot access and isolation opposite Coleman</div><div class="grow2"><span class="gp">Ryan Wingo<small>834 yards and seven TD in 2025 · Isolated-side winner</small></span><span class="gp">Emmett Mosley V<small>408 yards and three TD · Room underneath from the slot</small></span><span class="gp">Brown and Smothers<small>Outside-zone backs against one fewer body in the fit</small></span></div></div><div class="gcap"><b>Coleman has to change the defense before Manning takes the snap.</b> Safety help for Coleman gives Wingo more single coverage, Mosley cleaner interior access and the rebuilt backfield lighter boxes. If one corner handles Coleman without help, the safety stays central and those matchups shrink.</div></div><div class="subhead"><h4>The most important position battle</h4><div class="ln"></div><span class="tg">Left guard · One opening inside a reconstructed five</span></div><div class="ltb"><div class="ph photo gm"><i>Photo slot</i><b>Laurence Seymore III and Jaydon Chatman<small>Camp photo · The unsettled interior</small></b></div><div class="bd"><p>The line has shape elsewhere: Trevor Goosby at left tackle, Brandon Baker at left guard and Melvin Siani at right tackle. Seymore has more than 1,300 career snaps, Chatman received first-team work, Dylan Sikorski started at Oregon State and Cole Hutson returned with 23 career starts after a court ruling. One player needs to take the job. Weekly changes would disrupt outside-zone timing and the middle of Manning’s pocket.</p><div class="oc good"><b>If it holds</b><p>One left guard claims the job, Baker stays inside, Siani settles at right tackle and Texas improves on 138.0 rushing yards per game while protecting Manning as it did in a 23-sack season.</p></div><div class="oc bad"><b>If it doesn’t</b><p>The staff keeps changing combinations, interior games create pressure and Manning again carries third-and-long. The skill group spends too many snaps waiting on protection.</p></div><div class="oc"><b>How you’ll know</b><p>Track the starting five Saturday against Texas State, then watch that group against Ohio State on Sept. 12: yards before contact between the tackles, interior pressures and third-and-seven or longer.</p></div></div></div></div><div class="folio bottom"><span>JP Preseason Annual · 2026</span><span>Pages 7–8</span></div></section><section class="page" id="p4"><div class="folio"><span>No. 05 · Texas</span><b>The Defense</b></div><div class="pin"><div class="spread"><h3>Twenty-point-three is gone. What replaces the spine?</h3><span class="tag">What left · What returns · What arrived · The communication clock</span></div><div class="cols"><p class="lead">Texas returns 12 of the 39 sacks it produced in 2025 through Colin Simmons, but four drafted defenders leave a defense that allowed 20.3 points per game.</p><p>The 2025 defense allowed 20.3 points and 338.8 yards per game, held opponents to 64 conversions on 194 third downs and forced 23 turnovers. It gave up 29 at Florida and 35 at Georgia, the two regular-season games in which an opponent reached 29. Texas generated 39 sacks while allowing 23 and recorded seven interceptions. In three losses, Texas allowed 26.0 points per game while the offense scored 12.7. The defense had flaws, but it did not carry those losses alone.</p><div class="col-photo"><div class="photo gm"><i>Pate State original art</i><b>The movable piece<small>Colin Simmons and the new geometry of the Texas front</small></b></div><div class="cap"><b>Twelve sacks return. Four drafted defenders do not.</b> Muschamp can align Simmons wide, reduce him inside or move him after the protection declares. The linebackers and secondary have to communicate behind him when he moves.</div></div><p>Anthony Hill Jr., Malik Muhammad, Trey Moore and Michael Taaffe combined for 204 tackles and 8.5 sacks before they were drafted. The portal also took Liona Lefau, Ty’Anthony Smith, Kobe Black, Warren Roberson, Derek Williams Jr., Elijah Barnes, Caleb Chester and Lavon Johnson. Simmons returns with 12 sacks, 15.5 tackles for loss and 15 quarterback hurries. Jelani McDonald led the team with 80 tackles, Graceson Littleton broke up six passes, and Hero Kanu, Alex January and Maraad Watson return interior snaps and size. Lance Jackson and Zina Umeozulu give Will Muschamp options opposite Simmons as he moves him around the front.</p><p>Texas added eight defenders from the portal, including Rasheem Biles, Bo Mascoe, Justin Cryer, Ian Geffrard and Zion Williams. Darius Snow, Markus Boswell and Nick Hudson add experience. Camp reporting has Mascoe emerging as a likely outside starter, and Steve Sarkisian has praised Cryer’s physicality and preparation. Geffrard holding the point at nose would free Biles and the linebackers while Simmons moves across the formation. Littleton can work in the slot, and McDonald has range, but the group must exchange calls correctly under tempo.</p><p>Cryer and Biles must replace the communication and production lost with Hill, Mascoe must handle a starting corner assignment, and McDonald must organize the back end while keeping his versatility. Sept. 12 against Ohio State brings motions, protection checks and third-and-medium. Nov. 14 at LSU is the tenth game. By then, the transition has to be settled.</p></div><div class="subhead"><h4>The communication clock</h4><div class="ln"></div><span class="tg">Four checkpoints from installation to final exam</span></div><div class="clock"><div><small>Sept. 5 · Texas State</small><b>Installing</b><p>Alignment and clean substitutions matter more than final yardage.</p></div><div><small>Sept. 12 · Ohio State</small><b>Disguising</b><p>Simmons moves, the new corners work, and third-and-medium tests the calls without coverage busts.</p></div><div><small>Sept. 26 · at Tennessee</small><b>Traveling</b><p>The front, linebackers and safeties take one call system away from Austin.</p></div><div><small>Nov. 14 · at LSU</small><b>Operating</b><p>In the tenth game, the rebuilt defense communicates as one unit.</p></div></div></div><div class="folio bottom"><span>JP Preseason Annual · 2026</span><span>Pages 9–10</span></div></section><section class="page" id="p5"><div class="folio"><span>No. 05 · Texas</span><b>The Marquee · I</b></div><div class="pin"><div class="spread"><h3>The Marquee</h3><span class="tag">The marquee · Texas · Sunday, Aug. 30 · six days before the opener</span></div><div class="prof"><div class="ph photo"><span class="jersey">16</span><i>Photo slot</i><b>Arch Manning<small>Game photo</small></b></div><div class="body"><div class="role">QB · Redshirt Jr. · The trigger</div><h4>Arch Manning</h4><div class="meta"></div><div class="statline">2025: 248-of-404 (61.4%) · 3,163 passing yds · 26 TD / 7 INT · 399 rushing yds · 10 rushing TD</div><p>Manning accounted for 36 of Texas’s 45 passing and rushing touchdowns as the starter, including 10 on the ground, while Texas went 10-3 and averaged 30.5 points. His 7.8 yards per attempt and 61.4 percent completion rate won 10 games, but Texas scored 10 at Georgia, 16 at Kentucky and seven at Ohio State. With 85.4 percent of the passing production back and Cam Coleman joining Ryan Wingo and Emmett Mosley V, Manning has more answers around him. He has to get to the right one faster when protection changes and the first read disappears.</p><div class="swrow"><div class="s"><b>Strengths</b>Downfield arm talent · 10-touchdown value as a runner · experience operating the full offense · red-zone stress from quarterback movement · 36 total touchdowns as the starter</div><div class="w"><b>The Fair-Witness Flaw</b>The fair-witness flaw: Texas allowed 23 sacks, and Manning completed 61.4 percent of his passes at 7.8 yards per attempt. When the pocket compresses, athletic recovery can’t be the plan.</div></div><div class="comp"><b>The bottom line</b>Thirty-six touchdowns gave Texas enough quarterback production to win 10 games. Better down-to-down command would keep ordinary SEC possessions from becoming rescue work.</div><div class="foot"><span class="gradechip">Grade: A · Playoff linchpin</span><span class="wd">⏱ ⏱ Watch: protection checks, third-and-medium efficiency and designed-run usage against Ohio State · Sept. 12</span></div></div></div><div class="prof"><div class="ph photo gm"><span class="jersey">1</span><i>Photo slot</i><b>Colin Simmons<small>Game photo</small></b></div><div class="body"><div class="role">EDGE · Jr. · The disruptor</div><h4>Colin Simmons</h4><div class="meta"></div><div class="statline">2025: 43 tackles · 15.5 TFL · 12.0 sacks · 15 QB hurries · 2 pass breakups</div><p>Simmons produced 12 of Texas’s 39 sacks and nearly one-fifth of its 82 tackles for loss. Texas lost four defensive draft picks, including Anthony Hill Jr. and Trey Moore, so Will Muschamp plans to move Simmons before the snap. That can force the center’s call, pull a back into protection and create one-on-ones for Lance Jackson, Zina Umeozulu or an interior rusher. Texas needs the rest of the front to finish those chances.</p><div class="swrow"><div class="s"><b>Strengths</b>First-step pressure · 12-sack finishing production · inside-out alignment flexibility · 15 quarterback hurries · ability to change protection before the snap</div><div class="w"><b>The Fair-Witness Flaw</b>The fair-witness flaw: Simmons supplied 12 of 39 sacks, and opponents can slide protection and chip him until another rusher makes that choice costly.</div></div><div class="comp"><b>The bottom line</b>Twelve sacks make Simmons the defense’s leverage point. If the other rushers win the openings he creates, Texas has a championship-caliber rush.</div><div class="foot"><span class="gradechip">Grade: A+ · Defensive centerpiece</span><span class="wd">⏱ ⏱ Watch: where he aligns and who wins the resulting one-on-ones against Tennessee · Sept. 26</span></div></div></div></div><div class="folio bottom"><span>JP Preseason Annual · 2026</span><span>Pages 11–12</span></div></section><section class="page" id="p6"><div class="folio"><span>No. 05 · Texas</span><b>The Marquee · II</b></div><div class="pin"><div class="spread"><h3>The offense’s supporting cast</h3><span class="tag">Quarter-page profiles · the players Manning’s season leans on</span></div><div class="qgrid"><div class="qp"><div class="ph photo"><i>Photo slot</i><b>Cam Coleman</b></div><div class="body"><div class="role">WR · Jr. · The new No. 1</div><h5>Cam Coleman</h5><div class="meta">Five-star transfer from Auburn</div><p><b>The stake:</b> Texas returns only 55.0 percent of its receiving production after losing Parker Livingstone and DeAndre Moore Jr. Coleman gives Texas an outside X receiver with the frame to pull coverage from Ryan Wingo. He has to absorb Steve Sarkisian’s timing and adjustment work quickly enough to become a dependable first read.</p><div class="foot"><span class="gradechip">Grade: A− · Newcomer pick</span><span class="wd">⏱ ⏱ Watch: targets and third-down placement against Ohio State · Sept. 12</span></div></div></div><div class="qp"><div class="ph photo gm"><i>Photo slot</i><b>Ryan Wingo</b></div><div class="body"><div class="role">WR · Jr. · The proven target</div><h5>Ryan Wingo</h5><div class="meta">No. 1 · 2025: 54 rec · 834 yds · 15.4 per catch · 7 TD</div><p><b>Strength:</b> Wingo posted 834 yards, seven touchdowns and 15.4 yards per catch as Manning’s leading receiver. Coleman’s arrival can give Wingo cleaner matchups, but Texas needs him involved early as it works in new receivers, backs and tight ends.</p><div class="foot"><span class="gradechip">Grade: A−</span><span class="wd">⏱ ⏱ Watch: explosive receptions and targets away from Coleman’s side · first four games</span></div></div></div><div class="qp"><div class="ph photo"><i>Photo slot</i><b>Trevor Goosby</b></div><div class="body"><div class="role">LT · Sr. · The anchor</div><h5>Trevor Goosby</h5><div class="meta">Returning starting left tackle</div><p><b>The stake:</b> Texas averaged 138 rushing yards and allowed 23 sacks in 2025, with four other line spots settling around transfers and position changes. Goosby is Manning’s established blindside protector. Moving Brandon Baker inside and installing Melvin Siani at right tackle works only if the new right side communicates and the interior stops penetration without help from Goosby’s edge.</p><div class="foot"><span class="gradechip">Grade: A− · Line anchor</span><span class="wd">⏱ ⏱ Watch: protection slides and interior leakage against Ohio State · Sept. 12</span></div></div></div><div class="qp"><div class="ph photo gm"><i>Photo slot</i><b>Raleek Brown</b></div><div class="body"><div class="role">RB · Sr. · The reset</div><h5>Raleek Brown</h5><div class="meta"></div><p>Texas lost its top four listed 2025 rushers from the running-back room, and Manning led the team with 10 rushing touchdowns. Brown needs to supply yards and short-yardage work while sharing carries with Hollywood Smothers and younger backs.</p><div class="foot"><span class="gradechip">Grade: A− · Newcomer</span><span class="wd">⏱ ⏱ Watch: yards before contact and short-yardage role at Tennessee · Sept. 26</span></div></div></div></div></div><div class="folio bottom"><span>JP Preseason Annual · 2026</span><span>Pages 13–14</span></div></section><section class="page" id="p7"><div class="folio"><span>No. 05 · Texas</span><b>The Marquee · III</b></div><div class="pin"><div class="spread"><h3>The defense’s returning spine</h3><span class="tag">Quarter-page profiles · the structure around Simmons</span></div><div class="qgrid"><div class="qp"><div class="ph photo"><i>Photo slot</i><b>Jelani McDonald</b></div><div class="body"><div class="role">DB · Sr. · The voice</div><h5>Jelani McDonald</h5><div class="meta">No. 4 · 2025: 80 tackles · 49 solo · 4 TFL · 3 pass breakups</div><p><b>Strength:</b> McDonald made 80 tackles, 49 solo, to lead the listed Texas defenders. Texas can move him across the secondary, but Michael Taaffe was drafted and safety roles remained contested in camp. McDonald has to keep a reshaped back end connected.</p><div class="foot"><span class="gradechip">Grade: A− · Secondary anchor</span><span class="wd">⏱ ⏱ Watch: alignment and open-field tackling against Ohio State · Sept. 12</span></div></div></div><div class="qp"><div class="ph photo gm"><i>Photo slot</i><b>Graceson Littleton</b></div><div class="body"><div class="role">NB · Soph. · The connector</div><h5>Graceson Littleton</h5><div class="meta"></div><p>He can cover the slot, work in the middle or move outside. Texas needs him to handle the run fits and communication near the formation.</p><div class="foot"><span class="gradechip">Grade: A− · Breakout watch</span><span class="wd">⏱ ⏱ Watch: slot targets and run fits at Tennessee · Sept. 26</span></div></div></div><div class="qp"><div class="ph photo"><i>Photo slot</i><b>Rasheem Biles</b></div><div class="body"><div class="role">LB · Sr. · The import</div><h5>Rasheem Biles</h5><div class="meta"></div><p><b>The stake:</b> Texas allowed only 1,351 rushing yards last season and now replaces second-round pick Anthony Hill Jr. He has to learn the new fits and produce before November beside a still-forming middle-linebacker rotation.</p><div class="foot"><span class="gradechip">Grade: A− · Newcomer pick</span><span class="wd">⏱ ⏱ Watch: fit discipline and coverage assignments against Ohio State · Sept. 12</span></div></div></div><div class="qp"><div class="ph photo gm"><i>Photo slot</i><b>Hero Kanu</b></div><div class="body"><div class="role">DL · Sr. · The stabilizer</div><h5>Hero Kanu</h5><div class="meta">2025: 31 tackles · 4 TFL · 2 sacks · 4 QB hurries</div><p><b>Strength:</b> Kanu had 31 tackles, four tackles for loss, two sacks and four quarterback hurries in 2025. Texas needs him and the tackle rotation to hold up while Simmons moves around the front. If Kanu, Alex January, Maraad Watson and the newcomers control the A-gaps, the linebackers can run.</p><div class="foot"><span class="gradechip">Grade: B+ · Interior hinge</span><span class="wd">⏱ ⏱ Watch: early-down movement and double-team survival at Tennessee · Sept. 26</span></div></div></div></div><div class="subhead"><h4>The rest of the cast</h4><div class="ln"></div><span class="tg">The rest of the cast · eight names the season will teach you</span></div><div class="cast"><div><small>RB · Sr.</small><h6>Hollywood Smothers</h6><p>Four 100-yard games and six games with at least 15 carries in 2025 make Smothers a workload counterweight to Brown.</p></div><div><small>WR · Jr.</small><h6>Emmett Mosley V</h6><p>Mosley caught 28 passes for 408 yards and three touchdowns, and his slot work matters while Coleman settles outside.</p></div><div><small>TE · Sr.</small><h6>Spencer Shannon</h6><p>At 6-7 and 260 pounds, Shannon gives Manning a large red-zone target with in-system experience.</p></div><div><small>OT · Sr.</small><h6>Melvin Siani</h6><p>Siani is one half of Texas moving Brandon Baker inside after the Wake Forest transfer worked at right tackle.</p></div><div><small>EDGE · Soph.</small><h6>Lance Jackson</h6><p>Jackson had two sacks in limited 2025 work and enters as the likely edge starter opposite Simmons.</p></div><div><small>LB · Sr.</small><h6>Justin Cryer</h6><p>Cryer is one Florida State transfer who could settle the middle after late linebacker turnover.</p></div><div><small>CB · Sr.</small><h6>Bo Mascoe</h6><p>Mascoe is one Rutgers transfer who emerged in the offseason at the outside corner spot Texas needed after Malik Muhammad’s departure.</p></div><div><small>DL · Sr.</small><h6>Ian Geffrard</h6><p></p></div></div><p class="fineprint">No NFL comparison appears in this section. Role language — The trigger, The disruptor, The voice, The connector — carries the scouting meaning without using the annual’s comparison allowance.</p></div><div class="folio bottom"><span>JP Preseason Annual · 2026</span><span>Pages 15–16</span></div></section><section class="page" id="p8"><div class="folio"><span>No. 05 · Texas</span><b>The Depth Chart</b></div><div class="pin"><div class="spread"><h3>The Projected 22 — on the field</h3><span class="tag">Projected 22 · Six days before the opener · Aug. 30</span></div><div class="fieldwrap"><div class="flab">Offense</div><div class="frow spread-row"><span class="fp new">WR-X<small>Cam Coleman</small></span><span class="fp lock">LT<small>Trevor Goosby</small></span><span class="fp battle">LG<small>Laurence Seymore III / Cole Hutson</small></span><span class="fp lock">C<small>Connor Robertson</small></span><span class="fp lead">RG<small>Brandon Baker</small></span><span class="fp new">RT<small>Melvin Siani</small></span><span class="fp battle">TE-Y<small>Spencer Shannon / Michael Masunas</small></span><span class="fp lock">WR-Z<small>Ryan Wingo</small></span></div><div class="frow"><span class="fp lock">SLOT<small>Emmett Mosley V</small></span></div><div class="frow"><span class="fp lock">QB<small>Arch Manning</small></span></div><div class="frow"><span class="fp battle">RB<small>Raleek Brown / Hollywood Smothers</small></span></div><div class="flab">Defense</div><div class="frow spread-row"><span class="fp new">CB<small>Bo Mascoe</small></span><span class="fp lead">FS<small>Xavier Filsaime</small></span><span class="fp lock">SS<small>Jelani McDonald</small></span><span class="fp lead">CB<small>Kade Phillips</small></span></div><div class="frow"><span class="fp lock">NB<small>Graceson Littleton</small></span></div><div class="frow"><span class="fp new">WILL<small>Rasheem Biles</small></span><span class="fp new">MIKE<small>Justin Cryer</small></span><span class="fp lead">OLB/EDGE<small>Brad Spence</small></span></div><div class="frow"><span class="fp lock">EDGE<small>Colin Simmons</small></span><span class="fp lock">DT<small>Hero Kanu</small></span><span class="fp new">NT<small>Ian Geffrard</small></span><span class="fp lead">EDGE<small>Lance Jackson</small></span></div><div class="flegend"><span><i class="lock"></i>Locked returner</span><span><i class="new"></i>Proven newcomer</span><span><i class="lead"></i>Leader, being pushed</span><span><i class="battle"></i>Open battle</span></div></div><div class="backups"><div class="k">The next men up — key backups</div><div class="row"><span>RB · Hollywood Smothers<small>Four 100-yard games point to an inside complement for Brown.</small></span><span>TE · Michael Masunas<small>A physical every-down option if Shannon’s fall rise does not hold.</small></span><span>OL · Jaydon Chatman<small>Chatman has 13 career appearances, first-team left-guard work in camp and the first interior reserve role.</small></span><span>DL · Maraad Watson<small>Can spell Kanu and Geffrard.</small></span><span>EDGE · Zina Umeozulu<small>First edge off the bench and a strong-side fit in the new structure.</small></span><span>LB · Tyler Atkinson<small>A five-star freshman with a path into the rotation.</small></span></div></div><div class="subhead"><h4>The Pate State unit grades</h4><div class="ln"></div><span class="tg">Preseason marks · tracked against the weekly game grade</span></div><div class="gstrip"><div class="gs hi"><b>QB</b><i>A</i></div><div class="gs"><b>RB</b><i>B+</i></div><div class="gs hi"><b>WR</b><i>A</i></div><div class="gs"><b>TE</b><i>B</i></div><div class="gs"><b>OL</b><i>A−</i></div><div class="gs hi"><b>DL</b><i>A</i></div><div class="gs"><b>LB</b><i>B+</i></div><div class="gs"><b>CB</b><i>B+</i></div><div class="gs lo"><b>S</b><i>B</i></div><div class="gs lo"><b>ST</b><i>C+</i></div><div class="gs hi"><b>Coach</b><i>A</i></div><div class="gs"><b>Depth</b><i>B+</i></div></div><div class="gsum"><div>OFFENSE: A− — Texas averaged 138 rushing yards and allowed 23 sacks in 2025. Manning, Coleman, Wingo and Goosby give the offense its best pieces, while left guard remains unsettled.</div><div>DEFENSE: A− — Simmons had 12 of Texas’ 39 sacks last season. The front has size behind him, but two portal linebackers and an open safety spot beside McDonald leave work in the middle.</div></div><div class="subhead"><h4>Four positions to watch</h4><div class="ln"></div></div><div class="watch4"><div><b>Left guard</b><p>Seymore has more than 1,300 career snaps, while Hutson has 23 starts. Chatman took first-team work, and Texas needs one five-man line settled by Ohio State on Sept. 12.</p></div><div><b>Running back</b><p>Brown topped 1,000 yards at 6.1 per carry in 2025, while Smothers had four 100-yard games. The committee has to improve a run game that stayed below 100 yards five times last season.</p></div><div><b>Safety</b><p>McDonald is set, but Filsaime leads an unsettled race for the other safety job. Watch the tackling angles against Ohio State on Sept. 12 and Tennessee on Sept. 26.</p></div><div><b>Special teams</b><p>Shipley made 20 of 24 field goals in 2025. New starters at kicker, punter and long snapper put operation time and coverage under watch in September.</p></div></div></div><div class="folio bottom"><span>JP Preseason Annual · 2026</span><span>Pages 17–18</span></div></section><section class="page" id="p9"><div class="folio"><span>No. 05 · Texas</span><b>The Film Room</b></div><div class="pin"><div class="spread"><h3>How opponents will attack Texas</h3><span class="tag">Four blueprints · and their expiration dates</span></div><div class="bp"><div class="bpc"><h4><span>1</span>1. Crowd Manning’s interior clock</h4><div class="sb"><span class="show">Double-A-gap pressure</span><span class="ar">→</span><span class="bring">Four-man games and simulated pressure</span></div><p>The tackles are the strength, so defenses can attack left guard, test Baker’s move inside and make Manning reset before Coleman and Wingo get downfield.</p></div><div class="bpc"><h4><span>2</span>2. Put the new backs in protection</h4><div class="sb"><span class="show">Light box and two-high shells</span><span class="ar">→</span><span class="bring">Late nickel pressure</span></div><p>Brown and Smothers arrived to repair the run game. Opponents can threaten pressure after the check and force the rebuilt backfield to find the extra rusher.</p></div><div class="bpc"><h4><span>3</span>3. Make anyone but Simmons finish</h4><div class="sb"><span class="show">Protection shaded toward No. 1</span><span class="ar">→</span><span class="bring">Chips, quick game and runs away from him</span></div><p>Simmons produced 12 of Texas’ 39 sacks last season. Slides and tight-end help put Jackson, Spence and Umeozulu in isolated rushes before the quarterback’s first answer opens.</p></div><div class="bpc"><h4><span>4</span>4. Stress the new middle</h4><div class="sb"><span class="show">Motion, bunch and condensed formations</span><span class="ar">→</span><span class="bring">Tempo into seams and option routes</span></div><p>Biles and Cryer are newcomers, Filsaime is being pushed, and Muschamp wants multiplicity. Offenses can hurry the communication, move Littleton and test the linebacker-safety exchange.</p></div></div><div class="breaks"><b>What breaks the blueprint</b>By Sept. 12, Texas needs a left guard, backs who handle pressure, a rush opposite Simmons and clean linebacker-safety communication. The next check comes at Tennessee on Sept. 26.</div><div class="subhead"><h4>What would change the pick?</h4><div class="ln"></div><span class="tg">The inputs are dated and falsifiable</span></div><div class="flip"><div class="col up"><h4>Move me up</h4><ul><li>Texas averages at least 160 rushing yards through the first four games, improving on 138 per game in 2025.</li><li>The offensive line allows two sacks or fewer against Ohio State on Sept. 12, with one left guard taking every meaningful snap.</li><li>Opponents convert below 33 percent on third down through Oklahoma on Oct. 10, beating the 64-of-194 rate Texas allowed last season.</li><li>Jackson and Umeozulu combine for at least four sacks by Oct. 10, proving protections cannot stay tilted toward Simmons.</li></ul></div><div class="col dn"><h4>Move me down</h4><ul><li>Texas is still rotating left guards during competitive snaps against Ohio State on Sept. 12.</li><li>The offense allows eight or more sacks through Tennessee on Sept. 26 after allowing 23 across all 13 games last season.</li><li>The rebuilt backfield averages below 4.0 yards per carry through the first four games, leaving Manning to carry the offense again.</li><li>Texas allows six passes of at least 30 yards by Oklahoma on Oct. 10, showing the new middle and unsettled safety rotation are not communicating cleanly.</li></ul></div></div></div><div class="folio bottom"><span>JP Preseason Annual · 2026</span><span>Pages 19–20</span></div></section><section class="page" id="p10"><div class="folio"><span>No. 05 · Texas</span><b>The Road</b></div><div class="pin"><div class="spread"><h3>The Road to Atlanta</h3><span class="tag"><span style="color:#1E7D3E">●</span> Expected Win &nbsp;<span style="color:#b58a00">●</span> Should Win &nbsp;<span style="color:#d2691e">●</span> Upset Watch &nbsp;<span style="color:#BF5700">●</span> Season-Definer</span></div><div class="cols"><p class="lead">Texas gets 2 September tests in 15 days: Ohio State comes to Austin on Sept. 12, then Tennessee gets Texas at noon on Sept. 26. The Oct. 3 open date follows. Oklahoma starts a 4-game October run, with 3 straight home games after the rivalry. The bill comes in the final 21 days: at Missouri, at LSU and at Texas A&amp;M, with Arkansas at home between the trips. I have Texas beating Ohio State, leaving October unbeaten and taking 2 November losses as the rebuilt backfield, reworked offensive line and defensive replacements go on the road.</p></div><div class="roadgrid"><div class="road"><div class="stop g"><div class="d">SEP 5 · Expected win</div><h5>vs Texas State <span class="pick w">W</span></h5><p>One game gives the offensive line and rebuilt backfield live work without a fourth-quarter problem.</p></div><div class="stop r zone"><div class="d">SEP 12 · Season-definer</div><h5>vs Ohio State <span class="pick w">W</span></h5><p>Texas gets Ohio State in Austin in Week 2, with Arch Manning, Ryan Wingo and Cam Coleman facing a rebuilt defense.</p></div><div class="stop g"><div class="d">SEP 19 · Expected win</div><h5>vs UTSA <span class="pick w">W</span></h5><p>One week after Ohio State, Texas has to avoid a flat half before Tennessee.</p></div><div class="stop r zone"><div class="d">SEP 26 · Season-definer</div><h5>at Tennessee <span class="pick w">W</span></h5><p>A noon road start puts the new offensive line under pressure, but Texas has the edge rush and quarterback stability to leave 4-0.</p></div><div class="stop g"><div class="d">OCT 3</div><h5>BYE </h5><p>The open date follows 2 September heavyweights and precedes Oklahoma.</p></div><div class="stop o"><div class="d">OCT 10 · Upset watch</div><h5>at Oklahoma <span class="pick w">W</span></h5><p>Texas won 23-6 last season and brings the more proven quarterback into the rematch.</p></div><div class="stop y"><div class="d">OCT 17 · Should win</div><h5>vs Florida <span class="pick w">W</span></h5><p>Last season's 29-21 loss is the reference point; Manning has more experience, and this one is in Austin.</p></div><div class="stop y"><div class="d">OCT 24 · Should win</div><h5>vs Ole Miss <span class="pick w">W</span></h5><p>Three games after the bye, Colin Simmons can move around and force protection calls.</p></div><div class="stop g"><div class="d">OCT 31 · Expected win</div><h5>vs Mississippi State <span class="pick w">W</span></h5><p>Texas allowed 38 points in Starkville last year; this rematch comes before the November road run.</p></div><div class="stop o"><div class="d">NOV 7 · Upset watch</div><h5>at Missouri <span class="pick w">W</span></h5><p>One road game before LSU gives Texas a talent edge and a look-ahead problem.</p></div><div class="stop r zone"><div class="d">NOV 14 · Season-definer</div><h5>at LSU <span class="pick l">L</span></h5><p>The middle trip of 3 November road games is where the interior run game costs Texas a possession.</p></div><div class="stop y"><div class="d">NOV 21 · Should win</div><h5>vs Arkansas <span class="pick w">W</span></h5><p>Texas allowed 37 points in this matchup last season, but Arkansas comes to Austin after LSU.</p></div><div class="stop r zone"><div class="d">NOV 27 · Season-definer</div><h5>at Texas A&amp;M <span class="pick l">L</span></h5><p>Friday night, a short week and a third road game in 21 days bring the second loss.</p></div></div><aside class="stress"><div class="k">📉 Schedule stress map</div><div class="sti dz"><b>Sept. 12-26 — The first audit</b><div class="score">8.7 / 10</div><p>Ohio State, UTSA and Tennessee arrive in 15 days. The guard rotation, new right tackle and rebuilt backfield get little time before 2 line-of-scrimmage games.</p></div><div class="sti dz"><b>Oct. 10-31 — The accumulation month</b><div class="score">7.6 / 10</div><p>Four games in 22 days start with Oklahoma and run through 3 straight home dates. The geography helps after the rivalry.</p></div><div class="sti dz"><b>Nov. 7-27 — The road collection</b><div class="score">9.4 / 10</div><p>Three road games in 21 days include Missouri, LSU and Texas A&amp;M, with Arkansas at home. The Friday finale arrives without an open date.</p></div></aside></div><div class="subhead"><h4>The four that decide it</h4><div class="ln"></div><span class="tg">The season-definers, tied to the thesis</span></div><div class="marquee4"><div class="mq"><small>Sept. 12 · Austin</small><b>Ohio State</b><em>The opener with stakes</em><p>Week 2 gives Texas its quarterback and home-field edge against an Ohio State defense still building communication.</p></div><div class="mq"><small>Sept. 26 · road</small><b>Tennessee</b><em>The protection audit</em><p>A noon road game puts the interior pocket and first-down run rate under pressure behind a reworked line.</p></div><div class="mq"><small>Nov. 14 · road</small><b>LSU</b><em>The November wall</em><p>The second of 3 late road trips demands manageable third downs without making Manning the whole rushing plan.</p></div><div class="mq"><small>Nov. 27 · road</small><b>Texas A&amp;M</b><em>The rivalry tax</em><p>A short week and the third November road game put depth and the kicking operation in focus.</p></div></div><div class="seasonline"><span><b>10-2</b> &nbsp;· The season call</span><span>10-2 · SEC title game loss · CFP No. 5 seed</span></div></div><div class="folio bottom"><span>JP Preseason Annual · 2026</span><span>Pages 21–22</span></div></section>
+<section class="page" id="p11"><div class="folio"><span>No. 05 · Texas</span><b>The Ledger</b></div><div class="pin"><div class="spread"><h3>The August Ledger</h3><span class="tag">Every claim recorded · OPEN → HIT / MISS all season · ★ = Season-Definer</span></div><div class="ledger"><div class="lr"><span class="d">SEP 5</span><span class="opp">vs Texas State</span><span class="tv">TBA</span><span class="res w">W</span></div><div class="lr dz"><span class="d">SEP 12</span><span class="opp">vs Ohio State ★</span><span class="tv">TBA</span><span class="res w">W</span></div><div class="lr"><span class="d">SEP 19</span><span class="opp">vs UTSA</span><span class="tv">TBA</span><span class="res w">W</span></div><div class="lr dz"><span class="d">SEP 26</span><span class="opp">at Tennessee ★</span><span class="tv">TBA</span><span class="res w">W</span></div><div class="lr"><span class="d">OCT 3</span><span class="opp">BYE</span><span class="tv">—</span><span class="res">—</span></div><div class="lr"><span class="d">OCT 10</span><span class="opp">at Oklahoma ▲</span><span class="tv">TBA</span><span class="res w">W</span></div><div class="lr"><span class="d">OCT 17</span><span class="opp">vs Florida</span><span class="tv">TBA</span><span class="res w">W</span></div><div class="lr"><span class="d">OCT 24</span><span class="opp">vs Ole Miss</span><span class="tv">TBA</span><span class="res w">W</span></div><div class="lr"><span class="d">OCT 31</span><span class="opp">vs Mississippi State</span><span class="tv">TBA</span><span class="res w">W</span></div><div class="lr"><span class="d">NOV 7</span><span class="opp">at Missouri ▲</span><span class="tv">TBA</span><span class="res w">W</span></div><div class="lr dz"><span class="d">NOV 14</span><span class="opp">at LSU ★</span><span class="tv">TBA</span><span class="res l">L</span></div><div class="lr"><span class="d">NOV 21</span><span class="opp">vs Arkansas</span><span class="tv">TBA</span><span class="res w">W</span></div><div class="lr dz"><span class="d">NOV 27</span><span class="opp">at Texas A&amp;M ★</span><span class="tv">TBA</span><span class="res l">L</span></div><div class="lfoot"><span>Projected: 10-2 · 6-2 SEC · SEC title game loss · CFP No. 5 seed, hosting a first-round game</span><span>TV/times = TBA</span></div></div><div class="subhead"><h4>Five things that are actually true</h4><div class="ln"></div><span class="tg">No quarterback mythology, no portal accounting tricks</span></div><div class="five"><div class="ft"><div><h4>Manning returns; his offensive ecosystem does not.</h4><p>Manning returns with 3,163 passing yards, 26 touchdowns and 85.4 percent of Texas' passing production. Texas returns 6 offensive starters but only 55.0 percent of its receiving production after Parker Livingstone and DeAndre Moore Jr. transferred and Jack Endries was drafted. Cam Coleman changes the talent level, but the receiver timing still has to be built.</p></div></div><div class="ft"><div><h4>The boldest bet is the offensive-line reshuffle.</h4><p>Texas asks Wake Forest transfer Melvin Siani to play right tackle while Brandon Baker moves inside, Trevor Goosby anchors the left side and the guards remain unsettled. Ohio State on Sept. 12 brings the first look at Siani against SEC edge speed and the interior run surface.</p></div></div><div class="ft"><div><h4>The running back rebuild was a choice.</h4><p>Four transfers accounted for 1,181 rushing yards in 2025: Quintrevion Wisner, CJ Baxter Jr., Jerrick Gibson and Christian Clark. Raleek Brown surpassed 1,000 yards at 6.1 per carry, and Hollywood Smothers had 4 100-yard games. Outside-zone potential has to hold up in SEC short yardage.</p></div></div><div class="ft"><div><h4>Simmons carries a large share of the transition.</h4><p>Colin Simmons had 12 of Texas' 39 sacks and 15.5 tackles for loss last season. Six Longhorns were drafted, including Anthony Hill Jr., Malik Muhammad, Trey Moore and Michael Taaffe, so the linebacker and secondary communication still need answers.</p></div></div><div class="ft"><div><h4>The hidden opponent is self-inflicted yardage.</h4><p>Texas took 108 penalties for 906 yards while averaging 28 minutes of possession per game. The defense forced 23 turnovers, but November leaves little room for pre-snap flags, lost field position and extended drives.</p></div></div></div><div class="subhead"><h4>The margins</h4><div class="ln"></div><span class="tg">What the playoff conversation tends to skip</span></div><div class="mrg"><div class="mg"><small>Run game</small><b>138</b><h4>The yards-per-game floor must rise</h4><p>Texas ran for 1,794 yards in 13 games, about 138 per game, and stayed below 100 rushing yards 5 times. Manning led the team with 10 rushing touchdowns, putting too much short-yardage work on the quarterback.</p><div class="w">⏱ ⏱ Watch Sept. 26: running back carries and yards before contact at Tennessee.</div></div><div class="mg"><small>Protection</small><b>23</b><h4>Good enough is not the target</h4><p>Texas allowed 23 sacks in 2025. Ohio State, Tennessee and the November road run test a reworked right side and the guard-center-guard triangle.</p><div class="w">⏱ ⏱ Watch Sept. 12: pressure through the guard-center-guard triangle against Ohio State.</div></div><div class="mg"><small>Discipline</small><b>906</b><h4>The penalty tax is championship-sized</h4><p>Texas gave up 906 yards on 108 penalties, an average of 8.3 flags and nearly 70 penalty yards per game. That yardage travels into one-possession road games.</p><div class="w">⏱ ⏱ Watch Oct. 10: pre-snap and post-snap penalties in the Oklahoma rivalry.</div></div><div class="mg"><small>Special teams</small><b>20/24</b><h4>A proven operation has been reset</h4><p>Mason Shipley made 20 of 24 field goals, hit from 53 yards and made all 48 extra points. Gianni Spetic inherits an 83.3 percent field-goal operation before the November road games.</p><div class="w">⏱ ⏱ Watch Nov. 14: first high-leverage field-goal decision at LSU.</div></div></div></div><div class="folio bottom"><span>JP Preseason Annual · 2026</span><span>Pages 23–24</span></div></section>
+<section class="page dark darkpg" id="p13"><div class="folio"><span>No. 05 · Texas</span><b>The Flag Plant</b></div><div class="pin"><div class="spread"><h3>The flag plant</h3><span class="tag">The claim is logged now and graded in January</span></div><div class="seasons"><div class="sea c"><div class="k">The Ceiling</div><div class="rec">12-0 · The rebuilt run game balances Manning, Simmons anchors a top-tier defense, and Texas reaches the CFP semifinal.</div><div class="sub">Everything holds</div></div><div class="sea p"><div class="k">The Pate Case — Flag Plant</div><div class="rec">10-2</div><div class="sub">10-2 · SEC title game loss · CFP No. 5 seed</div></div><div class="sea f"><div class="k">The Floor</div><div class="rec">8-4 · The line reshuffle fails, November produces multiple road losses, and Texas misses the CFP.</div><div class="sub">What goes wrong</div></div></div><p style="max-width:70ch;margin:14px auto;font-size:16px;line-height:1.6;color:#e8e4d8">I have Texas at 10-2, in the SEC title game and hosting as the No. 5 seed in the College Football Playoff. I have Texas beating Ohio State on Sept. 12 because Manning is in year 2 as the starter, the game is in Austin and Wingo, Coleman and the quarterback run element get a rebuilt defense early.</p><p style="max-width:70ch;margin:14px auto;font-size:16px;line-height:1.6;color:#e8e4d8">Texas has a 985.17 talent composite, 72.1 percent overall returning production and its returning quarterback. It has 55.0 percent of its receiving production back, a remade backfield and an offensive line changing multiple jobs.</p><p style="max-width:70ch;margin:14px auto;font-size:16px;line-height:1.6;color:#e8e4d8">Texas averaged about 138 rushing yards, stayed below 100 5 times and leaned on Manning in short yardage. Brown and Smothers bring proven explosiveness, but Siani at right tackle and Baker inside remain the personnel bet. Ohio State starts the grading; Tennessee on Sept. 26 brings the fuller answer.</p><p style="max-width:70ch;margin:14px auto;font-size:16px;line-height:1.6;color:#e8e4d8">Simmons returns with 12 sacks, but 4 of the 6 drafted Longhorns named here were Hill, Muhammad, Moore and Taaffe. Three November road games pressure a reconstructed secondary and its communication.</p><p style="max-width:70ch;margin:14px auto;font-size:16px;line-height:1.6;color:#e8e4d8">The floor is 8-4 and outside the playoff if the line reshuffle fails, the new backs can't create dependable early-down production and the secondary remains unsettled. The Championship Ceiling is a 12-0 regular season and a CFP semifinal run if the right side holds, Coleman makes bracket coverage expensive and the defense rushes 4 without exposing its rebuilt middle. I land at 10-2 because LSU and Texas A&amp;M collect the late schedule tax. — JP</p><div class="flag"><div class="k">The Flag Plant · Ledger entry</div><div class="rec">10-2</div><div class="status"><span class="open">⏳ Status: OPEN</span><span class="gd">Grading date: January 2027</span></div></div><div class="src"><b>Sources:</b> 2025 results and statistics — CFBD; 2026 schedule and polls — the site's fact sheet; reporting — si, statesman (Aug. 2026); Josh's on-record positions — the JP Poll and the published bracket. <div class="status"><span class="ok">Verified public data</span><span class="pp">Pate State proprietary (JP Poll, Model, grades)</span><span class="dm">Review draft — not published</span></div></div></div><div class="folio bottom"><span>patestate.com/annual</span><span>Pages 25–26</span></div></section><div class="page" style="padding:26px 46px"><h3 style="font:800 22px/1 var(--cond);margin:0 0 8px">Fact-check appendix (review only)</h3><p style="font:500 13px/1.5 var(--body);color:var(--mut)">Every section was checked against the fact pack and the sources. Claims below were not supported or were contradicted by them; in a published annual each would be verified or cut.</p></div><footer><div class="in"><div class="flogo">The Pate <em>State</em></div><div class="fbase"><span>© The Pate State</span></div></div></footer>
+</body>
+</html>

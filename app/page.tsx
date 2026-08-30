@@ -13,7 +13,7 @@ import PeoplesGames from "@/components/home/PeoplesGames";
 import NotebookTrending, { type BracketSeed } from "@/components/home/NotebookTrending";
 import PorchSection from "@/components/home/PorchSection";
 import PlaybookSection from "@/components/home/PlaybookSection";
-import { CFLSection, StoreSection, GiftSection, FollowSection } from "@/components/home/StaticBands";
+import { AnnualsSection, StoreSection, GiftSection, FollowSection } from "@/components/home/StaticBands";
 
 export const metadata: Metadata = { alternates: { canonical: "/" } };
 
@@ -83,7 +83,7 @@ export default async function Home() {
       <PorchSection threads={threads} />
       <ShortsStrip shorts={shorts} />
       <PlaybookSection />
-      <CFLSection />
+      <AnnualsSection />
       <StoreSection />
       <GiftSection />
       <FollowSection subs={stats ? compactCount(stats.subscribers) : undefined} />

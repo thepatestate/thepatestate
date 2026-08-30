@@ -13,6 +13,63 @@ const GUIDES = [
   { venue: "Camp Randall", k: "Wisconsin · Jump Around", team: "wisconsin", photo: "p4" },
 ];
 
+// The Preseason Annuals band (Isaac, 2026-08-30: "hide the tailgating stadium
+// thing, but put the top 5 teams' preseason guides in their place"). JP's top
+// five = the published bracket's top seeds (lib/josh-bracket.ts). Each card
+// opens the team's Team Capsule, served as a standalone magazine page from
+// public/annual/<slug>.html. Cards use the studio helmet photos.
+const ANNUALS = [
+  { slug: "georgia", name: "Georgia", seed: 1, k: "Josh's No. 1 · The Team Capsule" },
+  { slug: "ohio-state", name: "Ohio State", seed: 2, k: "Josh's No. 2 · The Team Capsule" },
+  { slug: "clemson", name: "Clemson", seed: 3, k: "Josh's No. 3 · The Team Capsule" },
+  { slug: "boise-state", name: "Boise State", seed: 4, k: "Josh's No. 4 · The Team Capsule" },
+  { slug: "texas", name: "Texas", seed: 5, k: "Josh's No. 5 · The Team Capsule" },
+];
+
+export function AnnualsSection() {
+  return (
+    <section className="cfl annuals">
+      <div className="wrap">
+        <div className="sect-head">
+          <div>
+            <div className="eyebrow">The Preseason Annuals · JP&apos;s Top Five</div>
+            <h2>Every contender, receipts included</h2>
+          </div>
+          <Link className="more" href="/poll#bracket">Josh&apos;s Bracket — All 12 Seeds →</Link>
+        </div>
+        <div className="tg-grid an-grid">
+          {ANNUALS.map((a) => {
+            const logo = teamLogoUrl(a.slug);
+            return (
+              <a className="tg photo" href={`/annual/${a.slug}.html`} key={a.slug}>
+                <span className="tg-photo" style={{ backgroundImage: `url(/img/helmets/${a.slug}.jpg)` }} />
+                {logo && <Image className="chip" src={logo} alt="" width={38} height={38} />}
+                <span className="seed">{a.seed}</span>
+                <div className="venue">{a.name}</div>
+                <div className="k">{a.k}</div>
+              </a>
+            );
+          })}
+        </div>
+        <div className="tour">
+          <div className="copy">
+            <div className="eyebrow">The Porch Goes On the Road</div>
+            <h3>Live &amp; On Campus</h3>
+            <span className="badge">The 2026 Tour Is Taking Shape · Dates Soon</span>
+            <p>The broadcast desk, on a quad near you. Citizens get first dibs the moment tickets drop.</p>
+            <Link className="go" href="/join">Get First Access →</Link>
+          </div>
+          <div className="photo">
+            <Image src="/img/campus-live.jpg" alt="The Pate State broadcast desk live on campus" fill sizes="(max-width:1080px) 0px, 520px" style={{ objectFit: "cover" }} />
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/** The tailgate band, hidden from the homepage 2026-08-30 (the cards led to
+ * demo content). Kept so it can return when /tailgate has real guides. */
 export function CFLSection() {
   return (
     <section className="cfl">
