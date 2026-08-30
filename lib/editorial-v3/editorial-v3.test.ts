@@ -40,9 +40,12 @@ describe("model routing", () => {
     __setTransportForTests(async () => { throw new Error("down"); });
     await expect(callJSON({ stage: "t", role: "joshCut", system: "s", user: "u", schema: {}, schemaName: "t", maxTokens: 10 })).rejects.toThrow(/every model failed/);
   });
-  it("V3 uses a few calls, not a committee: the desk editor is the opposite family of the reporter", () => {
-    expect(modelForRole("reportedWriter").vendor).not.toBe(modelForRole("deskEditor").vendor);
+  it("V3 uses a few calls, not a committee: the desk editor is a different model from the reporter", () => {
+    expect(modelForRole("reportedWriter").model).not.toBe(modelForRole("deskEditor").model);
     expect(oppositeOf(modelForRole("joshProseEdit").vendor).vendor).not.toBe(modelForRole("joshProseEdit").vendor);
+  });
+  it("2026-08-30: no Anthropic model writes or rewrites prose in any lane", () => {
+    for (const role of ["reportedWriter", "joshColumnWriter", "deskEditor", "joshProseEdit", "joshSubtraction", "factRepair", "subtractionEditor"] as const) expect(modelForRole(role).vendor).toBe("openai");
   });
   it("2026-08-28: every first draft is ChatGPT Sol, with OpenAI-only fallbacks; Opus and Sonnet only edit", () => {
     for (const role of ["reportedWriter", "joshColumnWriter"] as const) {
@@ -50,7 +53,7 @@ describe("model routing", () => {
       expect(c.vendor).toBe("openai"); expect(c.model).toBe("gpt-5.6-sol");
       expect(c.fallbacks.every((f) => f.vendor === "openai")).toBe(true);
     }
-    for (const role of ["deskEditor", "joshProseEdit", "joshSubtraction"] as const) expect(modelForRole(role).vendor).toBe("anthropic");
+    for (const role of ["deskEditor", "joshProseEdit", "joshSubtraction"] as const) expect(modelForRole(role).model).toBe("gpt-5.6-terra");
   });
 });
 
@@ -106,7 +109,7 @@ describe("tiers, gate and cap (2026-08-28)", () => {
     for (const role of ["reportedWriter", "deskEditor", "factRepair", "packExtract", "fanBrief"] as const) expect(choiceFor(role, "economy").vendor).toBe("openai");
     expect(choiceFor("quitJudge", "economy").model).toBe("gpt-5.6-luna");
     expect(choiceFor("reportedWriter", "premium").model).toBe("gpt-5.6-sol");
-    expect(choiceFor("deskEditor").model).toBe("claude-opus-5");
+    expect(choiceFor("deskEditor").model).toBe("gpt-5.6-terra");
     expect(choiceFor("joshColumnWriter", "economy").model).toBe("gpt-5.6-sol"); // Josh's Read has no economy mode
   });
   it("the desk gate prompt names what a national desk does not run", () => {

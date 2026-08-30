@@ -67,7 +67,7 @@ export function modelForRole(role: Role): ModelChoice {
     case "rewrite": return oStrong("high");
     case "audienceEditor": return oStrong("medium");
     case "factCheck": return aFast("low");
-    case "factRepair": return aFast("low");
+    case "factRepair": return oFast("low");
     case "fanJudgeA": return aFast("low");
     case "fanJudgeB": return oStrong("low");
     case "humanityJudge": return aStrong("low");
@@ -78,14 +78,19 @@ export function modelForRole(role: Role): ModelChoice {
     case "joshSegment": return aFast("medium");
     case "joshCut": return aFast("medium");
     case "supportFacts": return aFast("low");
-    case "joshProseEdit": return aStrong("medium"); // tighten + local repair: an edit, not a draft
+    // 2026-08-30 (Isaac: "why is Opus on Josh's Read?"): every piece he
+    // approved was Sol-written and Terra-edited (Anthropic was out of credits
+    // during those replays). Terra is the editor he actually liked; no
+    // Anthropic model writes or rewrites prose anywhere now — Sonnet only
+    // checks facts and judges.
+    case "joshProseEdit": return oStrong("medium"); // tighten + local repair
     case "joshColumnWriter": return oSol("medium");
-    case "joshSubtraction": return aStrong("low");
+    case "joshSubtraction": return oStrong("low");
     // V3 reported lane.
     case "packExtract": return aFast("low");
     case "fanBrief": return oStrong("medium");
     case "reportedWriter": return oSol("medium");
-    case "deskEditor": return aStrong("medium");
+    case "deskEditor": return oStrong("medium");
     case "craftReview": return aStrong("low");
     case "deskGate": return oFast("low");
     case "subtractionEditor": return oStrong("medium");
