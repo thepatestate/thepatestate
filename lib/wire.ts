@@ -580,6 +580,9 @@ export interface StoryJob {
   teams: string[];
   receiptKeywords: string[];
   itemId: string;
+  /** The item's 1–10 importance, so the story's impact rating (homepage
+   * triage) follows the news, not the word count (2026-08-30). */
+  importance?: number;
 }
 
 /** Full-story generation + the §21 verification stack (banned patterns,
@@ -628,7 +631,7 @@ export async function generateWireStory(
   if (v3MayWrite("reported")) {
     // The monitor already ran the desk gate on the feed text; the fan brief's
     // own "would a national desk run this" stays on as the second layer.
-    const v3 = await v3WireStory({ clusterKey: job.clusterKey, teams: job.teams, refs: job.sources.map((s) => ({ outlet: s.outlet, url: s.url, feedText: job.sourceBlock })), mode: "live", gate: false });
+    const v3 = await v3WireStory({ clusterKey: job.clusterKey, teams: job.teams, refs: job.sources.map((s) => ({ outlet: s.outlet, url: s.url, feedText: job.sourceBlock })), mode: "live", gate: false, importance: job.importance });
     return v3.ok ? { ok: true, fields: v3.fields } : { ok: false, reason: v3.reason };
   }
   let receipt = await findReceipt(job.teams, job.receiptKeywords);
@@ -874,10 +877,10 @@ export async function backfillWireStories(limit = 20): Promise<{
   const anthropic = new Anthropic();
   const items: {
     _id: string; headline: string; sub?: string; category?: string;
-    teams?: string[]; sourceUrls?: string[]; sourceOutlets?: string[];
+    teams?: string[]; sourceUrls?: string[]; sourceOutlets?: string[]; importance?: number;
   }[] = await writeClient.fetch(
     `*[_type == "wireItem" && !defined(story)] | order(publishedAt desc)[0...$limit]{
-      _id, headline, sub, category, teams, sourceUrls, sourceOutlets
+      _id, headline, sub, category, teams, sourceUrls, sourceOutlets, importance
     }`,
     { limit },
   );
@@ -917,6 +920,7 @@ export async function backfillWireStories(limit = 20): Promise<{
         teams: item.teams ?? [],
         receiptKeywords: [...titleKeywords(item.headline)],
         itemId: item._id,
+        importance: item.importance ?? undefined,
       });
       if (result === "ok") summary.stories++;
       else {
@@ -1102,6 +1106,7 @@ export async function runWireMonitor(): Promise<{
           teams: item.teams,
           receiptKeywords: [...titleKeywords(cluster.title)],
           itemId,
+          importance: item.importance,
         });
         if (result === "ok") { summary.stories++; todayCount++; }
         else summary.skipped.push(result);

@@ -39,7 +39,7 @@ export async function gatherSources(refs: SourceRef[]): Promise<ReportedMaterial
 const paragraphs = (body: string) => body.replace(/\[EMBED:[^\]]*\]\s*|\[PULLQUOTE\]\s*/g, "").split(/\n{2,}/).map((p) => p.trim()).filter(Boolean);
 
 /** The Wire story fields for a cluster, or a skip reason. */
-export async function v3WireStory(input: { clusterKey: string; teams: string[]; refs: SourceRef[]; category?: string; mode: V3Run["mode"]; tier?: Tier; gate?: boolean }): Promise<{ ok: true; fields: Record<string, unknown>; run: V3Run } | { ok: false; reason: string; run?: V3Run }> {
+export async function v3WireStory(input: { clusterKey: string; teams: string[]; refs: SourceRef[]; category?: string; mode: V3Run["mode"]; tier?: Tier; gate?: boolean; importance?: number }): Promise<{ ok: true; fields: Record<string, unknown>; run: V3Run } | { ok: false; reason: string; run?: V3Run }> {
   const sources = await gatherSources(input.refs);
   if (sources.length === 0) return { ok: false, reason: `no-source-text:${input.clusterKey}` };
   const factSheet = await teamFactSheet(input.teams.slice(0, 4), { games: 8 }).catch(() => "");
@@ -64,7 +64,9 @@ export async function v3WireStory(input: { clusterKey: string; teams: string[]; 
       teams,
       whatHappened: paras[0] ?? "",
       bodyMarkdown: run.final.bodyMarkdown,
-      impact: run.artifacts.brief?.depth === "analysis" ? "significant" : run.artifacts.brief?.depth === "story" ? "moderate" : "low",
+      // Impact follows the item's importance (the news), not the depth (the
+      // word count): a 120-word item about a court order is not "low".
+      impact: input.importance != null ? (input.importance >= 8 ? "significant" : input.importance >= 5 ? "moderate" : "low") : run.artifacts.brief?.depth === "analysis" ? "significant" : run.artifacts.brief?.depth === "story" ? "moderate" : "low",
       impactRationale: run.artifacts.brief?.depthReason ?? "",
       stats: [],
       watching: [],

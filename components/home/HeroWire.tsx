@@ -37,7 +37,10 @@ export default function HeroWire({ featured, wire }: {
               {/* Homepage shows ONLY clickable items (Josh via Isaac,
                   2026-08-20), and low-impact stories never occupy the top
                   five (Brief v2 scope filter) — they stay on /wire. */}
-              {wire.filter((w) => w.storySlug && w.impact !== "low").slice(0, 5).map((w, i) => {
+              {/* 2026-08-30: the desk pipeline rates most stories "low" by
+                  depth, which emptied this rail after the catalog reset;
+                  triage on the item's importance instead (fluff is ≤ 3). */}
+              {wire.filter((w) => w.storySlug && (w.impact !== "low" || (w.importance ?? 0) >= 4)).slice(0, 5).map((w, i) => {
                 const inner = (
                   <>
                     <span className={i === 0 ? "tmchip hot" : "tmchip"}><RelTime iso={w.publishedAt} short /></span>

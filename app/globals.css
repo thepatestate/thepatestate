@@ -686,17 +686,24 @@ footer{background:var(--navy);color:var(--chalk-dim);padding:34px 0 40px;font-fa
 
 /* --- cover: full-bleed article-page hero with the headline/dek/byline
    overlaid on the lower third, magazine-style (app/notebook/[slug]). --- */
-.cover{position:relative;border-radius:8px;overflow:hidden;aspect-ratio:16/8;
+/* The cover grows with its headline: a minimum height keeps the magazine
+   proportion, and the body sits in flow at the bottom instead of being
+   pinned absolutely, so a five-line headline pushes the box taller rather
+   than climbing out the top (2026-08-30). Long headlines also step down. */
+.cover{position:relative;border-radius:8px;overflow:hidden;min-height:clamp(300px,50vw,470px);
+  display:flex;flex-direction:column;justify-content:flex-end;
   margin-bottom:26px;box-shadow:0 18px 50px rgba(15,27,45,.35)}
 .cover-media{position:absolute;inset:0;z-index:0}
 .cover-scrim{position:absolute;inset:0;z-index:1;pointer-events:none;
   background:linear-gradient(180deg,transparent 26%,rgba(15,27,45,.6) 58%,rgba(15,27,45,.94) 100%)}
-.cover-body{position:absolute;left:0;right:0;bottom:0;z-index:2;padding:28px 32px 26px;color:var(--chalk)}
+.cover-body{position:relative;z-index:2;padding:120px 32px 26px;color:var(--chalk)}
 .cover-body .fr{color:var(--lamp);border-color:var(--lamp)}
 .cover-body h1{font-family:var(--display);font-weight:800;text-transform:uppercase;
-  color:var(--chalk);font-size:clamp(30px,4.6vw,50px);line-height:.96;margin:10px 0 10px}
+  color:var(--chalk);font-size:clamp(30px,4.6vw,50px);line-height:.96;margin:10px 0 10px;text-wrap:balance}
+.cover-body h1[data-long="1"]{font-size:clamp(26px,3.6vw,40px)}
+.cover-body h1[data-long="2"]{font-size:clamp(22px,3vw,32px);line-height:1.02}
 .cover-body .dek{font-size:17px;color:var(--chalk-dim);max-width:62ch;margin:0}
-@media(max-width:700px){.cover{aspect-ratio:4/5}.cover-body{padding:20px 20px 20px}}
+@media(max-width:700px){.cover{min-height:70vw}.cover-body{padding:90px 20px 20px}}
 
 /* --- section headers: kicker + display header, optional right-aligned
    "view all" text link on the same baseline row — replaces boxy

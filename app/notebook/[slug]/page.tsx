@@ -172,7 +172,7 @@ export default async function ArticlePage({
                     <div className="cover-scrim" />
                     <div className="cover-body">
                       <span className="fr">📝 {({"weekend-truths":"Weekend Truths","poll-day":"Poll Day","sit-down":"The Sit-Down","picks-drop":"Picks Drop","espn-friday":"The ESPN Show",mailbag:"The Mailbag"} as Record<string,string>)[article.episode?.series ?? ""] ?? "The Notebook"}</span>
-                      <h1>{article.headline}</h1>
+                      <h1 data-long={article.headline.length > 110 ? "2" : article.headline.length > 70 ? "1" : undefined}>{article.headline}</h1>
                       {article.dek && <p className="dek">{article.dek}</p>}
                       <div style={{ fontFamily: "var(--mono)", fontSize: 11, color: "var(--chalk-dim)", marginTop: 12 }}>
                         <Link href={`/authors/${authorSlug}`} style={{ color: "var(--chalk)", fontWeight: 700, textDecoration: "none" }}>

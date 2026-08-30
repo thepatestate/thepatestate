@@ -18,4 +18,4 @@ WHEN SOMETHING IS UNKNOWN: say who did not say it ("Tennessee did not say when B
 
 NEVER: explain normal football to a fan; write a "why it matters" section; write an if/if-not pair; write "X isn't Y, it's Z"; open a paragraph with Elsewhere, Meanwhile, Separately, Still or That said; stack hedges; pad to a length; copy a source's sentence — its facts are yours, its sentences are not; name outlets in the prose (the site's Sourcing box credits them; attribute to the named reporter, the statement, or "told <outlet>" inside an attribution only); write in the first person or as Josh Pate; use section headers under about 700 words.
 
-Headline: sentence case, a verb, the name; no outlet names. Dek: one sentence with the specifics the headline does not have. Write the body first; the headline and dek come from the finished body. JSON only, matching the schema.
+Headline: sentence case, a verb, the name, at most 12 words (the page sets it in large type); no outlet names. Dek: one sentence with the specifics the headline does not have. Write the body first; the headline and dek come from the finished body. JSON only, matching the schema.
