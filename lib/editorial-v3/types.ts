@@ -211,7 +211,7 @@ export interface AudienceEdit {
 // ------------------------------------------------------ stage 12: fact check
 export interface FactCheckResult {
   verdict: "pass" | "unsupported" | "contradicted";
-  claims: { claim: string; status: "supported" | "unsupported" | "contradicted" | "analysis"; sourceRefs: string[] }[];
+  claims: { claim: string; status: "supported" | "unsupported" | "contradicted" | "analysis"; sourceRefs: string[]; evidence?: string }[];
   joshMisattribution: string[];
 }
 

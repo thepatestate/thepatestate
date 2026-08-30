@@ -11,7 +11,7 @@ import { callJSON, modelForRole, oppositeOf, choiceFor, type Tier } from "./mode
 import { deskGate } from "./desk-gate";
 import { v3Prompt, S, arr, obj, nullable, ARTICLE_SCHEMA, OUTPUT_CONTRACT, cleanDraft, words, hardPolicyForLane, dateLine } from "./v3-context";
 import { hardPolicyGates } from "./policy-gates";
-import { factCheckSources } from "./fact-check";
+import { factCheckSources, factRepair } from "./fact-check";
 import { quitReadingTest, aiSmellTest } from "./judges";
 import { newRunId, recordV3Run } from "./telemetry";
 import { liftReport, liftVerdict } from "./lift-check";
@@ -136,8 +136,20 @@ export async function runReportedEngine(m: ReportedMaterial, opts: ReportedRunOp
     run.artifacts.lift = { pct: lift.pct, longestRun: lift.runs.reduce((a, x) => Math.max(a, x.split(" ").length), 0), pass: lv.pass, reason: lv.reason };
     if (!lv.pass) run.artifacts.policy = { pass: false, violations: [...run.artifacts.policy.violations, `verbatim lift: ${lv.reason}`] };
     log(`lift check: ${lv.reason}`);
-    const fc = await factCheckSources(draft, source); add(fc.call); run.artifacts.fact = fc.result;
+    let fc = await factCheckSources(draft, source); add(fc.call); run.artifacts.fact = fc.result;
     log(`policy ${run.artifacts.policy.pass ? "pass" : run.artifacts.policy.violations.join("; ")} · fact ${fc.result.verdict}`);
+    // One fact repair before a story dies (2026-08-30): drop or narrow the
+    // flagged claims, keep everything else, re-check once. Only what the
+    // pack carries survives; nothing is added.
+    if (fc.result.verdict !== "pass" && fc.result.claims.some((c) => c.status === "unsupported" || c.status === "contradicted")) {
+      const rp = await factRepair(draft, fc.result, { subject: b.brief.theNews, teams: run.final?.teams ?? [], coreDevelopment: p.pack.development, confirmedFacts: p.pack.facts.map((f) => ({ fact: f.fact, sourceRef: f.sourceRef, confidence: f.status === "confirmed" ? "confirmed" as const : "reported" as const })), uncertainOrMissing: p.pack.unknowns.map((u) => ({ item: u, whyItMatters: "" })), numbers: p.pack.numbers.map((x) => ({ value: x.value, meaning: x.meaning, sourceRef: x.sourceRef })), quotes: p.pack.quotes.map((q) => ({ speaker: q.speaker, text: q.text, sourceRef: q.sourceRef, role: "evidence" as const })), joshOnRecord: [], footballMechanisms: [], tensions: [], contradictions: [], fanObjections: [], secondOrderConsequences: [], observableTests: [], thingsActuallyInteresting: [], sourceSufficiency: { score: 0, canSupportBrief: true, canSupportReaction: true, canSupportPremiumColumn: false, reason: "" } }); add(rp.call);
+      if (rp.draft.bodyMarkdown.trim() && words(rp.draft.bodyMarkdown) >= Math.round(DEPTH_WORDS[b.brief.depth].min * 0.7)) {
+        draft = cleanDraft(rp.draft); run.artifacts.repairs!.push(...rp.removed.map((r) => `fact repair: ${r}`));
+        run.artifacts.policy = hardPolicyGates({ draft, lane: "standalone", suppliedQuotes: p.pack.quotes.map((q) => q.text) });
+        fc = await factCheckSources(draft, source); add(fc.call); run.artifacts.fact = fc.result;
+        log(`fact repair: removed ${rp.removed.length} · re-check ${fc.result.verdict} · ${words(draft.bodyMarkdown)} words`);
+      }
+    }
     const quitChoice = tier === "economy" ? choiceFor("quitJudge", tier) : oppositeOf(w.call.vendor, "low");
     const q1 = await quitReadingTest(draft, quitChoice); add(q1.call); run.artifacts.quit = q1.result;
     log(`quit test: ${q1.result.neverWantedToQuit ? "never wanted to quit" : `quit at ¶${q1.result.quitParagraphIndex} (${q1.result.reason})`} · finished ${q1.result.didFinish} · worth it ${q1.result.worthTheTime} · send ${q1.result.wouldSend}`);

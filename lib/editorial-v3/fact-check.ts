@@ -14,7 +14,7 @@ const obj = (properties: Record<string, unknown>) => ({ type: "object", properti
 
 export const FACTCHECK_SCHEMA = obj({
   verdict: { type: "string", enum: ["pass", "unsupported", "contradicted"] },
-  claims: arr(obj({ claim: S, status: { type: "string", enum: ["supported", "unsupported", "contradicted", "analysis"] }, sourceRefs: arr(S) })),
+  claims: arr(obj({ claim: S, status: { type: "string", enum: ["supported", "unsupported", "contradicted", "analysis"] }, sourceRefs: arr(S), evidence: S })),
   joshMisattribution: arr(S),
 });
 
@@ -34,6 +34,10 @@ export async function factCheck(draft: ArticleDraft, dossier: EditorialDossier, 
   let result: FactCheckResult;
   try { result = JSON.parse(text) as FactCheckResult; } catch { result = { verdict: "unsupported", claims: [], joshMisattribution: ["fact-check response unreadable"] }; }
   // Fail closed on the derived verdict, whatever the model's summary said.
+  // A "contradicted" that cannot quote the contradicting source sentence is
+  // the checker's own belief, not the sources' (2026-08-30: "Lane Kiffin
+  // identified as LSU coach — contradicted"). It counts as unsupported.
+  for (const c of result.claims) if (c.status === "contradicted" && !(c.evidence ?? "").trim()) c.status = "unsupported";
   if (result.joshMisattribution.length || result.claims.some((c) => c.status === "contradicted")) result.verdict = "contradicted";
   else if (result.claims.some((c) => c.status === "unsupported")) result.verdict = "unsupported";
   const call: StageCall = { stage: "fact-check", role: "factCheck", vendor: via, model: via === "anthropic" ? "claude-sonnet-5" : (process.env.OPENAI_JUDGE_MODEL ?? "gpt-5.6-luna"), inputTokens: 0, outputTokens: 0, costUsd: 0, ms: Date.now() - started };
@@ -52,6 +56,10 @@ export async function factCheckSources(draft: ArticleDraft, sources: string): Pr
   });
   let result: FactCheckResult;
   try { result = JSON.parse(text) as FactCheckResult; } catch { result = { verdict: "unsupported", claims: [], joshMisattribution: ["fact-check response unreadable"] }; }
+  // A "contradicted" that cannot quote the contradicting source sentence is
+  // the checker's own belief, not the sources' (2026-08-30: "Lane Kiffin
+  // identified as LSU coach — contradicted"). It counts as unsupported.
+  for (const c of result.claims) if (c.status === "contradicted" && !(c.evidence ?? "").trim()) c.status = "unsupported";
   if (result.joshMisattribution.length || result.claims.some((c) => c.status === "contradicted")) result.verdict = "contradicted";
   else if (result.claims.some((c) => c.status === "unsupported")) result.verdict = "unsupported";
   return { result, call: { stage: "fact-check", role: "factCheck", vendor: via, model: via === "anthropic" ? "claude-sonnet-5" : (process.env.OPENAI_JUDGE_MODEL ?? "gpt-5.6-luna"), inputTokens: 0, outputTokens: 0, costUsd: 0, ms: Date.now() - started } };

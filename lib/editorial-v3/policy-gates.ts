@@ -18,7 +18,9 @@ export function hardPolicyGates(input: PolicyInput): PolicyResult {
   const prose = body.replace(/\[QUOTE:[\d:]+\][\s\S]*?\[\/QUOTE\]/g, "");
   // Lane / person
   // Quoted speech is somebody else's first person; strip it before the lane check.
-  const firstPerson = hasFirstPersonProse(prose.replace(/"[^"]{3,}"|“[^”]{3,}”/g, " "));
+  // A multi-paragraph quote leaves its opening mark unclosed at the end of
+  // the paragraph (newspaper convention); strip that too (2026-08-30).
+  const firstPerson = hasFirstPersonProse(prose.replace(/"[^"]{3,}"|“[^”]{3,}”/g, " ").replace(/[“"][^”"\n]*$/gm, " "));
   if (input.lane === "show" && !firstPerson) v.push("lane: Josh's column must be first person");
   if (input.lane !== "show" && firstPerson) v.push("lane: staff/Wire prose carries no first person");
   if (input.lane === "show" && !/—\s*JP\s*$/.test(body.trimEnd())) v.push("lane: Josh's column signs off — JP");

@@ -4,4 +4,6 @@ Sources are the factual universe. Analysis may extend from sources; factual clai
 
 Separately list joshMisattribution: any opinion, pick, or prediction the draft attributes to Josh that the sources do not show him stating. For a piece edited from Josh's own transcript, his spoken positions in the segment ARE his positions. A column under his byline is written in his first person by design and signs off "— JP"; the sign-off and the first person are the byline convention, never a misattribution.
 
+For every claim give evidence: for "supported" and "contradicted", the verbatim source sentence (or fragment) that supports or contradicts it; "" otherwise. A contradiction you cannot quote is not a contradiction — mark it "unsupported". Do not contradict a draft with your own knowledge: the sources are the universe, and a person's past job in the sources ("coached both last year at Ole Miss") does not contradict his current one.
+
 Verdict: "contradicted" if any claim is contradicted or Josh is misattributed; "unsupported" if any material fact is unsupported; else "pass". A misspelled name that the sources spell differently is contradicted. Output JSON only.

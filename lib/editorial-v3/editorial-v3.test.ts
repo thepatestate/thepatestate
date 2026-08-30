@@ -136,6 +136,13 @@ describe("tiers, gate and cap (2026-08-28)", () => {
 });
 
 describe("lift gate", () => {
+  it("a quote split by an attribution is still a quote, not a lift", async () => {
+    const { liftReport } = await import("./lift-check");
+    const src = "Kiffin said the program would keep a relentless pursuit of excellence. \"That's how I live. It's how I run the team, and we're always going to look for every edge we can get,\" he said.";
+    const body = "Kiffin framed the decision as principle. \"That's how I live,\" he said. \"It's how I run the team, and we're always going to look for every edge we can get.\"";
+    const r = liftReport(body, [src]);
+    expect(r.runs).toEqual([]);
+  });
   it("a stat line shared with the source is a fact, not a lift", async () => {
     const { liftReport, mostlyNumbers } = await import("./lift-check");
     const src = "He finished last season completing 58.3% of his passes for 2,760 yards, 15 touchdowns and nine interceptions, he said.";

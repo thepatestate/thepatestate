@@ -37,9 +37,13 @@ export function mostlyNumbers(run: string): boolean {
 export function liftReport(body: string, sources: string[], n = 8): LiftReport {
   const source = sources.join("\n");
   const quoted = (body.match(/"[^"]{20,}"|“[^”]{20,}”/g) ?? []).map(norm);
-  const all = sharedRuns(body, source, n);
-  const quotedRuns = all.filter((r) => quoted.some((q) => q.includes(r)));
-  const runs = all.filter((r) => !quotedRuns.includes(r) && !mostlyNames(r, originalSpan(body, r)) && !mostlyNumbers(r));
+  // Quoted speech is masked out BEFORE the run search, so a run can never
+  // straddle a quote boundary ("…how I live," he said. "It's how I run…" —
+  // 2026-08-30: that pattern was failing real stories as 48-word lifts).
+  const masked = body.replace(/"[^"]{20,}"|“[^”]{20,}”/g, (m) => " ¶ ".repeat(1));
+  const all = sharedRuns(masked, source, n);
+  const quotedRuns = sharedRuns(body, source, n).filter((r) => quoted.some((q) => q.includes(r)));
+  const runs = all.filter((r) => !mostlyNames(r, originalSpan(body, r)) && !mostlyNumbers(r));
   const words = norm(body).split(" ").length;
   const liftedWords = runs.reduce((a, r) => a + r.split(" ").length, 0);
   return { words, liftedWords, pct: Math.round((liftedWords / Math.max(1, words)) * 1000) / 10, runs, quotedRuns };
