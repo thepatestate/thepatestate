@@ -55,8 +55,12 @@ console.log(`PHASE B done: ${finals.length} remain · $${cost.toFixed(2)}`);
 
 // Phase C — rewrite
 let rewritten = 0, keptOld = 0;
+let backups: any[] = [];
+try { backups = readFileSync(".superpowers/wire-2day-backup.jsonl", "utf8").trim().split("\n").map((l) => JSON.parse(l).doc); } catch {}
 for (const s of finals) {
-  const feed = `${s.headline}\n${s.deck ?? ""}\n\n${s.bodyMarkdown}`;
+  // Prefer the pre-rewrite original as source material — it is fuller.
+  const orig = backups.find((b) => b._id === s._id) ?? s;
+  const feed = `${orig.headline}\n${orig.deck ?? ""}\n\n${orig.bodyMarkdown}`;
   const refs = (s.sources?.length ? s.sources : [{ outlet: "wire", url: `https://example.invalid/${s._id}` }]).map((x: any) => ({ outlet: x.outlet ?? "wire", url: x.url, feedText: feed, title: s.headline }));
   const r: any = await v3WireStory({ clusterKey: `cleanup-${s._id.slice(-24)}`, teams: s.teams ?? [], refs, mode: "shadow", gate: false, tier: "economy" });
   cost += (r.run?.calls ?? []).reduce((a: number, c: any) => a + (c.costUsd ?? 0), 0);

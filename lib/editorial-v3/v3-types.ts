@@ -60,10 +60,13 @@ export interface FanBrief {
 }
 
 export const DEPTH_WORDS: Record<Depth, { min: number; max: number }> = {
-  item: { min: 75, max: 200 },
-  brief: { min: 200, max: 450 },
-  story: { min: 400, max: 750 },
-  analysis: { min: 600, max: 1300 },
+  // Ranges raised ~50% on 2026-08-31 (Isaac: "without fluff can you beef it
+  // up by another 50%") — the writer's anti-padding rules are unchanged, so
+  // the added words must come from the pack: comparisons, memory, context.
+  item: { min: 110, max: 300 },
+  brief: { min: 300, max: 650 },
+  story: { min: 600, max: 1100 },
+  analysis: { min: 900, max: 1800 },
 };
 
 // ---------------------------------------------------------------- Judges
