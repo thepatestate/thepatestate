@@ -42,6 +42,12 @@ export type Depth = "item" | "brief" | "story" | "analysis";
 export interface FanBrief {
   theNews: string;
   whyAFanCares: string;
+  /** One plain sentence a fan could repeat: what this changes, threatens or
+   * sets up (Isaac, 2026-08-31: "articles need to state WHY they exist"). */
+  stakes: string;
+  /** One sentence only when the site's on-record positions bear on the news
+   * (Josh's bracket, poll or picks, from the supplied ledger); else absent. */
+  joshAngle?: string;
   interestingDetail?: string;
   footballAngle?: string;
   importantUnknown?: string;

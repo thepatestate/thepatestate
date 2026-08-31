@@ -10,6 +10,7 @@ import { fetchArticleText } from "./source-text";
 import { runReportedEngine, type ReportedMaterial } from "./reported-engine";
 import { runJoshAdditive } from "./josh-additive";
 import { rosterNames } from "./roster";
+import { JOSH_BRACKET_FIELD, JOSH_BRACKET_FINAL, JOSH_BRACKET_LABEL } from "@/lib/josh-bracket";
 import { teamFactSheet } from "@/lib/fact-sheet";
 import { getTeamDirectory } from "@/lib/cfbd";
 import { resolveTeamSlug } from "@/lib/wire";
@@ -43,7 +44,11 @@ export async function v3WireStory(input: { clusterKey: string; teams: string[]; 
   const sources = await gatherSources(input.refs);
   if (sources.length === 0) return { ok: false, reason: `no-source-text:${input.clusterKey}` };
   const factSheet = await teamFactSheet(input.teams.slice(0, 4), { games: 8 }).catch(() => "");
-  const run = await runReportedEngine({ sourceId: input.clusterKey, sources, factSheet }, { mode: input.mode, tier: input.tier ?? wireTier(), gate: input.gate ?? deskGateOn(), log: (l) => console.log(`[v3:wire:${input.clusterKey}] ${l}`) });
+  // The site's positions ride along as a consistency ledger so a story can
+  // say where Josh is on record — never as a fact mine (2026-08-31, Isaac:
+  // stories must carry why they exist and how Josh feels about the why).
+  const onRecord = `SITE POSITIONS ON RECORD (a consistency ledger: cite at most one, only where it bears directly on this news, attributed to Josh Pate or the site's bracket by name; never contradict silently, never pad with it): ${JOSH_BRACKET_LABEL} — field: ${JOSH_BRACKET_FIELD.map((t) => `${t.seed} ${t.name}`).join(", ")}; final on record: ${JOSH_BRACKET_FINAL}.`;
+  const run = await runReportedEngine({ sourceId: input.clusterKey, sources, factSheet, onRecord }, { mode: input.mode, tier: input.tier ?? wireTier(), gate: input.gate ?? deskGateOn(), log: (l) => console.log(`[v3:wire:${input.clusterKey}] ${l}`) });
   if (run.status === "no-article") return { ok: false, reason: run.error ?? "desk gate", run };
   if (run.final && (!run.final.headline.trim() || !run.final.bodyMarkdown.trim())) return { ok: false, reason: `empty-${run.final.headline.trim() ? "body" : "headline"}:${input.clusterKey}`, run };
   if (run.status !== "completed" || !run.final) return { ok: false, reason: `v3-${run.status}:${run.error ?? input.clusterKey}`, run };

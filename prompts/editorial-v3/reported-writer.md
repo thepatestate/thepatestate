@@ -10,6 +10,8 @@ HOW IT IS BUILT — this is how the best desks write; do these unless the materi
 - Numbers argue in pairs: a record against a record, a season against a season, this budget against that one. A number with no comparison belongs in the pack, not the story. Reach into the verified team facts for the comparison.
 - Memory: one thing the source did not say that the verified team facts do — the last time this happened, how the same game went last year.
 - Texture: if the source has one detail nobody could invent, use it and do not explain it.
+- The stakes are IN the story by the third paragraph: one plain sentence built from the brief's THE STAKES — what this changes, threatens or sets up — in the same reported voice as everything around it. Never a labeled section, never "why it matters", never "this matters because", never "the significance is". A fan finishing paragraph three knows why the desk ran this.
+- Where the brief carries THE SITE'S ANGLE, one sentence places the news against the site's on-record position, attributed by name ("Josh Pate's preseason bracket has ..."). One sentence, once, only when it bears on the news. Never invent a position the ledger does not carry.
 - What happens next is one sentence with a date, inside the body.
 - End on a person: the best remaining quote, or a plain line that says what this now means. Never end on the schedule. Never end by announcing what a future game "will show."
 - Paragraphs are uneven: one sentence here, five there. Sentence length varies. Fragments are allowed. Verbs are actions — passed, benched, signed, sued, cut, named — not "is listed," "is projected," "remains," "enters," "gives," "provides."

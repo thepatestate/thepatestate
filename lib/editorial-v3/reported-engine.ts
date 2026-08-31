@@ -32,7 +32,7 @@ const PACK_SCHEMA = obj({
   unknowns: arr(S),
   relevantTeamContext: arr(S),
 });
-const BRIEF_SCHEMA = obj({ theNews: S, whyAFanCares: S, interestingDetail: nullable(S), footballAngle: nullable(S), importantUnknown: nullable(S), depth: { type: "string", enum: ["item", "brief", "story", "analysis"] }, depthReason: S, nationalDeskWouldRun: { type: "boolean" }, deskReason: S });
+const BRIEF_SCHEMA = obj({ theNews: S, whyAFanCares: S, stakes: S, joshAngle: nullable(S), interestingDetail: nullable(S), footballAngle: nullable(S), importantUnknown: nullable(S), depth: { type: "string", enum: ["item", "brief", "story", "analysis"] }, depthReason: S, nationalDeskWouldRun: { type: "boolean" }, deskReason: S });
 const SUBTRACT_SCHEMA = obj({ cuts: arr(S), draft: ARTICLE_SCHEMA });
 
 export function sourcesBlock(m: ReportedMaterial): string {
@@ -45,13 +45,13 @@ export async function extractPack(m: ReportedMaterial, tier: Tier = "premium"): 
 }
 
 export async function fanBrief(pack: ReportingPack, raw?: string, tier: Tier = "premium"): Promise<{ brief: FanBrief; call: StageCall }> {
-  const { data, call } = await callJSON<FanBrief & { interestingDetail: string | null; footballAngle: string | null; importantUnknown: string | null }>({ stage: "fan-brief", role: "fanBrief", choice: choiceFor("fanBrief", tier), maxTokens: 2000, schemaName: "fan_brief", schema: BRIEF_SCHEMA as unknown as Record<string, unknown>, system: v3Prompt("fan-brief"), user: `REPORTING PACK:\n${JSON.stringify(pack, null, 1)}${raw ? `\n\nTHE SOURCES THEMSELVES (so you can judge how much is really here):\n${raw.slice(0, 12000)}` : ""}` });
-  return { brief: { ...data, interestingDetail: data.interestingDetail ?? undefined, footballAngle: data.footballAngle ?? undefined, importantUnknown: data.importantUnknown ?? undefined }, call };
+  const { data, call } = await callJSON<FanBrief & { joshAngle: string | null; interestingDetail: string | null; footballAngle: string | null; importantUnknown: string | null }>({ stage: "fan-brief", role: "fanBrief", choice: choiceFor("fanBrief", tier), maxTokens: 2000, schemaName: "fan_brief", schema: BRIEF_SCHEMA as unknown as Record<string, unknown>, system: v3Prompt("fan-brief"), user: `REPORTING PACK:\n${JSON.stringify(pack, null, 1)}${raw ? `\n\nTHE SOURCES THEMSELVES (so you can judge how much is really here):\n${raw.slice(0, 12000)}` : ""}` });
+  return { brief: { ...data, joshAngle: data.joshAngle ?? undefined, interestingDetail: data.interestingDetail ?? undefined, footballAngle: data.footballAngle ?? undefined, importantUnknown: data.importantUnknown ?? undefined }, call };
 }
 
 function briefBlock(b: FanBrief): string {
   const w = DEPTH_WORDS[b.depth];
-  return `FAN BRIEF:\nTHE NEWS: ${b.theNews}\nWHY A FAN CARES: ${b.whyAFanCares}${b.interestingDetail ? `\nTHE INTERESTING DETAIL: ${b.interestingDetail}` : ""}${b.footballAngle ? `\nTHE FOOTBALL ANGLE: ${b.footballAngle}` : ""}${b.importantUnknown ? `\nWHAT WE DON'T KNOW: ${b.importantUnknown}` : ""}\n\nDEPTH: ${b.depth.toUpperCase()} (${w.min}–${w.max} words) — ${b.depthReason}\nThe range is real in both directions: a ${b.depth} under ${w.min} words has left out facts the pack carries; one over ${w.max} is padded. Use the pack's facts, quotes and team context until the range is honestly filled, then stop.`;
+  return `FAN BRIEF:\nTHE NEWS: ${b.theNews}\nWHY A FAN CARES: ${b.whyAFanCares}\nTHE STAKES: ${b.stakes}${b.joshAngle ? `\nTHE SITE'S ANGLE (on record): ${b.joshAngle}` : ""}${b.interestingDetail ? `\nTHE INTERESTING DETAIL: ${b.interestingDetail}` : ""}${b.footballAngle ? `\nTHE FOOTBALL ANGLE: ${b.footballAngle}` : ""}${b.importantUnknown ? `\nWHAT WE DON'T KNOW: ${b.importantUnknown}` : ""}\n\nDEPTH: ${b.depth.toUpperCase()} (${w.min}–${w.max} words) — ${b.depthReason}\nThe range is real in both directions: a ${b.depth} under ${w.min} words has left out facts the pack carries; one over ${w.max} is padded. Use the pack's facts, quotes and team context until the range is honestly filled, then stop.`;
 }
 
 /** The reporter's draft. Sol writes from the sources themselves (the quotes,
