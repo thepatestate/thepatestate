@@ -111,6 +111,7 @@ export const wireStory = defineType({
       description: "1–3 questions a fan is asking about this news, each with why it matters",
     }),
     defineField({ name: "heroImage", title: "Hero image (AI editorial illustration)", type: "image", options: { hotspot: true } }),
+    defineField({ name: "heroCredit", title: "Hero photo credit (licensed photo)", type: "string", description: "e.g. David Buono/Icon Sportswire; empty for the AI illustration" }),
     defineField({
       name: "joshReceipt",
       title: "Josh's Receipt (archive quote)",

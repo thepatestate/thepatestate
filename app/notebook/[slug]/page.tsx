@@ -153,7 +153,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
           {coverSrc && (
             <div className="a-hero">
               <img className="cover" src={coverSrc} alt={article.headline} />
-              <span className="lbl">The Pate State</span>
+              <span className="lbl">{article.heroCredit ? `Photo: ${article.heroCredit}` : "The Pate State"}</span>
             </div>
           )}
 

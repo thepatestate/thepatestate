@@ -37,6 +37,8 @@ export interface SanityArticle {
   bodyMarkdown: string;
   pullQuote?: string;
   heroUrl?: string | null;
+  /** Licensed photo credit (2026-09-02); empty for the AI illustration. */
+  heroCredit?: string;
   /** Visual modules for long-form staff analysis (2026-09-02), drawn from the body. */
   stats?: { value?: string; label?: string; critical?: boolean }[];
   callout?: string;
@@ -72,7 +74,7 @@ const ARTICLE_FIELDS = `_id, headline, slug, dek, bodyMarkdown, pullQuote, bylin
   stats, callout, calloutSpeaker, facts, watching, questions,
   workflowState, lowConfidence, primaryTeam, teams, tags, seoTitle, seoDescription, publishedAt,
   contentType, productionMethod, reviewedBy, corrections,
-  "heroUrl": heroImage.asset->url,
+  "heroUrl": heroImage.asset->url, heroCredit,
   "episode": episode->{ ytId, title, durationSeconds, series, description, thumbnailUrl, publishedAt }`;
 
 // Deliberately throws on failure — no try/catch here. Pages calling these
@@ -220,6 +222,7 @@ export interface SanityWireStory {
   sources?: { outlet?: string; url?: string }[];
   /** AI editorial illustration (2026-09-02: every Wire story carries one). */
   heroUrl?: string | null;
+  heroCredit?: string;
   v3Depth?: string;
   publishedAt?: string;
   updatedAt?: string;
@@ -230,7 +233,7 @@ const WIRE_STORY_FIELDS = `_id, headline, slug, verification, category, teams, w
   whyItMatters, deck, impact, impactRationale, stats, whyBody, missing, section04Title, section04Body,
   chessboard, openTitle, whyTitle, missingTitle, chessboardTitle,
   board, watching, facts, callout, calloutSpeaker, joshReceipt, readLabel, readBody, questions, whatsNext, sources,
-  "heroUrl": heroImage.asset->url, v3Depth,
+  "heroUrl": heroImage.asset->url, heroCredit, v3Depth,
   publishedAt, updatedAt, corrections`;
 
 export async function getWireItems(limit = 8): Promise<SanityWireItem[]> {

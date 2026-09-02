@@ -12,6 +12,7 @@ export default defineType({
       name: "heroImage", title: "Hero Image (auto-generated — BFL FLUX)",
       type: "image", options: { hotspot: true },
     }),
+    defineField({ name: "heroCredit", title: "Hero photo credit (licensed photo)", type: "string", description: "e.g. David J. Griffin/Icon Sportswire — rendered under the photo; empty for the AI illustration" }),
     defineField({
       name: "bodyMarkdown", title: "Body (Markdown — [EMBED:HH:MM:SS] and [PULLQUOTE] markers)",
       type: "text", rows: 30, validation: (r) => r.required(),
