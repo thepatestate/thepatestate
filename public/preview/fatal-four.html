@@ -1935,7 +1935,7 @@ function renderState(){
   var sc = liveScore(), yx = x(sc), draft = !S.locked;
   var flip = yx > W-(draft?190:130);
   var yl = svg("line", {x1:yx, y1:padT-6, x2:yx, y2:padT+ih, stroke:"#C9A227", "stroke-width":2});
-  if(not locked) yl.setAttribute("stroke-dasharray", "4 4");
+  if(draft) yl.setAttribute("stroke-dasharray", "4 4");
   g.appendChild(yl);
   g.appendChild(svg("circle", {cx:yx, cy:padT+ih, r:4.5, fill:draft?"#0E1F3F":"#C9A227",
     stroke:"#C9A227", "stroke-width":1.6}));
