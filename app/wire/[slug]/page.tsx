@@ -30,10 +30,15 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   const story = await getWireStoryBySlug(slug).catch(() => null);
   if (!story) return { title: "The Wire" };
+  const description = truncateMeta(story.deck ?? story.whatHappened ?? "");
   return {
     title: `${story.headline} — The Wire`,
-    description: truncateMeta(story.deck ?? story.whatHappened ?? ""),
+    description,
     alternates: { canonical: `/wire/${slug}` },
+    ...(story.heroUrl ? {
+      openGraph: { title: story.headline, description, type: "article", images: [{ url: story.heroUrl, width: 1152, height: 640, alt: story.headline }] },
+      twitter: { card: "summary_large_image", title: story.headline, description, images: [story.heroUrl] },
+    } : {}),
   };
 }
 
@@ -72,6 +77,7 @@ export default async function WireStoryPage({ params }: { params: Promise<{ slug
   const status = STATUS_LABEL[story.verification ?? "reported"] ?? "Reported";
   const stats = (story.stats ?? []).filter((s) => s.value && s.label);
   const watching = (story.watching ?? []).filter((w) => w.title);
+  const questions = (story.questions ?? []).filter((q) => q.question && q.why);
   const boardRows = story.board?.rows?.filter((r) => r.name) ?? [];
 
   const storyUrl = `https://thepatestate.com/wire/${story.slug.current}`;
@@ -84,6 +90,7 @@ export default async function WireStoryPage({ params }: { params: Promise<{ slug
       datePublished: story.publishedAt,
       dateModified: story.updatedAt ?? story.publishedAt,
       mainEntityOfPage: storyUrl,
+      ...(story.heroUrl ? { image: [story.heroUrl] } : {}),
       author: {
         "@type": "Organization",
         name: "The Pate State Wire Desk",
@@ -147,7 +154,14 @@ export default async function WireStoryPage({ params }: { params: Promise<{ slug
             <div className="upd"><b>● {status}</b><br />{formatDate(story.publishedAt ?? "")}</div>
           </div>
 
-          {teamLogo && (
+          {story.heroUrl ? (
+            <div className="a-hero">
+              {/* AI editorial illustration (2026-09-02): every Wire story
+                  carries one; the logo graphic below is the fallback. */}
+              <img className="cover" src={story.heroUrl} alt="" width={1152} height={640} />
+              <span className="lbl">The Pate State · Editorial Illustration</span>
+            </div>
+          ) : teamLogo && (
             <div className="a-hero">
               <div
                 className="ph"
@@ -180,8 +194,8 @@ export default async function WireStoryPage({ params }: { params: Promise<{ slug
             {story.bodyMarkdown && !story.whyBody && !story.readBody ? (
               // Editorial Engine V3: the desk's story is one body at the depth
               // the reporting supported; the modules below stay empty.
-              story.bodyMarkdown.split(/\n{2,}/).map((p, i) => p.trim()).filter(Boolean).map((p, i) => (
-                p.startsWith("## ") ? <h2 key={i}>{p.slice(3)}</h2> : <p key={i}>{p.replace(/\*\*(.+?)\*\*/g, "$1")}</p>
+              story.bodyMarkdown.split(/\n{2,}/).map((p) => p.trim()).filter(Boolean).map((p, i) => (
+                p.startsWith("## ") ? <h2 key={i}><span className="pt">{String(next()).padStart(2, "0")}</span>{p.slice(3)}</h2> : <p key={i}>{p.replace(/\*\*(.+?)\*\*/g, "$1")}</p>
               ))
             ) : (
               <>
@@ -207,13 +221,13 @@ export default async function WireStoryPage({ params }: { params: Promise<{ slug
               <>
                 <SectionHead n={next()} kicker="The Detail Beneath the Headline" title={story.missingTitle || "What Most People Are Missing"} />
                 <div className="missbox">
-                  <p>{story.missing}</p>
+                  {story.missing.split(/\n{2,}/).map((p) => p.trim()).filter(Boolean).map((p, i) => <p key={i}>{p}</p>)}
                 </div>
               </>
             )}
 
             {story.callout && (
-              <div className="pull"><p>&ldquo;{story.callout}&rdquo;</p><span>The Wire Desk</span></div>
+              <div className="pull"><p>&ldquo;{story.callout}&rdquo;</p><span>{story.calloutSpeaker || "From the story"}</span></div>
             )}
 
             {story.section04Body && (
@@ -260,6 +274,19 @@ export default async function WireStoryPage({ params }: { params: Promise<{ slug
                   — Josh Pate{receiptHref && <> · <a href={receiptHref} target="_blank" rel="noopener">watch the moment →</a></>}
                 </span>
               </div>
+            )}
+
+            {questions.length > 0 && (
+              <>
+                {/* Questions to Be Answered (Isaac, 2026-09-02): the one to
+                    three questions a fan is asking, each with why it matters. */}
+                <SectionHead n={next()} kicker="The Open Questions" title="Questions to Be Answered" />
+                <div className="wl qa">
+                  {questions.map((q, i) => (
+                    <div key={i}><div className="n">{i + 1}</div><div><h3>{q.question}</h3>{q.why!.split(/\n{2,}/).map((p) => p.trim()).filter(Boolean).map((p, j) => <p key={j}>{p}</p>)}</div></div>
+                  ))}
+                </div>
+              </>
             )}
 
             {(watching.length > 0 || (story.whatsNext?.length ?? 0) > 0) && (

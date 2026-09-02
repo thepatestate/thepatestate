@@ -12,6 +12,8 @@ import { runJoshAdditive } from "./josh-additive";
 import { rosterNames } from "./roster";
 import { JOSH_BRACKET_FIELD, JOSH_BRACKET_FINAL, JOSH_BRACKET_LABEL } from "@/lib/josh-bracket";
 import { modulateStory } from "@/lib/editorial-v3/modulate";
+import { expandStory, type Expansion } from "@/lib/editorial-v3/expand";
+import { renderedWords, shortfall, RENDER_FLOOR } from "@/lib/editorial-v3/render-length";
 import { teamFactSheet } from "@/lib/fact-sheet";
 import { getTeamDirectory } from "@/lib/cfbd";
 import { resolveTeamSlug } from "@/lib/wire";
@@ -59,8 +61,23 @@ export async function v3WireStory(input: { clusterKey: string; teams: string[]; 
   const paras = paragraphs(run.final.bodyMarkdown);
   // Page modules (2026-09-01): the finished story laid out into the wire
   // page's architecture. Fail-soft — a modulate error ships the flat body.
+  const log = (l: string) => console.log(`[v3:wire:${input.clusterKey}] ${l}`);
   let mods: Awaited<ReturnType<typeof modulateStory>>["modules"] | null = null;
-  try { const m = await modulateStory(run.final, run.artifacts.pack!, run.artifacts.brief!, input.tier ?? wireTier()); mods = m.modules; run.calls.push(m.call); } catch (err) { console.log(`[v3:wire:${input.clusterKey}] modulate failed: ${err instanceof Error ? err.message : err}`); }
+  try { const m = await modulateStory(run.final, run.artifacts.pack!, run.artifacts.brief!, input.tier ?? wireTier(), log); mods = m.modules; run.calls.push(...m.calls); } catch (err) { log(`modulate failed: ${err instanceof Error ? err.message : err}`); }
+  // The floor is what the page prints (2026-09-02): under RENDER_FLOOR words
+  // across its sections, the story gains What Most People Are Missing and
+  // Questions to Be Answered, written from the same sources and fact-checked.
+  // Fail-soft: a story that cannot honestly reach the floor still ships.
+  let expansion: Expansion = { missing: null, questions: [] };
+  const prospective = { bodyMarkdown: run.final.bodyMarkdown, whatHappened: mods?.whatHappened, whyBody: mods?.whyBody, missing: mods?.missing, section04Body: mods?.section04Body, chessboard: mods?.chessboard, readBody: mods?.readBody, watching: mods?.watching };
+  const need = shortfall(prospective);
+  if (need > 0) {
+    try {
+      const x = await expandStory(run.final, run.artifacts.pack!, run.artifacts.brief!, { sourceId: input.clusterKey, sources, factSheet, onRecord }, { need, hasMissing: Boolean(mods?.missing), tier: input.tier ?? wireTier(), log });
+      expansion = x.expansion; run.calls.push(...x.calls);
+      log(`floor: ${renderedWords(prospective)} → ${renderedWords({ ...prospective, missing: mods?.missing ?? expansion.missing, questions: expansion.questions })} rendered words (floor ${RENDER_FLOOR})`);
+    } catch (err) { log(`expand failed: ${err instanceof Error ? err.message : err}`); }
+  }
   const teamDir = await getTeamDirectory().catch(() => ({}) as Record<string, unknown>);
   const teams = [...new Set([...(run.final.teams ?? []), ...input.teams])].map((t) => resolveTeamSlug(t, teamDir)).filter(Boolean);
   const confirmed = (run.artifacts.pack?.facts ?? []).every((f) => f.status === "confirmed");
@@ -76,11 +93,13 @@ export async function v3WireStory(input: { clusterKey: string; teams: string[]; 
       bodyMarkdown: run.final.bodyMarkdown,
       ...(mods ? {
         openTitle: mods.openTitle, whyTitle: mods.whyTitle ?? undefined, whyBody: mods.whyBody ?? undefined,
-        missing: mods.missing ?? undefined, callout: mods.callout ?? undefined,
+        missing: mods.missing ?? undefined, callout: mods.callout ?? undefined, calloutSpeaker: mods.calloutSpeaker ?? undefined,
         section04Title: mods.section04Title ?? undefined, section04Body: mods.section04Body ?? undefined,
         chessboard: mods.chessboard ?? undefined, readBody: mods.readBody ?? undefined,
         watching: mods.watching, facts: mods.facts,
       } : {}),
+      ...(!mods?.missing && expansion.missing ? { missing: expansion.missing } : {}),
+      ...(expansion.questions.length ? { questions: expansion.questions.map((q, i) => ({ _key: `q${i}`, ...q })) } : {}),
       // Impact follows the item's importance (the news), not the depth (the
       // word count): a 120-word item about a court order is not "low".
       impact: input.importance != null ? (input.importance >= 8 ? "significant" : input.importance >= 5 ? "moderate" : "low") : run.artifacts.brief?.depth === "analysis" ? "significant" : run.artifacts.brief?.depth === "story" ? "moderate" : "low",

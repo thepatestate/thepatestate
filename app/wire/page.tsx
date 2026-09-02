@@ -3,6 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { getWireItems, getWireStories } from "@/lib/sanity";
 import { teamLogoUrl } from "@/lib/teams-meta";
+import { getTeamDirectory } from "@/lib/cfbd";
 import { formatDate } from "@/lib/format";
 
 export const revalidate = 120;
@@ -14,9 +15,10 @@ export const metadata: Metadata = {
 };
 
 export default async function WirePage() {
-  const [items, stories] = await Promise.all([
+  const [items, stories, dir] = await Promise.all([
     getWireItems(30).catch(() => []),
     getWireStories(12).catch(() => []),
+    getTeamDirectory().catch(() => ({}) as Awaited<ReturnType<typeof getTeamDirectory>>),
   ]);
 
   return (
@@ -39,18 +41,35 @@ export default async function WirePage() {
             <>
               <p className="eyebrow">Full Stories</p>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: 14, marginTop: 10, marginBottom: 34 }}>
-                {stories.map((s) => (
-                  <Link key={s._id} href={`/wire/${s.slug.current}`} className="panel" style={{ textDecoration: "none", padding: 16, display: "grid", gap: 8, alignContent: "start" }}>
-                    <span style={{ fontFamily: "var(--mono)", fontSize: 10, letterSpacing: ".08em", color: "var(--gold, #B8842C)" }}>
+                {stories.map((s) => {
+                  const team = s.teams?.[0];
+                  const info = team ? dir[team] : undefined;
+                  const logo = team ? (info?.logo ?? teamLogoUrl(team)) : null;
+                  const color = info?.color ? `#${info.color.replace(/^#/, "")}` : "#1A2C55";
+                  return (
+                  <Link key={s._id} href={`/wire/${s.slug.current}`} className="panel wire-card" style={{ textDecoration: "none", padding: 0, display: "grid", gap: 8, alignContent: "start", overflow: "hidden" }}>
+                    {/* Every story carries an AI illustration (2026-09-02); the
+                        team logo on a tinted field is the fallback. */}
+                    {s.heroUrl ? (
+                      <img className="wire-card-img" src={s.heroUrl} alt="" width={1152} height={640} loading="lazy" style={{ width: "100%", height: "auto", aspectRatio: "16/9", objectFit: "cover", display: "block" }} />
+                    ) : (
+                      <span className="wire-card-img" style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "100%", aspectRatio: "16/9", background: `radial-gradient(420px 220px at 70% 12%, ${color}66, transparent 58%), linear-gradient(140deg, ${color}40 0%, #0A1730 62%, #1A2C55 100%)` }}>
+                        {logo && <img src={logo} alt="" width={72} height={72} style={{ width: 72, height: 72, objectFit: "contain", filter: "drop-shadow(0 10px 30px rgba(0,0,0,.5))" }} />}
+                      </span>
+                    )}
+                    <span style={{ display: "grid", gap: 8, padding: "10px 16px 16px" }}>
+                    <span style={{ fontFamily: "var(--mono)", fontSize: 10, letterSpacing: ".08em", color: "var(--lamp-deep)" }}>
                       {(s.verification ?? "reported").toUpperCase()} · {s.category?.toUpperCase() ?? "NEWS"}
                       {s.publishedAt ? ` · ${formatDate(s.publishedAt)}` : ""}
                     </span>
                     <b className="display" style={{ fontSize: 19, lineHeight: 1.15 }}>{s.headline}</b>
                     <span style={{ fontSize: 14, color: "var(--ink-dim)", lineHeight: 1.5 }}>
-                      {s.whatHappened?.slice(0, 120)}…
+                      {(s.deck ?? s.whatHappened ?? "").slice(0, 120)}…
+                    </span>
                     </span>
                   </Link>
-                ))}
+                  );
+                })}
               </div>
             </>
           )}
@@ -66,9 +85,11 @@ export default async function WirePage() {
                 const logo = it.teams?.[0] ? teamLogoUrl(it.teams[0]) : null;
                 const inner = (
                   <div style={{ display: "flex", gap: 12, alignItems: "flex-start", padding: "14px 0", borderBottom: "1px solid var(--line-l)" }}>
-                    {logo && <Image src={logo} alt="" width={34} height={34} style={{ borderRadius: "50%", background: "#fff", padding: 3, flexShrink: 0 }} />}
+                    {it.storyHero ? (
+                      <img src={it.storyHero} alt="" width={96} height={54} loading="lazy" style={{ width: 96, height: 54, objectFit: "cover", borderRadius: 6, flexShrink: 0 }} />
+                    ) : logo && <Image src={logo} alt="" width={34} height={34} style={{ borderRadius: "50%", background: "#fff", padding: 3, flexShrink: 0 }} />}
                     <div style={{ display: "grid", gap: 3 }}>
-                      <span style={{ fontFamily: "var(--mono)", fontSize: 10, letterSpacing: ".08em", color: "var(--gold, #B8842C)" }}>
+                      <span style={{ fontFamily: "var(--mono)", fontSize: 10, letterSpacing: ".08em", color: "var(--lamp-deep)" }}>
                         {it.category?.toUpperCase() ?? "NEWS"}
                         {it.publishedAt ? ` · ${formatDate(it.publishedAt)}` : ""}
                         {it.storySlug ? " · ⚡ FULL STORY" : ""}

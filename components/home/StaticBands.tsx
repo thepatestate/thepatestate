@@ -40,11 +40,16 @@ export function AnnualsSection() {
         <div className="tg-grid an-grid">
           {ANNUALS.map((a) => {
             return (
-              <a className="tg photo" href={`/annual/${a.slug}.html`} key={a.slug}>
-                <span className="tg-photo" style={{ backgroundImage: `url(/img/helmets/${a.slug}.jpg)` }} />
+              // The card shows the guide itself — a render of its cover page —
+              // not a helmet (Isaac, 2026-09-02: the helmet "doesn't do a good
+              // job communicating that there is a downloadable guide"). Covers
+              // are built by scripts/annual-covers (Playwright render of
+              // public/annual/<slug>.html #p1) into /img/annual-covers/.
+              <a className="tg photo guide" href={`/annual/${a.slug}.html`} key={a.slug}>
+                <span className="tg-cover" style={{ backgroundImage: `url(/img/annual-covers/${a.slug}.jpg)` }} />
                 <span className="seed">No. {a.seed}</span>
                 <div className="venue">{a.name}</div>
-                <div className="k">{a.k}</div>
+                <div className="k">Preseason Annual · Read the Guide →</div>
               </a>
             );
           })}

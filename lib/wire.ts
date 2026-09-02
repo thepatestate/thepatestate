@@ -6,7 +6,7 @@ import Anthropic from "@anthropic-ai/sdk";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { createAdminClient, isAdminConfigured } from "@/lib/supabase/admin";
-import { writeClient, isSanityWriteConfigured } from "@/lib/sanity";
+import { writeClient, isSanityWriteConfigured, uploadHeroImage, setArticleHeroImage } from "@/lib/sanity";
 import { getTeamDirectory } from "@/lib/cfbd";
 import { findReceipt } from "@/lib/quotes";
 import { slugify } from "@/lib/slug";
@@ -15,6 +15,7 @@ import { boilerplateViolations, scoreDraft, editorialSystem, voiceMatch, circles
 import { judgeJSON } from "@/lib/judge";
 import { v3MayWrite } from "@/lib/editorial-v3/flags";
 import { v3WireStory, deskGateOn } from "@/lib/editorial-v3/production";
+import { generateWireHero } from "@/lib/hero-image";
 import { deskGate } from "@/lib/editorial-v3/desk-gate";
 import { teamFactSheet } from "@/lib/fact-sheet";
 
@@ -944,9 +945,39 @@ export async function backfillWireStories(limit = 20): Promise<{
 }
 
 /** One monitor pass. Returns a summary for the route response. Never throws. */
+/** Every Wire story carries an AI illustration (Isaac, 2026-09-02). Stories
+ * publish without one and this drain adds it within a monitor cycle or two:
+ * newest first, a small budget per run, bounded by the function window.
+ * Fail-soft — a story that gets no image keeps the logo graphic. */
+export async function addWireHeroes(limit = 2, deadlineAt = Date.now() + 200_000): Promise<{ done: number; skipped: string[] }> {
+  const out = { done: 0, skipped: [] as string[] };
+  if (!process.env.BFL_API_KEY || !isSanityWriteConfigured) { out.skipped.push("not-configured"); return out; }
+  const rows: { _id: string; headline: string; category?: string; teams?: string[] }[] = await writeClient.fetch(
+    `*[_type == "wireStory" && !defined(heroImage)] | order(publishedAt desc)[0...$limit]{ _id, headline, category, teams }`,
+    { limit },
+  );
+  for (const r of rows) {
+    const left = deadlineAt - Date.now();
+    if (left < 25_000) { out.skipped.push(`hero-time:${r._id}`); break; }
+    try {
+      const buf = await generateWireHero(r.headline, r.category ?? "general", r.teams ?? [], { timeoutMs: Math.min(90_000, left - 10_000) });
+      if (!buf) { out.skipped.push(`hero-none:${r._id}`); continue; }
+      const assetId = await uploadHeroImage(buf);
+      if (!assetId) { out.skipped.push(`hero-upload:${r._id}`); continue; }
+      await setArticleHeroImage(r._id, assetId);
+      out.done++;
+    } catch (err) {
+      console.error("[wire:hero]", r._id, err);
+      out.skipped.push(`hero-error:${r._id}`);
+    }
+  }
+  return out;
+}
+
 export async function runWireMonitor(): Promise<{
   entries: number; clusters: number; items: number; stories: number; skipped: string[];
 }> {
+  const startedAt = Date.now();
   const summary = { entries: 0, clusters: 0, items: 0, stories: 0, skipped: [] as string[] };
   if (!isAdminConfigured || !isSanityWriteConfigured || !process.env.ANTHROPIC_API_KEY) {
     summary.skipped.push("not-configured");
@@ -1133,6 +1164,15 @@ export async function runWireMonitor(): Promise<{
     } catch (err) {
       console.error("[wire:selfheal]", err);
     }
+  }
+
+  // Illustrations for stories that don't have one yet (2026-09-02), inside
+  // what is left of the 300s window.
+  try {
+    const heroes = await addWireHeroes(2, startedAt + 270_000);
+    summary.skipped.push(...heroes.skipped);
+  } catch (err) {
+    console.error("[wire:heroes]", err);
   }
 
   return summary;

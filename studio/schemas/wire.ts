@@ -98,6 +98,19 @@ export const wireStory = defineType({
       description: "Facts rail rows (label ≤ 2 words)",
     }),
     defineField({ name: "callout", type: "text", description: "The story's own sharpest line — renders as the bold pull quote (verbatim from the story text)" }),
+    defineField({ name: "calloutSpeaker", type: "string", description: "Who said the callout, when it is a person's quote; empty = the desk's own line" }),
+    // 2026-09-02: the page floor (350 rendered words) is reached through the
+    // Missing module and these questions — the ones a fan is asking, with
+    // why each matters. Written from the sources, fact-checked.
+    defineField({
+      name: "questions", title: "Questions to Be Answered", type: "array",
+      of: [{ type: "object", fields: [
+        defineField({ name: "question", type: "string" }),
+        defineField({ name: "why", type: "text", rows: 3 }),
+      ], preview: { select: { title: "question" } } }],
+      description: "1–3 questions a fan is asking about this news, each with why it matters",
+    }),
+    defineField({ name: "heroImage", title: "Hero image (AI editorial illustration)", type: "image", options: { hotspot: true } }),
     defineField({
       name: "joshReceipt",
       title: "Josh's Receipt (archive quote)",

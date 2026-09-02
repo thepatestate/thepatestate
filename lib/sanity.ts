@@ -167,6 +167,8 @@ export interface SanityWireItem {
   importance?: number;
   publishedAt?: string;
   storySlug?: string | null;
+  /** The linked story's AI illustration, for list thumbnails (2026-09-02). */
+  storyHero?: string | null;
 }
 
 export interface SanityWireStory {
@@ -200,11 +202,17 @@ export interface SanityWireStory {
   watching?: { title?: string; body?: string }[];
   facts?: { label?: string; value?: string }[];
   callout?: string;
+  calloutSpeaker?: string;
   joshReceipt?: { quote?: string; ytId?: string; tsSeconds?: number } | null;
   readLabel?: string;
   readBody?: string;
+  /** Questions to Be Answered (2026-09-02): 1–3 a fan is asking, each with why it matters. */
+  questions?: { question?: string; why?: string }[];
   whatsNext?: string[];
   sources?: { outlet?: string; url?: string }[];
+  /** AI editorial illustration (2026-09-02: every Wire story carries one). */
+  heroUrl?: string | null;
+  v3Depth?: string;
   publishedAt?: string;
   updatedAt?: string;
   corrections?: { at: string; note: string }[];
@@ -213,14 +221,15 @@ export interface SanityWireStory {
 const WIRE_STORY_FIELDS = `_id, headline, slug, verification, category, teams, whatHappened, bodyMarkdown,
   whyItMatters, deck, impact, impactRationale, stats, whyBody, missing, section04Title, section04Body,
   chessboard, openTitle, whyTitle, missingTitle, chessboardTitle,
-  board, watching, facts, callout, joshReceipt, readLabel, readBody, whatsNext, sources,
+  board, watching, facts, callout, calloutSpeaker, joshReceipt, readLabel, readBody, questions, whatsNext, sources,
+  "heroUrl": heroImage.asset->url, v3Depth,
   publishedAt, updatedAt, corrections`;
 
 export async function getWireItems(limit = 8): Promise<SanityWireItem[]> {
   return await readClient.fetch(
     `*[_type == "wireItem"] | order(publishedAt desc)[0...$limit]{
       _id, headline, sub, category, teams, importance, publishedAt,
-      "storySlug": story->slug.current, "impact": story->impact,
+      "storySlug": story->slug.current, "impact": story->impact, "storyHero": story->heroImage.asset->url,
       "sourceUrl": sourceUrls[0], "sourceOutlet": sourceOutlets[0]
     }`,
     { limit },

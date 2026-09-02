@@ -417,6 +417,14 @@
 .v5-page .an-grid{grid-template-columns:repeat(5,1fr)}
 .v5-page .an-grid .tg.photo{aspect-ratio:3/3.6}
 .v5-page .an-grid .tg-photo{background-position:center 30%}
+/* 2026-09-02: the guide's own cover page, set like a document on the card */
+.v5-page .an-grid .tg.guide{background:linear-gradient(168deg,#131F38 0%,#0A1730 100%)}
+.v5-page .an-grid .tg.guide::before{background:radial-gradient(360px 260px at 50% 0%,rgba(201,162,39,.22),transparent 60%)}
+.v5-page .an-grid .tg-cover{position:absolute;left:9%;right:9%;top:13%;bottom:-6%;background-size:cover;background-position:top left;border-radius:5px 5px 0 0;border:1px solid rgba(255,255,255,.14);box-shadow:0 18px 40px rgba(0,0,0,.55);transform:rotate(-1.5deg);transform-origin:bottom center;transition:transform .2s}
+.v5-page .an-grid .tg.guide:hover .tg-cover{transform:rotate(0deg) translateY(-6px)}
+.v5-page .an-grid .tg.guide::after{content:"";position:absolute;left:0;right:0;bottom:0;height:46%;background:linear-gradient(180deg,rgba(10,23,48,0) 0%,rgba(10,23,48,.88) 55%,rgba(10,23,48,.98) 100%);z-index:1;pointer-events:none}
+.v5-page .an-grid .tg.guide .venue,.v5-page .an-grid .tg.guide .k{z-index:2}
+.v5-page .an-grid .tg.guide .k{color:var(--gold)}
 .v5-page .an-grid .seed{position:absolute;top:14px;left:14px;z-index:1;height:28px;padding:0 12px;border-radius:14px;background:var(--gold);color:var(--mast);font:800 12.5px/28px var(--cond);letter-spacing:.1em;text-transform:uppercase;white-space:nowrap;box-shadow:0 4px 10px rgba(0,0,0,.4)}
 @media(max-width:1080px){.v5-page .an-grid{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:760px){.v5-page .an-grid{grid-template-columns:1fr 1fr}}
@@ -493,6 +501,8 @@
   .v5-page .hero h1{font-size:29px}
   .v5-page .show .head h2{font-size:30px}
   .v5-page .sect-head h2{font-size:25px}
+  .v5-page .sect-head{flex-direction:column;align-items:flex-start;gap:8px}
+  .v5-page .sect-head .more{padding-bottom:0}
   .v5-page .action-strip{flex-direction:column}
   .v5-page .as-item{border-right:none;border-bottom:1px solid rgba(255,255,255,.1)}
   .v5-page .brk{min-width:0;width:100%}

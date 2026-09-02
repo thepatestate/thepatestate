@@ -2,7 +2,7 @@
    Rides on .v5.pg-wirestory's architecture (the page carries both classes);
    this sheet holds only the column-specific parts. */
 .v5.pg-column .a-kick .nb{font:800 11px/1 var(--cond);letter-spacing:.16em;text-transform:uppercase;color:#fff;background:var(--w-navy);padding:7px 11px;border-radius:4px}
-.v5.pg-column .a-hero img.cover{width:100%;aspect-ratio:16/8.5;object-fit:cover;display:block}
+.v5.pg-column .a-hero img.cover{width:100%;height:auto;aspect-ratio:16/8.5;object-fit:cover;display:block}
 /* body typography: ArticleBody output mapped to the mockup's a-body scale */
 .v5.pg-column .story-body p{font:400 17px/1.75 var(--body);color:#232A35;margin:0 0 22px}
 .v5.pg-column .story-body>div>p:first-of-type::first-letter,.v5.pg-column .story-body>p:first-of-type::first-letter{font:800 54px/0.9 var(--cond);color:var(--w-navy);float:left;padding:6px 10px 0 0}
@@ -29,3 +29,20 @@
 .v5.pg-column .rc .impact{display:flex;align-items:flex-start;gap:12px}
 .v5.pg-column .rc .impact .lbadge{font:800 12px/1 var(--cond);letter-spacing:.08em;text-transform:uppercase;color:var(--w-gold-dk);background:var(--w-cream);border:1px solid rgba(201,162,39,.45);padding:8px 10px;border-radius:6px;white-space:nowrap;flex:none}
 .v5.pg-column .rc .impact p{font:400 12.5px/1.55 var(--body);color:var(--w-mut);margin:0}
+/* ---- 2026-09-02 rendering pass ---- */
+/* the cover carries the mockup's scrim so the label reads on any photo */
+.v5.pg-column .a-hero{margin-bottom:26px}
+.v5.pg-column .a-hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,rgba(10,23,48,.45) 100%);pointer-events:none}
+.v5.pg-column .a-hero .lbl{z-index:2}
+.v5.pg-column .story-body h3.display{font-size:23px;margin:34px 0 14px;text-transform:none;letter-spacing:-.015em}
+/* the column mockup stacks the rail under the article on tablets and phones
+   (Josh's Read links, the poll and the join card stay reachable) */
+@media(max-width:980px){
+  .v5.pg-column .rail{display:grid;position:static;max-width:700px}
+}
+@media(max-width:760px){
+  .v5.pg-column .story-body p{font-size:16px}
+  .v5.pg-column .story-body h3.display{font-size:21px;margin-top:30px}
+  .v5.pg-column .story-body .pullquote{font-size:18px}
+  .v5.pg-column .linebox p{font-size:17px}
+}
