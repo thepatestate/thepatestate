@@ -26,7 +26,7 @@ const ANNUALS = [
   { slug: "texas", name: "Texas", seed: 5, k: "Josh's No. 5 · The Team Capsule" },
 ];
 
-export function AnnualsSection({ photo }: { photo?: { src: string; alt: string } | null } = {}) {
+export function AnnualsSection({ photo }: { photo?: { src: string; alt: string; credit?: string } | null } = {}) {
   return (
     <section className="cfl annuals">
       <div className="wrap">
@@ -66,6 +66,7 @@ export function AnnualsSection({ photo }: { photo?: { src: string; alt: string }
             {/* A real frame of the show (Josh, 2026-09-02: real pictures on
                 the main page); the generated desk render is the fallback. */}
             <Image src={photo?.src ?? "/img/campus-live.jpg"} alt={photo?.alt ?? "The Pate State broadcast desk live on campus"} fill sizes="(max-width:1080px) 0px, 520px" style={{ objectFit: "cover" }} />
+            {photo?.credit ? <span style={{ position: "absolute", right: 10, bottom: 8, zIndex: 2, font: "700 9px/1 var(--cond, inherit)", letterSpacing: ".14em", textTransform: "uppercase", color: "rgba(255,255,255,.85)", textShadow: "0 1px 3px rgba(0,0,0,.8)" }}>Photo: {photo.credit}</span> : null}
           </div>
         </div>
       </div>

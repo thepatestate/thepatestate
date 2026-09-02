@@ -97,7 +97,8 @@ export default async function Home() {
       <QuadSection threads={threads} />
       <ShortsStrip shorts={shorts} />
       <PlaybookSection />
-      <AnnualsSection photo={featured ? { src: `https://i.ytimg.com/vi/${featured.id}/maxresdefault.jpg`, alt: `Josh Pate on the set of ${featured.title.replace(/ - Josh Pate's College Football Show/i, "")}` } : null} />
+      {/* Live &amp; On Campus carries a licensed campus photograph (Josh, 2026-09-02: real pictures on the main page). */}
+      <AnnualsSection photo={{ src: "/img/icon/8231846.jpg", alt: "The Indiana marching band and flags before the national championship game", credit: "David Buono/Icon Sportswire" }} />
       <StoreSection />
       <GiftSection />
       <FollowSection subs={stats ? compactCount(stats.subscribers) : undefined} />
