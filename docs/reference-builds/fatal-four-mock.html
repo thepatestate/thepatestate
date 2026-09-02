@@ -92,7 +92,7 @@ button,input,select{font:inherit;color:inherit}
     conic-gradient(from 200deg at 12% -12%, rgba(255,255,255,.07), transparent 22%),
     conic-gradient(from 300deg at 92% -10%, rgba(255,255,255,.06), transparent 20%);
 }
-.stagewrap{display:flex;align-items:stretch;height:clamp(376px,54vh,528px)}
+.stagewrap{display:flex;align-items:stretch;height:clamp(430px,72vh,760px)}
 .stage{position:relative;height:100%;flex:1 1 auto;min-width:0}
 
 /* ── team tray ────────────────────────────────────────────────────── */
@@ -193,10 +193,14 @@ button,input,select{font:inherit;color:inherit}
 .lift{position:absolute;left:0;right:0;top:0;display:flex;align-items:center;justify-content:center;
   transition:transform .9s cubic-bezier(.22,1,.36,1);will-change:transform}
 .bub{display:block;overflow:visible}
-.readout{
-  position:absolute;right:10px;top:50%;transform:translateY(-50%);
-  text-align:right;pointer-events:none;
+.readout{                                   /* hangs off the sphere's right rim */
+  position:absolute;left:50%;top:50%;transform:translateY(-50%);
+  margin-left:var(--tagoff,150px);padding-left:30px;text-align:left;pointer-events:none;
 }
+.readout::before{content:"";position:absolute;left:2px;top:50%;width:24px;height:1px;
+  background:linear-gradient(90deg,rgba(220,233,255,.12),rgba(220,233,255,.6))}
+.readout::after{content:"";position:absolute;left:0;top:50%;width:6px;height:6px;border-radius:50%;
+  background:var(--gold);transform:translate(-50%,-50%)}
 .readout .n{font-family:var(--disp);font-weight:800;font-size:54px;line-height:.9;color:var(--ink);letter-spacing:.01em}
 .readout .k{font-family:var(--disp);font-weight:700;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
 .readout.final .n{color:var(--gold)}
@@ -227,6 +231,29 @@ button,input,select{font:inherit;color:inherit}
 .tether{stroke:var(--muted-2);stroke-width:1;stroke-dasharray:2 4;opacity:.5}
 .pt{animation:pt .6s ease-out forwards}
 @keyframes pt{0%{opacity:.95;transform:translate(0,0) scale(1)}100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(.3)}}
+
+/* ── the sphere reacts: shells flatten, teams crack, ballast hangs ── */
+.shell{transform-origin:150px 150px;transition:transform .8s cubic-bezier(.22,1,.36,1)}
+.bub.bomb #bubbleGroup{animation:bomb .78s cubic-bezier(.24,1.3,.4,1)}
+@keyframes bomb{
+  0%{transform:translate(0,0)}12%{transform:translate(-3px,7px)}24%{transform:translate(3px,10px)}
+  38%{transform:translate(-2px,6px)}55%{transform:translate(1px,-3px)}75%{transform:translate(0,1px)}
+  100%{transform:translate(0,0)}
+}
+.orb .crack{opacity:0;transition:opacity .22s ease}
+.orb.cracked .crack{opacity:.92}
+.orb .streaks{opacity:0;transition:opacity .45s ease}
+.orb.lift .streaks{opacity:.7}
+.orb.lift .streaks line{animation:streak 2.3s ease-out infinite}
+@keyframes streak{0%{opacity:0;transform:translateY(7px)}28%{opacity:.95}100%{opacity:0;transform:translateY(-15px)}}
+.orb .laurel{opacity:0;transition:opacity .5s ease}
+.orb.f4 .laurel{opacity:1}
+.orb .outtag{opacity:0;transition:opacity .5s ease .35s}
+.orb.ballast .outtag{opacity:1}
+.orb.ballast .body{filter:saturate(.08) brightness(.62)}
+.orb.ballast .orb-bob{animation:sway var(--dur,4.4s) ease-in-out infinite}
+@keyframes sway{0%,100%{transform:translateX(-3px) rotate(-2.6deg)}50%{transform:translateX(3px) rotate(2.6deg)}}
+.tether.slack{stroke:var(--muted-2);stroke-dasharray:none;opacity:.42}
 
 /* week strip */
 .strip{
@@ -360,15 +387,19 @@ select[disabled]{opacity:.45}
 }
 .readout.final .ceil b{color:var(--gold-hi)}
 .ceilmark{
-  position:absolute;left:0;right:0;height:0;z-index:1;pointer-events:none;
-  border-top:1px dashed rgba(220,233,255,.34);
-  transition:bottom .9s cubic-bezier(.22,1,.36,1);
+  position:absolute;left:0;right:0;height:11px;z-index:1;pointer-events:none;
+  background:linear-gradient(180deg,rgba(220,233,255,.02),rgba(220,233,255,.13));
+  border-bottom:1px solid rgba(220,233,255,.42);
+  transition:top .9s cubic-bezier(.22,1,.36,1);transform-origin:50% 100%;
 }
 .ceilmark span{
-  position:absolute;left:2px;top:-14px;
+  position:absolute;left:2px;top:-15px;
   font-family:var(--disp);font-weight:700;font-size:10px;letter-spacing:.12em;
   text-transform:uppercase;color:var(--muted-2);
 }
+.ceilmark b{color:var(--glass);font-weight:800;margin-left:4px}
+.ceilmark.press{animation:press .7s ease-out}
+@keyframes press{0%{transform:scaleY(1)}30%{transform:scaleY(2.1)}100%{transform:scaleY(1)}}
 .bub.draft #rim{stroke-opacity:.22;stroke-dasharray:6 9}
 #lockRing{opacity:0;transform-origin:150px 150px}
 .bub.locking #lockRing{animation:lockring .9s ease-out}
@@ -422,7 +453,7 @@ select[disabled]{opacity:.45}
 }
 @media (max-width:760px){
   .stagewrap{display:block;height:auto}
-  .stage{height:clamp(376px,54vh,528px)}
+  .stage{height:clamp(430px,66vh,600px)}
   .tray{height:auto;border-left:0;border-top:1px solid var(--line)}
   .traylist{
     display:flex;overflow-x:auto;overflow-y:hidden;gap:10px;
@@ -436,12 +467,11 @@ select[disabled]{opacity:.45}
 @media (max-width:700px){
   .grid{grid-template-columns:minmax(0,1fr)}
   .readout{display:none}
-  .axis{width:96px}
-  .field{left:96px}
+  .axis{width:70px}
+  .field{left:70px}
   .axis .tick .cap{left:44px;font-size:9.5px}
   .axis .tick .v{width:34px;padding-left:8px;font-size:12px}
   .mast .rail{margin-left:0;align-items:flex-start;flex-direction:row;flex-wrap:wrap}
-  .stage{height:340px}
 }
 @media (max-width:400px){
   .wrap{padding-left:12px;padding-right:12px}
@@ -453,6 +483,8 @@ select[disabled]{opacity:.45}
   .bub.locking #lockRing{animation:lockfade .5s ease-out}
   @keyframes lockfade{0%{opacity:0}40%{opacity:.75}100%{opacity:0}}
   .orb-bob,.ripple #bubbleGroup,.ripple #rim,.shimmer #shimmer{animation:none !important}
+  .bub.bomb #bubbleGroup,.orb.lift .streaks line,.orb.ballast .orb-bob,.ceilmark.press{animation:none !important}
+  .shell{transition:none}
   .orb{transition:opacity .25s linear}
   .toast{animation:none}
   .pt{display:none}
@@ -478,7 +510,7 @@ select[disabled]{opacity:.45}
       <div class="stage" id="stage">
         <div class="axis" id="axis"></div>
         <div class="field" id="fieldEl">
-          <div class="ceilmark" id="ceilMark"><span>Ceiling</span></div>
+          <div class="ceilmark" id="ceilMark"><span>Ceiling <b class="num" id="ceilMarkN">1,000</b></span></div>
           <div class="lift" id="lift">
             <svg class="bub" id="bub" viewBox="0 0 300 300" width="300" height="300" role="img" aria-labelledby="bubTitle">
               <title id="bubTitle">Your bubble, floating at your live score</title>
@@ -508,22 +540,33 @@ select[disabled]{opacity:.45}
                 <clipPath id="ball"><circle cx="150" cy="150" r="146"/></clipPath>
               </defs>
               <g id="bubbleGroup">
-                <circle cx="150" cy="150" r="146" fill="url(#glassg)"/>
-                <circle cx="150" cy="150" r="146" fill="url(#rimg)"/>
-                <ellipse cx="104" cy="84" rx="46" ry="27" fill="#FFFFFF" opacity=".15" filter="url(#soft)"/>
-                <ellipse cx="196" cy="222" rx="34" ry="15" fill="#BCD6FF" opacity=".08" filter="url(#soft)"/>
-                <path d="M40 196 A 146 146 0 0 0 262 196" fill="none" stroke="#DCE9FF" stroke-opacity=".10" stroke-width="1"/>
+                <g class="shell" id="shellBack">
+                  <circle cx="150" cy="150" r="146" fill="url(#glassg)"/>
+                  <circle cx="150" cy="150" r="146" fill="url(#rimg)"/>
+                  <ellipse id="topGlow" cx="150" cy="72" rx="112" ry="64" fill="url(#topg)" opacity="0"/>
+                  <ellipse cx="104" cy="84" rx="46" ry="27" fill="#FFFFFF" opacity=".15" filter="url(#soft)"/>
+                  <ellipse cx="196" cy="222" rx="34" ry="15" fill="#BCD6FF" opacity=".08" filter="url(#soft)"/>
+                  <path d="M40 196 A 146 146 0 0 0 262 196" fill="none" stroke="#DCE9FF" stroke-opacity=".10" stroke-width="1"/>
+                </g>
                 <g id="tethers"></g>
                 <g id="orbs"></g>
-                <g clip-path="url(#ball)"><rect id="shimmer" x="-40" y="0" width="90" height="300" fill="url(#shg)"/></g>
-                <circle id="rim" cx="150" cy="150" r="146" fill="none" stroke="#DCE9FF" stroke-opacity=".34" stroke-width="1.1"/>
-                <circle id="rimHalo" cx="150" cy="150" r="146" fill="none" stroke="#E0525C" stroke-width="6" filter="url(#soft2)"/>
-              <circle id="lockRing" cx="150" cy="150" r="146" fill="none" stroke="#E8C75B" stroke-width="3"/>
-                <g id="seal">
-                  <rect x="86" y="260" width="128" height="24" rx="12" fill="#0B1A33" fill-opacity=".82" stroke="#C9A227" stroke-width="1.4"/>
-                  <text id="sealTxt" x="150" y="272.6" text-anchor="middle" dominant-baseline="central"
-                        font-family="Barlow Condensed, sans-serif" font-weight="800" font-size="12.5"
-                        letter-spacing="1.5" fill="#E8C75B">LOCKED &#xB7; PRESEASON</text>
+                <g class="shell" id="shellFront">
+                  <g clip-path="url(#ball)"><rect id="shimmer" x="-40" y="0" width="90" height="300" fill="url(#shg)"/></g>
+                  <circle id="rim" cx="150" cy="150" r="146" fill="none" stroke="#DCE9FF" stroke-opacity="var(--rimop,.34)" stroke-width="1.1"/>
+                  <circle id="rimHalo" cx="150" cy="150" r="146" fill="none" stroke="#E0525C" stroke-width="6" filter="url(#soft2)"/>
+                  <circle id="lockRing" cx="150" cy="150" r="146" fill="none" stroke="#E8C75B" stroke-width="3"/>
+                  <g id="finalStamp" hidden>
+                    <rect x="111" y="224" width="78" height="24" rx="5" fill="#0B1A33" fill-opacity=".8" stroke="#E8C75B" stroke-width="1.6" transform="rotate(-6 150 236)"/>
+                    <text x="150" y="236.6" text-anchor="middle" dominant-baseline="central" transform="rotate(-6 150 236)"
+                          font-family="Barlow Condensed, sans-serif" font-weight="800" font-size="13"
+                          letter-spacing="2.2" fill="#E8C75B">FINAL</text>
+                  </g>
+                  <g id="seal">
+                    <rect x="86" y="260" width="128" height="24" rx="12" fill="#0B1A33" fill-opacity=".82" stroke="#C9A227" stroke-width="1.4"/>
+                    <text id="sealTxt" x="150" y="272.6" text-anchor="middle" dominant-baseline="central"
+                          font-family="Barlow Condensed, sans-serif" font-weight="800" font-size="12.5"
+                          letter-spacing="1.5" fill="#E8C75B">LOCKED &#xB7; PRESEASON</text>
+                  </g>
                 </g>
                 <g id="parts"></g>
               </g>
@@ -735,14 +778,39 @@ var TEAMS = [
 var BY_ID = {};
 TEAMS.forEach(function(t){ BY_ID[t.id]=t; });
 
-/* Sample AP Top 25 for 2026 \u2014 labelled "Sample rankings" on the page. */
-var RANKS_0 = ["OSU","UGA","TEX","CLEM","PSU","ND","ORE","ALA","LSU","MIA","TAMU","IND",
-               "OU","TENN","MICH","MISS","ASU","USC","ISU","ILL","UTAH","BYU","SMU","BSU","FLA"];
+/* \u2550\u2550 A SCRIPTED SAMPLE SEASON \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
+   Twelve polls, written not rolled, so the demo actually tells a story:
+   Michigan slides 15 \u2192 19 \u2192 23 \u2192 24 and bombs out in Week 5; LSU tumbles
+   to 14 by Week 8; Texas holds the top four and Georgia the top two; Indiana
+   climbs from 12 to 4; Penn State collapses out of the poll. Weeks 9\u201312
+   settle the field. Sample rankings \u2014 not a real AP poll. */
+var SEASON = [
+ "OSU UGA TEX CLEM PSU ND ORE ALA LSU MIA TAMU IND OU TENN MICH MISS ASU USC ISU ILL UTAH BYU SMU BSU FLA",
+ "OSU UGA TEX ORE CLEM ND ALA IND LSU PSU MIA TAMU OU TENN MISS ASU ISU USC MICH ILL UTAH BYU SMU FLA BSU",
+ "UGA OSU TEX ORE ALA IND ND CLEM MIA LSU TENN OU TAMU MISS PSU ASU ISU USC ILL UTAH BYU SMU MICH FLA WVU",
+ "UGA OSU TEX IND ORE ALA TENN ND MIA OU LSU CLEM MISS TAMU ASU ISU USC ILL BYU UTAH SMU PSU WVU MICH FLA",
+ "UGA OSU TEX IND ORE ALA TENN ND MIA OU MISS LSU CLEM TAMU ASU ISU ILL USC BYU UTAH SMU WVU FLA KSU TTU",
+ "UGA OSU TEX IND ALA ORE TENN MIA ND OU MISS CLEM TAMU ISU ILL LSU ASU BYU USC UTAH KSU WVU FLA TTU SMU",
+ "UGA TEX OSU IND ALA TENN ORE MIA OU ND MISS CLEM TAMU ISU LSU ILL BYU ASU USC UTAH KSU TTU WVU SMU LOU",
+ "UGA TEX OSU IND ALA TENN MIA ORE OU MISS ND CLEM TAMU LSU ISU ILL BYU UTAH ASU KSU USC TTU WVU LOU NEB",
+ "UGA TEX OSU IND ALA MISS TENN MIA OU ORE CLEM ND TAMU LSU BYU ISU ILL UTAH KSU ASU TTU USC NEB WVU LOU",
+ "UGA TEX OSU IND ALA MISS TENN OU MIA CLEM ORE TAMU ND LSU BYU ISU ILL UTAH KSU TTU ASU USC NEB WVU LOU",
+ "UGA TEX OSU IND ALA MISS OU TENN MIA CLEM ORE TAMU ND LSU BYU ISU ILL UTAH KSU TTU ASU USC NEB WVU LOU",
+ "UGA TEX OSU IND ALA MISS OU TENN MIA CLEM ORE TAMU ND LSU BYU ISU ILL UTAH KSU TTU ASU USC NEB WVU LOU"
+].map(function(w){ return w.split(" "); });
+
+/* The bracket the sample season feeds: the Week 12 top twelve, byes for the
+   top four, then the quarterfinal and semifinal survivors. */
+var PLAYOFF = {
+  field: SEASON[11].slice(0,12),
+  qf:    ["UGA","TEX","OSU","IND","ALA","ORE","OU","TENN"],
+  f4:    ["UGA","TEX","OSU","IND"]
+};
 
 var DOCKS = [{k:"Preseason",p:1},{k:"Week 2",p:.9},{k:"Week 3",p:.8},{k:"Week 4",p:.7}];
 
 var FRIENDS = [
-  {h:"SwampFox", d:["Swamp","Fox"], teams:["FLA","UGA","TENN","MIA","OSU"],      entry:0},
+  {h:"SwampFox", d:["Swamp","Fox"], teams:["FLA","UGA","TENN","MIA","OSU"],      entry:1},
   {h:"HailState_Hannah", d:["HailState","Hannah"], teams:["MSST","ALA","MISS","TAMU"],          entry:1},
   {h:"TheGrove_Tom", d:["TheGrove","Tom"], teams:["MISS","LSU","ORE","TEX","PSU","ND"], entry:0},
   {h:"BuckeyeBrent", d:["Buckeye","Brent"], teams:["OSU","ORE","PSU","IND"],             entry:2},
@@ -867,7 +935,7 @@ function freshState(){
   return {
     week:1, entry:0,
     bubble:["UGA","TEX","LSU","MICH"],
-    ranks:RANKS_0.slice(),
+    ranks:SEASON[0].slice(),
     swapUsed:false, fee:0,
     playoff:null,
     locked:false, lockedAt:null, lockLabel:null,
@@ -876,6 +944,12 @@ function freshState(){
   };
 }
 function rankOf(id){ return S.ranks.indexOf(id)+1; }
+function creditOf(id){                     // what this team pays right now, %
+  var p = sliceFor(rankOf(id));
+  if(S.playoff) p = Math.max(p, playoffCredit(id, S.playoff));
+  return p;
+}
+function deadTeams(){ return S.bubble.filter(function(id){ return creditOf(id) === 0; }); }
 function liveScore(){ return scoreOf(S.bubble, S.entry, S.ranks, S.fee, S.playoff); }
 function liveCeiling(){ return ceilingOf(S.bubble, S.entry, S.ranks, S.fee, S.playoff); }
 function swapFee(){ return 20 * S.week; }
@@ -906,118 +980,179 @@ var orbsG = $("orbs"), tethersG = $("tethers"), partsG = $("parts"), bubEl = $("
 var liftEl = $("lift"), stageEl = $("stage"), fieldEl = $("fieldEl");
 var bubbleD = 300;
 
+/* Orbs keep roughly their old size while the sphere grew, so a four-team
+   bubble reads as four fat roundels with room to breathe \u2014 and twenty still fit. */
 function orbRadius(n){
-  if(n<=2) return 46; if(n<=4) return 39; if(n<=6) return 33;
-  if(n<=9) return 28; if(n<=12) return 24; if(n<=16) return 20.5; return 17.5;
+  if(n<=2) return 33; if(n<=4) return 28; if(n<=6) return 24;
+  if(n<=9) return 20.5; if(n<=12) return 17.5; if(n<=16) return 15; return 13;
 }
-/* Phyllotaxis slots inside the sphere, then handed out top-first so the teams
-   with the most lift sit high and the dead weight sags to the bottom. */
-function slots(n, R){
+/* Phyllotaxis slots inside the sphere, squashed by the same factor the shell
+   is, then handed out top-first so the teams with the most lift sit high. */
+function slots(n, R, flat){
   var pts=[], i, t, r, a;
   if(n===1) return [[150,150]];
   for(i=0;i<n;i++){
     t = (i+0.5)/n;
     r = R*Math.sqrt(t);
     a = i*2.39996 + 1.1;
-    pts.push([150 + r*Math.cos(a), 150 + r*Math.sin(a)]);
+    pts.push([150 + r*Math.cos(a), 150 + r*Math.sin(a)*flat]);
   }
   return pts;
+}
+function crackPath(r){                       // a jagged split across the disc
+  function k(v){ return (v*r).toFixed(1); }
+  return "M"+k(-0.74)+","+k(-0.46)+" L"+k(-0.18)+","+k(-0.06)+" L"+k(-0.44)+","+k(0.5)+
+         " M"+k(-0.18)+","+k(-0.06)+" L"+k(0.36)+","+k(-0.36)+
+         " M"+k(-0.18)+","+k(-0.06)+" L"+k(0.3)+","+k(0.64);
 }
 
 function renderOrbs(){
   var n = S.bubble.length;
-  var R = orbRadius(n);
-  var maxR = 146 - R - 7;
-  var pos = slots(n, maxR).sort(function(a,b){ return a[1]-b[1]; });
-
-  // most lift first
-  var order = S.bubble.slice().sort(function(a,b){
-    var d = sliceFor(rankOf(b)) - sliceFor(rankOf(a));
+  var R = orbRadius(n), Rb = R*0.72;
+  var dead = deadTeams();
+  var flat = 1 - Math.min(.12, .04*dead.length);      // the shell goes oblate
+  var inside = S.bubble.filter(function(id){ return dead.indexOf(id) < 0; });
+  var maxR = 146 - R - 8;
+  var pos = slots(inside.length, maxR, flat).sort(function(a,b){ return a[1]-b[1]; });
+  var order = inside.slice().sort(function(a,b){
+    var d = creditOf(b) - creditOf(a);
     return d !== 0 ? d : a.localeCompare(b);
   });
+  var place = {}, anchor = {};
+  order.forEach(function(id, i){ place[id] = pos[i]; });
 
-  var present = {};
-  order.forEach(function(id, i){ present[id] = pos[i]; });
-
-  // leave
-  Array.prototype.slice.call(orbsG.children).forEach(function(g){
-    var id = g.getAttribute("data-id");
-    if(!present[id]){ popOrb(g); }
+  // ballast: popped teams hang below the sphere on slack tethers
+  var gap = Math.min(86, 250/Math.max(1, dead.length));
+  dead.slice().sort().forEach(function(id, i){
+    var bx = 150 + (i - (dead.length-1)/2)*gap;
+    var dx = Math.max(-142, Math.min(142, bx-150));
+    anchor[id] = 150 + Math.sqrt(Math.max(0, 146*146 - dx*dx))*flat;
+    place[id] = [bx, anchor[id] + 30 + Rb + (i%2 ? 15 : 0)];
   });
-  // tethers redraw wholesale
+
+  Array.prototype.slice.call(orbsG.children).forEach(function(g){
+    if(!place[g.getAttribute("data-id")]) popOrb(g);
+  });
   while(tethersG.firstChild) tethersG.removeChild(tethersG.firstChild);
 
-  order.forEach(function(id, i){
-    var t = BY_ID[id], p = pos[i], rank = rankOf(id);
-    var isLift = rank>=1 && rank<=8;
-    var isSink = (rank===0 || rank>=13);
+  var lifts = 0, i = 0;
+  S.bubble.forEach(function(id){
+    var t = BY_ID[id], p = place[id], rank = rankOf(id);
+    var isBallast = dead.indexOf(id) >= 0;
+    var isLift = !isBallast && rank>=1 && rank<=8;
+    var isSink = !isBallast && rank>=13;
+    var isF4 = !!(S.playoff && S.playoff.f4.indexOf(id) >= 0);
+    var rr = isBallast ? Rb : R;
+    if(isLift) lifts++;
     var g = orbsG.querySelector('[data-id="'+id+'"]');
-    var fresh = !g;
+    i++;
 
-    if(fresh){
+    if(!g){
       g = svg("g", {"class":"orb", "data-id":id});
       var gx = svg("g", {"class":"orb-x"});
       var gy = svg("g", {"class":"orb-y"});
       var gb = svg("g", {"class":"orb-bob"});
+      var st = svg("g", {"class":"streaks"});
+      [-0.52, 0, 0.52].forEach(function(f, k){
+        var ln = svg("line", {"data-f":f, stroke:"#DCE9FF", "stroke-width":1.4,
+          "stroke-linecap":"round", "stroke-opacity":".75"});
+        ln.style.animationDelay = (k*0.42).toFixed(2) + "s";
+        st.appendChild(ln);
+      });
       var body = svg("g", {"class":"body"});
       body.appendChild(svg("circle", {"class":"glow", r:1, fill:"none", stroke:"#C9A227",
         "stroke-width":3, opacity:0, filter:"url(#soft2)"}));
+      body.appendChild(svg("circle", {"class":"laurel", r:1, fill:"none", stroke:"#E8C75B",
+        "stroke-width":2.4, "stroke-dasharray":"3 5"}));
       body.appendChild(svg("circle", {"class":"disc", r:1, fill:t.c1, stroke:t.c2, "stroke-width":2.2}));
       var tx = svg("text", {"class":"abbr", y:0.5, fill:"#fff"});
       tx.textContent = id;
       body.appendChild(tx);
-      var ch = svg("path", {"class":"chev", fill:"#E0525C", opacity:0, d:"M-5,-3 L5,-3 L0,4 Z"});
-      body.appendChild(ch);
-      gb.appendChild(body); gy.appendChild(gb); gx.appendChild(gy); g.appendChild(gx);
+      body.appendChild(svg("path", {"class":"chev", fill:"#E0525C", opacity:0, d:"M-5,-3 L5,-3 L0,4 Z"}));
+      body.appendChild(svg("path", {"class":"crack", fill:"none", "stroke-width":2,
+        "stroke-linecap":"round", "stroke-linejoin":"round"}));
+      var ot = svg("g", {"class":"outtag"});
+      ot.appendChild(svg("rect", {x:-14, y:0, width:28, height:13, rx:3.5,
+        fill:"#2A0E12", stroke:"#B3202A", "stroke-width":1}));
+      var ott = svg("text", {x:0, y:6.6, "text-anchor":"middle", "dominant-baseline":"central",
+        "font-family":"Barlow Condensed, sans-serif", "font-weight":800, "font-size":9,
+        "letter-spacing":1, fill:"#E0525C"});
+      ott.textContent = "OUT";
+      ot.appendChild(ott);
+      body.appendChild(ot);
+      gb.appendChild(st); gb.appendChild(body); gy.appendChild(gb); gx.appendChild(gy); g.appendChild(gx);
       gb.style.setProperty("--ph", (-(i*0.37)).toFixed(2)+"s");
       gb.style.setProperty("--dur", (2.4 + (i%5)*0.34).toFixed(2)+"s");
       orbsG.appendChild(g);
       (function(tid, node){
         node.addEventListener("pointerdown", function(ev){ orbDown(ev, tid, node); });
       })(id, g);
-      // fly in from off to the right, on a curve (x and y ease differently)
       if(REDUCE){
         g.classList.add("enter");
-        gx.setAttribute("transform","translate("+p[0]+",0)");
-        gy.setAttribute("transform","translate(0,"+p[1]+")");
+        setOrbAt(g, p[0], p[1]);
         requestAnimationFrame(function(){ g.classList.remove("enter"); });
       } else {
         g.classList.add("enter");
-        gx.setAttribute("transform","translate(408,0)");
-        gy.setAttribute("transform","translate(0,262)");
+        setOrbAt(g, 408, 262);
         requestAnimationFrame(function(){
           requestAnimationFrame(function(){
             g.classList.remove("enter");
-            gx.setAttribute("transform","translate("+p[0]+",0)");
-            gy.setAttribute("transform","translate(0,"+p[1]+")");
+            setOrbAt(g, p[0], p[1]);
           });
         });
       }
     } else {
       g.classList.remove("parked");
-      g.querySelector(".orb-x").setAttribute("transform","translate("+p[0]+",0)");
-      g.querySelector(".orb-y").setAttribute("transform","translate(0,"+p[1]+")");
+      setOrbAt(g, p[0], p[1]);
     }
 
     var disc = g.querySelector(".disc"), glow = g.querySelector(".glow"),
-        txt = g.querySelector(".abbr"), chev = g.querySelector(".chev");
-    disc.setAttribute("r", R);
+        txt = g.querySelector(".abbr"), chev = g.querySelector(".chev"),
+        crack = g.querySelector(".crack"), laurel = g.querySelector(".laurel"),
+        ot2 = g.querySelector(".outtag"), dark = lum(t.c1) > .62;
+    disc.setAttribute("r", rr);
     disc.setAttribute("fill", t.c1);
     disc.setAttribute("stroke", isLift ? "#C9A227" : t.c2);
-    glow.setAttribute("r", R+5);
+    glow.setAttribute("r", rr+5);
     glow.setAttribute("opacity", isLift ? .62 : 0);
-    txt.setAttribute("font-size", Math.max(10, R*0.62));
-    txt.setAttribute("fill", lum(t.c1) > .62 ? "#12203A" : "#FFFFFF");
-    txt.setAttribute("y", R>26 ? -1 : 0);
+    laurel.setAttribute("r", rr+7);
+    txt.setAttribute("font-size", Math.max(9, rr*0.62));
+    txt.setAttribute("fill", dark ? "#12203A" : "#FFFFFF");
+    txt.setAttribute("y", rr>26 ? -1 : 0);
     chev.setAttribute("opacity", isSink ? .95 : 0);
-    chev.setAttribute("transform","translate(0,"+(R*0.52+2)+") scale("+(R/26).toFixed(2)+")");
+    chev.setAttribute("transform","translate(0,"+(rr*0.52+2)+") scale("+(rr/26).toFixed(2)+")");
+    crack.setAttribute("stroke", dark ? "#12203A" : "#EAF2FF");
+    crack.setAttribute("d", crackPath(rr));
+    ot2.setAttribute("transform","translate(0,"+(rr+3).toFixed(1)+")");
+    Array.prototype.forEach.call(g.querySelectorAll(".streaks line"), function(ln){
+      var f = parseFloat(ln.getAttribute("data-f"));
+      var x = (f*rr*0.55).toFixed(1), y1 = (-rr*0.95).toFixed(1);
+      ln.setAttribute("x1", x); ln.setAttribute("x2", x);
+      ln.setAttribute("y1", y1);
+      ln.setAttribute("y2", (-rr*0.95 - rr*(f === 0 ? 1.0 : 0.66)).toFixed(1));
+    });
     g.classList.toggle("sink", isSink);
+    g.classList.toggle("ballast", isBallast);
+    g.classList.toggle("lift", isLift);
+    g.classList.toggle("f4", isF4);
 
-    if(isSink){
+    if(isBallast){
+      tethersG.appendChild(svg("line", {"class":"tether slack",
+        x1:p[0], y1:anchor[id], x2:p[0], y2:p[1]-rr-1}));
+    } else if(isSink){
       tethersG.appendChild(svg("line", {"class":"tether",
-        x1:p[0], y1:p[1]+R, x2:p[0], y2:Math.min(292, 150 + Math.sqrt(Math.max(0,146*146-Math.pow(p[0]-150,2))) - 4)}));
+        x1:p[0], y1:p[1]+rr, x2:p[0],
+        y2:Math.min(292, 150 + Math.sqrt(Math.max(0,146*146-Math.pow(p[0]-150,2)))*flat - 4)}));
     }
   });
+
+  var f2 = "scaleY(" + flat.toFixed(3) + ")";
+  $("shellBack").style.transform = f2;
+  $("shellFront").style.transform = f2;
+  bubEl.style.setProperty("--rimop", Math.max(.08, .34 - .055*dead.length).toFixed(3));
+  $("topGlow").setAttribute("opacity", Math.min(.34, .085*lifts).toFixed(3));
+  if(S.playoff) $("finalStamp").removeAttribute("hidden");
+  else $("finalStamp").setAttribute("hidden","");
 
   ripple();
 }
@@ -1040,9 +1175,9 @@ function popOrb(g){
   setTimeout(function(){ if(g.parentNode) g.parentNode.removeChild(g); }, REDUCE?260:520);
 }
 
-var rippleT;
+var rippleT, quietRipple = 0;
 function ripple(){
-  if(REDUCE) return;
+  if(REDUCE || Date.now() < quietRipple) return;
   bubEl.classList.remove("ripple");
   void bubEl.offsetWidth;
   bubEl.classList.add("ripple");
@@ -1054,23 +1189,35 @@ function ripple(){
 function layout(){
   var sh = stageEl.clientHeight - 52;
   var fw = fieldEl.clientWidth;
-  bubbleD = Math.max(150, Math.min(320, Math.min(sh*0.66, fw*0.62)));
+  bubbleD = window.innerWidth <= 760
+    ? Math.max(190, Math.min(window.innerWidth*0.78, fw, sh*0.74))
+    : Math.max(240, Math.min(460, sh*0.72, fw*0.62));
   bubEl.setAttribute("width", bubbleD);
   bubEl.setAttribute("height", bubbleD);
   liftEl.style.height = bubbleD + "px";
+  $("readout").style.setProperty("--tagoff", (bubbleD/2).toFixed(0) + "px");
   placeBubble();
+  placeCeiling();
 }
+function ballastRoom(){ return deadTeams().length ? Math.round(bubbleD*0.20) : 0; }
+function travelPx(){ return Math.max(0, (stageEl.clientHeight - 52) - bubbleD - ballastRoom()); }
 function placeBubble(){
-  var sh = stageEl.clientHeight - 52;
-  var travel = Math.max(0, sh - bubbleD);
   var alt = Math.max(0, Math.min(1, liveScore()/1000));
-  liftEl.style.transform = "translateY(" + ((1-alt)*travel).toFixed(1) + "px)";
+  liftEl.style.transform = "translateY(" + ((1-alt)*travelPx()).toFixed(1) + "px)";
 }
 
-/* the lid: a dashed marker at ceiling/1000, on the same scale as the axis */
+/* The lid: a translucent plate parked where the sphere's crown would sit if
+   the bubble banked its ceiling. Drop the ceiling and the plate presses down. */
+var lastCeil = null;
 function placeCeiling(){
   var c = Math.max(0, Math.min(1000, liveCeiling()));
-  $("ceilMark").style.bottom = (c/1000*100).toFixed(1) + "%";
+  var el = $("ceilMark");
+  el.style.top = ((1 - c/1000) * travelPx()).toFixed(1) + "px";
+  $("ceilMarkN").textContent = fmtN(c);
+  if(lastCeil !== null && c < lastCeil && !REDUCE){
+    el.classList.remove("press"); void el.offsetWidth; el.classList.add("press");
+  }
+  lastCeil = c;
 }
 
 /* \u2500\u2500 elevation axis \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 */
@@ -1700,91 +1847,84 @@ function renderLock(){
   }
 }
 
-/* poll movement: deterministic, a few places swap, one team drops out,
-   one team comes in from the unranked pool. */
-function advanceWeek(){
-  if(S.playoff) return;
-  cancelSwapAsk(true);
+/* \u2500\u2500 the clock, and the moment a team bombs out \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 */
+function bombOut(ids){
+  if(!ids.length) return;
+  ids.forEach(function(id){
+    var g = orbsG.querySelector('[data-id="'+id+'"]');
+    if(g) g.classList.add("cracked");           // the disc splits
+  });
+  if(!REDUCE){
+    quietRipple = Date.now() + 900;             // the shake owns the sphere
+    bubEl.classList.remove("bomb");
+    void bubEl.offsetWidth;
+    bubEl.classList.add("bomb");
+    setTimeout(function(){ bubEl.classList.remove("bomb"); }, 820);
+  }
+  var names = ids.map(function(i){ return BY_ID[i].name; }).join(" and ");
+  toast(names + (ids.length > 1 ? " have" : " has") + " bombed out \u2014 dead weight on your bubble", "bad");
+}
+function applyPoll(newRanks, playoff){
+  var wasCredit = {}, wasRank = {};
+  S.bubble.forEach(function(id){ wasCredit[id] = creditOf(id); wasRank[id] = rankOf(id); });
   var prev = liveScore();
-  var before = {};
-  S.bubble.forEach(function(id){ before[id] = rankOf(id); });
-
-  S.week++;
-  // an unlocked bubble is only a draft: its dock follows the week
-  if(!S.locked) S.entry = Math.min(DOCKS.length-1, S.week-1);
-  var rnd = mulberry32(4820 + S.week*977);
-  var r = S.ranks.slice(), i, k;
-  for(i=0;i<4;i++){ k = Math.floor(rnd()*24); var tmp=r[k]; r[k]=r[k+1]; r[k+1]=tmp; }
-  // one bigger climber
-  var from = 6 + Math.floor(rnd()*17);
-  var to = Math.max(1, from - (2 + Math.floor(rnd()*4)));
-  var climber = r.splice(from,1)[0]; r.splice(to,0,climber);
-  // one team falls out, one enters
-  var outIdx = 18 + Math.floor(rnd()*7);
-  var dropped = r.splice(outIdx,1)[0];
-  var pool = TEAMS.filter(function(t){ return r.indexOf(t.id)<0; });
-  var entrant = pool[Math.floor(rnd()*pool.length)].id;
-  r.push(entrant);
-  S.ranks = r;
-
+  if(newRanks) S.ranks = newRanks.slice();
+  if(playoff) S.playoff = playoff;
+  var bombs = S.bubble.filter(function(id){ return wasCredit[id] > 0 && creditOf(id) === 0; });
+  bombOut(bombs);
   render(prev);
+  return {bombs:bombs, wasRank:wasRank};
+}
 
-  // what the fan actually cares about
+function advanceWeek(){
+  if(S.playoff || S.week >= SEASON.length) return;
+  cancelSwapAsk(true);
+  S.week++;
+  if(!S.locked) S.entry = Math.min(DOCKS.length-1, S.week-1);
+  var r = applyPoll(SEASON[S.week-1], null);
+
   var msgs = [];
   S.bubble.forEach(function(id){
-    var was = before[id], now = rankOf(id);
-    if(was && !now) msgs.push([BY_ID[id].name + " crashed out of the Top 25.", "bad"]);
-    else if(!was && now) msgs.push([BY_ID[id].name + " is back in the poll at #" + now + ".", "ok"]);
+    if(r.bombs.indexOf(id) >= 0) return;
+    var was = r.wasRank[id], now = rankOf(id);
+    if(!was && now) msgs.push([BY_ID[id].name + " is back in the poll at #" + now + ".", "ok"]);
     else if(now && now<=8 && (was>8 || !was)) msgs.push([BY_ID[id].name + " is elevating your bubble (#" + now + ").", "ok"]);
-    else if(now && was && was-now>=3) msgs.push([BY_ID[id].name + " climbed to #" + now + ".", "ok"]);
-    else if(now && was && now-was>=3) msgs.push([BY_ID[id].name + " slid to #" + now + ".", "bad"]);
+    else if(now && was && was-now>=2) msgs.push([BY_ID[id].name + " climbed to #" + now + ".", "ok"]);
+    else if(now && was && now-was>=2) msgs.push([BY_ID[id].name + " slid to #" + now + ".", "bad"]);
   });
-  if(dropped === climber){} // no-op guard
-  if(!msgs.length) msgs.push(["Quiet week. " + BY_ID[dropped].name + " fell out of the poll; " + BY_ID[entrant].name + " took the spot.", "ok"]);
-  msgs.slice(0,3).forEach(function(m, i){
-    setTimeout(function(){ toast(m[0], m[1]==="bad"?"bad":""); }, i*420);
+  if(!msgs.length && !r.bombs.length) msgs.push(["Quiet week in the poll. Your bubble holds where it was.", "ok"]);
+  msgs.slice(0,2).forEach(function(m, i){
+    setTimeout(function(){ toast(m[0], m[1]==="bad"?"bad":""); }, 520 + i*440);
   });
   if(!S.locked){
     setTimeout(function(){
-      toast(S.week > 4
-        ? "Entry closed. That draft never made the boards \u2014 reset to play it again."
-        : "Still a draft \u2014 lock in by Week 4 to enter.", S.week > 4 ? "bad" : "");
-    }, 3*420);
+      toast(S.week > 4 ? "Entry closed. That draft never made the boards \u2014 reset to play it again."
+                       : "Still a draft \u2014 lock in by Week 4 to enter.", S.week > 4 ? "bad" : "");
+    }, 1500);
+  } else if(S.week === 5){
+    toast("Entry window is closed. Whatever you have is what you ride.", "bad");
   }
-  if(S.week===5 && S.locked) toast("Entry window is closed. Whatever you have is what you ride.", "bad");
+  if(S.week === SEASON.length) setTimeout(function(){ toast("Final poll is in. Play the playoff."); }, 1900);
 }
 
 function playPlayoff(){
   if(S.playoff) return;
   cancelSwapAsk(true);
-  var prev = liveScore();
-  var rnd = mulberry32(90211 + S.week);
-  var field = S.ranks.slice(0,12);
-  // seeds 1-4 get the bye; 5v12, 6v11, 7v10, 8v9 in the first round
-  var qf = field.slice(0,4);
-  [[4,11],[5,10],[6,9],[7,8]].forEach(function(p){
-    qf.push(rnd() < 0.72 ? field[p[0]] : field[p[1]]);   // higher seed usually holds
-  });
-  // four survive the quarterfinal
-  var f4 = [], pool = qf.slice();
-  while(f4.length<4){
-    var idx = Math.floor(Math.pow(rnd(),1.6)*pool.length);
-    f4.push(pool.splice(Math.min(idx,pool.length-1),1)[0]);
+  if(S.week < SEASON.length){                   // settle the poll, then play it out
+    S.week = SEASON.length;
+    if(!S.locked) S.entry = Math.min(DOCKS.length-1, S.week-1);
   }
-  S.playoff = {field:field, qf:qf, f4:f4};
-  render(prev);
+  applyPoll(SEASON[SEASON.length-1], PLAYOFF);
   if(!REDUCE) bubEl.classList.add("shimmer");
 
   var note = $("finalNote");
   note.hidden = false;
-  note.innerHTML = 'Final Four: <b>' + f4.map(function(i){return BY_ID[i].name;}).join(" \u00B7 ") +
+  note.innerHTML = 'Final Four: <b>' + PLAYOFF.f4.map(function(i){return BY_ID[i].name;}).join(" \u00B7 ") +
     '</b>. Every team in your bubble banked the better of its playoff run or its final poll slice. ' +
     'Your season closes at <b>' + liveScore() + '</b> points.';
-  var mine = S.bubble.filter(function(id){ return f4.indexOf(id)>=0; });
+  var mine = S.bubble.filter(function(id){ return PLAYOFF.f4.indexOf(id) >= 0; });
   if(mine.length) toast(mine.map(function(i){return BY_ID[i].name;}).join(" and ") + " reached the Final Four \u2014 full share.");
   else toast("No Final Four team in your bubble. You take the poll slices.", "bad");
-  $("bAdv").disabled = true;
-  $("bPlay").disabled = true;
 }
 
 function reset(){
@@ -1818,6 +1958,8 @@ function render(prev){
   renderTailgate();
   renderState();
   renderStrip(prev===undefined?null:prev);
+  $("bAdv").disabled = !!S.playoff || S.week >= SEASON.length;
+  $("bPlay").disabled = !!S.playoff;
 }
 
 /* wiring */
