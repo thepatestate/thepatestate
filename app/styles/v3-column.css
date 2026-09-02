@@ -16,3 +16,11 @@
 .v5.pg-column .linebox small{font:700 10.5px/1.5 var(--cond);letter-spacing:.12em;text-transform:uppercase;color:var(--w-mut)}
 .v5.pg-column .story-media{aspect-ratio:16/9;margin:26px 0}
 .v5.pg-column .sig{font:800 16px/1 var(--cond);letter-spacing:.08em;color:var(--w-navy);margin:6px 0 22px}
+/* fixes from the first live render (2026-09-01 night) */
+.v5.pg-column .story-body .pullquote{text-transform:none;letter-spacing:0}
+.v5.pg-column .rc .impact{align-items:flex-start}
+.v5.pg-column .rc .impact .badge{white-space:nowrap;flex:none}
+.v5.pg-column .rc .nx{display:block}
+.v5.pg-column .rc .nx small{display:block}
+.v5.pg-column .rc .nx b{display:block;margin-top:5px}
+.v5.pg-column .story-media{aspect-ratio:16/9;height:auto}
