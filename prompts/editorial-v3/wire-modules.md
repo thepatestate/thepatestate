@@ -5,11 +5,11 @@ THE MODULES (the depth says which to fill):
 - whyTitle + whyBody: the stakes, argued with the story's numbers. One tight paragraph.
 - missing: the story under the story — the one non-obvious mechanism the article carries. Null if the article doesn't have one; never manufacture it.
 - callout: the story's best pull-quote-able sentence, WITHOUT surrounding quotation marks (the page adds them) — a real quote from a person if one exists, else the desk's sharpest line. Null for items. calloutSpeaker: who said it, as the story attributes it ("Kirby Smart", "an SEC source", "Lane Kiffin, to reporters") when the callout is a person's quote; null when it is the desk's own line.
-- section04Title + section04Body: the personnel/what-changes section when the article has one (replacements, next man up, the chain of effects). Null otherwise.
+- section04Title + section04Body: the personnel/what-changes section when the article has one (replacements, next man up, the chain of effects). Title it for what it holds ("Next Man Up", "What Changes Now", "The Replacement Board") — never "What the Coaches Can Actually Change", which is the chessboard's own header. Null otherwise.
 - chessboard: the tactical levers paragraph when the article has one. Null otherwise.
 - readBody: the desk's read — the article's closing thesis, counterweight included. Null for items.
 - watching: two to four items, each a question a fan can check from the couch or the box score, with its tell in the body. Empty for items.
-- stats: up to three numbers that ARGUE, from the article/pack, each with a label that makes the argument ("critical": true for the one alarming number). Empty if the story has no numbers worth a rail.
+- stats: up to three QUANTITIES that ARGUE, from the article/pack — records, yards, counts, percentages, dollars, rankings — each with a label that makes the argument ("critical": true for the one alarming number). Never a date, a season year, a kickoff time or a jersey number. Empty if the story has fewer than two numbers worth a rail.
 - facts: three to six label/value rows for the rail — the who/what/when a reader scans (Player, Injury, Status, Opener, Hearing, Penalty...). Values compact.
 
 DEPTH RULES: item → openTitle/whatHappened + facts only (everything else null/empty). brief → add whyBody, watching (2), stats if earned. story/analysis → the full set the material supports.

@@ -94,10 +94,14 @@ function TextBlocks({ markdown, ytId, inserts = [], paragraphOffset = 0 }: { mar
   return (
     <>
       {blocks.map((block, i) => {
-        if (block.startsWith("## ")) {
+        // A header is "## Title" — or, when a writer bolds a short line on its
+        // own ("**What Happened**"), that line (2026-09-02: the LSU piece's
+        // section heads rendered as body text with the drop cap on them).
+        const boldHead = block.match(/^\*\*([^*\n]{3,80})\*\*$/);
+        if (block.startsWith("## ") || boldHead) {
           return (
             <h3 className="display" key={i}>
-              {renderInline(block.slice(3).trim())}
+              {renderInline(boldHead ? boldHead[1].trim() : block.slice(3).trim())}
             </h3>
           );
         }

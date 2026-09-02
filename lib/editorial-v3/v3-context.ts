@@ -43,5 +43,7 @@ export function paragraphs(body: string): string[] {
 
 export function cleanDraft<T extends { headline: string; dek: string; bodyMarkdown: string; pullQuote: string }>(d: T): T {
   const fix = (s: string) => s.replace(/\\(["'])/g, "$1");
-  return { ...d, headline: fix(d.headline), dek: fix(d.dek), bodyMarkdown: fix(d.bodyMarkdown).trimEnd(), pullQuote: fix(d.pullQuote) };
+  // A section head the writer bolded on its own line is a header (2026-09-02).
+  const heads = (s: string) => s.replace(/^\*\*([^*\n]{3,80})\*\*\s*$/gm, "## $1");
+  return { ...d, headline: fix(d.headline), dek: fix(d.dek), bodyMarkdown: heads(fix(d.bodyMarkdown)).trimEnd(), pullQuote: fix(d.pullQuote) };
 }

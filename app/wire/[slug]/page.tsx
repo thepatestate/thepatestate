@@ -232,7 +232,7 @@ export default async function WireStoryPage({ params }: { params: Promise<{ slug
 
             {story.section04Body && (
               <>
-                <SectionHead n={next()} kicker="The Personnel" title={story.section04Title || "What Changes Now"} />
+                <SectionHead n={next()} kicker="The Personnel" title={story.section04Title && story.section04Title !== (story.chessboardTitle || "What the Coaches Can Actually Change") ? story.section04Title : "What Changes Now"} />
                 <p>{story.section04Body}</p>
               </>
             )}
