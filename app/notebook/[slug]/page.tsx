@@ -68,6 +68,18 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
   // only when the body doesn't already place it via its [PULLQUOTE] marker.
   const lineWorthKeeping = isJosh && article.pullQuote && !article.bodyMarkdown.includes("[PULLQUOTE]") ? article.pullQuote : null;
   const otherJosh = joshLatest.filter((a) => a.slug.current !== slug).slice(0, 2);
+  // Visual modules for long-form staff analysis (2026-09-02): drawn from the
+  // body by lib/editorial-v3/article-visuals.ts; Josh's columns keep their
+  // own shape (the Line Worth Keeping).
+  const stats = !isJosh ? (article.stats ?? []).filter((x) => x.value && x.label).slice(0, 3) : [];
+  const facts = !isJosh ? (article.facts ?? []).filter((x) => x.label && x.value) : [];
+  const watching = !isJosh ? (article.watching ?? []).filter((x) => x.title) : [];
+  const questions = !isJosh ? (article.questions ?? []).filter((x) => x.question && x.why) : [];
+  const callout = !isJosh && article.callout ? article.callout : null;
+  const bodyParagraphs = article.bodyMarkdown.split(/\n{2,}/).map((b) => b.trim()).filter((b) => b && !b.startsWith("## ") && !/^\[(EMBED|PULLQUOTE)/.test(b)).length;
+  const inserts = callout && bodyParagraphs >= 4 ? [{ afterParagraph: 3, node: <div className="pull"><p>&ldquo;{callout}&rdquo;</p><span>{article.calloutSpeaker || "From the story"}</span></div> }] : [];
+  let n = 0;
+  const next = () => ++n;
 
   const jsonLd = {
     "@context": "https://schema.org", "@type": "NewsArticle",
@@ -97,7 +109,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
   } : null;
 
   return (
-    <main className="v5 pg-wirestory pg-column">
+    <main className={isJosh ? "v5 pg-wirestory pg-column" : "v5 pg-wirestory pg-column pg-analysis"}>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd).replace(/</g, "\\u003c") }} />
       {videoJsonLd && (
@@ -145,6 +157,17 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
             </div>
           )}
 
+          {stats.length > 0 && (
+            <div className="nums">
+              {stats.map((x, i) => (
+                <div className="num" key={i}>
+                  <div className={x.critical ? "n crit" : "n"}>{x.value}</div>
+                  <p>{x.label}</p>
+                </div>
+              ))}
+            </div>
+          )}
+
           <div className="a-body">
             {lineWorthKeeping && (
               <div className="linebox">
@@ -154,7 +177,29 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
               </div>
             )}
 
-            <ArticleBody article={article} bare hideKicker />
+            <ArticleBody article={article} bare hideKicker inserts={inserts} />
+
+            {questions.length > 0 && (
+              <>
+                <h2><span className="pt">{String(next()).padStart(2, "0")} · The Open Questions</span>Questions to Be Answered</h2>
+                <div className="wl qa">
+                  {questions.map((q, i) => (
+                    <div key={i}><div className="n">{i + 1}</div><div><h3>{q.question}</h3><p>{q.why}</p></div></div>
+                  ))}
+                </div>
+              </>
+            )}
+
+            {watching.length > 0 && (
+              <>
+                <h2><span className="pt">{String(next()).padStart(2, "0")} · The Watch List</span>What to Watch Next</h2>
+                <div className="wl">
+                  {watching.map((w, i) => (
+                    <div key={i}><div className="n">{i + 1}</div><div><h3>{w.title}</h3>{w.body && <p>{w.body}</p>}</div></div>
+                  ))}
+                </div>
+              </>
+            )}
 
             <Corrections corrections={article.corrections} />
 
@@ -232,6 +277,16 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
         </article>
 
         <aside className="rail">
+          {facts.length > 0 && (
+            <div className="rc">
+              <div className="hd">The Facts</div>
+              <div className="bd"><ul>
+                {facts.map((f, i) => (
+                  <li key={i}><b>{f.label}</b><i style={{ fontStyle: "normal" }}>{f.value}</i></li>
+                ))}
+              </ul></div>
+            </div>
+          )}
           <div className="rc">
             <div className="hd">{isJosh ? "Josh’s Read" : "The Notebook"}</div>
             <div className="bd"><div className="impact">

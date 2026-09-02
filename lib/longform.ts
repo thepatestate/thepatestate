@@ -27,6 +27,7 @@ import { judgeJSON } from "@/lib/judge";
 import { teamFactSheet } from "@/lib/fact-sheet";
 import { v3MayWrite } from "@/lib/editorial-v3/flags";
 import { v3ReactionArticle } from "@/lib/editorial-v3/production";
+import { articleVisuals, visualsPatch } from "@/lib/editorial-v3/article-visuals";
 
 const MODEL = "claude-sonnet-5";
 
@@ -365,6 +366,16 @@ export async function publishLongformDraft(draft: LongformDraft): Promise<string
       }
     } catch (err) {
       console.error("[longform:hero]", err);
+    }
+    // Visual modules for the staff piece (2026-09-02) — drawn from the body,
+    // best-effort; the article is already published without them.
+    if (draft.product !== "feature") {
+      try {
+        const v = await articleVisuals({ headline: draft.headline, dek: draft.dek, bodyMarkdown: draft.bodyMarkdown }, "premium", (l) => console.log(`[longform:visuals] ${l}`));
+        await writeClient.patch(articleId).set(visualsPatch(v.visuals)).commit();
+      } catch (err) {
+        console.error("[longform:visuals]", err);
+      }
     }
     return `ok:${articleId}`;
   } catch (err) {

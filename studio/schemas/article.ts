@@ -17,6 +17,24 @@ export default defineType({
       type: "text", rows: 30, validation: (r) => r.required(),
     }),
     defineField({ name: "pullQuote", type: "text", rows: 2 }),
+    // Visual modules for long-form staff analysis (Isaac, 2026-09-02: Josh
+    // wants these "longer visually, not necessarily in words"). Extracted
+    // from the finished body by lib/editorial-v3/article-visuals.ts — every
+    // value is drawn from the article; nothing new is asserted.
+    defineField({ name: "stats", title: "At a glance (3 numbers)", type: "array", of: [{ type: "object", fields: [
+      defineField({ name: "value", type: "string" }), defineField({ name: "label", type: "string" }), defineField({ name: "critical", type: "boolean", initialValue: false }),
+    ] }] }),
+    defineField({ name: "callout", title: "Pull quote (verbatim from the body)", type: "text", rows: 2 }),
+    defineField({ name: "calloutSpeaker", type: "string", description: "Who said it; empty = the desk's own line" }),
+    defineField({ name: "facts", title: "Facts rail", type: "array", of: [{ type: "object", fields: [
+      defineField({ name: "label", type: "string" }), defineField({ name: "value", type: "string" }),
+    ] }] }),
+    defineField({ name: "watching", title: "What to Watch Next", type: "array", of: [{ type: "object", fields: [
+      defineField({ name: "title", type: "string" }), defineField({ name: "body", type: "text", rows: 2 }),
+    ] }] }),
+    defineField({ name: "questions", title: "Questions to Be Answered", type: "array", of: [{ type: "object", fields: [
+      defineField({ name: "question", type: "string" }), defineField({ name: "why", type: "text", rows: 3 }),
+    ], preview: { select: { title: "question" } } }] }),
     defineField({ name: "episode", type: "reference", to: [{ type: "episode" }] }),
     defineField({ name: "byline", type: "string", readOnly: true }),
     defineField({

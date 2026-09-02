@@ -37,6 +37,13 @@ export interface SanityArticle {
   bodyMarkdown: string;
   pullQuote?: string;
   heroUrl?: string | null;
+  /** Visual modules for long-form staff analysis (2026-09-02), drawn from the body. */
+  stats?: { value?: string; label?: string; critical?: boolean }[];
+  callout?: string;
+  calloutSpeaker?: string;
+  facts?: { label?: string; value?: string }[];
+  watching?: { title?: string; body?: string }[];
+  questions?: { question?: string; why?: string }[];
   byline: string;
   workflowState: "ai-drafted" | "approved" | "published";
   lowConfidence?: boolean;
@@ -62,6 +69,7 @@ export interface SanityArticle {
 }
 
 const ARTICLE_FIELDS = `_id, headline, slug, dek, bodyMarkdown, pullQuote, byline,
+  stats, callout, calloutSpeaker, facts, watching, questions,
   workflowState, lowConfidence, primaryTeam, teams, tags, seoTitle, seoDescription, publishedAt,
   contentType, productionMethod, reviewedBy, corrections,
   "heroUrl": heroImage.asset->url,

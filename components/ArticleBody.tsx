@@ -84,25 +84,39 @@ function renderWithQuotes(text: string, ytId?: string): ReactNode[] {
   return nodes;
 }
 
-function TextBlocks({ markdown, ytId }: { markdown: string; ytId?: string }) {
+/** A node placed after the Nth paragraph of the body (1-based; headers don't
+ * count) — the staff pages set their pull quote this way (2026-09-02). */
+export interface BodyInsert { afterParagraph: number; node: ReactNode }
+
+function TextBlocks({ markdown, ytId, inserts = [], paragraphOffset = 0 }: { markdown: string; ytId?: string; inserts?: BodyInsert[]; paragraphOffset?: number }) {
   const blocks = markdown.split(/\n{2,}/).map((b) => b.trim()).filter(Boolean);
+  let n = paragraphOffset;
   return (
     <>
-      {blocks.map((block, i) =>
-        block.startsWith("## ") ? (
-          <h3 className="display" key={i}>
-            {renderInline(block.slice(3).trim())}
-          </h3>
-        ) : (
-          <p key={i}>{renderWithQuotes(block, ytId)}</p>
-        )
-      )}
+      {blocks.map((block, i) => {
+        if (block.startsWith("## ")) {
+          return (
+            <h3 className="display" key={i}>
+              {renderInline(block.slice(3).trim())}
+            </h3>
+          );
+        }
+        n += 1;
+        const after = inserts.filter((x) => x.afterParagraph === n);
+        return (
+          <span key={i} style={{ display: "contents" }}>
+            <p>{renderWithQuotes(block, ytId)}</p>
+            {after.map((x, j) => <span key={j} style={{ display: "contents" }}>{x.node}</span>)}
+          </span>
+        );
+      })}
     </>
   );
 }
 
-export default function ArticleBody({ article, hideKicker = false, bare = false }: { article: SanityArticle; hideKicker?: boolean; bare?: boolean }) {
+export default function ArticleBody({ article, hideKicker = false, bare = false, inserts = [] }: { article: SanityArticle; hideKicker?: boolean; bare?: boolean; inserts?: BodyInsert[] }) {
   const segments = parseMarkers(article.bodyMarkdown);
+  let paragraphsSoFar = 0;
 
   return (
     <>
@@ -125,7 +139,11 @@ export default function ArticleBody({ article, hideKicker = false, bare = false 
       </div>}
       <div className="story-body">
         {segments.map((seg, i) => {
-          if (seg.type === "text") return <TextBlocks markdown={seg.markdown} ytId={article.episode?.ytId} key={i} />;
+          if (seg.type === "text") {
+            const offset = paragraphsSoFar;
+            paragraphsSoFar += seg.markdown.split(/\n{2,}/).map((b) => b.trim()).filter((b) => b && !b.startsWith("## ")).length;
+            return <TextBlocks markdown={seg.markdown} ytId={article.episode?.ytId} inserts={inserts} paragraphOffset={offset} key={i} />;
+          }
           if (seg.type === "pullquote") {
             if (!article.pullQuote) return null;
             // Pull quotes are Josh's verbatim takes from the show (§26) — always

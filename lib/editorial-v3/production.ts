@@ -14,6 +14,7 @@ import { JOSH_BRACKET_FIELD, JOSH_BRACKET_FINAL, JOSH_BRACKET_LABEL } from "@/li
 import { modulateStory } from "@/lib/editorial-v3/modulate";
 import { expandStory, type Expansion } from "@/lib/editorial-v3/expand";
 import { renderedWords, shortfall, RENDER_FLOOR } from "@/lib/editorial-v3/render-length";
+import { hollowReport } from "@/lib/editorial-v3/hollow";
 import { teamFactSheet } from "@/lib/fact-sheet";
 import { getTeamDirectory } from "@/lib/cfbd";
 import { resolveTeamSlug } from "@/lib/wire";
@@ -58,6 +59,9 @@ export async function v3WireStory(input: { clusterKey: string; teams: string[]; 
   if (!run.artifacts.policy?.pass) return { ok: false, reason: `policy:${run.artifacts.policy?.violations[0] ?? "?"}`, run };
   if (run.artifacts.fact?.verdict !== "pass") return { ok: false, reason: `factcheck-${run.artifacts.fact?.verdict}:${input.clusterKey}`, run };
   if (run.artifacts.quit && !run.artifacts.quit.didFinish) return { ok: false, reason: `quit:${run.artifacts.quit.reason}`, run };
+  // A story built from what its sources do not say does not run (2026-09-02).
+  const hollow = hollowReport(run.final.bodyMarkdown, run.artifacts.brief?.depth ?? "item");
+  if (hollow.hollow) return { ok: false, reason: hollow.reason.slice(0, 160), run };
   const paras = paragraphs(run.final.bodyMarkdown);
   // Page modules (2026-09-01): the finished story laid out into the wire
   // page's architecture. Fail-soft — a modulate error ships the flat body.
@@ -122,6 +126,12 @@ export async function v3ReactionArticle(input: { sourceId: string; refs: SourceR
   if (run.status !== "completed" || !run.final) return { ok: false, reason: `v3-${run.status}`, run };
   if (!run.artifacts.policy?.pass) return { ok: false, reason: `policy:${run.artifacts.policy?.violations[0]}`, run };
   if (run.artifacts.fact?.verdict !== "pass") return { ok: false, reason: `factcheck-${run.artifacts.fact?.verdict}`, run };
+  // The Notebook's staff lane is long-form analysis (Josh's second article
+  // type, 2026-09-02): a source that only supports an item or a brief is
+  // Wire material, not a Notebook piece.
+  const depth = run.artifacts.brief?.depth ?? "item";
+  if (depth === "item" || depth === "brief") return { ok: false, reason: `too-thin-for-analysis:${depth}`, run };
+  if (hollowReport(run.final.bodyMarkdown, depth).hollow) return { ok: false, reason: "hollow", run };
   return { ok: true, run, fields: { headline: run.final.headline, dek: run.final.dek, bodyMarkdown: run.final.bodyMarkdown, pullQuote: "", primaryTeam: run.final.primaryTeam, teams: run.final.teams, tags: [...run.final.tags, "engine:v3", `depth:${run.artifacts.brief?.depth ?? "item"}`], seoTitle: run.final.seo.title, seoDescription: run.final.seo.description, productionMethod: "ai-reviewed" } };
 }
 

@@ -46,3 +46,16 @@
   .v5.pg-column .story-body .pullquote{font-size:18px}
   .v5.pg-column .linebox p{font-size:17px}
 }
+
+/* ---- long-form staff analysis (2026-09-02): the wire's visual modules
+   around an untouched body; section headers carry a numbered kicker ---- */
+.v5.pg-analysis .story-body{counter-reset:sec}
+.v5.pg-analysis .story-body h3.display::before{counter-increment:sec;content:counter(sec,decimal-leading-zero);display:block;font:800 11px/1 var(--cond);letter-spacing:.2em;color:var(--w-gold-dk);margin-bottom:7px}
+.v5.pg-analysis .a-body .pull{border-left:4px solid var(--w-gold);padding:6px 0 6px 22px;margin:30px 0}
+.v5.pg-analysis .a-body .pull p{font:600 21px/1.45 var(--body);font-style:italic;color:var(--w-navy);margin:0}
+.v5.pg-analysis .a-body .pull span{display:block;font:700 10.5px/1 var(--cond);letter-spacing:.14em;text-transform:uppercase;color:var(--w-mut);margin-top:10px}
+.v5.pg-analysis .nums{margin:0 0 26px}
+@media(max-width:760px){.v5.pg-analysis .a-body .pull p{font-size:18px}}
+/* the body's paragraphs sit in display:contents wrappers (pull-quote inserts) — keep the drop cap */
+.v5.pg-column .story-body>span:first-child>p:first-child::first-letter{font:800 54px/0.9 var(--cond);color:var(--w-navy);float:left;padding:6px 10px 0 0}
+@media(max-width:760px){.v5.pg-column .story-body>span:first-child>p:first-child::first-letter{font-size:46px}}
