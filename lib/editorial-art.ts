@@ -40,6 +40,7 @@ type Candidate = { src: string; alt: string };
 // description of the scene is enough; callers can pass a more specific alt
 // via pick()'s second argument when the card is about something concrete.
 const IMG: Record<string, string> = {
+  "/img/icon/8231846.jpg": "The Indiana marching band and flags before the national championship game (Photo: David Buono/Icon Sportswire)",
   "/img/cfb-aerial.jpg": "A stadium lit up at night, seen from above",
   "/img/cfb-tunnel.jpg": "Players in silhouette walking out through the tunnel",
   "/img/cfb-band.jpg": "Brass instruments catching the light under the stadium lights",
@@ -88,7 +89,7 @@ const ART: Record<ArtCategory, Candidate[]> = {
   state: [c("/img/cfb-goalline.jpg"), c("/img/editorial-goalpost.jpg")],
   schedule: [c("/img/cfb-aerial.jpg"), c("/img/editorial-turf.jpg")],
   "rankings-movement": [c("/img/cfb-flag.jpg"), c("/img/editorial-goalpost.jpg")],
-  atmosphere: [c("/img/cfb-grill.jpg"), c("/img/tailgate-night.jpg")],
+  atmosphere: [c("/img/icon/8231846.jpg"), c("/img/cfb-grill.jpg"), c("/img/tailgate-night.jpg")],
   "season-preview": [c("/img/cfb-band.jpg"), c("/img/editorial-turf.jpg")],
   weather: [c("/img/cfb-snow.jpg"), c("/img/cfb-rain.jpg")],
   "locker-room": [c("/img/cfb-locker.jpg"), c("/img/cfb-headset.jpg")],

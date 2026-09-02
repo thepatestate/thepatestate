@@ -10,8 +10,10 @@ import { teamLogoUrl } from "@/lib/teams-meta";
 // thumbnail); a staff piece, which has no photograph, shows the team's mark
 // on a tinted field instead of a generated scene. The AI hero stays on the
 // article page only until licensed photos arrive.
-function realArt(a: SanityArticle, logos: Record<string, string | null>): { kind: "photo"; src: string; alt: string } | { kind: "mark"; logo: string | null } {
-  if (a.episode?.ytId) return { kind: "photo", src: `https://i.ytimg.com/vi/${a.episode.ytId}/maxresdefault.jpg`, alt: a.episode.title || a.headline };
+function realArt(a: SanityArticle, logos: Record<string, string | null>): { kind: "photo"; src: string; alt: string; pos: string } | { kind: "mark"; logo: string | null } {
+  // A licensed photograph (Icon Sportswire etc.) carries a heroCredit; only those are real.
+  if (a.heroCredit && a.heroUrl) return { kind: "photo", src: a.heroUrl, alt: a.headline, pos: "50% 35%" };
+  if (a.episode?.ytId) return { kind: "photo", src: `https://i.ytimg.com/vi/${a.episode.ytId}/maxresdefault.jpg`, alt: a.episode.title || a.headline, pos: "50% 22%" };
   return { kind: "mark", logo: logos[a._id] ?? (a.primaryTeam ? teamLogoUrl(a.primaryTeam) : null) };
 }
 function TeamMark({ logo, size }: { logo: string | null; size: number }) {
@@ -88,7 +90,7 @@ export default function NotebookTrending({ lead, stack, trending, seeds, seedSou
                     {leadArt?.kind === "mark" ? (
                       <TeamMark logo={leadArt.logo} size={140} />
                     ) : (
-                      <Image src={leadImg.src} alt={leadImg.alt} fill sizes="(max-width:1080px) 100vw, 780px" style={{ objectFit: "cover", objectPosition: leadArt?.kind === "photo" ? "50% 22%" : "50% 50%" }} />
+                      <Image src={leadImg.src} alt={leadImg.alt} fill sizes="(max-width:1080px) 100vw, 780px" style={{ objectFit: "cover", objectPosition: leadArt?.kind === "photo" ? leadArt.pos : "50% 50%" }} />
                     )}
                     <span className="art-lbl">{seriesLabel(lead.episode?.series)}</span>
                   </div>
@@ -110,7 +112,7 @@ export default function NotebookTrending({ lead, stack, trending, seeds, seedSou
                         <Link className="nb-row" href={`/notebook/${a.slug.current}`} key={a._id}>
                           <span className="im">
                             {ra.kind === "photo" ? (
-                              <Image src={ra.src} alt="" fill sizes="128px" style={{ objectFit: "cover", objectPosition: "50% 22%" }} />
+                              <Image src={ra.src} alt="" fill sizes="128px" style={{ objectFit: "cover", objectPosition: ra.pos }} />
                             ) : (
                               <TeamMark logo={ra.logo} size={44} />
                             )}

@@ -70,7 +70,7 @@ for (const it of plan) {
     let src = readFileSync(p, "utf8");
     const web = `/img/icon/${it.id}.jpg`;
     if (!src.includes(web)) {
-      src = src.replace(/(const IMG: Record<string, string> = \{\n)/, `$1  "${web}": ${JSON.stringify(`${it.alt} (Photo: ${it.credit})`)},\n`);
+      src = src.replace(/(const IMG: Record<string, string> = \{\n)/, `$1  "${web}": ${JSON.stringify(`${t.alt} (Photo: ${it.credit})`)},\n`);
       src = src.replace(new RegExp(`(\\n\\s*${t.category}: \\[)`), `$1c("${web}"), `);
       if (!DRY) writeFileSync(p, src);
     }
