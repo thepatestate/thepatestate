@@ -27,6 +27,7 @@
   --r:10px;
 }
 *{box-sizing:border-box}
+[hidden]{display:none !important}
 body{
   margin:0;
   background:var(--field);
@@ -91,7 +92,85 @@ button,input,select{font:inherit;color:inherit}
     conic-gradient(from 200deg at 12% -12%, rgba(255,255,255,.07), transparent 22%),
     conic-gradient(from 300deg at 92% -10%, rgba(255,255,255,.06), transparent 20%);
 }
-.stage{position:relative;height:clamp(376px,54vh,528px)}
+.stagewrap{display:flex;align-items:stretch;height:clamp(376px,54vh,528px)}
+.stage{position:relative;height:100%;flex:1 1 auto;min-width:0}
+
+/* ── team tray ────────────────────────────────────────────────────── */
+.tray{
+  flex:0 0 232px;min-width:0;height:100%;display:flex;flex-direction:column;
+  border-left:1px solid var(--line);position:relative;z-index:3;
+  background:linear-gradient(180deg, rgba(255,255,255,.025), rgba(0,0,0,.14));
+}
+.tray.swapping{box-shadow:inset 0 0 0 1px var(--gold)}
+.trayhead{padding:10px 12px 9px;border-bottom:1px solid var(--line-soft);flex:0 0 auto}
+.trayhead .segs{gap:3px}
+.trayhead .seg-btn{padding:5px 7px;font-size:11px}
+.trayhead .search{margin-top:7px;padding:7px 10px;font-size:13px}
+.trayhint{margin:6px 0 0;font-size:11px;color:var(--muted-2);line-height:1.3}
+.tray.swapping .trayhint{color:var(--gold)}
+.traylist{
+  flex:1 1 auto;min-height:0;overflow-y:auto;align-content:start;
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px 4px;padding:12px 10px 16px;
+}
+.traylist::-webkit-scrollbar{width:8px}
+.traylist::-webkit-scrollbar-thumb{background:#1C3559;border-radius:8px}
+.trayempty{grid-column:1/-1;font-size:12.5px;color:var(--muted-2);line-height:1.45}
+.tray-item{
+  position:relative;background:transparent;border:0;padding:2px 0;border-radius:8px;
+  display:flex;flex-direction:column;align-items:center;gap:5px;
+  cursor:grab;touch-action:none;
+}
+.tray-item:hover .torb{transform:translateY(-2px) scale(1.07)}
+.tray-item:hover .tnm{color:var(--ink)}
+.torb{
+  width:44px;height:44px;border-radius:50%;border:2px solid;position:relative;
+  display:grid;place-items:center;flex:0 0 auto;transition:transform .18s ease;
+}
+.torb .ab{font-family:var(--disp);font-weight:800;font-size:12.5px;letter-spacing:.02em}
+.torb .rkb{
+  position:absolute;top:-5px;right:-8px;background:var(--gold);color:#16130A;
+  border-radius:6px;padding:0 3px;font-family:var(--disp);font-weight:800;font-size:9.5px;
+}
+.tnm{
+  font-family:var(--disp);font-weight:700;font-size:10px;letter-spacing:.05em;text-transform:uppercase;
+  color:var(--muted);text-align:center;line-height:1.15;max-width:68px;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+}
+.tray-item.in{cursor:default}
+.tray-item.in .torb{opacity:.26}
+.tray-item.in .tnm{color:var(--muted-2)}
+.tray-item.in::after{
+  content:"\2713";position:absolute;top:9px;left:50%;transform:translateX(-50%);
+  font-family:var(--disp);font-weight:800;font-size:21px;color:var(--gold);
+}
+.dragghost{
+  position:fixed;left:0;top:0;width:48px;height:48px;border-radius:50%;border:2px solid;
+  display:grid;place-items:center;font-family:var(--disp);font-weight:800;font-size:13px;
+  pointer-events:none;z-index:60;box-shadow:0 10px 24px rgba(0,0,0,.5);
+}
+
+/* ── dragging a team out ────────────────────────────────────────── */
+.orb{cursor:grab;touch-action:none}
+.orb.dragging{cursor:grabbing}
+.orb.dragging .orb-x,.orb.dragging .orb-y,
+.orb.parked .orb-x,.orb.parked .orb-y{transition:none}
+.orb.dragging .orb-bob,.orb.parked .orb-bob{animation:none}
+.orb.dragging .body{transform:scale(1.15)}
+.orb.parked .body{transform:scale(1.06)}
+#rimHalo{opacity:0;transition:opacity .2s ease}
+.bub.out #rim,.bub.in #rim{stroke-dasharray:none;stroke-width:2.4;stroke-opacity:.95}
+.bub.out #rim{stroke:#E0525C}
+.bub.in #rim{stroke:#E8C75B}
+.bub.out #rimHalo{opacity:.55;stroke:#E0525C}
+.bub.in #rimHalo{opacity:.5;stroke:#E8C75B}
+.swapask{
+  position:absolute;left:50%;bottom:10px;transform:translateX(-50%);z-index:6;
+  display:flex;align-items:center;gap:12px;max-width:min(94%,540px);
+  background:#0F2444;border:1px solid var(--line);border-left:3px solid var(--gold);
+  border-radius:9px;padding:8px 12px;box-shadow:0 10px 26px rgba(0,0,0,.45);
+}
+.swapask p{margin:0;font-size:13px;color:var(--ink)}
+.swapask p b{color:var(--gold);font-weight:700}
 
 /* elevation axis */
 .axis{position:absolute;left:0;top:26px;bottom:26px;width:150px;z-index:2}
@@ -199,23 +278,11 @@ button,input,select{font:inherit;color:inherit}
   padding:9px 11px;color:var(--ink);font-size:14px;
 }
 .search::placeholder{color:var(--muted-2)}
-.tlist{max-height:206px;overflow-y:auto;display:flex;flex-direction:column;gap:2px;margin:0 -4px;padding:0 4px}
-.tlist::-webkit-scrollbar{width:8px}
-.tlist::-webkit-scrollbar-thumb{background:#1C3559;border-radius:8px}
-.trow{
-  display:flex;align-items:center;gap:9px;width:100%;text-align:left;
-  background:transparent;border:1px solid transparent;border-radius:7px;
-  padding:6px 8px;cursor:pointer;transition:background .14s,border-color .14s;
-}
-.trow:hover{background:var(--panel);border-color:var(--line)}
-.trow[disabled]{opacity:.34;cursor:default}
-.trow[disabled]:hover{background:transparent;border-color:transparent}
 .swatch{width:16px;height:16px;border-radius:50%;flex:0 0 auto;border:1.5px solid}
-.trow .nm{flex:1 1 auto;font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.rk{font-family:var(--disp);font-weight:700;font-size:12px;letter-spacing:.06em;color:var(--muted-2);flex:0 0 auto}
-.rk.in{color:var(--gold)}
-.plus{font-family:var(--disp);font-weight:800;font-size:16px;color:var(--muted-2);flex:0 0 auto;width:14px;text-align:center}
-.trow:hover .plus{color:var(--gold)}
+.conf{
+  font-family:var(--disp);font-weight:700;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--muted-2);border:1px solid var(--line);border-radius:4px;padding:1px 4px;flex:0 0 auto;
+}
 
 .roster{display:flex;flex-direction:column;gap:4px}
 .rrow{display:flex;align-items:center;gap:8px;padding:5px 6px;border-radius:7px;background:var(--panel-2);border:1px solid var(--line-soft)}
@@ -249,8 +316,8 @@ select[disabled]{opacity:.45}
 
 /* tailgate */
 .tg-scroll{overflow-x:auto;padding-bottom:4px}
-.tg{display:flex;gap:6px;min-width:322px}
-.tg .col{flex:1 1 0;min-width:40px;display:flex;flex-direction:column;align-items:center;gap:6px}
+.tg{display:flex;gap:6px;min-width:360px}
+.tg .col{flex:1 1 0;min-width:46px;display:flex;flex-direction:column;align-items:center;gap:6px}
 .tg .track{position:relative;width:100%;height:186px;border-bottom:1px solid var(--line)}
 .tg .track::before{content:"";position:absolute;left:50%;top:0;bottom:0;width:1px;background:linear-gradient(180deg,transparent,var(--line-soft))}
 .tg .mini{position:absolute;left:50%;transform:translate(-50%,50%);transition:bottom .9s cubic-bezier(.22,1,.36,1)}
@@ -284,6 +351,53 @@ select[disabled]{opacity:.45}
 .sl .meter{flex:0 0 40px;height:4px;background:var(--line-soft);border-radius:3px;overflow:hidden}
 .sl .meter i{display:block;height:100%;background:var(--gold);border-radius:3px}
 
+/* ceiling marker + lock dressing */
+.readout .ceil{margin-top:4px}
+.readout .ceil b{font-family:var(--disp);font-weight:800;font-size:15px;color:var(--glass);letter-spacing:.06em}
+.readout .draft-tag{
+  margin-top:6px;font-family:var(--disp);font-weight:700;font-size:10px;
+  letter-spacing:.13em;text-transform:uppercase;color:var(--gold);
+}
+.readout.final .ceil b{color:var(--gold-hi)}
+.ceilmark{
+  position:absolute;left:0;right:0;height:0;z-index:1;pointer-events:none;
+  border-top:1px dashed rgba(220,233,255,.34);
+  transition:bottom .9s cubic-bezier(.22,1,.36,1);
+}
+.ceilmark span{
+  position:absolute;left:2px;top:-14px;
+  font-family:var(--disp);font-weight:700;font-size:10px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--muted-2);
+}
+.bub.draft #rim{stroke-opacity:.22;stroke-dasharray:6 9}
+#lockRing{opacity:0;transform-origin:150px 150px}
+.bub.locking #lockRing{animation:lockring .9s ease-out}
+@keyframes lockring{
+  0%{opacity:0;transform:scale(.93)}
+  22%{opacity:.95;transform:scale(1)}
+  100%{opacity:0;transform:scale(1.07)}
+}
+#seal{opacity:0;transition:opacity .45s ease .22s}
+.bub.locked #seal{opacity:1}
+.confirm{
+  display:none;align-items:center;gap:12px;flex-wrap:wrap;
+  border:1px solid var(--line);border-left:3px solid var(--gold);
+  background:var(--panel-2);border-radius:10px;padding:11px 14px;margin:-6px 0 18px;
+}
+.confirm.on{display:flex}
+.confirm p{margin:0;font-size:13.5px;color:var(--muted);max-width:62ch}
+.confirm p b{color:var(--ink);font-weight:600}
+.confirm .acts{margin-left:auto;display:flex;gap:8px;flex:0 0 auto}
+.chip.lockchip b{color:var(--gold)}
+.rrow.tot{background:transparent;border-color:var(--line)}
+.rrow.tot .math{color:var(--ink);font-weight:600}
+.rrow.cel{background:transparent;border-color:transparent}
+.rrow.cel .math,.rrow.cel .pts{color:var(--muted)}
+.tg .cl{font-family:var(--disp);font-weight:700;font-size:9.5px;letter-spacing:.06em;
+  text-transform:uppercase;color:var(--muted-2);line-height:1.1;white-space:nowrap}
+.tg .col.you.draft .who{color:var(--muted)}
+.drafty{color:var(--gold);opacity:.92}
+
 /* toasts */
 .toasts{position:fixed;right:14px;bottom:14px;display:flex;flex-direction:column;gap:8px;z-index:50;max-width:min(330px,86vw)}
 .toast{
@@ -303,6 +417,21 @@ select[disabled]{opacity:.45}
 /* &#x2500;&#x2500; responsive &#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500; */
 @media (max-width:980px){
   .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .tray{flex-basis:196px}
+  .traylist{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:760px){
+  .stagewrap{display:block;height:auto}
+  .stage{height:clamp(376px,54vh,528px)}
+  .tray{height:auto;border-left:0;border-top:1px solid var(--line)}
+  .traylist{
+    display:flex;overflow-x:auto;overflow-y:hidden;gap:10px;
+    padding:12px 12px 14px;scrollbar-width:thin;
+  }
+  .traylist::-webkit-scrollbar{height:8px}
+  .tray-item{flex:0 0 62px}
+  .trayempty{flex:1 1 auto}
+  .swapask{font-size:12px}
 }
 @media (max-width:700px){
   .grid{grid-template-columns:minmax(0,1fr)}
@@ -320,7 +449,9 @@ select[disabled]{opacity:.45}
 }
 
 @media (prefers-reduced-motion:reduce){
-  .lift,.orb-x,.orb-y,.tg .mini,.orb .body{transition:opacity .2s linear !important}
+  .lift,.orb-x,.orb-y,.tg .mini,.orb .body,.ceilmark{transition:opacity .2s linear !important}
+  .bub.locking #lockRing{animation:lockfade .5s ease-out}
+  @keyframes lockfade{0%{opacity:0}40%{opacity:.75}100%{opacity:0}}
   .orb-bob,.ripple #bubbleGroup,.ripple #rim,.shimmer #shimmer{animation:none !important}
   .orb{transition:opacity .25s linear}
   .toast{animation:none}
@@ -343,61 +474,91 @@ select[disabled]{opacity:.45}
   </div>
 
   <section class="hero" aria-label="Your bubble">
-    <div class="stage" id="stage">
-      <div class="axis" id="axis"></div>
-      <div class="field" id="fieldEl">
-        <div class="lift" id="lift">
-          <svg class="bub" id="bub" viewBox="0 0 300 300" width="300" height="300" role="img" aria-labelledby="bubTitle">
-            <title id="bubTitle">Your bubble, floating at your live score</title>
-            <defs>
-              <radialGradient id="glassg" cx="36%" cy="28%" r="78%">
-                <stop offset="0" stop-color="#D6E8FF" stop-opacity=".28"/>
-                <stop offset=".42" stop-color="#7FA6D8" stop-opacity=".10"/>
-                <stop offset=".84" stop-color="#0B1A33" stop-opacity=".04"/>
-                <stop offset="1" stop-color="#A8CBFF" stop-opacity=".17"/>
-              </radialGradient>
-              <radialGradient id="rimg" cx="50%" cy="50%" r="50%">
-                <stop offset=".80" stop-color="#DCE9FF" stop-opacity="0"/>
-                <stop offset=".955" stop-color="#DCE9FF" stop-opacity=".30"/>
-                <stop offset="1" stop-color="#DCE9FF" stop-opacity=".06"/>
-              </radialGradient>
-              <linearGradient id="shg" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0" stop-color="#C9A227" stop-opacity="0"/>
-                <stop offset=".5" stop-color="#E8C75B" stop-opacity=".55"/>
-                <stop offset="1" stop-color="#C9A227" stop-opacity="0"/>
-              </linearGradient>
-              <filter id="soft" x="-40%" y="-40%" width="180%" height="180%">
-                <feGaussianBlur stdDeviation="5"/>
-              </filter>
-              <filter id="soft2" x="-40%" y="-40%" width="180%" height="180%">
-                <feGaussianBlur stdDeviation="2.4"/>
-              </filter>
-              <clipPath id="ball"><circle cx="150" cy="150" r="146"/></clipPath>
-            </defs>
-            <g id="bubbleGroup">
-              <circle cx="150" cy="150" r="146" fill="url(#glassg)"/>
-              <circle cx="150" cy="150" r="146" fill="url(#rimg)"/>
-              <ellipse cx="104" cy="84" rx="46" ry="27" fill="#FFFFFF" opacity=".15" filter="url(#soft)"/>
-              <ellipse cx="196" cy="222" rx="34" ry="15" fill="#BCD6FF" opacity=".08" filter="url(#soft)"/>
-              <path d="M40 196 A 146 146 0 0 0 262 196" fill="none" stroke="#DCE9FF" stroke-opacity=".10" stroke-width="1"/>
-              <g id="tethers"></g>
-              <g id="orbs"></g>
-              <g clip-path="url(#ball)"><rect id="shimmer" x="-40" y="0" width="90" height="300" fill="url(#shg)"/></g>
-              <circle id="rim" cx="150" cy="150" r="146" fill="none" stroke="#DCE9FF" stroke-opacity=".34" stroke-width="1.1"/>
-              <g id="parts"></g>
-            </g>
-          </svg>
-          <div class="readout" id="readout">
-            <div class="n num" id="roN">0</div>
-            <div class="k" id="roK">Live score</div>
+    <div class="stagewrap">
+      <div class="stage" id="stage">
+        <div class="axis" id="axis"></div>
+        <div class="field" id="fieldEl">
+          <div class="ceilmark" id="ceilMark"><span>Ceiling</span></div>
+          <div class="lift" id="lift">
+            <svg class="bub" id="bub" viewBox="0 0 300 300" width="300" height="300" role="img" aria-labelledby="bubTitle">
+              <title id="bubTitle">Your bubble, floating at your live score</title>
+              <defs>
+                <radialGradient id="glassg" cx="36%" cy="28%" r="78%">
+                  <stop offset="0" stop-color="#D6E8FF" stop-opacity=".28"/>
+                  <stop offset=".42" stop-color="#7FA6D8" stop-opacity=".10"/>
+                  <stop offset=".84" stop-color="#0B1A33" stop-opacity=".04"/>
+                  <stop offset="1" stop-color="#A8CBFF" stop-opacity=".17"/>
+                </radialGradient>
+                <radialGradient id="rimg" cx="50%" cy="50%" r="50%">
+                  <stop offset=".80" stop-color="#DCE9FF" stop-opacity="0"/>
+                  <stop offset=".955" stop-color="#DCE9FF" stop-opacity=".30"/>
+                  <stop offset="1" stop-color="#DCE9FF" stop-opacity=".06"/>
+                </radialGradient>
+                <linearGradient id="shg" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0" stop-color="#C9A227" stop-opacity="0"/>
+                  <stop offset=".5" stop-color="#E8C75B" stop-opacity=".55"/>
+                  <stop offset="1" stop-color="#C9A227" stop-opacity="0"/>
+                </linearGradient>
+                <filter id="soft" x="-40%" y="-40%" width="180%" height="180%">
+                  <feGaussianBlur stdDeviation="5"/>
+                </filter>
+                <filter id="soft2" x="-40%" y="-40%" width="180%" height="180%">
+                  <feGaussianBlur stdDeviation="2.4"/>
+                </filter>
+                <clipPath id="ball"><circle cx="150" cy="150" r="146"/></clipPath>
+              </defs>
+              <g id="bubbleGroup">
+                <circle cx="150" cy="150" r="146" fill="url(#glassg)"/>
+                <circle cx="150" cy="150" r="146" fill="url(#rimg)"/>
+                <ellipse cx="104" cy="84" rx="46" ry="27" fill="#FFFFFF" opacity=".15" filter="url(#soft)"/>
+                <ellipse cx="196" cy="222" rx="34" ry="15" fill="#BCD6FF" opacity=".08" filter="url(#soft)"/>
+                <path d="M40 196 A 146 146 0 0 0 262 196" fill="none" stroke="#DCE9FF" stroke-opacity=".10" stroke-width="1"/>
+                <g id="tethers"></g>
+                <g id="orbs"></g>
+                <g clip-path="url(#ball)"><rect id="shimmer" x="-40" y="0" width="90" height="300" fill="url(#shg)"/></g>
+                <circle id="rim" cx="150" cy="150" r="146" fill="none" stroke="#DCE9FF" stroke-opacity=".34" stroke-width="1.1"/>
+                <circle id="rimHalo" cx="150" cy="150" r="146" fill="none" stroke="#E0525C" stroke-width="6" filter="url(#soft2)"/>
+              <circle id="lockRing" cx="150" cy="150" r="146" fill="none" stroke="#E8C75B" stroke-width="3"/>
+                <g id="seal">
+                  <rect x="86" y="260" width="128" height="24" rx="12" fill="#0B1A33" fill-opacity=".82" stroke="#C9A227" stroke-width="1.4"/>
+                  <text id="sealTxt" x="150" y="272.6" text-anchor="middle" dominant-baseline="central"
+                        font-family="Barlow Condensed, sans-serif" font-weight="800" font-size="12.5"
+                        letter-spacing="1.5" fill="#E8C75B">LOCKED &#xB7; PRESEASON</text>
+                </g>
+                <g id="parts"></g>
+              </g>
+            </svg>
+            <div class="readout" id="readout">
+              <div class="n num" id="roN">0</div>
+              <div class="k" id="roK">Live score (draft)</div>
+              <div class="k ceil">Ceiling <b class="num" id="roCeilN">1,000</b></div>
+              <div class="draft-tag" id="roDraft">Draft &#x2014; not entered</div>
+            </div>
           </div>
         </div>
+        <div class="swapask" id="swapAsk" hidden>
+          <p id="swapAskT"></p>
+          <button class="btn sm ghost" type="button" id="swapAskX">Cancel</button>
+        </div>
       </div>
+      <aside class="tray" id="tray" aria-label="Team tray">
+        <div class="trayhead">
+          <div class="segs" id="confChips"></div>
+          <div class="segs" style="margin-top:6px">
+            <button class="seg-btn" type="button" id="t25" aria-pressed="false">Top 25 only</button>
+          </div>
+          <input class="search" id="q" type="search" placeholder="Search teams" aria-label="Search teams" autocomplete="off">
+          <p class="trayhint" id="trayHint">Drag a team into the bubble, or tap to add.</p>
+        </div>
+        <div class="traylist" id="traylist"></div>
+      </aside>
     </div>
     <div class="strip">
       <div class="seg">Each team worth <b class="num" id="sShare">250</b></div>
       <span class="sep">&#xB7;</span>
       <div class="seg">Live score <b class="num" id="sScore">0</b></div>
+      <span class="sep">&#xB7;</span>
+      <div class="seg">Ceiling <b class="num" id="sCeil">1,000</b></div>
       <span class="sep">&#xB7;</span>
       <div class="seg delta" id="sDelta"><b class="num">Even</b><span id="sDeltaTxt">since Tuesday</span></div>
       <span class="sep">&#xB7;</span>
@@ -406,7 +567,9 @@ select[disabled]{opacity:.45}
   </section>
 
   <div class="bar">
-    <button class="btn gold" id="bAdv">Advance a week</button>
+    <button class="btn gold" id="bLock">Lock in your bubble</button>
+    <span class="chip lockchip" id="lockChip" hidden></span>
+    <button class="btn" id="bAdv">Advance a week</button>
     <button class="btn" id="bPlay">Play the playoff</button>
     <button class="btn ghost" id="bReset">Reset</button>
     <span class="spacer"></span>
@@ -414,13 +577,19 @@ select[disabled]{opacity:.45}
     <span class="chip" id="swapChip">Swap available</span>
   </div>
 
+  <div class="confirm" id="lockConfirm" role="group" aria-label="Confirm your lock">
+    <p id="cfTxt"></p>
+    <span class="acts">
+      <button class="btn gold sm" id="bLockGo">Lock</button>
+      <button class="btn ghost sm" id="bLockNo">Keep editing</button>
+    </span>
+  </div>
+
   <div class="grid">
 
     <!-- 1 &#xB7; BUILD -->
     <section class="panel">
       <header><h2>Build your bubble</h2><span class="lbl num" id="capNote">4 / 20</span></header>
-      <input class="search" id="q" type="search" placeholder="Search 56 FBS teams" aria-label="Search teams" autocomplete="off">
-      <div class="tlist" id="tlist"></div>
       <div>
         <span class="lbl">Entry week</span>
         <div class="segs" id="entrySegs" style="margin-top:7px"></div>
@@ -448,6 +617,7 @@ select[disabled]{opacity:.45}
       <header><h2>You vs the tailgate</h2><span class="lbl">6 friends</span></header>
       <div class="tg-scroll"><div class="tg" id="tg"></div></div>
       <div class="gapline" id="gapLine">Gap to the leader: <b class="num">0</b></div>
+      <p class="hint drafty" id="tgDraft">Lock in to enter the boards.</p>
       <p class="hint">Same math for everyone. Small bubbles pay more per team; big bubbles just need one to survive.</p>
     </section>
 
@@ -461,6 +631,7 @@ select[disabled]{opacity:.45}
         <span class="big num" id="rankBig">No. 0 <span class="of">of 8,400</span></span>
         <span class="pct num" id="rankPct">Top 50%</span>
       </div>
+      <p class="hint drafty" id="stDraft">Lock in to enter the boards.</p>
       <p class="hint" id="medianHint"></p>
     </section>
 
@@ -486,6 +657,14 @@ select[disabled]{opacity:.45}
           <div class="slices" id="sliceTable"></div>
         </div>
         <div class="rule">
+          <h3>Your ceiling</h3>
+          <p>The number under your score is the <b>most this bubble can still bank</b>. The poll only pays four teams at full freight, the next four at about half, the four after that at a fifth &#x2014; so every team past four thins the share without lifting the lid much. Four ranked teams sit under a <b>1,000</b> ceiling; ten sit under 640. Let a team fall out of the Top 25 and the lid drops for good.</p>
+        </div>
+        <div class="rule">
+          <h3>Lock in</h3>
+          <p>Nothing counts until you <b>lock in</b>. Locking fixes your entry week, stamps your bubble with the minute you entered &#x2014; the tie-break if two bubbles finish level &#x2014; and closes the roster. From then on the only change you get is your one swap.</p>
+        </div>
+        <div class="rule">
           <h3>Season end</h3>
           <p>Each team takes the <b>better</b> of two numbers: what the playoff paid it &#x2014; <b>20%</b> for making the 12-team field, <b>50%</b> for reaching the quarterfinal, <b>100%</b> for the Final Four &#x2014; or its slice of the final poll. Ties break to the <b>smaller bubble</b>, then to whoever entered earliest.</p>
         </div>
@@ -506,36 +685,52 @@ var REDUCE = window.matchMedia && window.matchMedia("(prefers-reduced-motion: re
 /* \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
    DATA
    \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550 */
+var CONF_TAG = {SEC:"SEC", B1G:"B1G", ACC:"ACC", B12:"B12", OTH:"FBS"};
+var CONFS = [["ALL","All"],["SEC","SEC"],["B1G","Big Ten"],["ACC","ACC"],["B12","Big 12"],["OTH","Others"]];
+
 var TEAMS = [
- ["ALA","Alabama","#9E1B32","#98A2A8"],   ["ASU","Arizona State","#8C1D40","#FFC627"],
- ["ARK","Arkansas","#9D2235","#F1F1F1"],  ["AUB","Auburn","#0C2340","#E87722"],
- ["BAY","Baylor","#154734","#FFB81C"],    ["BSU","Boise State","#0033A0","#D64309"],
- ["BYU","BYU","#002E5D","#C5C5C5"],       ["CIN","Cincinnati","#E00122","#1A1A1A"],
- ["CLEM","Clemson","#F66733","#522D80"],  ["COLO","Colorado","#CFB87C","#1A1A1A"],
- ["DUKE","Duke","#00539B","#F1F1F1"],     ["FLA","Florida","#0021A5","#FA4616"],
- ["FSU","Florida State","#782F40","#CEB888"], ["UGA","Georgia","#BA0C2F","#1A1A1A"],
- ["GT","Georgia Tech","#003057","#B3A369"],["ILL","Illinois","#13294B","#FF5F05"],
- ["IND","Indiana","#990000","#EEEDEB"],   ["IOWA","Iowa","#FFCD00","#1A1A1A"],
- ["ISU","Iowa State","#C8102E","#F1BE48"],["KU","Kansas","#0051BA","#E8000D"],
- ["KSU","Kansas State","#512888","#D1D1D1"],["UK","Kentucky","#0033A0","#F1F1F1"],
- ["LOU","Louisville","#AD0000","#1A1A1A"],["LSU","LSU","#461D7C","#FDD023"],
- ["MIA","Miami","#005030","#F47321"],     ["MICH","Michigan","#00274C","#FFCB05"],
- ["MSU","Michigan State","#18453B","#F1F1F1"],["MINN","Minnesota","#7A0019","#FFCC33"],
- ["MSST","Mississippi State","#660000","#F1F1F1"],["MIZ","Missouri","#1A1A1A","#F1B82D"],
- ["NEB","Nebraska","#E41C38","#FDF9F7"],  ["UNC","North Carolina","#13294B","#4B9CD3"],
- ["ND","Notre Dame","#0C2340","#C99700"], ["OSU","Ohio State","#BB0000","#8C8C8C"],
- ["OU","Oklahoma","#841617","#FDF9F7"],   ["OKST","Oklahoma State","#FF7300","#1A1A1A"],
- ["MISS","Ole Miss","#14213D","#CE1126"], ["ORE","Oregon","#154733","#FEE123"],
- ["PSU","Penn State","#041E42","#F1F1F1"],["PITT","Pitt","#003594","#FFB81C"],
- ["SMU","SMU","#354CA1","#C8102E"],       ["SCAR","South Carolina","#73000A","#1A1A1A"],
- ["STAN","Stanford","#8C1515","#F1F1F1"], ["SYR","Syracuse","#F76900","#000E54"],
- ["TCU","TCU","#4D1979","#A3A9AC"],       ["TENN","Tennessee","#FF8200","#58595B"],
- ["TEX","Texas","#BF5700","#F1F1F1"],     ["TAMU","Texas A&M","#500000","#F1F1F1"],
- ["TTU","Texas Tech","#CC0000","#1A1A1A"],["UCLA","UCLA","#2D68C4","#F2A900"],
- ["USC","USC","#990000","#FFC72C"],       ["UTAH","Utah","#CC0000","#F1F1F1"],
- ["VT","Virginia Tech","#630031","#CF4420"],["WASH","Washington","#4B2E83","#B7A57A"],
- ["WVU","West Virginia","#002855","#EAAA00"],["WIS","Wisconsin","#C5050C","#F1F1F1"]
-].map(function(t){ return {id:t[0], name:t[1], c1:t[2], c2:t[3]}; });
+ /* abbr, name, colour, trim, conference, badge \u2014 2026 alignment */
+ ["ALA","Alabama","#9E1B32","#98A2A8","SEC"],        ["ARIZ","Arizona","#003366","#CC0033","B12"],
+ ["ASU","Arizona State","#8C1D40","#FFC627","B12"],  ["ARK","Arkansas","#9D2235","#F1F1F1","SEC"],
+ ["ARMY","Army","#2C2A29","#D4BF91","OTH","AAC"],    ["AUB","Auburn","#0C2340","#E87722","SEC"],
+ ["BAY","Baylor","#154734","#FFB81C","B12"],         ["BSU","Boise State","#0033A0","#D64309","OTH","MW"],
+ ["BC","Boston College","#98002E","#BC9B6A","ACC"],  ["BYU","BYU","#002E5D","#C5C5C5","B12"],
+ ["CAL","California","#003262","#FDB515","ACC"],     ["CIN","Cincinnati","#E00122","#1A1A1A","B12"],
+ ["CLEM","Clemson","#F66733","#522D80","ACC"],       ["COLO","Colorado","#CFB87C","#1A1A1A","B12"],
+ ["DUKE","Duke","#00539B","#F1F1F1","ACC"],          ["FLA","Florida","#0021A5","#FA4616","SEC"],
+ ["FSU","Florida State","#782F40","#CEB888","ACC"],  ["UGA","Georgia","#BA0C2F","#1A1A1A","SEC"],
+ ["GT","Georgia Tech","#003057","#B3A369","ACC"],    ["HOU","Houston","#C8102E","#F1F1F1","B12"],
+ ["ILL","Illinois","#13294B","#FF5F05","B1G"],       ["IND","Indiana","#990000","#EEEDEB","B1G"],
+ ["IOWA","Iowa","#FFCD00","#1A1A1A","B1G"],          ["ISU","Iowa State","#C8102E","#F1BE48","B12"],
+ ["JMU","James Madison","#450084","#CBB677","OTH","SBC"], ["KU","Kansas","#0051BA","#E8000D","B12"],
+ ["KSU","Kansas State","#512888","#D1D1D1","B12"],   ["UK","Kentucky","#0033A0","#F1F1F1","SEC"],
+ ["LIB","Liberty","#002D62","#A6192E","OTH","CUSA"], ["LOU","Louisville","#AD0000","#1A1A1A","ACC"],
+ ["LSU","LSU","#461D7C","#FDD023","SEC"],            ["MD","Maryland","#E03A3E","#FFD520","B1G"],
+ ["MEM","Memphis","#003087","#898D8D","OTH","AAC"],  ["MIA","Miami","#005030","#F47321","ACC"],
+ ["MICH","Michigan","#00274C","#FFCB05","B1G"],      ["MSU","Michigan State","#18453B","#F1F1F1","B1G"],
+ ["MINN","Minnesota","#7A0019","#FFCC33","B1G"],     ["MSST","Mississippi State","#660000","#F1F1F1","SEC"],
+ ["MIZ","Missouri","#1A1A1A","#F1B82D","SEC"],       ["NAVY","Navy","#00205B","#C5B783","OTH","AAC"],
+ ["NCST","NC State","#CC0000","#F1F1F1","ACC"],      ["NEB","Nebraska","#E41C38","#FDF9F7","B1G"],
+ ["UNC","North Carolina","#13294B","#4B9CD3","ACC"], ["NW","Northwestern","#4E2A84","#F1F1F1","B1G"],
+ ["ND","Notre Dame","#0C2340","#C99700","OTH","Ind."], ["OSU","Ohio State","#BB0000","#8C8C8C","B1G"],
+ ["OU","Oklahoma","#841617","#FDF9F7","SEC"],        ["OKST","Oklahoma State","#FF7300","#1A1A1A","B12"],
+ ["MISS","Ole Miss","#14213D","#CE1126","SEC"],      ["ORE","Oregon","#154733","#FEE123","B1G"],
+ ["PSU","Penn State","#041E42","#F1F1F1","B1G"],     ["PITT","Pitt","#003594","#FFB81C","ACC"],
+ ["PUR","Purdue","#CEB888","#1A1A1A","B1G"],         ["RUT","Rutgers","#CC0033","#5F6A72","B1G"],
+ ["SMU","SMU","#354CA1","#C8102E","ACC"],            ["SCAR","South Carolina","#73000A","#1A1A1A","SEC"],
+ ["STAN","Stanford","#8C1515","#F1F1F1","ACC"],      ["SYR","Syracuse","#F76900","#000E54","ACC"],
+ ["TCU","TCU","#4D1979","#A3A9AC","B12"],            ["TENN","Tennessee","#FF8200","#58595B","SEC"],
+ ["TEX","Texas","#BF5700","#F1F1F1","SEC"],          ["TAMU","Texas A&M","#500000","#F1F1F1","SEC"],
+ ["TTU","Texas Tech","#CC0000","#1A1A1A","B12"],     ["TULN","Tulane","#006747","#418FDE","OTH","AAC"],
+ ["UCF","UCF","#1A1A1A","#BA9B37","B12"],            ["UCLA","UCLA","#2D68C4","#F2A900","B1G"],
+ ["USC","USC","#990000","#FFC72C","B1G"],            ["UTAH","Utah","#CC0000","#F1F1F1","B12"],
+ ["VAN","Vanderbilt","#866D4B","#1A1A1A","SEC"],     ["UVA","Virginia","#232D4B","#F84C1E","ACC"],
+ ["VT","Virginia Tech","#630031","#CF4420","ACC"],   ["WAKE","Wake Forest","#9E7E38","#1A1A1A","ACC"],
+ ["WASH","Washington","#4B2E83","#B7A57A","B1G"],    ["WVU","West Virginia","#002855","#EAAA00","B12"],
+ ["WIS","Wisconsin","#C5050C","#F1F1F1","B1G"]
+].map(function(t){
+  return {id:t[0], name:t[1], c1:t[2], c2:t[3], conf:t[4], tag:t[5] || CONF_TAG[t[4]]};
+});
 
 var BY_ID = {};
 TEAMS.forEach(function(t){ BY_ID[t.id]=t; });
@@ -567,6 +762,24 @@ var FRIENDS = [
                   #13-25 ->  12 down to 0, one point per rung (#13=12 \u2026 #25=0)
                   unranked -> 0
    live score = SUM(share x dock x slice) - swap fee already paid
+
+   ceiling    = the most the bubble can still bank. The poll pays four teams
+                at full freight, the next four at about half, the four after
+                that at a fifth, so A alive teams stack into those tiers:
+                  weight = min(A,4)x1.00 + min(A-4,4)x0.50 + min(A-8,4)x0.20
+                  ceiling = share x weight - swap fee paid
+                ALIVE, before the playoff, = your teams still in the Top 25;
+                an unranked team has popped and can never pay again, so the
+                lid drops the moment it falls out. After the playoff every
+                team carries its settled credit (Final Four 1.00, quarter-
+                final 0.50, field 0.20, else its final poll slice), so the
+                ceiling collapses onto the final score.
+                Sanity: 4 ranked -> 1000 \u00B7 5 -> 900 \u00B7 10 -> 640 \u00B7 20 -> 340
+
+   lock in    = a bubble is a DRAFT until it is locked. Locking freezes the
+                entry-week dock, stamps a timestamp (the tie-break) and
+                closes the roster; only the one swap still works.
+
    season end = each team takes MAX(playoff credit, final poll slice), where
                 playoff credit is 20% (made the 12-team field), 50% (quarter-
                 final) or 100% (Final Four).
@@ -595,6 +808,25 @@ function playoffCredit(id, po){
   if(po.qf.indexOf(id)>=0) return 50;
   if(po.field.indexOf(id)>=0) return 20;
   return 0;
+}
+function tierWeight(a){   // how many whole shares A alive teams can still earn
+  return Math.min(a,4)*1 + Math.min(Math.max(a-4,0),4)*0.5 + Math.min(Math.max(a-8,0),4)*0.2;
+}
+function ceilingOf(teams, entryIdx, ranks, fee, playoff){
+  var share = shareOf(teams.length, entryIdx), w = 0, i, id;
+  if(playoff){
+    for(i=0;i<teams.length;i++){
+      id = teams[i];
+      w += Math.max(playoffCredit(id, playoff), sliceFor(ranks.indexOf(id)+1))/100;
+    }
+  } else {
+    var alive = 0;
+    for(i=0;i<teams.length;i++) if(ranks.indexOf(teams[i])>=0) alive++;
+    w = tierWeight(alive);
+  }
+  var c = Math.round(share*w - (fee||0));
+  // a perfectly stacked top-10 can out-run the tiers, so never sit under the score
+  return Math.max(0, c, scoreOf(teams, entryIdx, ranks, fee, playoff));
 }
 
 /* \u2500\u2500 deterministic RNG \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 */
@@ -638,11 +870,14 @@ function freshState(){
     ranks:RANKS_0.slice(),
     swapUsed:false, fee:0,
     playoff:null,
+    locked:false, lockedAt:null, lockLabel:null,
+    pendingOut:null,
     lastScore:null
   };
 }
 function rankOf(id){ return S.ranks.indexOf(id)+1; }
 function liveScore(){ return scoreOf(S.bubble, S.entry, S.ranks, S.fee, S.playoff); }
+function liveCeiling(){ return ceilingOf(S.bubble, S.entry, S.ranks, S.fee, S.playoff); }
 function swapFee(){ return 20 * S.week; }
 
 /* \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
@@ -654,6 +889,10 @@ function svg(tag, attrs){
   var e = document.createElementNS(SVGNS, tag);
   for(var k in attrs) e.setAttribute(k, attrs[k]);
   return e;
+}
+function fmtN(v){ return Number(v).toLocaleString("en-US"); }
+function stamp(d){
+  return d.toLocaleString("en-US", {month:"short", day:"numeric", hour:"numeric", minute:"2-digit"});
 }
 function lum(hex){
   var n = parseInt(hex.slice(1),16);
@@ -733,6 +972,9 @@ function renderOrbs(){
       gb.style.setProperty("--ph", (-(i*0.37)).toFixed(2)+"s");
       gb.style.setProperty("--dur", (2.4 + (i%5)*0.34).toFixed(2)+"s");
       orbsG.appendChild(g);
+      (function(tid, node){
+        node.addEventListener("pointerdown", function(ev){ orbDown(ev, tid, node); });
+      })(id, g);
       // fly in from off to the right, on a curve (x and y ease differently)
       if(REDUCE){
         g.classList.add("enter");
@@ -752,6 +994,7 @@ function renderOrbs(){
         });
       }
     } else {
+      g.classList.remove("parked");
       g.querySelector(".orb-x").setAttribute("transform","translate("+p[0]+",0)");
       g.querySelector(".orb-y").setAttribute("transform","translate(0,"+p[1]+")");
     }
@@ -824,6 +1067,12 @@ function placeBubble(){
   liftEl.style.transform = "translateY(" + ((1-alt)*travel).toFixed(1) + "px)";
 }
 
+/* the lid: a dashed marker at ceiling/1000, on the same scale as the axis */
+function placeCeiling(){
+  var c = Math.max(0, Math.min(1000, liveCeiling()));
+  $("ceilMark").style.bottom = (c/1000*100).toFixed(1) + "%";
+}
+
 /* \u2500\u2500 elevation axis \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 */
 function buildAxis(){
   var ax = $("axis");
@@ -847,36 +1096,209 @@ function buildAxis(){
 /* \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
    PANELS
    \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550 */
-function renderTeamList(){
-  var q = $("q").value.trim().toLowerCase();
-  var list = $("tlist");
-  list.innerHTML = "";
-  var rows = TEAMS.filter(function(t){
-    return !q || t.name.toLowerCase().indexOf(q)>=0 || t.id.toLowerCase().indexOf(q)>=0;
-  }).sort(function(a,b){
-    var ra = rankOf(a.id)||99, rb = rankOf(b.id)||99;
-    return ra!==rb ? ra-rb : a.name.localeCompare(b.name);
+/* \u2550\u2550 THE TRAY \u00B7 pick a team, drag it in, drag one out \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
+   Every team lives in the tray beside the bubble as an orb. Drag one over
+   the rim to add it; drag an orb out through the rim to drop it. Locked
+   bubbles cannot drop a team \u2014 dragging one out opens the one swap instead.
+   The roster's x buttons stay as the keyboard/pointer-free alternative. */
+var trayFilter = "ALL", top25Only = false, drag = null, noClickUntil = 0;
+
+function buildConfChips(){
+  var host = $("confChips");
+  host.innerHTML = "";
+  CONFS.forEach(function(c){
+    var b = document.createElement("button");
+    b.className = "seg-btn"; b.type = "button";
+    b.setAttribute("aria-pressed", trayFilter === c[0] ? "true" : "false");
+    b.textContent = c[1];
+    b.addEventListener("click", function(){ trayFilter = c[0]; buildConfChips(); renderTray(); });
+    host.appendChild(b);
   });
+}
+function trayRows(){
+  var q = $("q").value.trim().toLowerCase();
+  return TEAMS.filter(function(t){
+    if(trayFilter !== "ALL" && t.conf !== trayFilter) return false;
+    if(top25Only && !rankOf(t.id)) return false;
+    if(q && t.name.toLowerCase().indexOf(q) < 0 && t.id.toLowerCase().indexOf(q) < 0) return false;
+    return true;
+  }).sort(function(a,b){                       // rank first, then alphabetical
+    var ra = rankOf(a.id)||99, rb = rankOf(b.id)||99;
+    return ra !== rb ? ra - rb : a.name.localeCompare(b.name);
+  });
+}
+function trayHint(){
+  if(S.playoff) return "The season is settled. Nothing moves now.";
+  if(S.pendingOut) return "Pick who comes in for " + BY_ID[S.pendingOut].name + ".";
+  if(!S.locked) return "Drag a team into the bubble, or tap to add. Drag one out to drop it.";
+  if(S.swapUsed) return "Locked, and the swap is spent. This bubble is set.";
+  if(S.week > 10) return "Locked. The swap window closed after Week 10.";
+  return "Locked. Drag a team out of the bubble to spend your one swap.";
+}
+function renderTray(){
+  var list = $("traylist"), st = list.scrollTop, sl = list.scrollLeft;
+  list.innerHTML = "";
+  $("q").placeholder = "Search " + TEAMS.length + " teams";
+  $("trayHint").textContent = trayHint();
+  $("t25").setAttribute("aria-pressed", top25Only ? "true" : "false");
+  var rows = trayRows();
   if(!rows.length){
     var e = document.createElement("p");
-    e.className = "hint"; e.textContent = "No FBS team by that name. Try an abbreviation \u2014 TEX, PSU, BSU.";
-    list.appendChild(e); return;
+    e.className = "trayempty";
+    e.textContent = "No team there. Try an abbreviation \u2014 TEX, PSU, BSU \u2014 or widen the filter.";
+    list.appendChild(e);
+    return;
   }
   rows.forEach(function(t){
-    var inB = S.bubble.indexOf(t.id)>=0;
-    var full = S.bubble.length>=20;
+    var inB = S.bubble.indexOf(t.id) >= 0, r = rankOf(t.id);
     var b = document.createElement("button");
-    b.className = "trow"; b.type = "button";
-    if(inB || full || S.playoff) b.setAttribute("disabled","");
-    var r = rankOf(t.id);
+    b.className = "tray-item" + (inB ? " in" : "");
+    b.type = "button";
+    b.setAttribute("data-id", t.id);
+    b.title = t.name + " \u00B7 " + t.tag + (r ? " \u00B7 #" + r : " \u00B7 unranked") + (inB ? " \u00B7 in your bubble" : "");
     b.innerHTML =
-      '<span class="swatch" style="background:'+t.c1+';border-color:'+t.c2+'"></span>' +
-      '<span class="nm">'+t.name+'</span>' +
-      '<span class="rk'+(r&&r<=12?" in":"")+'">'+(r?"#"+r:"UR")+'</span>' +
-      '<span class="plus">'+(inB?"&#10003;":"+")+'</span>';
-    b.addEventListener("click", function(){ addTeam(t.id); });
+      '<span class="torb" style="background:'+t.c1+';border-color:'+t.c2+'">' +
+        '<span class="ab" style="color:'+(lum(t.c1) > .62 ? "#12203A" : "#FFFFFF")+'">'+t.id+'</span>' +
+        (r ? '<span class="rkb">#'+r+'</span>' : '') +
+      '</span>' +
+      '<span class="tnm">'+t.name+'</span>';
+    if(!inB){
+      b.addEventListener("pointerdown", function(e){ trayDown(e, t); });
+      b.addEventListener("click", function(){ if(Date.now() < noClickUntil) return; trayPick(t.id); });
+    }
     list.appendChild(b);
   });
+  list.scrollTop = st; list.scrollLeft = sl;
+}
+function trayPick(id){
+  if(S.playoff) return;
+  if(S.bubble.indexOf(id) >= 0) return;
+  if(S.pendingOut){ completeSwap(S.pendingOut, id); return; }
+  if(S.locked){
+    toast(S.swapUsed ? "Your swap is used \u2014 teams are locked"
+                     : "Locked. Drag a team out of the bubble to use your swap.", "bad");
+    return;
+  }
+  addTeam(id);
+}
+
+/* \u2500\u2500 pointer geometry \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 */
+function svgPt(e){
+  var r = bubEl.getBoundingClientRect();
+  return {x:(e.clientX - r.left)/r.width*300, y:(e.clientY - r.top)/r.height*300};
+}
+function insideRim(e){
+  var p = svgPt(e);
+  return Math.sqrt(Math.pow(p.x-150,2) + Math.pow(p.y-150,2)) <= 146;
+}
+function setOrbAt(g, x, y){
+  g.querySelector(".orb-x").setAttribute("transform","translate("+x.toFixed(1)+",0)");
+  g.querySelector(".orb-y").setAttribute("transform","translate(0,"+y.toFixed(1)+")");
+}
+function endDrag(){
+  window.removeEventListener("pointermove", dragMove);
+  window.removeEventListener("pointerup", dragUp);
+  window.removeEventListener("pointercancel", dragCancel);
+  bubEl.classList.remove("out","in");
+}
+
+/* \u2500\u2500 dragging an orb out of the sphere \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 */
+function orbDown(e, id, g){
+  if(drag || S.playoff || S.pendingOut) return;
+  if(e.button !== undefined && e.button !== 0) return;
+  e.preventDefault();
+  drag = {kind:"orb", id:id, g:g, moved:false, out:false, pid:e.pointerId};
+  try{ g.setPointerCapture(e.pointerId); }catch(err){}
+  orbsG.appendChild(g);                       // to the front of the pile
+  g.classList.add("dragging");
+  window.addEventListener("pointermove", dragMove);
+  window.addEventListener("pointerup", dragUp);
+  window.addEventListener("pointercancel", dragCancel);
+}
+function trayDown(e, t){
+  if(drag || S.playoff) return;
+  if(e.button !== undefined && e.button !== 0) return;
+  drag = {kind:"tray", id:t.id, team:t, moved:false, inRim:false, x0:e.clientX, y0:e.clientY, pid:e.pointerId};
+  window.addEventListener("pointermove", dragMove);
+  window.addEventListener("pointerup", dragUp);
+  window.addEventListener("pointercancel", dragCancel);
+}
+function makeGhost(t){
+  var d = document.createElement("div");
+  d.className = "dragghost";
+  d.style.background = t.c1;
+  d.style.borderColor = t.c2;
+  d.style.color = lum(t.c1) > .62 ? "#12203A" : "#FFFFFF";
+  d.textContent = t.id;
+  document.body.appendChild(d);
+  return d;
+}
+function dragMove(e){
+  if(!drag) return;
+  if(drag.kind === "orb"){
+    drag.moved = true;
+    var p = svgPt(e);
+    setOrbAt(drag.g, p.x, p.y);
+    drag.out = !insideRim(e);
+    bubEl.classList.toggle("out", drag.out);
+  } else {
+    if(!drag.moved){
+      if(Math.abs(e.clientX-drag.x0) + Math.abs(e.clientY-drag.y0) < 7) return;
+      drag.moved = true;
+      drag.ghost = makeGhost(drag.team);
+    }
+    e.preventDefault();
+    drag.ghost.style.transform = "translate("+(e.clientX-24)+"px,"+(e.clientY-24)+"px)";
+    drag.inRim = insideRim(e);
+    bubEl.classList.toggle("in", drag.inRim);
+  }
+}
+function dragUp(e){
+  if(!drag) return;
+  var d = drag; drag = null; endDrag();
+  if(d.kind === "orb"){
+    d.g.classList.remove("dragging");
+    if(!d.moved || !d.out){ renderOrbs(); return; }   // let go inside: it settles back
+    dropOrbOut(d.id, d.g);
+    return;
+  }
+  if(d.ghost && d.ghost.parentNode) d.ghost.parentNode.removeChild(d.ghost);
+  if(d.moved){
+    noClickUntil = Date.now() + 350;                  // the drag already answered
+    if(d.inRim) trayPick(d.id);
+  }
+}
+function dragCancel(){ abortDrag(); }
+function abortDrag(){
+  if(!drag) return;
+  var d = drag; drag = null; endDrag();
+  if(d.kind === "orb"){ d.g.classList.remove("dragging"); renderOrbs(); }
+  else if(d.ghost && d.ghost.parentNode) d.ghost.parentNode.removeChild(d.ghost);
+}
+function dropOrbOut(id, g){
+  if(!S.locked){                                      // a draft drops teams for free
+    if(S.bubble.length <= 1){
+      toast("You need at least one team. A bubble of none floats nowhere.", "bad");
+      renderOrbs(); return;
+    }
+    removeTeam(id);
+    return;
+  }
+  if(S.swapUsed){ toast("Your swap is used \u2014 teams are locked", "bad"); renderOrbs(); return; }
+  if(S.week > 10){ toast("The swap window closed after Week 10.", "bad"); renderOrbs(); return; }
+  g.classList.add("parked");                          // it hovers outside, waiting
+  S.pendingOut = id;
+  $("swapAskT").innerHTML = "Swap out <b>" + BY_ID[id].name + "</b>? Pick who comes in \u2014 fee " + swapFee() + " pts";
+  $("swapAsk").hidden = false;
+  $("tray").classList.add("swapping");
+  $("trayHint").textContent = trayHint();
+}
+function cancelSwapAsk(quiet){
+  if(!S.pendingOut) return;
+  S.pendingOut = null;
+  $("swapAsk").hidden = true;
+  $("tray").classList.remove("swapping");
+  if(!quiet){ renderOrbs(); renderTray(); }
 }
 
 function renderRoster(){
@@ -896,16 +1318,18 @@ function renderRoster(){
     row.className = "rrow " + (r&&r<=8 ? "lift-y" : (!r||r>=13 ? "sink-y" : ""));
     row.innerHTML =
       '<span class="swatch" style="background:'+t.c1+';border-color:'+t.c2+'"></span>' +
+      '<span class="conf">'+t.tag+'</span>' +
       '<span class="math"><b>'+t.name+'</b> \u00B7 '+(r?"#"+r:"popped")+(tag?" \u00B7 "+tag:"")+' \u00B7 '+
         Math.round(share)+' &times; '+credit+'%</span>' +
       '<span class="pts num">'+Math.round(share*credit/100)+'</span>';
-    var x = document.createElement("button");
-    x.className = "x"; x.type="button"; x.innerHTML = "&times;";
-    x.title = "Drop " + t.name;
-    x.setAttribute("aria-label","Drop "+t.name);
-    if(S.playoff) x.setAttribute("disabled","");
-    x.addEventListener("click", function(){ removeTeam(id); });
-    row.appendChild(x);
+    if(!S.playoff && !S.locked){
+      var x = document.createElement("button");
+      x.className = "x"; x.type="button"; x.innerHTML = "&times;";
+      x.title = "Drop " + t.name;
+      x.setAttribute("aria-label","Drop "+t.name);
+      x.addEventListener("click", function(){ removeTeam(id); });
+      row.appendChild(x);
+    }
     host.appendChild(row);
   });
   if(S.fee>0){
@@ -915,12 +1339,23 @@ function renderRoster(){
                   '<span class="pts num" style="color:var(--red-hi)">&minus;'+S.fee+'</span>';
     host.appendChild(f);
   }
+  var tot = document.createElement("div");
+  tot.className = "rrow tot";
+  tot.innerHTML = '<span class="math">' + (S.playoff ? "Final score" : "Live score") +
+                  (S.locked || S.playoff ? "" : " \u00B7 draft") + '</span>' +
+                  '<span class="pts num">' + fmtN(liveScore()) + '</span>';
+  host.appendChild(tot);
+  var cel = document.createElement("div");
+  cel.className = "rrow cel";
+  cel.innerHTML = '<span class="math">Ceiling \u00B7 most it can still bank</span>' +
+                  '<span class="pts num">' + fmtN(liveCeiling()) + '</span>';
+  host.appendChild(cel);
 }
 
 function renderEntry(){
   var host = $("entrySegs");
   host.innerHTML = "";
-  var closed = S.week > 4 || !!S.playoff;
+  var closed = S.locked || S.week > 4 || !!S.playoff;
   DOCKS.forEach(function(d, i){
     var b = document.createElement("button");
     b.className = "seg-btn"; b.type="button";
@@ -930,10 +1365,14 @@ function renderEntry(){
     b.addEventListener("click", function(){ S.entry = i; render(); toast("Entry set to "+d.k+" \u2014 shares pay "+Math.round(d.p*100)+"%"); });
     host.appendChild(b);
   });
-  $("entryHint").textContent = closed
-    ? "Entry closed after Week 4. Your bubble is locked at " + Math.round(DOCKS[S.entry].p*100) + "% of every share."
-    : "Enter late and every share is docked. You are at " + Math.round(DOCKS[S.entry].p*100) + "%.";
-  $("entryChip").textContent = closed ? "Entry closed" : "Entry window open";
+  var pct = Math.round(DOCKS[S.entry].p*100);
+  $("entryHint").textContent = S.locked
+    ? "Locked in at " + DOCKS[S.entry].k + " \u2014 every share pays " + pct + "%. That is fixed now."
+    : (S.week > 4 || S.playoff
+        ? "Entry closed after Week 4. An unlocked bubble is only a draft."
+        : "Enter late and every share is docked. You are at " + pct + "%, and the dock follows the week until you lock in.");
+  $("entryChip").textContent = S.locked ? "Entered \u00B7 " + DOCKS[S.entry].k
+    : (S.week > 4 || S.playoff ? "Entry closed" : "Entry window open");
 }
 
 function renderSwap(){
@@ -965,11 +1404,14 @@ function renderSwap(){
 /* \u2500\u2500 tailgate \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 */
 function renderTailgate(){
   var host = $("tg");
-  var mine = { h:"YOU", d:["You",""], teams:S.bubble, entry:S.entry, fee:S.fee, you:true };
+  var mine = { h:"YOU", d:["You", S.locked?"locked":"(draft)"], teams:S.bubble, entry:S.entry, fee:S.fee, you:true };
   var all = [mine].concat(FRIENDS.map(function(f){
     return { h:f.h, d:f.d, teams:f.teams, entry:f.entry, fee:0 };
   }));
-  all.forEach(function(p){ p.score = scoreOf(p.teams, p.entry, S.ranks, p.fee, S.playoff); });
+  all.forEach(function(p){
+    p.score = scoreOf(p.teams, p.entry, S.ranks, p.fee, S.playoff);
+    p.ceil  = ceilingOf(p.teams, p.entry, S.ranks, p.fee, S.playoff);
+  });
   var best = all.reduce(function(a,b){ return b.score>a.score?b:a; });
 
   if(host.children.length !== all.length){
@@ -979,6 +1421,7 @@ function renderTailgate(){
       c.className = "col" + (p.you?" you":"");
       c.innerHTML = '<div class="track"><div class="mini"></div></div>' +
                     '<div class="sc num">0</div>' +
+                    '<div class="cl num"></div>' +
                     '<div class="who"></div>' +
                     '<div class="ct num"></div>';
       host.appendChild(c);
@@ -989,18 +1432,27 @@ function renderTailgate(){
     var mini = c.querySelector(".mini");
     var d = p.you ? 26 : 20;
     var lead = p === best;
+    var hollow = p.you && !S.locked;          // a draft floats without a fill
+    c.className = "col" + (p.you ? " you" : "") + (hollow ? " draft" : "");
     mini.style.bottom = (p.score/1000*100).toFixed(1) + "%";
     mini.innerHTML =
       '<svg width="'+(d+16)+'" height="'+(d+18)+'" viewBox="'+(-(d+16)/2)+' '+(-(d+18)+6)+' '+(d+16)+' '+(d+18)+'" style="overflow:visible">' +
       (lead ? '<path d="M-7,-'+(d/2+7)+' l3.5,5 3.5,-6.5 3.5,6.5 3.5,-5 -1.4,7.5 -11.2,0 z" fill="#C9A227"/>' : '') +
-      '<circle cx="0" cy="0" r="'+(d/2)+'" fill="rgba(160,196,255,.10)" stroke="'+(p.you?"#C9A227":"#2A4A78")+'" stroke-width="'+(p.you?2:1.2)+'"/>' +
-      '<circle cx="'+(-d/7)+'" cy="'+(-d/5)+'" r="'+(d/7)+'" fill="#DCE9FF" opacity=".22"/>' +
+      '<circle cx="0" cy="0" r="'+(d/2)+'" fill="'+(hollow?"none":"rgba(160,196,255,.10)")+'" stroke="'+(p.you?"#C9A227":"#2A4A78")+'" stroke-width="'+(p.you?2:1.2)+'"'+(hollow?' stroke-dasharray="4 4"':'')+'/>' +
+      (hollow ? '' : '<circle cx="'+(-d/7)+'" cy="'+(-d/5)+'" r="'+(d/7)+'" fill="#DCE9FF" opacity=".22"/>') +
       '</svg>';
     c.querySelector(".sc").textContent = p.score;
-    c.querySelector(".who").innerHTML = p.d.map(function(w){return w?"<span>"+w+"</span>":"";}).join("");
+    c.querySelector(".cl").textContent = "Ceil " + fmtN(p.ceil);
+    var who = c.querySelector(".who");
+    who.innerHTML = p.d.map(function(w){return w?"<span>"+w+"</span>":"";}).join("");
+    who.title = p.you
+      ? (S.locked ? "Locked " + stamp(S.lockedAt) + " \u2014 the timestamp is the tie-break"
+                  : "Not entered yet \u2014 lock in to take your timestamp")
+      : (p.h + " \u00B7 entered " + DOCKS[p.entry].k);
     c.querySelector(".ct").textContent = p.teams.length + (p.teams.length===1?" team":" teams");
   });
 
+  $("tgDraft").hidden = S.locked;
   var gap = best.score - all[0].score;
   $("gapLine").innerHTML = gap<=0
     ? 'You lead the tailgate by <b class="num">' + (all[0].score - all.slice(1).reduce(function(a,b){return Math.max(a,b.score);},0)) + '</b>'
@@ -1052,16 +1504,23 @@ function renderState(){
   mt.textContent = "MEDIAN " + DIST_MEDIAN;
   g.appendChild(mt);
 
-  // you
-  var sc = liveScore(), yx = x(sc);
-  var flip = yx > W-130;
-  g.appendChild(svg("line", {x1:yx, y1:padT-6, x2:yx, y2:padT+ih, stroke:"#C9A227", "stroke-width":2}));
-  g.appendChild(svg("circle", {cx:yx, cy:padT+ih, r:4.5, fill:"#C9A227"}));
+  // you \u2014 hollow and dashed until the bubble is locked in
+  var sc = liveScore(), yx = x(sc), draft = !S.locked;
+  var flip = yx > W-(draft?190:130);
+  var yl = svg("line", {x1:yx, y1:padT-6, x2:yx, y2:padT+ih, stroke:"#C9A227", "stroke-width":2});
+  if(draft) yl.setAttribute("stroke-dasharray", "4 4");
+  g.appendChild(yl);
+  g.appendChild(svg("circle", {cx:yx, cy:padT+ih, r:4.5, fill:draft?"#0E1F3F":"#C9A227",
+    stroke:"#C9A227", "stroke-width":1.6}));
   var yt = svg("text", {x:flip?yx-7:yx+7, y:padT-1, fill:"#C9A227", "font-size":13,
     "font-family":"Barlow Condensed, sans-serif", "font-weight":800, "letter-spacing":"0.08em",
     "text-anchor": flip?"end":"start"});
-  yt.textContent = "YOU " + sc;
+  yt.textContent = (draft ? "YOU (DRAFT) " : "YOU ") + sc;
   g.appendChild(yt);
+  // the lid
+  var cx2 = x(Math.min(1000, liveCeiling()));
+  g.appendChild(svg("line", {x1:cx2, y1:padT+4, x2:cx2, y2:padT+ih, stroke:"#C9A227",
+    "stroke-width":1, "stroke-dasharray":"2 5", "stroke-opacity":".55"}));
 
   // axis labels
   [[0,"0"],[250,"250"],[500,"500"],[750,"750"],[1000,"1000"]].forEach(function(p,i,arr){
@@ -1081,6 +1540,7 @@ function renderState(){
   var pct = Math.max(1, Math.round(rk/DIST.length*100));
   $("rankBig").innerHTML = 'No. ' + rk.toLocaleString() + ' <span class="of">of 8,400</span>';
   $("rankPct").textContent = "Top " + pct + "%";
+  $("stDraft").hidden = S.locked;
   $("medianHint").textContent = "The median bubble in the state sits at " + DIST_MEDIAN +
     ". Most entries pile up under 250 \u2014 too many teams, not enough of them ranked.";
 }
@@ -1111,9 +1571,13 @@ function renderStrip(prev){
   var share = Math.round(shareOf(S.bubble.length, S.entry));
   $("sShare").textContent = share;
   $("sTeams").textContent = S.bubble.length + (S.bubble.length===1?" team in the bubble":" teams in the bubble");
+  var cl = liveCeiling();
   countUp($("sScore"), sc);
   countUp($("roN"), sc);
-  $("roK").textContent = S.playoff ? "Final score" : "Live score";
+  countUp($("sCeil"), cl, undefined, fmtN);
+  countUp($("roCeilN"), cl, undefined, fmtN);
+  $("roK").textContent = S.playoff ? "Final score" : ("Live score" + (S.locked ? "" : " (draft)"));
+  $("roDraft").hidden = S.locked || !!S.playoff;
   $("readout").classList.toggle("final", !!S.playoff);
 
   var el = $("sDelta");
@@ -1128,15 +1592,16 @@ function renderStrip(prev){
     if(!REDUCE) countUp(document.getElementById("dNum"), Math.abs(d), 0);
   }
 }
-function countUp(el, to, from){
+function countUp(el, to, from, fmt){
   if(!el) return;
-  var start = (from===undefined) ? (parseInt(el.textContent.replace(/\D/g,""),10)||0) : from;
-  if(REDUCE || start===to){ el.textContent = to; return; }
+  var f = fmt || function(v){ return v; };
+  var start = (from===undefined || from===null) ? (parseInt(String(el.textContent).replace(/\D/g,""),10)||0) : from;
+  if(REDUCE || start===to){ el.textContent = f(to); return; }
   var t0 = performance.now(), dur = 700;
   function step(t){
     var k = Math.min(1, (t-t0)/dur);
     var e = 1 - Math.pow(1-k, 3);
-    el.textContent = Math.round(start + (to-start)*e);
+    el.textContent = f(Math.round(start + (to-start)*e));
     if(k<1) requestAnimationFrame(step);
   }
   requestAnimationFrame(step);
@@ -1157,7 +1622,7 @@ function toast(msg, kind){
    ACTIONS
    \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550 */
 function addTeam(id){
-  if(S.playoff) return;
+  if(S.playoff || S.locked) return;
   if(S.bubble.indexOf(id)>=0) return;
   if(S.bubble.length>=20){ toast("Twenty is the cap. At that size each team is only worth 50 \u2014 add a 21st and there is nothing left to split.", "bad"); return; }
   var prev = liveScore();
@@ -1167,7 +1632,7 @@ function addTeam(id){
   toast(BY_ID[id].name + " joins the bubble" + (r ? " at #" + r : ", unranked"));
 }
 function removeTeam(id){
-  if(S.playoff) return;
+  if(S.playoff || S.locked) return;
   if(S.bubble.length<=1){ toast("You need at least one team. A bubble of none floats nowhere.", "bad"); return; }
   var prev = liveScore();
   S.bubble.splice(S.bubble.indexOf(id),1);
@@ -1175,25 +1640,78 @@ function removeTeam(id){
   toast(BY_ID[id].name + " is out of the bubble", "bad");
 }
 function doSwap(){
-  if(S.swapUsed || S.week>10 || S.playoff) return;
   var out = $("swapOut").value, inn = $("swapIn").value;
-  if(!out || !inn) return;
+  if(out && inn) completeSwap(out, inn);
+}
+function completeSwap(out, inn){
+  if(S.swapUsed || S.week>10 || S.playoff) return;
+  if(S.bubble.indexOf(out) < 0 || S.bubble.indexOf(inn) >= 0) return;
   var prev = liveScore();
   S.bubble[S.bubble.indexOf(out)] = inn;
   S.swapUsed = true; S.swapWeek = S.week; S.fee = swapFee();
+  cancelSwapAsk(true);
   render(prev);
   toast(BY_ID[inn].name + " takes over " + BY_ID[out].name + "'s share \u00B7 fee " + S.fee + " pts", "bad");
+}
+
+/* \u2500\u2500 lock in \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 */
+function entryShut(){ return S.week > 4 || !!S.playoff; }
+function askLock(){
+  if(S.locked || entryShut()) return;
+  var n = S.bubble.length;
+  $("cfTxt").innerHTML = "Lock <b>" + n + (n===1?" team":" teams") + "</b> at <b>Week " + S.week +
+    "</b> prices? Shares worth <b>" + Math.round(shareOf(n, S.entry)) + "</b>. You'll get one swap all season.";
+  $("lockConfirm").classList.add("on");
+  $("bLockGo").focus();
+}
+function closeLockAsk(){ $("lockConfirm").classList.remove("on"); }
+function doLock(){
+  if(S.locked || entryShut()) return;
+  cancelSwapAsk(true);
+  S.locked = true;
+  S.lockedAt = new Date();
+  S.lockLabel = DOCKS[S.entry].k;                 // the dock is fixed from here
+  closeLockAsk();
+  $("sealTxt").textContent = "LOCKED \u00B7 " + S.lockLabel.toUpperCase();
+  bubEl.classList.remove("locking");
+  void bubEl.offsetWidth;
+  bubEl.classList.add("locking");
+  setTimeout(function(){ bubEl.classList.remove("locking"); }, REDUCE ? 620 : 1000);
+  render();
+  toast("Bubble locked. You're on the boards.");
+}
+function renderLock(){
+  var b = $("bLock"), chip = $("lockChip");
+  bubEl.classList.toggle("draft", !S.locked);
+  bubEl.classList.toggle("locked", S.locked);
+  $("bAdv").classList.toggle("gold", S.locked);
+  if(S.locked){
+    b.hidden = true;
+    chip.hidden = false;
+    chip.innerHTML = '<span class="dot"></span>Locked \u00B7 <b>' + S.lockLabel + '</b> \u00B7 ' + stamp(S.lockedAt);
+    chip.title = "Your lock timestamp is the tie-break if two bubbles finish level.";
+    closeLockAsk();
+  } else {
+    b.hidden = false;
+    chip.hidden = true;
+    b.disabled = entryShut();
+    b.textContent = entryShut() ? "Entry closed" : "Lock in your bubble";
+    if(entryShut()) closeLockAsk();
+  }
 }
 
 /* poll movement: deterministic, a few places swap, one team drops out,
    one team comes in from the unranked pool. */
 function advanceWeek(){
   if(S.playoff) return;
+  cancelSwapAsk(true);
   var prev = liveScore();
   var before = {};
   S.bubble.forEach(function(id){ before[id] = rankOf(id); });
 
   S.week++;
+  // an unlocked bubble is only a draft: its dock follows the week
+  if(!S.locked) S.entry = Math.min(DOCKS.length-1, S.week-1);
   var rnd = mulberry32(4820 + S.week*977);
   var r = S.ranks.slice(), i, k;
   for(i=0;i<4;i++){ k = Math.floor(rnd()*24); var tmp=r[k]; r[k]=r[k+1]; r[k+1]=tmp; }
@@ -1226,11 +1744,19 @@ function advanceWeek(){
   msgs.slice(0,3).forEach(function(m, i){
     setTimeout(function(){ toast(m[0], m[1]==="bad"?"bad":""); }, i*420);
   });
-  if(S.week===5) toast("Entry window is closed. Whatever you have is what you ride.", "bad");
+  if(!S.locked){
+    setTimeout(function(){
+      toast(S.week > 4
+        ? "Entry closed. That draft never made the boards \u2014 reset to play it again."
+        : "Still a draft \u2014 lock in by Week 4 to enter.", S.week > 4 ? "bad" : "");
+    }, 3*420);
+  }
+  if(S.week===5 && S.locked) toast("Entry window is closed. Whatever you have is what you ride.", "bad");
 }
 
 function playPlayoff(){
   if(S.playoff) return;
+  cancelSwapAsk(true);
   var prev = liveScore();
   var rnd = mulberry32(90211 + S.week);
   var field = S.ranks.slice(0,12);
@@ -1262,15 +1788,17 @@ function playPlayoff(){
 }
 
 function reset(){
+  cancelSwapAsk(true);
   S = freshState();
-  bubEl.classList.remove("shimmer");
+  bubEl.classList.remove("shimmer", "locking");
+  closeLockAsk();
   $("finalNote").hidden = true;
   $("bAdv").disabled = false;
   $("bPlay").disabled = false;
   $("q").value = "";
   while(orbsG.firstChild) orbsG.removeChild(orbsG.firstChild);
   render(null);
-  toast("Back to the preseason. Four teams, 250 apiece.");
+  toast("Back to the preseason. Four teams, 250 apiece, still a draft.");
 }
 
 /* \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
@@ -1281,7 +1809,9 @@ function render(prev){
   $("capNote").textContent = S.bubble.length + " / 20";
   renderOrbs();
   placeBubble();
-  renderTeamList();
+  placeCeiling();
+  renderLock();
+  renderTray();
   renderRoster();
   renderEntry();
   renderSwap();
@@ -1291,19 +1821,29 @@ function render(prev){
 }
 
 /* wiring */
-$("q").addEventListener("input", renderTeamList);
+$("q").addEventListener("input", renderTray);
+$("t25").addEventListener("click", function(){ top25Only = !top25Only; renderTray(); });
+$("swapAskX").addEventListener("click", function(){ cancelSwapAsk(); });
+document.addEventListener("keydown", function(e){
+  if(e.key === "Escape"){ abortDrag(); cancelSwapAsk(); }
+});
 $("bSwap").addEventListener("click", doSwap);
 $("bAdv").addEventListener("click", advanceWeek);
 $("bPlay").addEventListener("click", playPlayoff);
 $("bReset").addEventListener("click", reset);
+$("bLock").addEventListener("click", askLock);
+$("bLockGo").addEventListener("click", doLock);
+$("bLockNo").addEventListener("click", closeLockAsk);
 window.addEventListener("resize", layout);
 
 S = freshState();
 buildAxis();
+buildConfChips();
 buildSliceTable();
 layout();
 render(null);
 setTimeout(function(){ toast("Georgia is elevating your bubble (#2)."); }, 900);
 setTimeout(function(){ toast("Michigan is sagging at #15 \u2014 10% of a share."); }, 2200);
+setTimeout(function(){ toast("This is still a draft. Lock in to take your place on the boards."); }, 3600);
 })();
 </script>
