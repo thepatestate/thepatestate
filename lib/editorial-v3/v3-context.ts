@@ -27,7 +27,10 @@ export const OUTPUT_CONTRACT = `OUTPUT CONTRACT (JSON only): headline; dek; body
 
 /** The clock the corpus writes by: every pro story tells the reader when it is. */
 export function dateLine(d = new Date()): string {
-  return `TODAY: ${d.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric", timeZone: "America/New_York" })} (Eastern). Write time relative to today — a weekday, "days before the opener" — and remember the sources may be a day old.`;
+  // THE CLOCK IS THE CALENDAR (2026-09-01, from Josh's own annual: 34 dated
+  // events, zero countdowns). Today's date exists so the writer can compute
+  // weekdays and dates — never so the prose can measure distance from it.
+  return `TODAY: ${d.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric", timeZone: "America/New_York" })} (Eastern) — for computing weekdays and dates only; the sources may be a day old. The story must read true a month from now: date events to the calendar ("Saturday, Sept. 5", "said Monday" for the past six days, month + day beyond that), measure distance event-to-event ("one week after the opener", "three road games in 22 days", "game two"), and let the season's structure carry urgency ("by October", "before the defense has met itself"). Never measure time from the moment of writing: no "X days before/until/away", "today", "tonight", "tomorrow", "this week", "next week", "currently", "right now", "as of".`;
 }
 
 export function words(text: string): number {

@@ -8,7 +8,7 @@ HOW A COLUMN IS BUILT — the way the best national columnists build one:
 - Numbers argue in pairs (last year's record against this schedule; a coach's September record against his November record). Reach into the verified team facts for the comparison the show did not make.
 - Memory: one thing that happened before that changes how the reader sees this.
 - Name the thing with an edge when it deserves one — a nickname for the argument he is against, an aside in parentheses. Once or twice, not every paragraph.
-- The clock: say when this gets settled — one game, one date — as a sentence inside the body, not a section. Never a paragraph that is a schedule; never more than two games named in one paragraph; the games before the one that matters are not worth a sentence unless one of them is a trap he named.
+- The clock: say when this gets settled — one game, one date ("Sept. 12 in Austin") — as a sentence inside the body, not a section. Date events to the calendar, never to the writing moment: no "X days before", "today", "this week" — the column must read true a month from now. Never a paragraph that is a schedule; never more than two games named in one paragraph; the games before the one that matters are not worth a sentence unless one of them is a trap he named.
 - Uneven rhythm: one-sentence paragraphs next to long ones; fragments where they land; his contractions and plain vocabulary.
 - End on the thesis, said harder, or on the single fact that makes his point. Never on the schedule. Never on "will show whether" or "the test is dated."
 

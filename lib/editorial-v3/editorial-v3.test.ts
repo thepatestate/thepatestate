@@ -84,7 +84,7 @@ describe("Josh engine", () => {
 
 describe("reported engine", () => {
   it("depth ranges are the brief's, and the writer prompt refuses padding and Josh catchphrases", () => {
-    expect(DEPTH_WORDS.item).toEqual({ min: 75, max: 200 });
+    expect(DEPTH_WORDS.item).toEqual({ min: 110, max: 300 });
     expect(DEPTH_WORDS.story.max).toBeLessThan(DEPTH_WORDS.analysis.max);
     const p = v3Prompt("reported-writer");
     expect(p).toMatch(/ends at 140 words/);
