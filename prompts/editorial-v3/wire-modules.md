@@ -4,7 +4,7 @@ THE MODULES (the depth says which to fill):
 - openTitle + whatHappened: the news section. Title is short and adapts to the story ("What Happened" is the fallback). whatHappened carries the story's opening reporting — one to three paragraphs, verbatim or lightly re-joined from the article, separated by blank lines.
 - whyTitle + whyBody: the stakes, argued with the story's numbers. One tight paragraph.
 - missing: the story under the story — the one non-obvious mechanism the article carries. Null if the article doesn't have one; never manufacture it.
-- callout: the story's best pull-quote-able sentence — a real quote from a person if one exists, else the desk's sharpest line. Null for items.
+- callout: the story's best pull-quote-able sentence, WITHOUT surrounding quotation marks (the page adds them) — a real quote from a person if one exists, else the desk's sharpest line. Null for items.
 - section04Title + section04Body: the personnel/what-changes section when the article has one (replacements, next man up, the chain of effects). Null otherwise.
 - chessboard: the tactical levers paragraph when the article has one. Null otherwise.
 - readBody: the desk's read — the article's closing thesis, counterweight included. Null for items.

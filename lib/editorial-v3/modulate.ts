@@ -35,5 +35,7 @@ export async function modulateStory(draft: ArticleDraft, pack: ReportingPack, br
     system: v3Prompt("wire-modules"),
     user: `DEPTH: ${brief.depth.toUpperCase()}\nTHE STAKES (from the brief): ${brief.stakes}\n\nTHE FINISHED STORY:\nHEADLINE: ${draft.headline}\nDEK: ${draft.dek}\n\n${draft.bodyMarkdown}\n\nREPORTING PACK (for facts-rail values only; never introduce a fact the story does not carry):\n${JSON.stringify({ facts: pack.facts, numbers: pack.numbers, unknowns: pack.unknowns }, null, 1).slice(0, 4000)}`,
   });
+  // The page supplies the quotation marks around the callout.
+  if (data.callout) data.callout = data.callout.replace(/^[\s"\u201C\u2018']+|[\s"\u201D\u2019']+$/g, "");
   return { modules: data, call };
 }
