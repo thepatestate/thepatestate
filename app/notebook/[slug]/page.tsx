@@ -235,7 +235,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
           <div className="rc">
             <div className="hd">{isJosh ? "Josh’s Read" : "The Notebook"}</div>
             <div className="bd"><div className="impact">
-              <span className="badge">{isJosh ? "On the Ledger" : "Analysis"}</span>
+              <span className="lbadge">{isJosh ? "On the Ledger" : "Analysis"}</span>
               <p>{isJosh ? "Every take timestamped, every pick graded, every miss printed first." : "What the news actually means — argued from the numbers."}</p>
             </div></div>
             {otherJosh.map((a) => (
