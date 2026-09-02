@@ -248,9 +248,21 @@ button,input,select{font:inherit;color:inherit}
 @keyframes streak{0%{opacity:0;transform:translateY(7px)}28%{opacity:.95}100%{opacity:0;transform:translateY(-15px)}}
 .orb .laurel{opacity:0;transition:opacity .5s ease}
 .orb.f4 .laurel{opacity:1}
+.orb .seedbadge,.orb .crown{opacity:0;transition:opacity .35s ease}
+.orb.seeded .seedbadge{opacity:1}
+.orb.crowned .crown{opacity:.95}
+.orb.ballast .seedbadge,.orb.ballast .crown{opacity:0}
 .orb .outtag{opacity:0;transition:opacity .5s ease .35s}
 .orb.ballast .outtag{opacity:1}
 .orb.ballast .body{filter:saturate(.08) brightness(.62)}
+.orb.weigh .body{filter:saturate(.06) brightness(.58)}
+.dent{transition:d .6s ease}
+.bub.release #bubbleGroup{animation:release .85s cubic-bezier(.3,1,.4,1)}
+@keyframes release{
+  0%{transform:translate(0,0) scale(1,1)}18%{transform:translate(0,4px) scale(1.025,.955)}
+  52%{transform:translate(0,-3px) scale(.99,1.025)}78%{transform:translate(0,1px) scale(1.005,.995)}
+  100%{transform:translate(0,0) scale(1,1)}
+}
 .orb.ballast .orb-bob{animation:sway var(--dur,4.4s) ease-in-out infinite}
 @keyframes sway{0%,100%{transform:translateX(-3px) rotate(-2.6deg)}50%{transform:translateX(3px) rotate(2.6deg)}}
 .tether.slack{stroke:var(--muted-2);stroke-dasharray:none;opacity:.42}
@@ -408,17 +420,71 @@ select[disabled]{opacity:.45}
   22%{opacity:.95;transform:scale(1)}
   100%{opacity:0;transform:scale(1.07)}
 }
-#seal{opacity:0;transition:opacity .45s ease .22s}
-.bub.locked #seal{opacity:1}
-.confirm{
-  display:none;align-items:center;gap:12px;flex-wrap:wrap;
-  border:1px solid var(--line);border-left:3px solid var(--gold);
-  background:var(--panel-2);border-radius:10px;padding:11px 14px;margin:-6px 0 18px;
+.sealtag{
+  position:absolute;right:50%;top:50%;transform:translateY(-50%);
+  margin-right:var(--tagoff,150px);padding-right:30px;pointer-events:none;
+  display:flex;flex-direction:column;align-items:flex-end;gap:7px;
 }
-.confirm.on{display:flex}
-.confirm p{margin:0;font-size:13.5px;color:var(--muted);max-width:62ch}
+.sealtag::before{content:"";position:absolute;right:2px;top:50%;width:24px;height:1px;
+  background:linear-gradient(270deg,rgba(201,162,39,.15),rgba(201,162,39,.75))}
+.sealtag::after{content:"";position:absolute;right:0;top:50%;width:6px;height:6px;border-radius:50%;
+  background:var(--gold);transform:translate(50%,-50%)}
+.sealpill{
+  border:1.4px solid var(--gold);background:rgba(11,26,51,.82);border-radius:100px;padding:4px 12px;
+  font-family:var(--disp);font-weight:800;font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--gold-hi);white-space:nowrap;
+}
+.sealpill.final{border-radius:6px;letter-spacing:.22em;transform:rotate(-6deg)}
+.confirm{
+  display:none;
+  border:1px solid var(--line);border-left:3px solid var(--gold);
+  background:var(--panel-2);border-radius:10px;padding:13px 15px;margin:-6px 0 18px;
+}
+.confirm.on{display:block}
+.confirm p{margin:0 0 9px;font-size:13.5px;color:var(--muted);max-width:70ch}
 .confirm p b{color:var(--ink);font-weight:600}
-.confirm .acts{margin-left:auto;display:flex;gap:8px;flex:0 0 auto}
+.cfhead{display:flex;align-items:baseline;gap:10px;margin-bottom:5px}
+.cfhead h3{font-size:19px;letter-spacing:.03em;text-transform:uppercase}
+.confirm .acts{display:flex;gap:8px;margin-top:11px}
+.seedlist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px;max-width:520px}
+.seedrow{
+  display:flex;align-items:center;gap:9px;padding:6px 8px;border-radius:7px;
+  background:var(--panel);border:1px solid var(--line-soft);cursor:grab;touch-action:none;
+}
+.seedrow.drop{border-color:var(--gold);background:#153059}
+.seedrow .grip{color:var(--muted-2);font-size:13px;letter-spacing:-2px;flex:0 0 auto}
+.sn{
+  font-family:var(--disp);font-weight:800;font-size:12px;color:#16130A;background:var(--gold);
+  border-radius:5px;padding:1px 6px;flex:0 0 auto;min-width:20px;text-align:center;
+}
+.seedrow .nm{flex:1 1 auto;font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.crowntag{
+  font-family:var(--disp);font-weight:700;font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--gold);flex:0 0 auto;
+}
+.ups{display:flex;gap:3px;flex:0 0 auto}
+.ups button{
+  background:var(--panel-2);border:1px solid var(--line);color:var(--muted);
+  border-radius:5px;width:22px;height:20px;line-height:1;cursor:pointer;font-size:10px;padding:0;
+}
+.ups button:hover:not([disabled]){color:var(--ink);border-color:#2A4A78}
+.ups button[disabled]{opacity:.3;cursor:not-allowed}
+.tbfield{display:block;font-size:12.5px;color:var(--muted);max-width:340px}
+.tbfield input{margin-top:6px}
+.tbline{
+  display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 16px;
+  padding:9px clamp(14px,2.4vw,22px);border-top:1px solid var(--line-soft);
+  background:rgba(0,0,0,.16);position:relative;z-index:3;font-size:13px;color:var(--muted);
+}
+.tbline b{color:var(--ink);font-weight:600}
+.tbline i{font-style:normal}
+.tbline i.good{color:var(--green)}
+.tbline i.bad2{color:var(--red-hi)}
+.tbline .q{border-bottom:1px dotted var(--muted-2);cursor:help}
+.tiewin{
+  font-family:var(--disp);font-weight:700;font-size:9px;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--gold);line-height:1.1;
+}
 .chip.lockchip b{color:var(--gold)}
 .rrow.tot{background:transparent;border-color:var(--line)}
 .rrow.tot .math{color:var(--ink);font-weight:600}
@@ -466,7 +532,7 @@ select[disabled]{opacity:.45}
 }
 @media (max-width:700px){
   .grid{grid-template-columns:minmax(0,1fr)}
-  .readout{display:none}
+  .readout,.sealtag{display:none}
   .axis{width:70px}
   .field{left:70px}
   .axis .tick .cap{left:44px;font-size:9.5px}
@@ -483,7 +549,8 @@ select[disabled]{opacity:.45}
   .bub.locking #lockRing{animation:lockfade .5s ease-out}
   @keyframes lockfade{0%{opacity:0}40%{opacity:.75}100%{opacity:0}}
   .orb-bob,.ripple #bubbleGroup,.ripple #rim,.shimmer #shimmer{animation:none !important}
-  .bub.bomb #bubbleGroup,.orb.lift .streaks line,.orb.ballast .orb-bob,.ceilmark.press{animation:none !important}
+  .bub.bomb #bubbleGroup,.bub.release #bubbleGroup,.orb.lift .streaks line,
+  .orb.ballast .orb-bob,.ceilmark.press{animation:none !important}
   .shell{transition:none}
   .orb{transition:opacity .25s linear}
   .toast{animation:none}
@@ -550,28 +617,21 @@ select[disabled]{opacity:.45}
                 </g>
                 <g id="tethers"></g>
                 <g id="orbs"></g>
+                <g id="dents"></g>
                 <g class="shell" id="shellFront">
                   <g clip-path="url(#ball)"><rect id="shimmer" x="-40" y="0" width="90" height="300" fill="url(#shg)"/></g>
                   <circle id="rim" cx="150" cy="150" r="146" fill="none" stroke="#DCE9FF" stroke-opacity="var(--rimop,.34)" stroke-width="1.1"/>
                   <circle id="rimHalo" cx="150" cy="150" r="146" fill="none" stroke="#E0525C" stroke-width="6" filter="url(#soft2)"/>
                   <circle id="lockRing" cx="150" cy="150" r="146" fill="none" stroke="#E8C75B" stroke-width="3"/>
-                  <g id="finalStamp" hidden>
-                    <rect x="111" y="224" width="78" height="24" rx="5" fill="#0B1A33" fill-opacity=".8" stroke="#E8C75B" stroke-width="1.6" transform="rotate(-6 150 236)"/>
-                    <text x="150" y="236.6" text-anchor="middle" dominant-baseline="central" transform="rotate(-6 150 236)"
-                          font-family="Barlow Condensed, sans-serif" font-weight="800" font-size="13"
-                          letter-spacing="2.2" fill="#E8C75B">FINAL</text>
-                  </g>
-                  <g id="seal">
-                    <rect x="86" y="260" width="128" height="24" rx="12" fill="#0B1A33" fill-opacity=".82" stroke="#C9A227" stroke-width="1.4"/>
-                    <text id="sealTxt" x="150" y="272.6" text-anchor="middle" dominant-baseline="central"
-                          font-family="Barlow Condensed, sans-serif" font-weight="800" font-size="12.5"
-                          letter-spacing="1.5" fill="#E8C75B">LOCKED &#xB7; PRESEASON</text>
-                  </g>
                 </g>
                 <g id="parts"></g>
               </g>
             </svg>
-            <div class="readout" id="readout">
+            <div class="sealtag" id="sealTag" hidden>
+            <span class="sealpill final" id="sealFinal" hidden>Final</span>
+            <span class="sealpill" id="sealTxt">Locked &#xB7; Preseason</span>
+          </div>
+          <div class="readout" id="readout">
               <div class="n num" id="roN">0</div>
               <div class="k" id="roK">Live score (draft)</div>
               <div class="k ceil">Ceiling <b class="num" id="roCeilN">1,000</b></div>
@@ -607,6 +667,7 @@ select[disabled]{opacity:.45}
       <span class="sep">&#xB7;</span>
       <div class="seg" id="sTeams">4 teams in the bubble</div>
     </div>
+    <div class="tbline" id="tbLine" hidden></div>
   </section>
 
   <div class="bar">
@@ -620,12 +681,28 @@ select[disabled]{opacity:.45}
     <span class="chip" id="swapChip">Swap available</span>
   </div>
 
-  <div class="confirm" id="lockConfirm" role="group" aria-label="Confirm your lock">
-    <p id="cfTxt"></p>
-    <span class="acts">
-      <button class="btn gold sm" id="bLockGo">Lock</button>
-      <button class="btn ghost sm" id="bLockNo">Keep editing</button>
-    </span>
+  <div class="confirm" id="lockConfirm" role="group" aria-label="Lock in your bubble">
+    <div class="cfstep" id="cfStep1">
+      <div class="cfhead"><span class="lbl lbl-gold">Step 1 of 2</span><h3>Seed your bubble</h3></div>
+      <p class="hint">Drag them into the order you believe in. <b>Seed 1 is your crown</b> &#x2014; the team you say wins it all. Seeds move no points; they break ties.</p>
+      <ol class="seedlist" id="seedList"></ol>
+      <span class="acts">
+        <button class="btn gold sm" id="cfNext">Next</button>
+        <button class="btn ghost sm" id="bLockNo">Keep editing</button>
+      </span>
+    </div>
+    <div class="cfstep" id="cfStep2" hidden>
+      <div class="cfhead"><span class="lbl lbl-gold">Step 2 of 2</span><h3>Tiebreaker</h3></div>
+      <p class="hint" id="cfTxt"></p>
+      <label class="tbfield" for="tbInput">Total points scored across all 11 playoff games
+        <input class="search" type="number" id="tbInput" min="0" max="2000" step="1" inputmode="numeric" placeholder="Your number">
+      </label>
+      <p class="hint">Typical range <b>450&#x2013;750</b>. Required &#x2014; it is the last tie-break before a prize is shared.</p>
+      <span class="acts">
+        <button class="btn gold sm" id="bLockGo">Lock</button>
+        <button class="btn ghost sm" id="cfBack">Back</button>
+      </span>
+    </div>
   </div>
 
   <div class="grid">
@@ -696,7 +773,7 @@ select[disabled]{opacity:.45}
         </div>
         <div class="rule">
           <h3>Poll slice</h3>
-          <p>Your live score is what you'd bank if the season ended today: each share times its team's slice of the poll.</p>
+          <p>Your live score is what you'd bank if the season ended today: each share times its team's slice of the poll. A team that <b>falls out of the Top 25</b> sinks to the floor of your bubble and weighs it down &#x2014; it can still climb back. Only when it is <b>out of the playoff picture</b> does it drop through the skin and hang underneath as ballast. A team that was never ranked simply waits at the bottom until it climbs in.</p>
           <div class="slices" id="sliceTable"></div>
         </div>
         <div class="rule">
@@ -704,12 +781,16 @@ select[disabled]{opacity:.45}
           <p>The number under your score is the <b>most this bubble can still bank</b>. The poll only pays four teams at full freight, the next four at about half, the four after that at a fifth &#x2014; so every team past four thins the share without lifting the lid much. Four ranked teams sit under a <b>1,000</b> ceiling; ten sit under 640. Let a team fall out of the Top 25 and the lid drops for good.</p>
         </div>
         <div class="rule">
+          <h3>Ties</h3>
+          <p>Level on points? The <b>crown</b> settles it &#x2014; seed 1 is your pick to win the title. Still level: the closer <b>seed order</b>, scored against how your teams actually finished. Then the closest guess at the <b>playoff points total</b>. Then, and only then, it is shared (shown as T-1).</p>
+        </div>
+        <div class="rule">
           <h3>Lock in</h3>
-          <p>Nothing counts until you <b>lock in</b>. Locking fixes your entry week, stamps your bubble with the minute you entered &#x2014; the tie-break if two bubbles finish level &#x2014; and closes the roster. From then on the only change you get is your one swap.</p>
+          <p>Nothing counts until you <b>lock in</b>. Locking fixes your entry week, takes your <b>seed order</b> and your <b>tiebreaker number</b>, stamps the minute you entered, and closes the roster. From then on the only change you get is your one swap.</p>
         </div>
         <div class="rule">
           <h3>Season end</h3>
-          <p>Each team takes the <b>better</b> of two numbers: what the playoff paid it &#x2014; <b>20%</b> for making the 12-team field, <b>50%</b> for reaching the quarterfinal, <b>100%</b> for the Final Four &#x2014; or its slice of the final poll. Ties break to the <b>smaller bubble</b>, then to whoever entered earliest.</p>
+          <p>Each team takes the <b>better</b> of two numbers: what the playoff paid it &#x2014; <b>20%</b> for making the 12-team field, <b>50%</b> for reaching the quarterfinal, <b>100%</b> for the Final Four &#x2014; or its slice of the final poll. </p>
         </div>
       </div>
       <div class="final-note" id="finalNote" hidden></div>
@@ -782,25 +863,32 @@ TEAMS.forEach(function(t){ BY_ID[t.id]=t; });
    Twelve polls, written not rolled, so the demo actually tells a story:
    Michigan slides 15 \u2192 19 \u2192 23 \u2192 24 and bombs out in Week 5; LSU tumbles
    to 14 by Week 8; Texas holds the top four and Georgia the top two; Indiana
-   climbs from 12 to 4; Penn State collapses out of the poll. Weeks 9\u201312
+   climbs from 12 to 4; Penn State collapses out of the poll; SMU is unranked
+   until Week 4 and then climbs to 16. Weeks 9\u201312
    settle the field. Sample rankings \u2014 not a real AP poll. */
 var SEASON = [
- "OSU UGA TEX CLEM PSU ND ORE ALA LSU MIA TAMU IND OU TENN MICH MISS ASU USC ISU ILL UTAH BYU SMU BSU FLA",
- "OSU UGA TEX ORE CLEM ND ALA IND LSU PSU MIA TAMU OU TENN MISS ASU ISU USC MICH ILL UTAH BYU SMU FLA BSU",
- "UGA OSU TEX ORE ALA IND ND CLEM MIA LSU TENN OU TAMU MISS PSU ASU ISU USC ILL UTAH BYU SMU MICH FLA WVU",
- "UGA OSU TEX IND ORE ALA TENN ND MIA OU LSU CLEM MISS TAMU ASU ISU USC ILL BYU UTAH SMU PSU WVU MICH FLA",
- "UGA OSU TEX IND ORE ALA TENN ND MIA OU MISS LSU CLEM TAMU ASU ISU ILL USC BYU UTAH SMU WVU FLA KSU TTU",
- "UGA OSU TEX IND ALA ORE TENN MIA ND OU MISS CLEM TAMU ISU ILL LSU ASU BYU USC UTAH KSU WVU FLA TTU SMU",
- "UGA TEX OSU IND ALA TENN ORE MIA OU ND MISS CLEM TAMU ISU LSU ILL BYU ASU USC UTAH KSU TTU WVU SMU LOU",
- "UGA TEX OSU IND ALA TENN MIA ORE OU MISS ND CLEM TAMU LSU ISU ILL BYU UTAH ASU KSU USC TTU WVU LOU NEB",
- "UGA TEX OSU IND ALA MISS TENN MIA OU ORE CLEM ND TAMU LSU BYU ISU ILL UTAH KSU ASU TTU USC NEB WVU LOU",
- "UGA TEX OSU IND ALA MISS TENN OU MIA CLEM ORE TAMU ND LSU BYU ISU ILL UTAH KSU TTU ASU USC NEB WVU LOU",
- "UGA TEX OSU IND ALA MISS OU TENN MIA CLEM ORE TAMU ND LSU BYU ISU ILL UTAH KSU TTU ASU USC NEB WVU LOU",
- "UGA TEX OSU IND ALA MISS OU TENN MIA CLEM ORE TAMU ND LSU BYU ISU ILL UTAH KSU TTU ASU USC NEB WVU LOU"
+ "OSU UGA TEX CLEM PSU ND ORE ALA LSU MIA TAMU IND OU TENN MICH MISS ASU USC ISU ILL UTAH BYU NEB BSU FLA",
+ "OSU UGA TEX ORE CLEM ND ALA IND LSU PSU MIA TAMU OU TENN MISS ASU ISU USC MICH ILL UTAH BYU NEB FLA BSU",
+ "UGA OSU TEX ORE ALA IND ND CLEM MIA LSU TENN OU TAMU MISS PSU ASU ISU USC ILL UTAH BYU NEB MICH FLA WVU",
+ "UGA OSU TEX IND ORE ALA TENN ND MIA OU LSU CLEM MISS TAMU ASU ISU USC ILL BYU UTAH PSU WVU SMU MICH FLA",
+ "UGA OSU TEX IND ORE ALA TENN ND MIA OU MISS LSU CLEM TAMU ASU ISU ILL USC BYU UTAH WVU SMU FLA KSU TTU",
+ "UGA OSU TEX IND ALA ORE TENN MIA ND OU MISS CLEM TAMU ISU ILL LSU ASU BYU USC UTAH SMU KSU FLA WVU TTU",
+ "UGA TEX OSU IND ALA TENN ORE MIA OU ND MISS CLEM TAMU ISU LSU ILL BYU ASU USC SMU UTAH KSU TTU WVU LOU",
+ "UGA TEX OSU IND ALA TENN MIA ORE OU MISS ND CLEM TAMU LSU ISU ILL BYU UTAH SMU ASU KSU USC TTU WVU LOU",
+ "UGA TEX OSU IND ALA MISS TENN MIA OU ORE CLEM ND TAMU LSU BYU ISU ILL SMU UTAH KSU ASU TTU USC WVU LOU",
+ "UGA TEX OSU IND ALA MISS TENN OU MIA CLEM ORE TAMU ND LSU BYU ISU SMU ILL UTAH KSU TTU ASU USC WVU LOU",
+ "UGA TEX OSU IND ALA MISS OU TENN MIA CLEM ORE TAMU ND LSU BYU SMU ISU ILL UTAH KSU TTU ASU USC WVU LOU",
+ "UGA TEX OSU IND ALA MISS OU TENN MIA CLEM ORE TAMU ND LSU BYU SMU ISU ILL UTAH KSU TTU ASU USC WVU LOU"
 ].map(function(w){ return w.split(" "); });
 
 /* The bracket the sample season feeds: the Week 12 top twelve, byes for the
    top four, then the quarterfinal and semifinal survivors. */
+/* Out of playoff contention: the scripted week a team is mathematically done,
+   plus Selection Sunday, when everyone outside the twelve is finished. */
+var ELIMINATED = {MICH:8};
+var CHAMP = "UGA";          // the sample champion \u2014 the crown tie-break
+var ACTUAL_TB = 598;        // points scored across the sample's 11 playoff games
+
 var PLAYOFF = {
   field: SEASON[11].slice(0,12),
   qf:    ["UGA","TEX","OSU","IND","ALA","ORE","OU","TENN"],
@@ -809,13 +897,16 @@ var PLAYOFF = {
 
 var DOCKS = [{k:"Preseason",p:1},{k:"Week 2",p:.9},{k:"Week 3",p:.8},{k:"Week 4",p:.7}];
 
+/* teams[0] is that friend's crown \u2014 seed 1, their pick to win it all.
+   ThirdSat_Tay is written to finish level with the sample bubble on points,
+   so the tie-break chain has something to resolve. */
 var FRIENDS = [
-  {h:"SwampFox", d:["Swamp","Fox"], teams:["FLA","UGA","TENN","MIA","OSU"],      entry:1},
-  {h:"HailState_Hannah", d:["HailState","Hannah"], teams:["MSST","ALA","MISS","TAMU"],          entry:1},
-  {h:"TheGrove_Tom", d:["TheGrove","Tom"], teams:["MISS","LSU","ORE","TEX","PSU","ND"], entry:0},
-  {h:"BuckeyeBrent", d:["Buckeye","Brent"], teams:["OSU","ORE","PSU","IND"],             entry:2},
-  {h:"BayouBiscuit", d:["Bayou","Biscuit"], teams:["LSU","TEX","ND","OKST","WIS","UTAH","BYU","SMU","TCU"], entry:0},
-  {h:"ThirdSat_Tay", d:["ThirdSat","Tay"], teams:["TENN","ALA","UGA"],                  entry:1}
+  {h:"SwampFox", d:["Swamp","Fox"], teams:["OSU","UGA","TENN","MIA","FLA"], entry:1, tb:640},
+  {h:"HailState_Hannah", d:["HailState","Hannah"], teams:["ALA","MISS","TAMU","MSST"], entry:1, tb:520},
+  {h:"TheGrove_Tom", d:["TheGrove","Tom"], teams:["TEX","MISS","LSU","ORE","PSU","ND"], entry:0, tb:705},
+  {h:"BuckeyeBrent", d:["Buckeye","Brent"], teams:["OSU","IND","ORE","PSU"], entry:2, tb:588},
+  {h:"BayouBiscuit", d:["Bayou","Biscuit"], teams:["LSU","TEX","ND","OKST","WIS","UTAH","BYU","SMU","TCU"], entry:0, tb:470},
+  {h:"ThirdSat_Tay", d:["ThirdSat","Tay"], teams:["ALA","UGA","TENN","WVU"], entry:0, tb:640}
 ];
 
 /* \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
@@ -836,9 +927,10 @@ var FRIENDS = [
                 that at a fifth, so A alive teams stack into those tiers:
                   weight = min(A,4)x1.00 + min(A-4,4)x0.50 + min(A-8,4)x0.20
                   ceiling = share x weight - swap fee paid
-                ALIVE, before the playoff, = your teams still in the Top 25;
-                an unranked team has popped and can never pay again, so the
-                lid drops the moment it falls out. After the playoff every
+                ALIVE = every team you hold that is not ELIMINATED from the
+                playoff. A team that has merely fallen out of the poll still
+                counts \u2014 it weighs the bubble down but can climb back. After
+                the playoff every
                 team carries its settled credit (Final Four 1.00, quarter-
                 final 0.50, field 0.20, else its final poll slice), so the
                 ceiling collapses onto the final score.
@@ -880,7 +972,7 @@ function playoffCredit(id, po){
 function tierWeight(a){   // how many whole shares A alive teams can still earn
   return Math.min(a,4)*1 + Math.min(Math.max(a-4,0),4)*0.5 + Math.min(Math.max(a-8,0),4)*0.2;
 }
-function ceilingOf(teams, entryIdx, ranks, fee, playoff){
+function ceilingOf(teams, entryIdx, ranks, fee, playoff, popped){
   var share = shareOf(teams.length, entryIdx), w = 0, i, id;
   if(playoff){
     for(i=0;i<teams.length;i++){
@@ -888,13 +980,41 @@ function ceilingOf(teams, entryIdx, ranks, fee, playoff){
       w += Math.max(playoffCredit(id, playoff), sliceFor(ranks.indexOf(id)+1))/100;
     }
   } else {
-    var alive = 0;
-    for(i=0;i<teams.length;i++) if(ranks.indexOf(teams[i])>=0) alive++;
-    w = tierWeight(alive);
+    w = tierWeight(teams.length - (popped ? popped.length : 0));
   }
   var c = Math.round(share*w - (fee||0));
   // a perfectly stacked top-10 can out-run the tiers, so never sit under the score
   return Math.max(0, c, scoreOf(teams, entryIdx, ranks, fee, playoff));
+}
+
+/* \u2550\u2550 THE TIE-BREAK CHAIN \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
+   Level on points? The crown settles it \u2014 seed 1 against the actual champion.
+   Then seed accuracy: how far your order sat from how your teams really
+   finished. Then the closest guess at the playoff points total. Then shared.
+   None of this moves a single point. */
+function finishRank(id){                    // 0 = champion, then down the bracket
+  if(id === CHAMP) return 0;
+  var i = PLAYOFF.f4.indexOf(id);    if(i >= 0) return 1 + i;
+  var q = PLAYOFF.qf.indexOf(id);    if(q >= 0) return 10 + q;
+  var f = PLAYOFF.field.indexOf(id); if(f >= 0) return 30 + f;
+  var r = SEASON[SEASON.length-1].indexOf(id);
+  return r >= 0 ? 60 + r : 200;
+}
+function seedError(order){                  // sum of |seed \u2212 actual finish slot|
+  if(!order || !order.length) return 999;
+  var actual = order.slice().sort(function(a,b){ return finishRank(a) - finishRank(b); });
+  var e = 0;
+  order.forEach(function(id, i){ e += Math.abs(i - actual.indexOf(id)); });
+  return e;
+}
+function tbMiss(v){ return v === null || v === undefined ? Infinity : Math.abs(v - ACTUAL_TB); }
+function tieReason(a, b){                   // why a beats b, or "" if it does not
+  if((a.crown === CHAMP) !== (b.crown === CHAMP)) return a.crown === CHAMP ? "won on crown" : "";
+  var ae = seedError(a.order), be = seedError(b.order);
+  if(ae !== be) return ae < be ? "won on seeds" : "";
+  var am = tbMiss(a.tb), bm = tbMiss(b.tb);
+  if(am !== bm) return am < bm ? "won on tiebreak" : "";
+  return "";
 }
 
 /* \u2500\u2500 deterministic RNG \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 */
@@ -939,6 +1059,7 @@ function freshState(){
     swapUsed:false, fee:0,
     playoff:null,
     locked:false, lockedAt:null, lockLabel:null,
+    seen:{}, poppedAt:{}, seeds:[], tb:null,
     pendingOut:null,
     lastScore:null
   };
@@ -949,9 +1070,30 @@ function creditOf(id){                     // what this team pays right now, %
   if(S.playoff) p = Math.max(p, playoffCredit(id, S.playoff));
   return p;
 }
-function deadTeams(){ return S.bubble.filter(function(id){ return creditOf(id) === 0; }); }
+/* Unranked is not the same as popped. A team only becomes dead weight if it
+   was in the Top 25 at some point after you added it and has since fallen out
+   (or been knocked out of the playoff). A team you add while it is unranked
+   has never been up there \u2014 it just waits at the bottom of the sphere. */
+function isEliminated(id){
+  if(S.playoff) return S.playoff.f4.indexOf(id) < 0;      // only the last four survive
+  if(ELIMINATED[id] && S.week >= ELIMINATED[id]) return true;
+  return S.week >= SEASON.length && PLAYOFF.field.indexOf(id) < 0;   // Selection Sunday
+}
+function markSeen(){
+  S.bubble.forEach(function(id){
+    if(rankOf(id)){ S.seen[id] = true; delete S.poppedAt[id]; }
+    else if(S.seen[id] && S.poppedAt[id] === undefined) S.poppedAt[id] = S.week;
+  });
+}
+function forgetTeam(id){ delete S.seen[id]; delete S.poppedAt[id]; }
+function isPopped(id){ return !!S.seen[id] && creditOf(id) === 0; }   // fell out of the poll
+function goneTeams(){ return S.bubble.filter(isEliminated); }        // hangs below as ballast
+function weighTeams(){                                              // sits inside, dead weight
+  return S.bubble.filter(function(id){ return !isEliminated(id) && creditOf(id) === 0; });
+}
+function eliminatedIn(teams){ return teams.filter(isEliminated); }
 function liveScore(){ return scoreOf(S.bubble, S.entry, S.ranks, S.fee, S.playoff); }
-function liveCeiling(){ return ceilingOf(S.bubble, S.entry, S.ranks, S.fee, S.playoff); }
+function liveCeiling(){ return ceilingOf(S.bubble, S.entry, S.ranks, S.fee, S.playoff, goneTeams()); }
 function swapFee(){ return 20 * S.week; }
 
 /* \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
@@ -976,7 +1118,7 @@ function lum(hex){
 /* \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
    THE BUBBLE
    \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550 */
-var orbsG = $("orbs"), tethersG = $("tethers"), partsG = $("parts"), bubEl = $("bub");
+var orbsG = $("orbs"), tethersG = $("tethers"), partsG = $("parts"), bubEl = $("bub"), dentsG = $("dents");
 var liftEl = $("lift"), stageEl = $("stage"), fieldEl = $("fieldEl");
 var bubbleD = 300;
 
@@ -1009,22 +1151,40 @@ function crackPath(r){                       // a jagged split across the disc
 function renderOrbs(){
   var n = S.bubble.length;
   var R = orbRadius(n), Rb = R*0.72;
-  var dead = deadTeams();
-  var flat = 1 - Math.min(.12, .04*dead.length);      // the shell goes oblate
-  var inside = S.bubble.filter(function(id){ return dead.indexOf(id) < 0; });
+  var gone = goneTeams();                             // eliminated: hangs below
+  var weigh = weighTeams();                           // dead weight, still inside
+  var flat = 1 - Math.min(.12, .03*weigh.length);     // the shell sags under it
+  var live = S.bubble.filter(function(id){
+    return gone.indexOf(id) < 0 && weigh.indexOf(id) < 0;
+  });
   var maxR = 146 - R - 8;
-  var pos = slots(inside.length, maxR, flat).sort(function(a,b){ return a[1]-b[1]; });
-  var order = inside.slice().sort(function(a,b){
+  var pos = slots(live.length, maxR*(weigh.length ? .92 : 1), flat).sort(function(a,b){ return a[1]-b[1]; });
+  var order = live.slice().sort(function(a,b){
     var d = creditOf(b) - creditOf(a);
     return d !== 0 ? d : a.localeCompare(b);
   });
   var place = {}, anchor = {};
   order.forEach(function(id, i){ place[id] = pos[i]; });
 
-  // ballast: popped teams hang below the sphere on slack tethers
-  var gap = Math.min(86, 250/Math.max(1, dead.length));
-  dead.slice().sort().forEach(function(id, i){
-    var bx = 150 + (i - (dead.length-1)/2)*gap;
+  // dead weight rests on the floor of the shell and presses a dent into it
+  while(dentsG.firstChild) dentsG.removeChild(dentsG.firstChild);
+  var wgap = Math.min(74, 200/Math.max(1, weigh.length));
+  weigh.slice().sort().forEach(function(id, i){
+    var wx = 150 + (i - (weigh.length-1)/2)*wgap;
+    var dx = Math.max(-120, Math.min(120, wx-150));
+    var floor = 150 + Math.sqrt(Math.max(0, 146*146 - dx*dx))*flat;
+    place[id] = [wx, floor - R*0.66];
+    dentsG.appendChild(svg("path", {"class":"dent", fill:"none", stroke:"#DCE9FF",
+      "stroke-opacity":".2", "stroke-width":1.3,
+      d:"M"+(wx-R*1.1).toFixed(1)+","+(floor-3).toFixed(1)+
+        " Q"+wx.toFixed(1)+","+(floor+R*0.5).toFixed(1)+
+        " "+(wx+R*1.1).toFixed(1)+","+(floor-3).toFixed(1)}));
+  });
+
+  // ballast: eliminated teams hang below the sphere on slack tethers
+  var gap = Math.min(86, 250/Math.max(1, gone.length));
+  gone.slice().sort().forEach(function(id, i){
+    var bx = 150 + (i - (gone.length-1)/2)*gap;
     var dx = Math.max(-142, Math.min(142, bx-150));
     anchor[id] = 150 + Math.sqrt(Math.max(0, 146*146 - dx*dx))*flat;
     place[id] = [bx, anchor[id] + 30 + Rb + (i%2 ? 15 : 0)];
@@ -1038,9 +1198,10 @@ function renderOrbs(){
   var lifts = 0, i = 0;
   S.bubble.forEach(function(id){
     var t = BY_ID[id], p = place[id], rank = rankOf(id);
-    var isBallast = dead.indexOf(id) >= 0;
+    var isBallast = gone.indexOf(id) >= 0;                  // out of contention
+    var isWeigh = !isBallast && weigh.indexOf(id) >= 0;     // dead weight, inside
     var isLift = !isBallast && rank>=1 && rank<=8;
-    var isSink = !isBallast && rank>=13;
+    var isSink = !isBallast && (rank === 0 || rank >= 13);  // fading, or waiting
     var isF4 = !!(S.playoff && S.playoff.f4.indexOf(id) >= 0);
     var rr = isBallast ? Rb : R;
     if(isLift) lifts++;
@@ -1071,6 +1232,14 @@ function renderOrbs(){
       body.appendChild(svg("path", {"class":"chev", fill:"#E0525C", opacity:0, d:"M-5,-3 L5,-3 L0,4 Z"}));
       body.appendChild(svg("path", {"class":"crack", fill:"none", "stroke-width":2,
         "stroke-linecap":"round", "stroke-linejoin":"round"}));
+      body.appendChild(svg("path", {"class":"crown", fill:"#C9A227",
+        d:"M-9,-4 l4.5,6 4.5,-8.5 4.5,8.5 4.5,-6 -1.8,9.5 -14.4,0 z"}));
+      var sb = svg("g", {"class":"seedbadge"});
+      sb.appendChild(svg("circle", {r:8.6, fill:"#0B1A33", stroke:"#C9A227", "stroke-width":1.2}));
+      var sbt = svg("text", {"class":"seednum", "text-anchor":"middle", "dominant-baseline":"central",
+        "font-family":"Barlow Condensed, sans-serif", "font-weight":800, "font-size":10.5, fill:"#E8C75B"});
+      sb.appendChild(sbt);
+      body.appendChild(sb);
       var ot = svg("g", {"class":"outtag"});
       ot.appendChild(svg("rect", {x:-14, y:0, width:28, height:13, rx:3.5,
         fill:"#2A0E12", stroke:"#B3202A", "stroke-width":1}));
@@ -1124,6 +1293,10 @@ function renderOrbs(){
     crack.setAttribute("stroke", dark ? "#12203A" : "#EAF2FF");
     crack.setAttribute("d", crackPath(rr));
     ot2.setAttribute("transform","translate(0,"+(rr+3).toFixed(1)+")");
+    g.querySelector(".seedbadge").setAttribute("transform",
+      "translate("+(rr*0.72).toFixed(1)+","+(-rr*0.72).toFixed(1)+")");
+    g.querySelector(".crown").setAttribute("transform",
+      "translate(0,"+(-rr-10).toFixed(1)+") scale("+(rr/30).toFixed(2)+")");
     Array.prototype.forEach.call(g.querySelectorAll(".streaks line"), function(ln){
       var f = parseFloat(ln.getAttribute("data-f"));
       var x = (f*rr*0.55).toFixed(1), y1 = (-rr*0.95).toFixed(1);
@@ -1132,6 +1305,7 @@ function renderOrbs(){
       ln.setAttribute("y2", (-rr*0.95 - rr*(f === 0 ? 1.0 : 0.66)).toFixed(1));
     });
     g.classList.toggle("sink", isSink);
+    g.classList.toggle("weigh", isWeigh);
     g.classList.toggle("ballast", isBallast);
     g.classList.toggle("lift", isLift);
     g.classList.toggle("f4", isF4);
@@ -1146,13 +1320,12 @@ function renderOrbs(){
     }
   });
 
+  paintSeeds();
   var f2 = "scaleY(" + flat.toFixed(3) + ")";
   $("shellBack").style.transform = f2;
   $("shellFront").style.transform = f2;
-  bubEl.style.setProperty("--rimop", Math.max(.08, .34 - .055*dead.length).toFixed(3));
+  bubEl.style.setProperty("--rimop", Math.max(.08, .34 - .045*(weigh.length + gone.length)).toFixed(3));
   $("topGlow").setAttribute("opacity", Math.min(.34, .085*lifts).toFixed(3));
-  if(S.playoff) $("finalStamp").removeAttribute("hidden");
-  else $("finalStamp").setAttribute("hidden","");
 
   ripple();
 }
@@ -1199,7 +1372,7 @@ function layout(){
   placeBubble();
   placeCeiling();
 }
-function ballastRoom(){ return deadTeams().length ? Math.round(bubbleD*0.20) : 0; }
+function ballastRoom(){ return goneTeams().length ? Math.round(bubbleD*0.20) : 0; }
 function travelPx(){ return Math.max(0, (stageEl.clientHeight - 52) - bubbleD - ballastRoom()); }
 function placeBubble(){
   var alt = Math.max(0, Math.min(1, liveScore()/1000));
@@ -1461,12 +1634,17 @@ function renderRoster(){
       var pc = playoffCredit(id, S.playoff);
       if(pc > pct){ credit = pc; tag = pc===100?"Final Four":(pc===50?"Quarterfinal":"Made the field"); }
     }
+    var state;
+    if(isEliminated(id)) state = r ? "#"+r+" \u00B7 out of the playoff" : "out of the playoff";
+    else state = r ? "#"+r : (isPopped(id) ? "dropped out in Week "+(S.poppedAt[id]||S.week) : "unranked");
     var row = document.createElement("div");
     row.className = "rrow " + (r&&r<=8 ? "lift-y" : (!r||r>=13 ? "sink-y" : ""));
     row.innerHTML =
+      (S.locked ? '<span class="sn">'+(S.seeds.indexOf(id)+1)+'</span>' : '') +
       '<span class="swatch" style="background:'+t.c1+';border-color:'+t.c2+'"></span>' +
       '<span class="conf">'+t.tag+'</span>' +
-      '<span class="math"><b>'+t.name+'</b> \u00B7 '+(r?"#"+r:"popped")+(tag?" \u00B7 "+tag:"")+' \u00B7 '+
+      '<span class="math"><b>'+t.name+'</b> \u00B7 '+ state +
+        (tag?" \u00B7 "+tag:"")+' \u00B7 '+
         Math.round(share)+' &times; '+credit+'%</span>' +
       '<span class="pts num">'+Math.round(share*credit/100)+'</span>';
     if(!S.playoff && !S.locked){
@@ -1551,15 +1729,28 @@ function renderSwap(){
 /* \u2500\u2500 tailgate \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 */
 function renderTailgate(){
   var host = $("tg");
-  var mine = { h:"YOU", d:["You", S.locked?"locked":"(draft)"], teams:S.bubble, entry:S.entry, fee:S.fee, you:true };
+  var mine = { h:"YOU", d:["You", S.locked?"locked":"(draft)"], teams:S.bubble, entry:S.entry, fee:S.fee,
+               you:true, crown:S.locked?S.seeds[0]:null, order:S.locked?S.seeds:null, tb:S.locked?S.tb:null };
   var all = [mine].concat(FRIENDS.map(function(f){
-    return { h:f.h, d:f.d, teams:f.teams, entry:f.entry, fee:0 };
+    return { h:f.h, d:f.d, teams:f.teams, entry:f.entry, fee:0, crown:f.teams[0], order:f.teams, tb:f.tb };
   }));
   all.forEach(function(p){
     p.score = scoreOf(p.teams, p.entry, S.ranks, p.fee, S.playoff);
-    p.ceil  = ceilingOf(p.teams, p.entry, S.ranks, p.fee, S.playoff);
+    p.ceil  = ceilingOf(p.teams, p.entry, S.ranks, p.fee, S.playoff, eliminatedIn(p.teams));
   });
   var best = all.reduce(function(a,b){ return b.score>a.score?b:a; });
+  if(S.playoff){                       // level on points? run the chain
+    var groups = {};
+    all.forEach(function(p){ (groups[p.score] = groups[p.score] || []).push(p); });
+    Object.keys(groups).forEach(function(k){
+      var g = groups[k];
+      if(g.length < 2) return;
+      var win = g[0], why = "";
+      g.forEach(function(p){ if(p !== win && tieReason(p, win)) win = p; });
+      g.forEach(function(p){ if(p !== win){ var r = tieReason(win, p); if(r) why = r; } });
+      win.tieWin = why || "won the tie";
+    });
+  }
 
   if(host.children.length !== all.length){
     host.innerHTML = "";
@@ -1593,17 +1784,44 @@ function renderTailgate(){
     var who = c.querySelector(".who");
     who.innerHTML = p.d.map(function(w){return w?"<span>"+w+"</span>":"";}).join("");
     who.title = p.you
-      ? (S.locked ? "Locked " + stamp(S.lockedAt) + " \u2014 the timestamp is the tie-break"
+      ? (S.locked ? "Locked " + stamp(S.lockedAt) + ""
                   : "Not entered yet \u2014 lock in to take your timestamp")
       : (p.h + " \u00B7 entered " + DOCKS[p.entry].k);
     c.querySelector(".ct").textContent = p.teams.length + (p.teams.length===1?" team":" teams");
+    var tw = c.querySelector(".tiewin");
+    if(p.tieWin && !tw){ tw = document.createElement("div"); tw.className = "tiewin"; c.appendChild(tw); }
+    if(tw) tw.textContent = p.tieWin || "";
   });
 
   $("tgDraft").hidden = S.locked;
   var gap = best.score - all[0].score;
-  $("gapLine").innerHTML = gap<=0
-    ? 'You lead the tailgate by <b class="num">' + (all[0].score - all.slice(1).reduce(function(a,b){return Math.max(a,b.score);},0)) + '</b>'
-    : 'Gap to the leader (' + best.h + '): <b class="num">' + gap + '</b>';
+  var level = all.slice(1).filter(function(p){ return p.score === all[0].score; });
+  $("gapLine").innerHTML = gap > 0
+    ? 'Gap to the leader (' + best.h + '): <b class="num">' + gap + '</b>'
+    : (level.length
+        ? 'Level with ' + level[0].h + ' at <b class="num">' + all[0].score + '</b> \u2014 ' +
+          (all[0].tieWin ? "you " + all[0].tieWin : "the tie is theirs")
+        : 'You lead the tailgate by <b class="num">' +
+          (all[0].score - all.slice(1).reduce(function(a,b){return Math.max(a,b.score);},0)) + '</b>');
+}
+
+function renderTiebreak(){
+  var el = $("tbLine");
+  if(!S.playoff){ el.hidden = true; return; }
+  el.hidden = false;
+  if(!S.locked){
+    el.innerHTML = '<span class="lbl lbl-gold">Tie-break</span>' +
+      '<span>You never locked in \u2014 no crown, no tiebreaker. A draft loses every tie it is in.</span>';
+    return;
+  }
+  var crown = S.seeds[0], ok = crown === CHAMP, err = seedError(S.seeds);
+  el.innerHTML = '<span class="lbl lbl-gold">Tie-break</span>' +
+    '<span>Crown: <b>' + BY_ID[crown].name + '</b> \u00B7 ' +
+      (ok ? '<i class="good">correct</i>' : '<i class="bad2">no \u2014 ' + BY_ID[CHAMP].name + ' won it</i>') + '</span>' +
+    '<span><span class="q" title="Your seed order against how your teams actually finished: the seed slots they moved, added up. Zero is a perfect read.">Seed accuracy</span>: <b>' + err + '</b> ' +
+      (err === 0 ? "\u2014 perfect" : "off") + '</span>' +
+    '<span>Playoff points: you <b>' + (S.tb === null ? "\u2014" : S.tb) + '</b> \u00B7 actual <b>' + ACTUAL_TB +
+      '</b>' + (S.tb === null ? "" : ' \u00B7 off by <b>' + Math.abs(S.tb - ACTUAL_TB) + '</b>') + '</span>';
 }
 
 /* \u2500\u2500 the state \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 */
@@ -1700,7 +1918,7 @@ function buildSliceTable(){
     ["#5\u20138",   "60 \u00B7 56 \u00B7 52 \u00B7 48%",  60],
     ["#9\u201312",  "30 \u00B7 27 \u00B7 24 \u00B7 21%",  30],
     ["#13\u201325", "12% down to 0",       12],
-    ["Unranked","0 \u2014 a popped team pays nothing", 0]
+    ["Unranked","0 \u2014 until it climbs into the poll", 0]
   ];
   rows.forEach(function(r){
     var d = document.createElement("div");
@@ -1783,6 +2001,7 @@ function removeTeam(id){
   if(S.bubble.length<=1){ toast("You need at least one team. A bubble of none floats nowhere.", "bad"); return; }
   var prev = liveScore();
   S.bubble.splice(S.bubble.indexOf(id),1);
+  forgetTeam(id);
   render(prev);
   toast(BY_ID[id].name + " is out of the bubble", "bad");
 }
@@ -1795,6 +2014,7 @@ function completeSwap(out, inn){
   if(S.bubble.indexOf(out) < 0 || S.bubble.indexOf(inn) >= 0) return;
   var prev = liveScore();
   S.bubble[S.bubble.indexOf(out)] = inn;
+  forgetTeam(out);
   S.swapUsed = true; S.swapWeek = S.week; S.fee = swapFee();
   cancelSwapAsk(true);
   render(prev);
@@ -1803,23 +2023,119 @@ function completeSwap(out, inn){
 
 /* \u2500\u2500 lock in \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 */
 function entryShut(){ return S.week > 4 || !!S.playoff; }
+function seedsOn(){ return S.locked || $("lockConfirm").classList.contains("on"); }
+function syncSeeds(){                       // seeds follow the roster, order kept
+  S.seeds = S.seeds.filter(function(id){ return S.bubble.indexOf(id) >= 0; });
+  S.bubble.slice().sort(function(a,b){ return (rankOf(a)||99) - (rankOf(b)||99); })
+    .forEach(function(id){ if(S.seeds.indexOf(id) < 0) S.seeds.push(id); });
+}
+function paintSeeds(){
+  var on = seedsOn();
+  Array.prototype.forEach.call(orbsG.children, function(g){
+    var id = g.getAttribute("data-id"), i = S.seeds.indexOf(id);
+    g.classList.toggle("seeded", on && i >= 0);
+    g.classList.toggle("crowned", on && i === 0);
+    var t = g.querySelector(".seednum");
+    if(t) t.textContent = i >= 0 ? (i+1) : "";
+  });
+}
+function renderSeedList(){
+  var host = $("seedList");
+  host.innerHTML = "";
+  S.seeds.forEach(function(id, i){
+    var t = BY_ID[id], r = rankOf(id);
+    var li = document.createElement("li");
+    li.className = "seedrow";
+    li.setAttribute("data-id", id);
+    li.innerHTML = '<span class="grip" aria-hidden="true">\u2261</span>' +
+      '<span class="sn">'+(i+1)+'</span>' +
+      '<span class="swatch" style="background:'+t.c1+';border-color:'+t.c2+'"></span>' +
+      '<span class="nm">'+t.name+(r?" \u00B7 #"+r:"")+'</span>' +
+      (i===0 ? '<span class="crowntag">Crown</span>' : '') +
+      '<span class="ups">' +
+        '<button type="button" class="mv" data-d="-1" aria-label="Move '+t.name+' up"'+(i===0?" disabled":"")+'>\u25B2</button>' +
+        '<button type="button" class="mv" data-d="1" aria-label="Move '+t.name+' down"'+(i===S.seeds.length-1?" disabled":"")+'>\u25BC</button>' +
+      '</span>';
+    Array.prototype.forEach.call(li.querySelectorAll(".mv"), function(b){
+      b.addEventListener("click", function(e){ e.stopPropagation(); moveSeed(id, parseInt(b.getAttribute("data-d"),10)); });
+    });
+    li.addEventListener("pointerdown", function(e){ seedDown(e, id, li); });
+    host.appendChild(li);
+  });
+}
+function moveSeed(id, d){
+  var i = S.seeds.indexOf(id), j = i + d;
+  if(i < 0 || j < 0 || j >= S.seeds.length) return;
+  S.seeds.splice(j, 0, S.seeds.splice(i, 1)[0]);
+  renderSeedList();
+  paintSeeds();
+}
+var seedDrag = null;
+function seedDown(e, id, li){
+  if(e.target.closest && e.target.closest("button")) return;
+  e.preventDefault();
+  seedDrag = id;
+  li.classList.add("drop");
+  window.addEventListener("pointermove", seedMove);
+  window.addEventListener("pointerup", seedUp);
+}
+function seedMove(e){
+  if(!seedDrag) return;
+  var rows = Array.prototype.slice.call($("seedList").children);
+  var from = S.seeds.indexOf(seedDrag), to = from;
+  rows.forEach(function(row, i){
+    var b = row.getBoundingClientRect();
+    if(e.clientY >= b.top && e.clientY <= b.bottom) to = i;
+  });
+  if(to !== from && to >= 0){
+    S.seeds.splice(to, 0, S.seeds.splice(from, 1)[0]);
+    renderSeedList();
+    paintSeeds();
+    var el = $("seedList").children[to];
+    if(el) el.classList.add("drop");
+  }
+}
+function seedUp(){
+  seedDrag = null;
+  window.removeEventListener("pointermove", seedMove);
+  window.removeEventListener("pointerup", seedUp);
+  renderSeedList();
+}
 function askLock(){
   if(S.locked || entryShut()) return;
+  syncSeeds();
+  renderSeedList();
   var n = S.bubble.length;
   $("cfTxt").innerHTML = "Lock <b>" + n + (n===1?" team":" teams") + "</b> at <b>Week " + S.week +
     "</b> prices? Shares worth <b>" + Math.round(shareOf(n, S.entry)) + "</b>. You'll get one swap all season.";
   $("lockConfirm").classList.add("on");
-  $("bLockGo").focus();
+  lockStep(false);
+  paintSeeds();
 }
-function closeLockAsk(){ $("lockConfirm").classList.remove("on"); }
+function lockStep(two){
+  $("cfStep1").hidden = !!two;
+  $("cfStep2").hidden = !two;
+  if(two) $("bLockGo").disabled = !$("tbInput").value;
+  var f = two ? $("tbInput") : $("cfNext");
+  if(f) f.focus();
+}
+function closeLockAsk(){ $("lockConfirm").classList.remove("on"); paintSeeds(); }
 function doLock(){
   if(S.locked || entryShut()) return;
+  var v = parseInt($("tbInput").value, 10);
+  if(isNaN(v)){
+    toast("The tiebreaker needs a number \u2014 total points across the 11 playoff games.", "bad");
+    $("tbInput").focus();
+    return;
+  }
   cancelSwapAsk(true);
+  S.tb = v;
+  syncSeeds();
   S.locked = true;
   S.lockedAt = new Date();
   S.lockLabel = DOCKS[S.entry].k;                 // the dock is fixed from here
   closeLockAsk();
-  $("sealTxt").textContent = "LOCKED \u00B7 " + S.lockLabel.toUpperCase();
+  $("sealTxt").textContent = "Locked \u00B7 " + S.lockLabel;
   bubEl.classList.remove("locking");
   void bubEl.offsetWidth;
   bubEl.classList.add("locking");
@@ -1829,6 +2145,9 @@ function doLock(){
 }
 function renderLock(){
   var b = $("bLock"), chip = $("lockChip");
+  $("sealTag").hidden = !S.locked && !S.playoff;
+  $("sealTxt").hidden = !S.locked;
+  $("sealFinal").hidden = !S.playoff;
   bubEl.classList.toggle("draft", !S.locked);
   bubEl.classList.toggle("locked", S.locked);
   $("bAdv").classList.toggle("gold", S.locked);
@@ -1836,7 +2155,9 @@ function renderLock(){
     b.hidden = true;
     chip.hidden = false;
     chip.innerHTML = '<span class="dot"></span>Locked \u00B7 <b>' + S.lockLabel + '</b> \u00B7 ' + stamp(S.lockedAt);
-    chip.title = "Your lock timestamp is the tie-break if two bubbles finish level.";
+    chip.title = "Crown: " + (S.seeds[0] ? BY_ID[S.seeds[0]].name : "\u2014") +
+      " \u00B7 Tiebreak: " + (S.tb === null ? "\u2014" : S.tb) +
+      " \u00B7 Locked " + stamp(S.lockedAt) + ".";
     closeLockAsk();
   } else {
     b.hidden = false;
@@ -1848,51 +2169,66 @@ function renderLock(){
 }
 
 /* \u2500\u2500 the clock, and the moment a team bombs out \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 */
-function bombOut(ids){
+function shake(cls, ms){
+  if(REDUCE) return;
+  quietRipple = Date.now() + ms;                // the jolt owns the sphere
+  bubEl.classList.remove(cls);
+  void bubEl.offsetWidth;
+  bubEl.classList.add(cls);
+  setTimeout(function(){ bubEl.classList.remove(cls); }, ms - 60);
+}
+function droppedOut(ids){                       // stage one: still inside, now dead weight
   if(!ids.length) return;
   ids.forEach(function(id){
     var g = orbsG.querySelector('[data-id="'+id+'"]');
     if(g) g.classList.add("cracked");           // the disc splits
   });
-  if(!REDUCE){
-    quietRipple = Date.now() + 900;             // the shake owns the sphere
-    bubEl.classList.remove("bomb");
-    void bubEl.offsetWidth;
-    bubEl.classList.add("bomb");
-    setTimeout(function(){ bubEl.classList.remove("bomb"); }, 820);
-  }
+  shake("bomb", 880);
   var names = ids.map(function(i){ return BY_ID[i].name; }).join(" and ");
-  toast(names + (ids.length > 1 ? " have" : " has") + " bombed out \u2014 dead weight on your bubble", "bad");
+  toast(names + (ids.length > 1 ? " dropped" : " dropped") + " out of the Top 25 \u2014 weighing your bubble down", "bad");
 }
-function applyPoll(newRanks, playoff){
-  var wasCredit = {}, wasRank = {};
-  S.bubble.forEach(function(id){ wasCredit[id] = creditOf(id); wasRank[id] = rankOf(id); });
+function letGo(ids){                            // stage two: the shell lets it through
+  if(!ids.length) return;
+  shake("release", 940);
+  var names = ids.map(function(i){ return BY_ID[i].name; }).join(" and ");
+  toast(names + (ids.length > 1 ? " are" : " is") + " out of the playoff picture \u2014 dead weight", "bad");
+}
+function applyPoll(mutate){
+  var was = {};
+  S.bubble.forEach(function(id){ was[id] = {c:creditOf(id), r:rankOf(id), e:isEliminated(id)}; });
   var prev = liveScore();
-  if(newRanks) S.ranks = newRanks.slice();
-  if(playoff) S.playoff = playoff;
-  var bombs = S.bubble.filter(function(id){ return wasCredit[id] > 0 && creditOf(id) === 0; });
-  bombOut(bombs);
+  mutate();
+  var drops = [], outs = [];
+  S.bubble.forEach(function(id){
+    if(isEliminated(id)){ if(!was[id].e) outs.push(id); }
+    else if(was[id].c > 0 && creditOf(id) === 0) drops.push(id);
+  });
+  droppedOut(drops);
+  letGo(outs);
   render(prev);
-  return {bombs:bombs, wasRank:wasRank};
+  return {drops:drops, outs:outs, was:was};
 }
 
 function advanceWeek(){
   if(S.playoff || S.week >= SEASON.length) return;
   cancelSwapAsk(true);
-  S.week++;
-  if(!S.locked) S.entry = Math.min(DOCKS.length-1, S.week-1);
-  var r = applyPoll(SEASON[S.week-1], null);
+  var r = applyPoll(function(){
+    S.week++;
+    if(!S.locked) S.entry = Math.min(DOCKS.length-1, S.week-1);
+    S.ranks = SEASON[S.week-1].slice();
+  });
 
   var msgs = [];
   S.bubble.forEach(function(id){
-    if(r.bombs.indexOf(id) >= 0) return;
-    var was = r.wasRank[id], now = rankOf(id);
-    if(!was && now) msgs.push([BY_ID[id].name + " is back in the poll at #" + now + ".", "ok"]);
+    if(r.drops.indexOf(id) >= 0 || r.outs.indexOf(id) >= 0) return;
+    var was = r.was[id].r, now = rankOf(id);
+    if(!was && now) msgs.push([BY_ID[id].name + (S.poppedAt[id] === undefined && !S.seen[id]
+      ? " climbs into the poll at #" : " is back in the poll at #") + now + ".", "ok"]);
     else if(now && now<=8 && (was>8 || !was)) msgs.push([BY_ID[id].name + " is elevating your bubble (#" + now + ").", "ok"]);
     else if(now && was && was-now>=2) msgs.push([BY_ID[id].name + " climbed to #" + now + ".", "ok"]);
     else if(now && was && now-was>=2) msgs.push([BY_ID[id].name + " slid to #" + now + ".", "bad"]);
   });
-  if(!msgs.length && !r.bombs.length) msgs.push(["Quiet week in the poll. Your bubble holds where it was.", "ok"]);
+  if(!msgs.length && !r.drops.length && !r.outs.length) msgs.push(["Quiet week in the poll. Your bubble holds where it was.", "ok"]);
   msgs.slice(0,2).forEach(function(m, i){
     setTimeout(function(){ toast(m[0], m[1]==="bad"?"bad":""); }, 520 + i*440);
   });
@@ -1910,11 +2246,14 @@ function advanceWeek(){
 function playPlayoff(){
   if(S.playoff) return;
   cancelSwapAsk(true);
-  if(S.week < SEASON.length){                   // settle the poll, then play it out
-    S.week = SEASON.length;
-    if(!S.locked) S.entry = Math.min(DOCKS.length-1, S.week-1);
-  }
-  applyPoll(SEASON[SEASON.length-1], PLAYOFF);
+  applyPoll(function(){                         // settle the poll, then play it out
+    if(S.week < SEASON.length){
+      S.week = SEASON.length;
+      if(!S.locked) S.entry = Math.min(DOCKS.length-1, S.week-1);
+    }
+    S.ranks = SEASON[SEASON.length-1].slice();
+    S.playoff = PLAYOFF;
+  });
   if(!REDUCE) bubEl.classList.add("shimmer");
 
   var note = $("finalNote");
@@ -1945,6 +2284,8 @@ function reset(){
    RENDER
    \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550 */
 function render(prev){
+  markSeen();
+  syncSeeds();
   $("weekChip").textContent = S.week;
   $("capNote").textContent = S.bubble.length + " / 20";
   renderOrbs();
@@ -1958,6 +2299,7 @@ function render(prev){
   renderTailgate();
   renderState();
   renderStrip(prev===undefined?null:prev);
+  renderTiebreak();
   $("bAdv").disabled = !!S.playoff || S.week >= SEASON.length;
   $("bPlay").disabled = !!S.playoff;
 }
@@ -1976,6 +2318,10 @@ $("bReset").addEventListener("click", reset);
 $("bLock").addEventListener("click", askLock);
 $("bLockGo").addEventListener("click", doLock);
 $("bLockNo").addEventListener("click", closeLockAsk);
+$("cfNext").addEventListener("click", function(){ lockStep(true); });
+$("cfBack").addEventListener("click", function(){ lockStep(false); });
+$("tbInput").addEventListener("input", function(){ $("bLockGo").disabled = !$("tbInput").value; });
+$("tbInput").addEventListener("keydown", function(e){ if(e.key === "Enter") doLock(); });
 window.addEventListener("resize", layout);
 
 S = freshState();
