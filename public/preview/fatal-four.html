@@ -507,6 +507,35 @@ select[disabled]{opacity:.45}
 .ups button[disabled]{opacity:.3;cursor:not-allowed}
 .tbfield{display:block;font-size:12.5px;color:var(--muted);max-width:340px}
 .tbfield input{margin-top:6px}
+.callrow{display:flex;align-items:flex-end;gap:10px}
+.callrow .tbfield{max-width:128px}
+.cdash{color:var(--muted-2);padding-bottom:9px;font-size:15px}
+.crownpick{display:flex;flex-direction:column;gap:12px;max-width:660px}
+.cslots{display:flex;gap:8px;flex-wrap:wrap}
+.cslot{
+  flex:1 1 132px;min-width:124px;display:flex;align-items:center;gap:9px;padding:7px 10px;
+  border-radius:8px;background:var(--panel-2);border:1px dashed var(--line);color:var(--muted);
+  cursor:pointer;text-align:left;font:inherit;
+}
+.cslot.filled{border-style:solid;border-color:var(--gold);background:var(--panel);color:var(--ink)}
+.cslot.over{border-color:var(--gold-hi);background:#153059}
+.cslot .lab{font-family:var(--disp);font-weight:700;font-size:10px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--muted-2);flex:0 0 auto}
+.cslot.filled .lab{color:var(--gold)}
+.cslot .nm{font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1 1 auto}
+.cpool{display:flex;flex-wrap:wrap;gap:9px}
+.corb{
+  background:transparent;border:0;padding:0;width:58px;position:relative;cursor:grab;touch-action:none;
+  display:flex;flex-direction:column;align-items:center;gap:4px;
+}
+.corb .tnm{max-width:58px}
+.corb.on .torb{box-shadow:0 0 0 2px var(--gold)}
+.corb .cnum{
+  position:absolute;top:-4px;right:3px;background:var(--gold);color:#16130A;border-radius:5px;
+  font-family:var(--disp);font-weight:800;font-size:9.5px;padding:0 4px;
+}
+.sn.champ{display:inline-flex;align-items:center;justify-content:center;padding:2px 5px}
+.sn.champ svg{display:block}
 .tbline{
   display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 16px;
   padding:9px clamp(14px,2.4vw,22px);border-top:1px solid var(--line-soft);
@@ -517,6 +546,7 @@ select[disabled]{opacity:.45}
 .tbline i.good{color:var(--green)}
 .tbline i.bad2{color:var(--red-hi)}
 .tbline .q{border-bottom:1px dotted var(--muted-2);cursor:help}
+.tbline .tienote{color:var(--gold);flex-basis:100%}
 .tiewin{
   font-family:var(--disp);font-weight:700;font-size:9px;letter-spacing:.08em;text-transform:uppercase;
   color:var(--gold);line-height:1.1;
@@ -721,8 +751,12 @@ select[disabled]{opacity:.45}
 
   <div class="confirm" id="lockConfirm" role="group" aria-label="Lock in your bubble">
     <div class="cfstep" id="cfStep1">
-      <div class="cfhead"><span class="lbl lbl-gold">Step 1 of 2</span><h3>Rank your teams</h3></div>
-      <p class="hint">Drag them into the order you believe in. <b>Your #1 is your champ pick</b>, the team you say wins it all. The order moves no points. It only breaks ties.</p>
+      <div class="cfhead"><span class="lbl lbl-gold">Step 1 of 2</span><h3>Crown your Final Four</h3></div>
+      <p class="hint" id="cpHint">Pick four, in order. <b>Your #1 is your champ pick</b>, the team you say wins it all. This moves no points. It only breaks ties.</p>
+      <div class="crownpick" id="crownPick" hidden>
+        <div class="cslots" id="cSlots"></div>
+        <div class="cpool" id="cPool"></div>
+      </div>
       <ol class="seedlist" id="seedList"></ol>
       <span class="acts">
         <button class="btn gold sm" id="cfNext">Next</button>
@@ -730,12 +764,18 @@ select[disabled]{opacity:.45}
       </span>
     </div>
     <div class="cfstep" id="cfStep2" hidden>
-      <div class="cfhead"><span class="lbl lbl-gold">Step 2 of 2</span><h3>Tiebreaker</h3></div>
+      <div class="cfhead"><span class="lbl lbl-gold">Step 2 of 2</span><h3>Call the final</h3></div>
       <p class="hint" id="cfTxt"></p>
-      <label class="tbfield" for="tbInput">Total points in the whole playoff (all 11 games). Closest wins ties.
-        <input class="search" type="number" id="tbInput" min="0" max="2000" step="1" inputmode="numeric" placeholder="Your number">
-      </label>
-      <p class="hint">Typical range <b>450 to 750</b>. Required. It is the last tie-break before a prize gets split.</p>
+      <div class="callrow">
+        <label class="tbfield" for="tbWin">Winner
+          <input class="search" type="number" id="tbWin" min="0" max="200" step="1" inputmode="numeric" placeholder="31">
+        </label>
+        <span class="cdash">&#x2013;</span>
+        <label class="tbfield" for="tbLose">Loser
+          <input class="search" type="number" id="tbLose" min="0" max="200" step="1" inputmode="numeric" placeholder="24">
+        </label>
+      </div>
+      <p class="hint">Predict the championship game score. Closest wins ties. Required.</p>
       <span class="acts">
         <button class="btn gold sm" id="bLockGo">Lock</button>
         <button class="btn ghost sm" id="cfBack">Back</button>
@@ -799,8 +839,8 @@ select[disabled]{opacity:.45}
       <ol class="howto">
         <li><span class="hn">1</span><p>Pick the teams you think make the Final Four. Your 1,000 points get split across them. 4 teams = 250 each. 10 teams = 100 each.</p></li>
         <li><span class="hn">2</span><p>Lock it in before Week 1. Late? You lose 10% a week. Doors close after Week 4.</p></li>
-        <li><span class="hn">3</span><p>Your score follows the rankings all season. Top 4 pays full. 5&#x2013;8 pays about half. 9&#x2013;12 pays a fifth. Below that, crumbs.</p></li>
-        <li><span class="hn">4</span><p>Final Four pays full. Quarterfinal pays half. Made the playoff pays a fifth. Most points wins.</p></li>
+        <li><span class="hn">3</span><p>Your score follows the rankings all season.</p></li>
+        <li><span class="hn">4</span><p>More teams means better odds of catching the Final Four. It also lowers your max score.</p></li>
       </ol>
       <div class="howfoot">
         <span>One swap a season. It costs you.</span>
@@ -851,11 +891,11 @@ select[disabled]{opacity:.45}
       </section>
       <section>
         <h3>Ties</h3>
-        <p>First your champ pick. Then how close your team order was. Then the closest guess on total points in the whole playoff. Still tied, it's split.</p>
+        <p>First your champ pick. Then how many of your crowned four made the real Final Four. Then the closest call on the championship game score. Still tied, it's split.</p>
       </section>
       <section>
         <h3>Lock in</h3>
-        <p>Nothing counts until you lock in. Locking sets your entry week, your team order and your tiebreaker. It closes the roster except for your one swap.</p>
+        <p>Nothing counts until you lock in. Locking sets your entry week, your crowned four and your final score call. It closes the roster except for your one swap.</p>
       </section>
     </div>
   </div>
@@ -948,8 +988,9 @@ var SEASON = [
 /* Out of playoff contention: the scripted week a team is mathematically done,
    plus Selection Sunday, when everyone outside the twelve is finished. */
 var ELIMINATED = {MICH:8};
-var CHAMP = "UGA";          // the sample champion \u2014 the crown tie-break
-var ACTUAL_TB = 598;        // points scored across the sample's 11 playoff games
+var CHAMP = "UGA";          // the sample champion
+var RUNNER = "TEX";
+var FINAL_W = 34, FINAL_L = 27;   // Georgia 34, Texas 27 in the sample final
 
 var PLAYOFF = {
   field: SEASON[11].slice(0,12),
@@ -959,16 +1000,23 @@ var PLAYOFF = {
 
 var DOCKS = [{k:"Preseason",p:1},{k:"Week 2",p:.9},{k:"Week 3",p:.8},{k:"Week 4",p:.7}];
 
-/* teams[0] is that friend's champ pick, their #1, the team they say wins it.
-   ThirdSat_Tay is written to finish level with the sample bubble on points,
-   so the tie-break chain has something to resolve. */
+/* crowns[0] is that friend's champ pick. ThirdSat_Tay and BuckeyeBrent both
+   finish level with the sample bubble on points, so the whole tie-break chain
+   has to run: Tay loses on the champ pick, Brent goes all the way to the
+   score call and loses it by nine. */
 var FRIENDS = [
-  {h:"SwampFox", d:["Swamp","Fox"], teams:["OSU","UGA","TENN","MIA","FLA"], entry:1, tb:640},
-  {h:"HailState_Hannah", d:["HailState","Hannah"], teams:["ALA","MISS","TAMU","MSST"], entry:1, tb:520},
-  {h:"TheGrove_Tom", d:["TheGrove","Tom"], teams:["TEX","MISS","LSU","ORE","PSU","ND"], entry:0, tb:705},
-  {h:"BuckeyeBrent", d:["Buckeye","Brent"], teams:["OSU","IND","ORE","PSU"], entry:2, tb:588},
-  {h:"BayouBiscuit", d:["Bayou","Biscuit"], teams:["LSU","TEX","ND","OKST","WIS","UTAH","BYU","SMU","TCU"], entry:0, tb:470},
-  {h:"ThirdSat_Tay", d:["ThirdSat","Tay"], teams:["ALA","UGA","TENN","WVU"], entry:0, tb:640}
+  {h:"SwampFox", d:["Swamp","Fox"], teams:["OSU","UGA","TENN","MIA","FLA"], entry:1,
+   crowns:["OSU","UGA","MIA","TENN"], call:{w:38,l:31}},
+  {h:"HailState_Hannah", d:["HailState","Hannah"], teams:["ALA","MISS","TAMU","MSST"], entry:1,
+   crowns:["ALA","MISS","TAMU","MSST"], call:{w:27,l:20}},
+  {h:"TheGrove_Tom", d:["TheGrove","Tom"], teams:["TEX","MISS","LSU","ORE","PSU","ND"], entry:0,
+   crowns:["TEX","ORE","ND","MISS"], call:{w:45,l:38}},
+  {h:"BuckeyeBrent", d:["Buckeye","Brent"], teams:["OSU","UGA","MISS","ISU"], entry:2,
+   crowns:["UGA","OSU","MISS","ISU"], call:{w:42,l:34}},
+  {h:"BayouBiscuit", d:["Bayou","Biscuit"], teams:["LSU","TEX","ND","OKST","WIS","UTAH","BYU","SMU","TCU"], entry:0,
+   crowns:["LSU","TEX","ND","BYU"], call:{w:24,l:17}},
+  {h:"ThirdSat_Tay", d:["ThirdSat","Tay"], teams:["ALA","UGA","TENN","WVU"], entry:0,
+   crowns:["ALA","UGA","TENN","WVU"], call:{w:33,l:28}}
 ];
 
 /* \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
@@ -1051,31 +1099,23 @@ function ceilingOf(teams, entryIdx, ranks, fee, playoff, popped){
 
 /* \u2550\u2550 THE TIE-BREAK CHAIN \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
    Level on points? The champ pick settles it, your #1 against the real one.
-   Then team order: how far your order sat from how your teams really
-   finished. Then the closest guess at the playoff points total. Then split.
+   Then how many of your crowned four actually made the Final Four. Then the
+   closest call on the championship game score. Then it is split.
    None of this moves a single point. */
-function finishRank(id){                    // 0 = champion, then down the bracket
-  if(id === CHAMP) return 0;
-  var i = PLAYOFF.f4.indexOf(id);    if(i >= 0) return 1 + i;
-  var q = PLAYOFF.qf.indexOf(id);    if(q >= 0) return 10 + q;
-  var f = PLAYOFF.field.indexOf(id); if(f >= 0) return 30 + f;
-  var r = SEASON[SEASON.length-1].indexOf(id);
-  return r >= 0 ? 60 + r : 200;
+function f4Hits(crowns){
+  if(!crowns || !crowns.length) return 0;
+  return crowns.filter(function(id){ return PLAYOFF.f4.indexOf(id) >= 0; }).length;
 }
-function seedError(order){                  // sum of |seed \u2212 actual finish slot|
-  if(!order || !order.length) return 999;
-  var actual = order.slice().sort(function(a,b){ return finishRank(a) - finishRank(b); });
-  var e = 0;
-  order.forEach(function(id, i){ e += Math.abs(i - actual.indexOf(id)); });
-  return e;
+function callMiss(c){
+  return c ? Math.abs(c.w - FINAL_W) + Math.abs(c.l - FINAL_L) : Infinity;
 }
-function tbMiss(v){ return v === null || v === undefined ? Infinity : Math.abs(v - ACTUAL_TB); }
+var TIE_STEP = {"won on champ pick":1, "won on Final Four":2, "won on the score call":3};
 function tieReason(a, b){                   // why a beats b, or "" if it does not
-  if((a.crown === CHAMP) !== (b.crown === CHAMP)) return a.crown === CHAMP ? "won on champ pick" : "";
-  var ae = seedError(a.order), be = seedError(b.order);
-  if(ae !== be) return ae < be ? "won on team order" : "";
-  var am = tbMiss(a.tb), bm = tbMiss(b.tb);
-  if(am !== bm) return am < bm ? "won on tiebreaker" : "";
+  if((a.champ === CHAMP) !== (b.champ === CHAMP)) return a.champ === CHAMP ? "won on champ pick" : "";
+  var ah = f4Hits(a.crowns), bh = f4Hits(b.crowns);
+  if(ah !== bh) return ah > bh ? "won on Final Four" : "";
+  var am = callMiss(a.call), bm = callMiss(b.call);
+  if(am !== bm) return am < bm ? "won on the score call" : "";
   return "";
 }
 
@@ -1121,7 +1161,7 @@ function freshState(){
     swapUsed:false, fee:0,
     playoff:null,
     locked:false, lockedAt:null, lockLabel:null,
-    seen:{}, poppedAt:{}, seeds:[], tb:null,
+    seen:{}, poppedAt:{}, crowns:[], call:null,
     pendingOut:null,
     lastScore:null
   };
@@ -1168,6 +1208,8 @@ function svg(tag, attrs){
   for(var k in attrs) e.setAttribute(k, attrs[k]);
   return e;
 }
+var CROWN_SVG = '<svg width="13" height="10" viewBox="-10 -10 20 13" aria-hidden="true">' +
+  '<path d="M-9,-4 l4.5,6 4.5,-8.5 4.5,8.5 4.5,-6 -1.8,9.5 -14.4,0 z" fill="#16130A"/></svg>';
 function fmtN(v){ return Number(v).toLocaleString("en-US"); }
 function stamp(d){
   return d.toLocaleString("en-US", {month:"short", day:"numeric", hour:"numeric", minute:"2-digit"});
@@ -1382,7 +1424,7 @@ function renderOrbs(){
     }
   });
 
-  paintSeeds();
+  paintCrowns();
   var f2 = "scaleY(" + flat.toFixed(3) + ")";
   $("shellBack").style.transform = f2;
   $("shellFront").style.transform = f2;
@@ -1483,7 +1525,7 @@ function buildAxis(){
    the rim to add it; drag an orb out through the rim to drop it. Locked
    bubbles cannot drop a team \u2014 dragging one out opens the one swap instead.
    The roster's x buttons stay as the keyboard/pointer-free alternative. */
-var trayFilter = "ALL", top25Only = false, drag = null, noClickUntil = 0;
+var trayFilter = "ALL", top25Only = false, drag = null, noClickUntil = 0, tieNote = "";
 
 function buildConfChips(){
   var host = $("confChips");
@@ -1631,8 +1673,15 @@ function dragMove(e){
     }
     e.preventDefault();
     drag.ghost.style.transform = "translate("+(e.clientX-24)+"px,"+(e.clientY-24)+"px)";
-    drag.inRim = insideRim(e);
-    bubEl.classList.toggle("in", drag.inRim);
+    if(drag.kind === "crown"){
+      drag.slot = slotAt(e);
+      Array.prototype.forEach.call($("cSlots").children, function(el, i){
+        el.classList.toggle("over", i === drag.slot);
+      });
+    } else {
+      drag.inRim = insideRim(e);
+      bubEl.classList.toggle("in", drag.inRim);
+    }
   }
 }
 function dragUp(e){
@@ -1645,6 +1694,14 @@ function dragUp(e){
     return;
   }
   if(d.ghost && d.ghost.parentNode) d.ghost.parentNode.removeChild(d.ghost);
+  if(d.kind === "crown"){
+    Array.prototype.forEach.call($("cSlots").children, function(el){ el.classList.remove("over"); });
+    if(d.moved){
+      noClickUntil = Date.now() + 350;
+      if(d.slot >= 0) dropCrown(d.id, d.slot);
+    }
+    return;
+  }
   if(d.moved){
     noClickUntil = Date.now() + 350;                  // the drag already answered
     if(d.inRim) trayPick(d.id);
@@ -1702,7 +1759,10 @@ function renderRoster(){
     var row = document.createElement("div");
     row.className = "rrow " + (r&&r<=8 ? "lift-y" : (!r||r>=13 ? "sink-y" : ""));
     row.innerHTML =
-      (S.locked ? '<span class="sn">'+(S.seeds.indexOf(id)+1)+'</span>' : '') +
+      (S.locked && S.crowns.indexOf(id) === 0
+        ? '<span class="sn champ" title="Your champ pick">' + CROWN_SVG + '</span>'
+        : (S.locked && S.crowns.indexOf(id) > 0
+            ? '<span class="sn">'+(S.crowns.indexOf(id)+1)+'</span>' : '')) +
       '<span class="swatch" style="background:'+t.c1+';border-color:'+t.c2+'"></span>' +
       '<span class="conf">'+t.tag+'</span>' +
       '<span class="math"><b>'+t.name+'</b> \u00B7 '+ state +
@@ -1792,15 +1852,16 @@ function renderSwap(){
 function renderTailgate(){
   var host = $("tg");
   var mine = { h:"YOU", d:["You", S.locked?"locked":"not locked"], teams:S.bubble, entry:S.entry, fee:S.fee,
-               you:true, crown:S.locked?S.seeds[0]:null, order:S.locked?S.seeds:null, tb:S.locked?S.tb:null };
+               you:true, champ:S.locked?S.crowns[0]:null, crowns:S.locked?S.crowns:[], call:S.locked?S.call:null };
   var all = [mine].concat(FRIENDS.map(function(f){
-    return { h:f.h, d:f.d, teams:f.teams, entry:f.entry, fee:0, crown:f.teams[0], order:f.teams, tb:f.tb };
+    return { h:f.h, d:f.d, teams:f.teams, entry:f.entry, fee:0, champ:f.crowns[0], crowns:f.crowns, call:f.call };
   }));
   all.forEach(function(p){
     p.score = scoreOf(p.teams, p.entry, S.ranks, p.fee, S.playoff);
     p.ceil  = ceilingOf(p.teams, p.entry, S.ranks, p.fee, S.playoff, eliminatedIn(p.teams));
   });
   var best = all.reduce(function(a,b){ return b.score>a.score?b:a; });
+  tieNote = "";
   if(S.playoff){                       // level on points? run the chain
     var groups = {};
     all.forEach(function(p){ (groups[p.score] = groups[p.score] || []).push(p); });
@@ -1809,8 +1870,20 @@ function renderTailgate(){
       if(g.length < 2) return;
       var win = g[0], why = "";
       g.forEach(function(p){ if(p !== win && tieReason(p, win)) win = p; });
-      g.forEach(function(p){ if(p !== win){ var r = tieReason(win, p); if(r) why = r; } });
+      g.forEach(function(p){                     // the tie is named by the step that ended it
+        if(p === win) return;
+        var r = tieReason(win, p);
+        if(r && (TIE_STEP[r] || 0) > (TIE_STEP[why] || 0)) why = r;
+      });
       win.tieWin = why || "won the tie";
+      if(win.you && why === "won on the score call"){
+        var rival = null;                // the one it came down to
+        g.forEach(function(p){
+          if(p !== win && (p.champ === CHAMP) === (win.champ === CHAMP) && f4Hits(p.crowns) === f4Hits(win.crowns)) rival = p;
+        });
+        if(rival) tieNote = "You off by " + callMiss(win.call) + " \u00B7 " + rival.h +
+          " off by " + callMiss(rival.call) + " \u00B7 you win on the final score call.";
+      }
     });
   }
 
@@ -1861,8 +1934,9 @@ function renderTailgate(){
   $("gapLine").innerHTML = gap > 0
     ? 'Gap to the leader (' + best.h + '): <b class="num">' + gap + '</b>'
     : (level.length
-        ? 'Level with ' + level[0].h + ' at <b class="num">' + all[0].score + '</b> \u2014 ' +
-          (all[0].tieWin ? "you " + all[0].tieWin : "the tie is theirs")
+        ? 'Level with ' + level.map(function(p){ return p.h; }).join(" and ") +
+          ' at <b class="num">' + all[0].score + '</b>. ' +
+          (all[0].tieWin ? "You " + all[0].tieWin + "." : "The tie is theirs.")
         : 'You lead the tailgate by <b class="num">' +
           (all[0].score - all.slice(1).reduce(function(a,b){return Math.max(a,b.score);},0)) + '</b>');
 }
@@ -1873,17 +1947,20 @@ function renderTiebreak(){
   el.hidden = false;
   if(!S.locked){
     el.innerHTML = '<span class="lbl lbl-gold">Tie-break</span>' +
-      '<span>You never locked in. No champ pick, no tiebreaker. You lose every tie.</span>';
+      '<span>You never locked in. No champ pick, no score call. You lose every tie.</span>';
     return;
   }
-  var crown = S.seeds[0], ok = crown === CHAMP, err = seedError(S.seeds);
+  var champ = S.crowns[0], ok = champ === CHAMP;
+  var hits = f4Hits(S.crowns), miss = callMiss(S.call);
   el.innerHTML = '<span class="lbl lbl-gold">Tie-break</span>' +
-    '<span>Champ pick: <b>' + BY_ID[crown].name + '</b> \u00B7 ' +
-      (ok ? '<i class="good">correct</i>' : '<i class="bad2">no \u2014 ' + BY_ID[CHAMP].name + ' won it</i>') + '</span>' +
-    '<span><span class="q" title="Your order against how your teams actually finished. Count the places each team moved and add them up. Zero means you called it perfectly.">Team order</span>: <b>' + err + '</b> ' +
-      (err === 0 ? "\u2014 perfect" : "off") + '</span>' +
-    '<span>Playoff points: you <b>' + (S.tb === null ? "\u2014" : S.tb) + '</b> \u00B7 actual <b>' + ACTUAL_TB +
-      '</b>' + (S.tb === null ? "" : ' \u00B7 off by <b>' + Math.abs(S.tb - ACTUAL_TB) + '</b>') + '</span>';
+    '<span>Champ pick: <b>' + BY_ID[champ].name + '</b> \u00B7 ' +
+      (ok ? '<i class="good">correct</i>' : '<i class="bad2">no, ' + BY_ID[CHAMP].name + ' won it</i>') + '</span>' +
+    '<span><span class="q" title="How many of your crowned four actually made the Final Four.">Final Four crowned</span>: <b>' +
+      hits + ' of ' + S.crowns.length + '</b></span>' +
+    '<span>Final score call: you <b>' + (S.call ? S.call.w + "\u2013" + S.call.l : "\u2014") +
+      '</b> \u00B7 actual <b>' + FINAL_W + '\u2013' + FINAL_L + '</b>' +
+      (S.call ? ' \u00B7 off by <b>' + miss + '</b>' : '') + '</span>' +
+    (tieNote ? '<span class="tienote">' + tieNote + '</span>' : '');
 }
 
 /* \u2500\u2500 the state \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 */
@@ -2086,25 +2163,107 @@ function completeSwap(out, inn){
 /* \u2500\u2500 lock in \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 */
 function entryShut(){ return S.week > 4 || !!S.playoff; }
 function seedsOn(){ return S.locked || $("lockConfirm").classList.contains("on"); }
-function syncSeeds(){                       // seeds follow the roster, order kept
-  S.seeds = S.seeds.filter(function(id){ return S.bubble.indexOf(id) >= 0; });
-  S.bubble.slice().sort(function(a,b){ return (rankOf(a)||99) - (rankOf(b)||99); })
-    .forEach(function(id){ if(S.seeds.indexOf(id) < 0) S.seeds.push(id); });
+function syncCrowns(){                      // crowns follow the roster, order kept
+  S.crowns = S.crowns.filter(function(id){ return S.bubble.indexOf(id) >= 0; });
+  if(S.bubble.length <= 4){                 // four or fewer: they are all crowned
+    S.bubble.slice().sort(function(a,b){ return (rankOf(a)||99) - (rankOf(b)||99); })
+      .forEach(function(id){ if(S.crowns.indexOf(id) < 0) S.crowns.push(id); });
+  }
+  if(S.crowns.length > 4) S.crowns.length = 4;
 }
-function paintSeeds(){
+function crownsNeeded(){ return Math.min(4, S.bubble.length); }
+function crownsReady(){ return S.crowns.length >= crownsNeeded(); }
+function paintCrowns(){
   var on = seedsOn();
   Array.prototype.forEach.call(orbsG.children, function(g){
-    var id = g.getAttribute("data-id"), i = S.seeds.indexOf(id);
-    g.classList.toggle("seeded", on && i >= 0);
-    g.classList.toggle("crowned", on && i === 0);
+    var id = g.getAttribute("data-id"), i = S.crowns.indexOf(id);
+    g.classList.toggle("seeded", on && i > 0);      // 2, 3, 4 wear a numeral
+    g.classList.toggle("crowned", on && i === 0);   // the champ wears the crown
     var t = g.querySelector(".seednum");
-    if(t) t.textContent = i >= 0 ? (i+1) : "";
+    if(t) t.textContent = i > 0 ? (i+1) : "";
   });
+}
+function renderCrownStep(){
+  var few = S.bubble.length <= 4;
+  $("seedList").hidden = !few;
+  $("crownPick").hidden = few;
+  $("cpHint").innerHTML = (few ? "Put them in order. " : "Pick four, in order. ") +
+    "<b>Your #1 is your champ pick</b>, the team you say wins it all. This moves no points. It only breaks ties.";
+  if(few) renderSeedList(); else renderCrownPick();
+  $("cfNext").disabled = !crownsReady();
+}
+function renderCrownPick(){
+  var slots = $("cSlots"), pool = $("cPool"), labels = ["Champ","2","3","4"];
+  slots.innerHTML = ""; pool.innerHTML = "";
+  labels.forEach(function(lab, i){
+    var id = S.crowns[i], t = id ? BY_ID[id] : null;
+    var b = document.createElement("button");
+    b.type = "button";
+    b.className = "cslot" + (id ? " filled" : "");
+    b.setAttribute("data-i", i);
+    b.innerHTML = '<span class="lab">' + lab + '</span>' +
+      (t ? '<span class="swatch" style="background:'+t.c1+';border-color:'+t.c2+'"></span>' +
+           '<span class="nm">' + t.name + '</span>'
+         : '<span class="nm">Tap a team</span>');
+    b.addEventListener("click", function(){
+      if(S.crowns[i]){ S.crowns.splice(i, 1); afterCrownChange(); }
+    });
+    slots.appendChild(b);
+  });
+  S.bubble.slice().sort(function(a,b){ return (rankOf(a)||99) - (rankOf(b)||99); }).forEach(function(id){
+    var t = BY_ID[id], i = S.crowns.indexOf(id), r = rankOf(id);
+    var b = document.createElement("button");
+    b.type = "button";
+    b.className = "corb" + (i >= 0 ? " on" : "");
+    b.setAttribute("data-id", id);
+    b.title = t.name + (r ? " \u00B7 #" + r : " \u00B7 unranked");
+    b.innerHTML =
+      '<span class="torb" style="background:'+t.c1+';border-color:'+t.c2+'">' +
+        '<span class="ab" style="color:'+(lum(t.c1) > .62 ? "#12203A" : "#FFFFFF")+'">'+id+'</span>' +
+      '</span>' +
+      (i >= 0 ? '<span class="cnum">'+(i+1)+'</span>' : '') +
+      '<span class="tnm">'+t.name+'</span>';
+    b.addEventListener("click", function(){ if(Date.now() < noClickUntil) return; toggleCrown(id); });
+    b.addEventListener("pointerdown", function(e){ crownDown(e, t); });
+    pool.appendChild(b);
+  });
+}
+function toggleCrown(id){
+  var i = S.crowns.indexOf(id);
+  if(i >= 0) S.crowns.splice(i, 1);
+  else if(S.crowns.length < 4) S.crowns.push(id);
+  else { toast("Four already crowned. Tap one to drop it.", "bad"); return; }
+  afterCrownChange();
+}
+function dropCrown(id, i){
+  var at = S.crowns.indexOf(id);
+  if(at >= 0) S.crowns.splice(at, 1);
+  if(i < S.crowns.length) S.crowns[i] = id;
+  else if(S.crowns.length < 4) S.crowns.push(id);
+  else S.crowns[3] = id;
+  afterCrownChange();
+}
+function afterCrownChange(){ renderCrownStep(); paintCrowns(); }
+function slotAt(e){
+  var out = -1;
+  Array.prototype.forEach.call($("cSlots").children, function(el, i){
+    var r = el.getBoundingClientRect();
+    if(e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom) out = i;
+  });
+  return out;
+}
+function crownDown(e, t){
+  if(drag) return;
+  if(e.button !== undefined && e.button !== 0) return;
+  drag = {kind:"crown", id:t.id, team:t, moved:false, x0:e.clientX, y0:e.clientY};
+  window.addEventListener("pointermove", dragMove);
+  window.addEventListener("pointerup", dragUp);
+  window.addEventListener("pointercancel", dragCancel);
 }
 function renderSeedList(){
   var host = $("seedList");
   host.innerHTML = "";
-  S.seeds.forEach(function(id, i){
+  S.crowns.forEach(function(id, i){
     var t = BY_ID[id], r = rankOf(id);
     var li = document.createElement("li");
     li.className = "seedrow";
@@ -2113,10 +2272,10 @@ function renderSeedList(){
       '<span class="sn">'+(i+1)+'</span>' +
       '<span class="swatch" style="background:'+t.c1+';border-color:'+t.c2+'"></span>' +
       '<span class="nm">'+t.name+(r?" \u00B7 #"+r:"")+'</span>' +
-      (i===0 ? '<span class="crowntag">Champ pick</span>' : '') +
+      (i===0 ? '<span class="crowntag">Champ</span>' : '') +
       '<span class="ups">' +
         '<button type="button" class="mv" data-d="-1" aria-label="Move '+t.name+' up"'+(i===0?" disabled":"")+'>\u25B2</button>' +
-        '<button type="button" class="mv" data-d="1" aria-label="Move '+t.name+' down"'+(i===S.seeds.length-1?" disabled":"")+'>\u25BC</button>' +
+        '<button type="button" class="mv" data-d="1" aria-label="Move '+t.name+' down"'+(i===S.crowns.length-1?" disabled":"")+'>\u25BC</button>' +
       '</span>';
     Array.prototype.forEach.call(li.querySelectorAll(".mv"), function(b){
       b.addEventListener("click", function(e){ e.stopPropagation(); moveSeed(id, parseInt(b.getAttribute("data-d"),10)); });
@@ -2126,11 +2285,11 @@ function renderSeedList(){
   });
 }
 function moveSeed(id, d){
-  var i = S.seeds.indexOf(id), j = i + d;
-  if(i < 0 || j < 0 || j >= S.seeds.length) return;
-  S.seeds.splice(j, 0, S.seeds.splice(i, 1)[0]);
+  var i = S.crowns.indexOf(id), j = i + d;
+  if(i < 0 || j < 0 || j >= S.crowns.length) return;
+  S.crowns.splice(j, 0, S.crowns.splice(i, 1)[0]);
   renderSeedList();
-  paintSeeds();
+  paintCrowns();
 }
 var seedDrag = null;
 function seedDown(e, id, li){
@@ -2144,15 +2303,15 @@ function seedDown(e, id, li){
 function seedMove(e){
   if(!seedDrag) return;
   var rows = Array.prototype.slice.call($("seedList").children);
-  var from = S.seeds.indexOf(seedDrag), to = from;
+  var from = S.crowns.indexOf(seedDrag), to = from;
   rows.forEach(function(row, i){
     var b = row.getBoundingClientRect();
     if(e.clientY >= b.top && e.clientY <= b.bottom) to = i;
   });
   if(to !== from && to >= 0){
-    S.seeds.splice(to, 0, S.seeds.splice(from, 1)[0]);
+    S.crowns.splice(to, 0, S.crowns.splice(from, 1)[0]);
     renderSeedList();
-    paintSeeds();
+    paintCrowns();
     var el = $("seedList").children[to];
     if(el) el.classList.add("drop");
   }
@@ -2165,34 +2324,42 @@ function seedUp(){
 }
 function askLock(){
   if(S.locked || entryShut()) return;
-  syncSeeds();
-  renderSeedList();
+  syncCrowns();
+  renderCrownStep();
   var n = S.bubble.length;
   $("cfTxt").innerHTML = "Lock <b>" + n + (n===1?" team":" teams") + "</b> at <b>Week " + S.week +
     "</b> prices? That is <b>" + Math.round(shareOf(n, S.entry)) + "</b> points per team. You get one swap all season.";
   $("lockConfirm").classList.add("on");
   lockStep(false);
-  paintSeeds();
+  paintCrowns();
 }
+function callFilled(){ return $("tbWin").value !== "" && $("tbLose").value !== ""; }
 function lockStep(two){
+  if(two && !crownsReady()) return;
   $("cfStep1").hidden = !!two;
   $("cfStep2").hidden = !two;
-  if(two) $("bLockGo").disabled = !$("tbInput").value;
-  var f = two ? $("tbInput") : $("cfNext");
+  if(two) $("bLockGo").disabled = !callFilled();
+  var f = two ? $("tbWin") : $("cfNext");
   if(f) f.focus();
 }
-function closeLockAsk(){ $("lockConfirm").classList.remove("on"); paintSeeds(); }
+function closeLockAsk(){ $("lockConfirm").classList.remove("on"); paintCrowns(); }
 function doLock(){
   if(S.locked || entryShut()) return;
-  var v = parseInt($("tbInput").value, 10);
-  if(isNaN(v)){
-    toast("The tiebreaker needs a number. Total points in the whole playoff.", "bad");
-    $("tbInput").focus();
+  syncCrowns();
+  if(!crownsReady()){ lockStep(false); toast("Crown four teams first.", "bad"); return; }
+  var w = parseInt($("tbWin").value, 10), l = parseInt($("tbLose").value, 10);
+  if(isNaN(w) || isNaN(l)){
+    toast("Call the final score. Winner and loser.", "bad");
+    $(isNaN(w) ? "tbWin" : "tbLose").focus();
+    return;
+  }
+  if(l > w){
+    toast("The loser cannot outscore the winner.", "bad");
+    $("tbLose").focus();
     return;
   }
   cancelSwapAsk(true);
-  S.tb = v;
-  syncSeeds();
+  S.call = {w:w, l:l};
   S.locked = true;
   S.lockedAt = new Date();
   S.lockLabel = DOCKS[S.entry].k;                 // the dock is fixed from here
@@ -2217,9 +2384,9 @@ function renderLock(){
     b.hidden = true;
     chip.hidden = false;
     chip.innerHTML = '<span class="dot"></span>Locked \u00B7 <b>' + S.lockLabel + '</b> \u00B7 ' + stamp(S.lockedAt);
-    chip.title = "Champ pick: " + (S.seeds[0] ? BY_ID[S.seeds[0]].name : "\u2014") +
-      " \u00B7 Tiebreaker: " + (S.tb === null ? "\u2014" : S.tb) +
-      " \u00B7 Locked " + stamp(S.lockedAt) + ".";
+    chip.title = "Champ: " + (S.crowns[0] ? BY_ID[S.crowns[0]].name : "\u2014") +
+      " \u00B7 Final Four: " + S.crowns.map(function(i){ return BY_ID[i].name; }).join(", ") +
+      " \u00B7 Called it " + (S.call ? S.call.w + "\u2013" + S.call.l : "\u2014");
     closeLockAsk();
   } else {
     b.hidden = false;
@@ -2347,7 +2514,7 @@ function reset(){
    \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550 */
 function render(prev){
   markSeen();
-  syncSeeds();
+  syncCrowns();
   $("weekChip").textContent = S.week;
   $("capNote").textContent = S.bubble.length + " / 20";
   renderOrbs();
@@ -2409,8 +2576,10 @@ $("bLockGo").addEventListener("click", doLock);
 $("bLockNo").addEventListener("click", closeLockAsk);
 $("cfNext").addEventListener("click", function(){ lockStep(true); });
 $("cfBack").addEventListener("click", function(){ lockStep(false); });
-$("tbInput").addEventListener("input", function(){ $("bLockGo").disabled = !$("tbInput").value; });
-$("tbInput").addEventListener("keydown", function(e){ if(e.key === "Enter") doLock(); });
+["tbWin","tbLose"].forEach(function(id){
+  $(id).addEventListener("input", function(){ $("bLockGo").disabled = !callFilled(); });
+  $(id).addEventListener("keydown", function(e){ if(e.key === "Enter") doLock(); });
+});
 window.addEventListener("resize", layout);
 
 S = freshState();
