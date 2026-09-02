@@ -218,7 +218,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
               return target ? (
                 <div style={{ marginTop: 24 }}>
                   <Link className="btn" href={`/community/${target.slug}`} style={{ borderColor: "var(--w-navy)", color: "var(--w-navy)" }}>
-                    💬 Argue it out on {teamBoard ? `the ${target.name}` : "the Porch"} →
+                    💬 Argue it out on {teamBoard ? `the ${target.name}` : "the Quad"} →
                   </Link>
                 </div>
               ) : null;
@@ -312,7 +312,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
           <div className="rc">
             <div className="hd">Citizenship</div>
             <Link className="cta" href="/join">Join Free</Link>
-            <p className="sub">Picks logged. Polls archived. The Porch gets the last word.</p>
+            <p className="sub">Picks logged. Polls archived. The Quad gets the last word.</p>
           </div>
         </aside>
       </div></div>

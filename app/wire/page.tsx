@@ -11,7 +11,7 @@ export const revalidate = 120;
 export const metadata: Metadata = {
   title: "The Wire — Breaking College Football News",
   description:
-    "Every move in the sport, the minute it breaks — and what it actually means for your team. The feed the porch runs on.",
+    "Every move in the sport, the minute it breaks — and what it actually means for your team. The feed the Quad runs on.",
 };
 
 export default async function WirePage() {
@@ -30,7 +30,7 @@ export default async function WirePage() {
           <p className="lede" style={{ maxWidth: 640 }}>
             Know it before the group chat does. Every move in the sport lands here the minute it breaks —
             coaching dominoes, portal bombs, recruiting flips — with what it actually means for your
-            Saturday. This is the feed the porch runs on.
+            Saturday. This is the feed the Quad runs on.
           </p>
         </div>
       </header>

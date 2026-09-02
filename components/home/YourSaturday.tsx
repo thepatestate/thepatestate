@@ -85,7 +85,7 @@ export default function YourSaturday() {
                 )}
                 {t.board && (
                   <Link className="row" href={`/community/${t.board.slug}`}>
-                    <div className="k">On the Porch</div><h5>{t.board.title} — pull up a chair</h5>
+                    <div className="k">On the Quad</div><h5>{t.board.title} — meet me on the Quad</h5>
                   </Link>
                 )}
                 <Link className="row" href={teamHubHref(t.slug)}>

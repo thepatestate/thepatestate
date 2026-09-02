@@ -1,4 +1,4 @@
-/* v3 Community page ("The Porch") — every selector scoped under .v5.pg-community.
+/* v3 Community page ("The Quad") — every selector scoped under .v5.pg-community.
    Source of truth: wireframes/v3/community-v1.html (page body only; rhythm bar,
    masthead and footer are global chrome). Keyframes prefixed community-.
    Globals bleed notes: section{padding:40px 0}, .wrap, .crumb are redefined in
@@ -67,11 +67,11 @@
 .v5.pg-community .morelink{display:block;text-align:center;font:800 12.5px/1 var(--cond);letter-spacing:.14em;text-transform:uppercase;color:var(--navy);border:1.5px solid var(--navy);border-radius:6px;padding:15px;margin-top:16px;transition:all .15s;background:none}
 .v5.pg-community .morelink:hover{background:var(--navy);color:#fff}
 
-/* empty porch (production zero-thread state) — card language, not globals' */
-.v5.pg-community .porch-empty{background:var(--white);border:1px solid var(--hair);border-radius:11px;padding:26px 24px;box-shadow:var(--sh-sm)}
-.v5.pg-community .porch-empty .k{font:800 10px/1 var(--cond);letter-spacing:.2em;text-transform:uppercase;color:var(--gold-dk)}
-.v5.pg-community .porch-empty h4{font:800 18px/1.25 var(--slab);color:var(--navy);margin:9px 0 6px;text-transform:none}
-.v5.pg-community .porch-empty p{font:400 13.5px/1.55 var(--body);color:var(--mut);max-width:520px}
+/* empty Quad (production zero-thread state) — card language, not globals' */
+.v5.pg-community .quad-empty{background:var(--white);border:1px solid var(--hair);border-radius:11px;padding:26px 24px;box-shadow:var(--sh-sm)}
+.v5.pg-community .quad-empty .k{font:800 10px/1 var(--cond);letter-spacing:.2em;text-transform:uppercase;color:var(--gold-dk)}
+.v5.pg-community .quad-empty h4{font:800 18px/1.25 var(--slab);color:var(--navy);margin:9px 0 6px;text-transform:none}
+.v5.pg-community .quad-empty p{font:400 13.5px/1.55 var(--body);color:var(--mut);max-width:520px}
 
 /* ── rail ── */
 .v5.pg-community .rail{position:sticky;top:84px}
@@ -105,7 +105,7 @@
 .v5.pg-community .tp .note a{color:var(--gold-dk);font-weight:700}
 
 .v5.pg-community .jc{background:linear-gradient(150deg,var(--navy) 0%,var(--navy-deep) 100%);border-radius:14px;box-shadow:var(--sh-md);color:#EDF1F7;padding:22px;position:relative;overflow:hidden}
-.v5.pg-community .jc::after{content:"🪑";position:absolute;right:-6px;bottom:-12px;font-size:76px;opacity:.1;transform:rotate(-8deg)}
+.v5.pg-community .jc::after{content:"🌳";position:absolute;right:-6px;bottom:-12px;font-size:76px;opacity:.1;transform:rotate(-8deg)}
 .v5.pg-community .jc .k{font:800 10px/1 var(--cond);letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
 .v5.pg-community .jc h4{font:800 20px/1.2 var(--slab);color:#fff;margin:9px 0 5px;text-transform:none}
 .v5.pg-community .jc p{font:400 12.5px/1.55 var(--body);color:#B9C6D8;position:relative}

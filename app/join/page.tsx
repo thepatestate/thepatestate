@@ -20,7 +20,7 @@ export default async function JoinPage({
           <p className="crumb">The Pate State / Citizenship</p>
           <h1>Become a Citizen</h1>
           <p className="lede">
-            Still free, forever. Citizenship is just how the porch knows who&apos;s home.
+            Still free, forever. Citizenship is just how the Quad knows who&apos;s home.
           </p>
         </div>
       </header>

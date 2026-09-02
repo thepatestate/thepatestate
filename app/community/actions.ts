@@ -1,5 +1,5 @@
 "use server";
-// The Porch server actions (v2 brief §3.3–§3.5). RLS is the enforcement
+// The Quad server actions (v2 brief §3.3–§3.5). RLS is the enforcement
 // layer — these actions stay thin: validate input, write with the caller's
 // own client (so citizens can only do citizen things and staff things need
 // a staff row), triage new content with Pate State AI, and log moderation.

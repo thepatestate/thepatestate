@@ -5,7 +5,7 @@ import PreseasonChip from "@/components/PreseasonChip";
 
 export const metadata: Metadata = {
   title: "The State Store",
-  description: "Wear the flag — tees, hats, and porch gear from The Pate State.",
+  description: "Wear the flag — tees, hats, and Quad gear from The Pate State.",
   alternates: { canonical: "/shop" },
 };
 
@@ -25,7 +25,7 @@ const STORE_URL = "https://patestatematerial.com";
 type GearItem = { label: string; photo: string | null; alt: string | null };
 
 const DEMO_GEAR: readonly GearItem[] = [
-  { label: "PORCH FLAG — $34", photo: "/img/product-flag.jpg", alt: "The Pate State porch flag" },
+  { label: "QUAD FLAG — $34", photo: "/img/product-flag.jpg", alt: "The Pate State Quad flag" },
   { label: "GAMEDAY HAT — $32", photo: "/img/product-hat.jpg", alt: "The Pate State gameday hat" },
   { label: "CITIZEN HOODIE — $54", photo: null, alt: null },
   { label: "TAILGATE APRON — $38", photo: null, alt: null },
@@ -40,7 +40,7 @@ export default function ShopPage() {
         <div className="wrap">
           <p className="crumb">The Pate State / The State Store</p>
           <h1>The State Store</h1>
-          <p className="lede">Wear the flag. Fly the colors. Every order funds more porch.</p>
+          <p className="lede">Wear the flag. Fly the colors. Every order funds more Quad.</p>
           <span className="note">Preseason preview — orders run through patestatematerial.com until the State Store opens</span>
         </div>
       </header>
@@ -87,7 +87,7 @@ export default function ShopPage() {
             <div>
               <h2 className="display" style={{ fontSize: 44 }}>The Creed Tee</h2>
               <p className="lede">
-                Two words, year-round. Tri-blend and ridiculously soft — field green with porch-lamp gold. The
+                Two words, year-round. Tri-blend and ridiculously soft — field green with stadium-light gold. The
                 shirt of the State.
               </p>
               <div style={{ marginTop: 16, display: "flex", gap: 12, flexWrap: "wrap" }}>
@@ -113,7 +113,7 @@ export default function ShopPage() {
             ))}
           </div>
 
-          <p className="eyebrow" style={{ marginTop: 28 }}>Paper &amp; Porch</p>
+          <p className="eyebrow" style={{ marginTop: 28 }}>Paper &amp; Pennants</p>
           <div className="shop-items shop4" style={{ marginTop: 12 }}>
             <Link href="/report" className="item has-photo" style={{ textDecoration: "none" }}>
               <Image

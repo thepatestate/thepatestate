@@ -4,7 +4,7 @@ import SubscribeCTA from "@/components/SubscribeCTA";
 
 export const metadata: Metadata = {
   title: "About The Pate State",
-  description: "What The Pate State is, who makes it, and why the front porch of college football exists.",
+  description: "What The Pate State is, who makes it, and why college football's common ground exists.",
   alternates: { canonical: "/about" },
 };
 
@@ -47,8 +47,8 @@ export default function AboutPage() {
                 Questions for Friday&apos;s mailbag, corrections, or just a good tailgate tip — the door&apos;s
                 open.
               </p>
-              <Link className="btn" href="/porch" style={{ borderColor: "var(--navy)", color: "var(--navy)" }}>
-                Go to the Porch
+              <Link className="btn" href="/quad" style={{ borderColor: "var(--navy)", color: "var(--navy)" }}>
+                Go to the Quad
               </Link>
             </div>
             <div className="panel">
@@ -64,7 +64,7 @@ export default function AboutPage() {
       <section className="on-soft">
         <div className="wrap" style={{ maxWidth: 820 }}>
           <p className="eyebrow">Every Week, All Season</p>
-          <h2 className="display">How the Porch Runs</h2>
+          <h2 className="display">How the Quad Runs</h2>
           <p className="lede">
             No offseason lulls, no reruns — just the same rhythm, week after week, from kickoff to the last
             bracket.
@@ -85,7 +85,7 @@ export default function AboutPage() {
 
       <section>
         <div className="wrap" style={{ textAlign: "center" }}>
-          <p className="eyebrow">Pull Up a Chair</p>
+          <p className="eyebrow">Meet Me on the Quad</p>
           <h2 className="display">Watch the Show</h2>
           <p className="lede" style={{ margin: "0 auto 24px" }}>
             New episodes all week, all season — every one of them on YouTube, free, no debates, no hot takes.

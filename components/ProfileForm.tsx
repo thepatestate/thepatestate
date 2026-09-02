@@ -15,7 +15,7 @@ export default function ProfileForm({ favoriteTeam }: { favoriteTeam: string | n
         id="favorite_team" name="favorite_team" defaultValue={favoriteTeam ?? ""}
         style={{ display: "block", width: "100%", padding: "12px 14px", margin: "8px 0 14px", fontFamily: "var(--mono)", fontSize: 14, border: "1.5px solid var(--line-l)", borderRadius: 2, background: "#fff", color: "var(--ink)" }}
       >
-        <option value="">No flag on my porch</option>
+        <option value="">No flag on my Quad</option>
         <optgroup label="The JP Top 25">
           {TEAMS_TOP25.map((t) => <option key={t.value} value={t.value}>{t.label}</option>)}
         </optgroup>

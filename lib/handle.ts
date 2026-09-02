@@ -1,7 +1,7 @@
 export const RESERVED_HANDLES = [
   "josh", "joshpate", "pate", "patestate", "thepatestate", "admin", "administrator",
   "mod", "moderator", "official", "staff", "support", "wiredesk", "thewire",
-  "citizen", "porch", "mayor", "help", "api", "root", "system",
+  "citizen", "porch", "quad", "mayor", "help", "api", "root", "system",
 ] as const;
 
 // Conservative, unambiguous list of severe slurs, checked as substrings.

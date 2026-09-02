@@ -19,8 +19,8 @@ const READ_PLAY = [
 
 const BELONG = [
   { href: "/join", label: "Citizenship" },
-  { href: "/community", label: "The Porch" },
-  { href: "/porch", label: "Porch Tour" },
+  { href: "/community", label: "The Quad" },
+  { href: "/quad", label: "Quad Tour" },
   { href: "/tailgate", label: "Tailgate" },
   { href: "/shop", label: "Shop" },
   { href: "/report", label: "The Report" },
@@ -65,7 +65,7 @@ export default function Footer() {
         <div className="ft-top">
           <div className="ft-brand">
             <div className="name">The Pate <em>State</em></div>
-            <p>The front porch of college football. All picks logged. All poll results archived.</p>
+            <p>College football's common ground. All picks logged. All poll results archived.</p>
             <div className="ft-social">
               {SOCIAL.map((s) => (
                 <a key={s.label} href={s.href} target="_blank" rel="noopener">{s.label}</a>

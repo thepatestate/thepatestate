@@ -226,7 +226,7 @@ export default function PlayoffsPage() {
           <h2 className="display" style={{ fontSize: 38 }}>Build Yours. Beat Everybody.</h2>
           <p className="lede">
             Call the field before anyone kicks off, then prove it again when the real bracket drops. Scored all
-            season, standings live on the porch, receipts forever.
+            season, standings live on the Quad, receipts forever.
           </p>
           <div className="feat-grid" style={{ marginTop: 26 }}>
             <div className="panel panel-accent-field">

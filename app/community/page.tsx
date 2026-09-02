@@ -13,17 +13,17 @@ import { teamLogoUrl } from "@/lib/teams-meta";
 import RelTime from "@/components/RelTime";
 
 export const metadata: Metadata = {
-  title: "The Porch — Community",
+  title: "The Quad — Community",
   description:
-    "The Pate State's community boards: the national Front Porch, recruiting and portal talk, game threads, the Film Room, and a porch for every fanbase.",
+    "The Pate State's community boards: the national Main Quad, recruiting and portal talk, game threads, the Film Room, and a Quad for every fanbase.",
   alternates: { canonical: "/community" },
 };
 
-// Community home, v3 "The Porch" comp (wireframes/v3/community-v1.html).
+// Community home, v3 "The Quad" comp (wireframes/v3/community-v1.html).
 // Public reads via publicClient() (anon, Next-cached); RLS hides held
 // content from anon, and we filter `hidden` client-side as a belt.
 const BOARD_ICONS: Record<string, string> = {
-  national: "\u{1FA91}", // 🪑
+  national: "\u{1F333}", // 🌳
   recruiting: "\u{1F575}\u{FE0F}", // 🕵️
   gameday: "\u{1F3C8}", // 🏈
   film: "\u{1F3AC}", // 🎬
@@ -46,8 +46,8 @@ function isHot(t: ThreadSummary): boolean {
 }
 
 // publicClient() throws when Supabase env is absent (e.g. bare local
-// builds) — every porch read funnels through this guard.
-async function loadPorch(): Promise<{
+// builds) — every Quad read funnels through this guard.
+async function loadQuad(): Promise<{
   boards: Board[];
   threads: ThreadSummary[];
   trending: ThreadSummary[];
@@ -100,7 +100,7 @@ function ThreadRow({ thread, board }: { thread: ThreadSummary; board?: Board }) 
 }
 
 export default async function CommunityPage() {
-  const { boards, threads, trending } = await loadPorch();
+  const { boards, threads, trending } = await loadQuad();
 
   const visible = threads.filter((t) => !t.hidden);
   const hotNow = visible.some(
@@ -124,16 +124,16 @@ export default async function CommunityPage() {
       <div className="phead">
         <div className="wrap">
           <div className="crumb">
-            The Pate State / <b>The Porch</b>
+            The Pate State / <b>The Quad</b>
           </div>
-          <h1>The Porch</h1>
+          <h1>The Quad</h1>
           <p className="sub">
             The comment section, if the comment section had manners — team threads, poll arguments,
-            and gameday chats, moderated like a front porch, not a mosh pit.
+            and gameday chats, moderated like a campus quad, not a mosh pit.
           </p>
           <div className="status">
             {/* No presence service yet — the honest pill, never an invented count. */}
-            <span className="st live">The Porch Is Open</span>
+            <span className="st live">The Quad Is Open</span>
             <span className="st rule">Every Take Signed · House Rules Apply</span>
           </div>
           <div className="cats">
@@ -146,8 +146,8 @@ export default async function CommunityPage() {
               </Link>
             ))}
             {teamTiles.length > 0 && (
-              <a className="cat" href="#team-porches">
-                Team Porches
+              <a className="cat" href="#team-quads">
+                Team Quads
               </a>
             )}
           </div>
@@ -157,7 +157,7 @@ export default async function CommunityPage() {
       {/* ── start here ── */}
       <section className="start">
         <div className="wrap">
-          <div className="shd">{"\u{1FA91}"} New to the Porch? Start Here</div>
+          <div className="shd">{"\u{1F333}"} New to the Quad? Start Here</div>
           <div className="start-grid">
             <Link className="stc" href="/standards">
               <span className="ic">{"\u{1F4DC}"}</span>
@@ -174,10 +174,10 @@ export default async function CommunityPage() {
               </div>
             </Link>
             {teamTiles.length > 0 ? (
-              <a className="stc" href="#team-porches">
+              <a className="stc" href="#team-quads">
                 <span className="ic">{"\u{1F3DF}"}</span>
                 <div>
-                  <h4>Find Your Team&apos;s Porch</h4>
+                  <h4>Find Your Team&apos;s Quad</h4>
                   <span>Pick your program&apos;s board and claim your seat.</span>
                 </div>
               </a>
@@ -186,7 +186,7 @@ export default async function CommunityPage() {
                 <span className="ic">{"\u{1F3DF}"}</span>
                 <div>
                   <h4>Set My Teams</h4>
-                  <span>Follow your programs and your porches rise to the top.</span>
+                  <span>Follow your programs and your quads rise to the top.</span>
                 </div>
               </Link>
             )}
@@ -208,11 +208,11 @@ export default async function CommunityPage() {
                 </Link>
               </div>
               {visible.length === 0 ? (
-                <div className="porch-empty">
-                  <span className="k">The Porch Is Open</span>
+                <div className="quad-empty">
+                  <span className="k">The Quad Is Open</span>
                   <h4>Somebody has to say the first word</h4>
                   <p>
-                    Pick a board and start the first thread — the porch remembers its founders.
+                    Pick a board and start the first thread — the Quad remembers its founders.
                     Citizenship is free, and that&apos;s the only ticket in.
                   </p>
                 </div>
@@ -233,7 +233,7 @@ export default async function CommunityPage() {
             <div className="rail">
               <div className="rules">
                 <span className="k">{"\u{1F4DC}"} The Short Version</span>
-                <h4>How the Porch Stays the Porch</h4>
+                <h4>How the Quad Stays the Quad</h4>
                 <div className="r">
                   <b>01</b>Every take is signed. No anonymous drive-bys, no bots.
                 </div>
@@ -241,7 +241,7 @@ export default async function CommunityPage() {
                   <b>02</b>Argue the take, not the person. Rivals welcome; jerks aren&apos;t.
                 </div>
                 <div className="r">
-                  <b>03</b>Moderated like a front porch — the Porch Desk keeps the peace.
+                  <b>03</b>Moderated like a campus quad — the Quad Desk keeps the peace.
                 </div>
                 <Link className="ln" href="/standards">
                   Full House Rules {"→"}
@@ -251,7 +251,7 @@ export default async function CommunityPage() {
               {trendingVisible.length > 0 && (
                 <div className="trend">
                   <span className="k">{"\u{1F525}"} Trending</span>
-                  <h4>Loudest on the Porch</h4>
+                  <h4>Loudest on the Quad</h4>
                   {trendingVisible.map((t) => (
                     <Link key={t.id} className="ti" href={`/community/thread/${t.id}`}>
                       <b>{t.title}</b>
@@ -270,8 +270,8 @@ export default async function CommunityPage() {
               )}
 
               {teamTiles.length > 0 && (
-                <div className="tp" id="team-porches">
-                  <span className="k">{"\u{1F3DF}"} Team Porches</span>
+                <div className="tp" id="team-quads">
+                  <span className="k">{"\u{1F3DF}"} Team Quads</span>
                   <h4>Find Your Program&apos;s Thread</h4>
                   <div className="tp-grid">
                     {teamTiles.map(({ board, logo }) => (
@@ -281,15 +281,15 @@ export default async function CommunityPage() {
                     ))}
                   </div>
                   <p className="note">
-                    More team porches open as their fanbases show up ·{" "}
+                    More team quads open as their fanbases show up ·{" "}
                     <Link href="/me">set My Teams</Link> and yours rise to the top.
                   </p>
                 </div>
               )}
 
               <div className="jc">
-                <span className="k">{"\u{1FA91}"} Citizens Only</span>
-                <h4>Pull Up a Chair.</h4>
+                <span className="k">{"\u{1F333}"} Citizens Only</span>
+                <h4>Meet Me on the Quad.</h4>
                 <p>
                   Posting is free with citizenship — every take signed, every citizen accountable.
                   Reading is open to everybody.
@@ -309,8 +309,8 @@ export default async function CommunityPage() {
         <div className="wrap">
           <div className="gd-grid">
             <div>
-              <span className="k">Saturdays on the Porch</span>
-              <h3>Every Saturday Gets a Live Porch.</h3>
+              <span className="k">Saturdays on the Quad</span>
+              <h3>Every Saturday Gets a Live Quad.</h3>
               <p>
                 Live game threads for the big Saturday slates, argued out in real time with the
                 whole State. Rooms open on gameday mornings.

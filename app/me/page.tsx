@@ -33,7 +33,7 @@ export default async function MePage() {
         <div className="wrap">
           <p className="crumb">The Pate State / Your Seat</p>
           <h1>Your Seat</h1>
-          <p className="lede">This is your porch. Your handle, your flag, your key.</p>
+          <p className="lede">This is your Quad. Your handle, your flag, your key.</p>
         </div>
       </header>
       <section className="tight">

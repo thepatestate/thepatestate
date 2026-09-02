@@ -17,7 +17,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   const db = await createClient();
   const thread = await getThread(db, id).catch(() => null);
   return {
-    title: thread ? `${thread.title} — The Porch` : "The Porch",
+    title: thread ? `${thread.title} — The Quad` : "The Quad",
     robots: { index: false },
   };
 }
@@ -44,7 +44,7 @@ export default async function ThreadPage({ params }: { params: Promise<{ id: str
       .then(() => {}, () => {});
   }
 
-  const author = thread.citizens?.display_handle ?? thread.author_label ?? "The Porch Desk";
+  const author = thread.citizens?.display_handle ?? thread.author_label ?? "The Quad Desk";
   const authorStaff = thread.citizens?.role === "staff" || !thread.citizens;
 
   return (
@@ -70,7 +70,7 @@ export default async function ThreadPage({ params }: { params: Promise<{ id: str
         </div>
       </div>
 
-      <div className="porch-page">
+      <div className="quad-page">
         <div className="wrap" style={{ maxWidth: 880 }}>
           <div className="post-card" style={{ marginTop: 20 }}>
             <div className="post-head">
@@ -168,7 +168,7 @@ export default async function ThreadPage({ params }: { params: Promise<{ id: str
           ) : (
             <div className="composer" style={{ textAlign: "center" }}>
               <p style={{ fontSize: 15 }}>
-                <b>Pull up a chair.</b> Citizenship is free and it&apos;s the only ticket into the conversation.
+                <b>Meet me on the Quad.</b> Citizenship is free and it&apos;s the only ticket into the conversation.
               </p>
               <Link className="btn gold" href={`/join?next=/community/thread/${thread.id}`} style={{ marginTop: 10, display: "inline-block" }}>
                 Become a Citizen — Free

@@ -21,7 +21,7 @@ export default function NewThreadForm({ board, isStaff }: { board: string; isSta
       <p className="eyebrow" style={{ margin: 0 }}>Start a thread</p>
       <input type="hidden" name="board" value={board} />
       <label htmlFor="nt-title">Title</label>
-      <input id="nt-title" type="text" name="title" maxLength={140} required placeholder="Say it like you'd say it on the porch" />
+      <input id="nt-title" type="text" name="title" maxLength={140} required placeholder="Say it like you'd say it on the Quad" />
       <label htmlFor="nt-type">Type</label>
       <select id="nt-type" name="thread_type" value={type} onChange={(e) => setType(e.target.value)}>
         {types.map(([v, l]) => <option key={v} value={v}>{l}</option>)}

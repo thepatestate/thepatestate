@@ -38,7 +38,7 @@ function seriesTag(v: Video): string {
   if (/jp poll|poll day/i.test(v.title)) return "Poll Day";
   if (/\bpreview\b/i.test(v.title)) return "Season Preview";
   if (isEpisode(v)) return "Full Episode";
-  return "From the Porch";
+  return "From the Quad";
 }
 
 const SIT_RE = /sit.?down|speaker series/i;
@@ -141,7 +141,7 @@ export default async function ShowPage() {
                 <span className="k">{seriesTag(latest)}{newToday ? " · New Today" : ""}</span>
                 <h2>{cleanTitle(latest.title)}</h2>
                 <p className="dek">
-                  Josh&apos;s honest read on the sport, straight from the porch — no debates, no manufactured
+                  Josh&apos;s honest read on the sport, straight from the Quad — no debates, no manufactured
                   hot takes, just college football the way it deserves to be talked about.
                 </p>
                 <div className="meta">{formatDate(latest.published)}{isEpisode(latest) ? " · Full Episode" : ""}</div>
@@ -168,7 +168,7 @@ export default async function ShowPage() {
           <div className="wrap">
             <div className="sect-head">
               <span className="eb">New This Week</span>
-              <h3>This Week on the Porch</h3>
+              <h3>This Week on the Quad</h3>
               <a href={CHANNEL_URL} target="_blank" rel="noopener">Full Archive on YouTube →</a>
             </div>
             <div className="ep-grid">
@@ -240,7 +240,7 @@ export default async function ShowPage() {
           <div className="wrap">
             <div className="sect-head">
               <span className="eb">60 Seconds of Ball</span>
-              <h3>Shorts From the Porch</h3>
+              <h3>Shorts From the Quad</h3>
               <a href={`${CHANNEL_URL}/shorts`} target="_blank" rel="noopener">More Shorts →</a>
             </div>
             <div className="sh-grid">

@@ -50,7 +50,7 @@ export function ShortsStrip({ shorts }: { shorts: { id: string; title: string }[
     <div className="v5 shorts-strip">
       <div className="wrap">
         <div className="shorts-h">
-          <h3>Shorts From the Porch</h3>
+          <h3>Shorts From the Quad</h3>
           <a href={`${CHANNEL_URL}/shorts`} target="_blank" rel="noopener">More on YouTube →</a>
         </div>
         <div className="shorts">

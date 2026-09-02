@@ -35,7 +35,7 @@ const article = `
         <div class="who"><b>Josh Pate</b><span>Aug 26, 2026 · ${Math.max(2, Math.round(words / 230))} min read · Adapted from the show, every claim on the tape</span></div>
         <div class="a-share"><a href="#" aria-label="Share on X">𝕏</a><a href="#" aria-label="Copy link">🔗</a><a href="#" aria-label="Share">↗</a></div>
       </div>
-      <div class="a-hero"><div class="ph"><span class="lbl">Photo Slot — ${esc(teams.slice(0, 3).join(", ") || "The Porch")}</span></div></div>
+      <div class="a-hero"><div class="ph"><span class="lbl">Photo Slot — ${esc(teams.slice(0, 3).join(", ") || "The Quad")}</span></div></div>
       <p class="a-cap"><b>${esc(a.headline.split(":")[0])}.</b> <span style="color:#AAB2BD">· Photo credit slot</span></p>
       <div class="a-body">
 ${body.join("\n")}
@@ -45,14 +45,14 @@ ${body.join("\n")}
           <div class="p-opts"><button class="p-btn" data-side="yes">Yes — He's Right</button><button class="p-btn" data-side="no">No — He's Wrong</button></div>
           <div class="p-bar"><i id="pulseBar"></i></div>
           <div class="p-lab"><span><b id="yesPct">50%</b> Yes</span><span><b id="noPct">50%</b> No</span></div>
-          <p class="ft" id="pulseFoot">The porch opens when this column publishes.</p>
+          <p class="ft" id="pulseFoot">The Quad opens when this column publishes.</p>
         </div>
       </div>
       <div class="a-pb"><span class="ic">▶</span><div class="tx"><b>This column comes from the show.</b><span>${esc(a.episode ?? "")}</span></div><a href="${yt ? `https://www.youtube.com/watch?v=${yt}` : "#"}">Watch the Episode →</a></div>
       <div class="a-src"><b>On the record:</b> Adapted from Josh's argument on the episode "${esc(a.episode ?? "")}". Every claim in the column is on the tape. <p class="disc">Published under the Josh Pate byline per <a href="/standards">our editorial standards</a>. Corrections are timestamped, never silent.</p></div>
       <div class="a-tags"><a href="#">Josh's Read</a>${teams.map((x) => `<a href="#">${esc(x)}</a>`).join("")}</div>
       <div class="a-author"><span class="av" style="background:linear-gradient(135deg,#C8102E,#8C0B20)">JP</span><div><b>Josh Pate</b><p>The mayor's desk. Every take timestamped, every pick graded, every miss printed first. For those of us who live for Saturdays in the fall.</p></div><a class="fl" href="/notebook">All of Josh's Columns →</a></div>
-      <div class="a-porch"><span class="ic">🪑</span><div class="tx"><b>Argue It Out on the Porch</b><span>This column has a live thread</span></div><a href="/community">Join the Argument →</a></div>
+      <div class="a-quad"><span class="ic">🌳</span><div class="tx"><b>Argue It Out on the Quad</b><span>This column has a live thread</span></div><a href="/community">Join the Argument →</a></div>
     `;
 let out = t.replace(/<article class="article">[\s\S]*?<\/article>/, () => `<article class="article">${article}</article>`);
 out = out.replace(/<title>.*?<\/title>/, `<title>${esc(a.headline)} — Josh Pate · The Pate State</title>`);

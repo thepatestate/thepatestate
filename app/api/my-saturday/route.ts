@@ -7,7 +7,7 @@ import { getBoards } from "@/lib/community";
 
 // "Your Saturday" card data: for each followed team slug, the real bits we
 // can source right now — next/current game, JP Poll rank, latest wire item,
-// and that team's porch board when one exists. Fields are null when a
+// and that team's Quad board when one exists. Fields are null when a
 // source has nothing (§0.1: never invented), and the card renders only the
 // rows it has.
 

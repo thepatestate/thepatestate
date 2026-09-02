@@ -1,6 +1,6 @@
 // Team-hub data layer (v2 brief §4). Everything here is real, sourced
 // data — CFBD for schedule/roster/records/portal, Sanity for editorial,
-// Supabase for Josh's quote archive and the team porches. Modules with no
+// Supabase for Josh's quote archive and the team quads. Modules with no
 // honest data source yet (JP Poll placement, 2026 stats) render labeled
 // empty states at the page level; this file never fabricates.
 import { slugifyTeam } from "@/lib/teams-meta";

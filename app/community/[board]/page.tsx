@@ -15,9 +15,9 @@ export async function generateMetadata({ params }: { params: Promise<{ board: st
   const { board } = await params;
   const boards = await getBoards();
   const b = boards.find((x) => x.slug === board);
-  if (!b) return { title: "The Porch" };
+  if (!b) return { title: "The Quad" };
   return {
-    title: `${b.name} — The Porch`,
+    title: `${b.name} — The Quad`,
     description: b.description,
     alternates: { canonical: `/community/${b.slug}` },
   };
@@ -36,7 +36,7 @@ export default async function BoardPage({ params }: { params: Promise<{ board: s
     <main className="v5-lite">
       <div className={b.kind === "team" ? "board-bar team" : "board-bar"}>
         <div className="wrap">
-          <p className="kicker">The Front Porch · The Pate State</p>
+          <p className="kicker">The Main Quad · The Pate State</p>
           <h1 style={{ display: "flex", alignItems: "center", gap: 14 }}>
             {logo && (
               <span style={{ background: "#fff", borderRadius: "50%", padding: 5, display: "inline-flex" }}>
@@ -56,7 +56,7 @@ export default async function BoardPage({ params }: { params: Promise<{ board: s
         </div>
       </div>
 
-      <div className="porch-page">
+      <div className="quad-page">
         <div className="wrap">
           <p style={{ marginTop: 20 }}>
             <Link href="/community" style={{ fontFamily: "var(--mono)", fontSize: 11, letterSpacing: ".08em", textTransform: "uppercase", color: "var(--lamp-deep)", textDecoration: "none" }}>
@@ -75,9 +75,9 @@ export default async function BoardPage({ params }: { params: Promise<{ board: s
           {threads.length === 0 ? (
             <div style={{ marginTop: 18, maxWidth: 720 }}>
               <EmptyState
-                kicker="FIRST CHAIR IS OPEN"
+                kicker="FIRST WORD IS YOURS"
                 title={`Nobody's said a word on ${b.name} yet`}
-                body="Start the first thread — a take, a question, a prediction. The porch remembers its founders."
+                body="Start the first thread — a take, a question, a prediction. The Quad remembers its founders."
               />
             </div>
           ) : (

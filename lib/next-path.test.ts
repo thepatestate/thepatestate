@@ -3,7 +3,7 @@ import { safeNextPath } from "./next-path";
 
 describe("safeNextPath", () => {
   it("passes through a plain path", () => {
-    expect(safeNextPath("/porch")).toBe("/porch");
+    expect(safeNextPath("/quad")).toBe("/quad");
   });
   it("defaults empty and null to /", () => {
     expect(safeNextPath("")).toBe("/");
@@ -20,10 +20,10 @@ describe("safeNextPath", () => {
     expect(safeNextPath("https://evil.com/x")).toBe("/");
   });
   it("reduces same-origin absolute URLs to a path", () => {
-    expect(safeNextPath("https://thepatestate.com/porch?a=1")).toBe("/porch?a=1");
+    expect(safeNextPath("https://thepatestate.com/quad?a=1")).toBe("/quad?a=1");
   });
   it("unwraps a nested next= on the auth callback", () => {
-    expect(safeNextPath("https://thepatestate.com/auth/callback?next=%2Fporch")).toBe("/porch");
+    expect(safeNextPath("https://thepatestate.com/auth/callback?next=%2Fquad")).toBe("/quad");
   });
   it("rejects a nested attack via the auth callback", () => {
     expect(safeNextPath("https://thepatestate.com/auth/callback?next=//evil.com")).toBe("/");
@@ -38,6 +38,6 @@ describe("safeNextPath", () => {
     expect(safeNextPath("/\n/evil.com")).toBe("/");
   });
   it("leaves a normal path with no control characters unaffected", () => {
-    expect(safeNextPath("/porch/thread-12")).toBe("/porch/thread-12");
+    expect(safeNextPath("/quad/thread-12")).toBe("/quad/thread-12");
   });
 });

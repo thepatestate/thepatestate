@@ -19,7 +19,7 @@ const STATIC_PATHS = [
   "/recruiting",
   "/notebook",
   "/wire",
-  "/porch",
+  "/quad",
   "/tailgate",
   "/shop",
   "/teams",

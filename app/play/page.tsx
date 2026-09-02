@@ -175,7 +175,7 @@ export default async function PlayPage() {
               kicker="BETWEEN SLATES"
               title="The next board opens with the coming week"
               body="Ten marquee games, confidence points 1 to 10, one lock before kickoff. Free for every citizen."
-              cta={{ href: "/pickem", label: "How Porch Pick'Em Works →" }}
+              cta={{ href: "/pickem", label: "How Quad Pick'Em Works →" }}
             />
           )}
         </div>

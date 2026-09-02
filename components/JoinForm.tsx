@@ -11,7 +11,7 @@ export default function JoinForm({ next }: { next: string }) {
   const [googlePending, setGooglePending] = useState(false);
 
   if (!isSupabaseConfigured) {
-    return <p className="lede">Citizenship opens shortly — the porch is still being wired.</p>;
+    return <p className="lede">Citizenship opens shortly — the Quad is still being wired.</p>;
   }
 
   async function sendLink(e: React.FormEvent) {

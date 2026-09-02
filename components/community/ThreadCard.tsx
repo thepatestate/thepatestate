@@ -17,7 +17,7 @@ export function AvatarDisc({ handle, staff }: { handle: string; staff?: boolean 
 }
 
 export default function ThreadCard({ thread, showBoard }: { thread: ThreadSummary; showBoard?: string }) {
-  const author = thread.citizens?.display_handle ?? thread.author_label ?? "The Porch Desk";
+  const author = thread.citizens?.display_handle ?? thread.author_label ?? "The Quad Desk";
   const staff = thread.citizens?.role === "staff" || !thread.citizens;
   const hot = thread.reply_count >= 5 || (thread.last_reply_at !== null && Date.now() - new Date(thread.last_reply_at).getTime() < 3600_000);
   const cls = ["thread-card", hot ? "hot" : "", thread.hidden ? "hidden-row" : ""].filter(Boolean).join(" ");

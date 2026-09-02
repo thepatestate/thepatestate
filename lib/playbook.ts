@@ -48,7 +48,7 @@ const COLOR_LAMP = "#E8A33D";
 // Apostrophes are intentionally left unescaped: every attribute in this
 // template is double-quoted, so a raw `'` can never terminate an attribute
 // value here, and escaping it would corrupt copy that callers (and tests)
-// compare verbatim — e.g. the intro "Here's the porch this morning." must
+// compare verbatim — e.g. the intro "Here's the Quad this morning." must
 // appear byte-for-byte in the rendered HTML.
 function escapeHtml(s: string): string {
   return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
@@ -158,10 +158,10 @@ export function renderPlaybookHtml(c: PlaybookContent, opts: PlaybookRenderOpts)
 ${episodeCardHtml(c.episode)}
 ${articlesHtml(c.articles)}
 <tr><td style="padding: 8px 32px 32px 32px;">
-<p style="${BODY_TEXT_STYLE} margin: 0 0 12px 0;">Catch every episode on <a href="${channelUrl}" style="color: ${COLOR_LAMP}; text-decoration: underline;">YouTube</a>, or pull up a chair as a Citizen at <a href="${joinUrl}" style="color: ${COLOR_LAMP}; text-decoration: underline;">thepatestate.com/join</a>.</p>
+<p style="${BODY_TEXT_STYLE} margin: 0 0 12px 0;">Catch every episode on <a href="${channelUrl}" style="color: ${COLOR_LAMP}; text-decoration: underline;">YouTube</a>, or grab a spot on the Quad as a Citizen at <a href="${joinUrl}" style="color: ${COLOR_LAMP}; text-decoration: underline;">thepatestate.com/join</a>.</p>
 </td></tr>
 <tr><td style="padding: 20px 32px; background-color: ${COLOR_NAVY};">
-<p style="font-family: Arial, Helvetica, sans-serif; font-size: 12px; line-height: 1.6; color: #9AA5B1; margin: 0 0 8px 0;">The Front Porch of College Football</p>
+<p style="font-family: Arial, Helvetica, sans-serif; font-size: 12px; line-height: 1.6; color: #9AA5B1; margin: 0 0 8px 0;">College Football's Common Ground</p>
 <p style="font-family: Arial, Helvetica, sans-serif; font-size: 12px; line-height: 1.6; color: #9AA5B1; margin: 0;">
 <a href="${escapeHtml(opts.unsubscribeUrl)}" style="color: #9AA5B1; text-decoration: underline;">Unsubscribe from the Playbook</a>
 </p>
@@ -198,9 +198,9 @@ export function renderPlaybookText(c: PlaybookContent, opts: PlaybookRenderOpts)
     }
   }
   lines.push(`Catch every episode on YouTube: ${channelUrl}`);
-  lines.push(`Pull up a chair as a Citizen: ${joinUrl}`);
+  lines.push(`Grab a spot on the Quad as a Citizen: ${joinUrl}`);
   lines.push("");
-  lines.push("The Front Porch of College Football");
+  lines.push("College Football's Common Ground");
   lines.push(`Unsubscribe from the Playbook: ${opts.unsubscribeUrl}`);
   if (process.env.PLAYBOOK_POSTAL_ADDRESS) {
     lines.push(process.env.PLAYBOOK_POSTAL_ADDRESS);

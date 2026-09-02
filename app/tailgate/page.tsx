@@ -7,7 +7,7 @@ import { teamLogoUrl } from "@/lib/teams-meta";
 
 export const metadata: Metadata = {
   title: "Pate Tailgate",
-  description: "The field guide to college football Saturdays — stadium guides, tailgate plans, traditions, and the porch cookbook.",
+  description: "The field guide to college football Saturdays — stadium guides, tailgate plans, traditions, and the tailgate cookbook.",
   alternates: { canonical: "/tailgate" },
 };
 
@@ -44,7 +44,7 @@ export default function TailgatePage() {
           <h1>Pate Tailgate</h1>
           <p className="lede">
             136 stadiums. Every tradition, parking lot, and pregame plate — written by citizens who&apos;ve been
-            there, verified by the porch.
+            there, verified by the Quad.
           </p>
         </div>
       </header>
@@ -107,7 +107,7 @@ export default function TailgatePage() {
           <div className="duo">
             <div className="panel">
               <p className="eyebrow">The Menu</p>
-              <h3>The Porch Cookbook</h3>
+              <h3>The Tailgate Cookbook</h3>
               <p>
                 Smoked wings for a noon kick. Brisket for a 7:30. A different citizen-tested recipe every week of
                 the season, with the make-ahead timeline that actually works in a parking lot.

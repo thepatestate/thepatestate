@@ -8,7 +8,7 @@ export const maxDuration = 60;
 
 // Auto game threads (v2 §3.2 Game Day): every morning in season, create a
 // live thread on the Game Day board for each of today's marquee games
-// (both teams power-4, or any game involving a seeded team-porch program).
+// (both teams power-4, or any game involving a seeded team-quad program).
 // Idempotent: one thread per game per day, keyed by title match. No-ops
 // outside the season (no games today).
 
@@ -25,7 +25,7 @@ export async function POST(request: Request) {
 
   const admin = createAdminClient();
   const { data: teamBoards } = await admin.from("boards").select("slug, team_slug").eq("kind", "team");
-  const porchTeams = new Set(((teamBoards as { team_slug: string | null }[] | null) ?? []).map((b) => b.team_slug).filter(Boolean));
+  const quadTeams = new Set(((teamBoards as { team_slug: string | null }[] | null) ?? []).map((b) => b.team_slug).filter(Boolean));
 
   const dir = await getTeamDirectory();
   const power = new Set(["SEC", "Big Ten", "Big 12", "ACC"]);
@@ -45,8 +45,8 @@ export async function POST(request: Request) {
       const homeSlug = slugifyTeam(home);
       const marquee =
         (power.has(dir[awaySlug]?.conference ?? "") && power.has(dir[homeSlug]?.conference ?? "")) ||
-        porchTeams.has(awaySlug) ||
-        porchTeams.has(homeSlug);
+        quadTeams.has(awaySlug) ||
+        quadTeams.has(homeSlug);
       if (!marquee) continue;
 
       const title = `GAME THREAD: ${away} at ${home} (${g.time ?? "today"})`.slice(0, 140);
@@ -61,7 +61,7 @@ export async function POST(request: Request) {
       const { error } = await admin.from("threads").insert({
         board_slug: "game-day",
         author_id: null,
-        author_label: "The Porch Desk",
+        author_label: "The Quad Desk",
         title,
         body: `${away} at ${home} — kickoff ${g.time ?? "today"}${g.net ? ` on ${g.net}` : ""}.\n\nScores, takes, overreactions: this is the room. Keep it in good faith.`,
         thread_type: "game",

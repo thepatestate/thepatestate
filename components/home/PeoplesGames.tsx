@@ -98,7 +98,7 @@ export default async function PeoplesGames() {
           </div>
 
           <div className="card-pick">
-            <div className="gc-k">✓ Porch Pick&apos;Em{pick ? ` · ${pick.comp.name}` : " · Free to Play"}</div>
+            <div className="gc-k">✓ Quad Pick&apos;Em{pick ? ` · ${pick.comp.name}` : " · Free to Play"}</div>
             <div className="gc-title">Beat Josh. Climb the Board.</div>
             {pick && pick.rows.length >= 3 ? (
               <>

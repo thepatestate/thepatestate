@@ -15,6 +15,14 @@ const nextConfig: NextConfig = {
     ],
   },
   outputFileTracingIncludes: { "/api/**/*": ["./prompts/**"] },
+  // The community product renamed from "The Porch" to "The Quad"; /porch was a
+  // published, indexed route, so it keeps its equity with a 308.
+  redirects() {
+    return [
+      { source: "/porch", destination: "/quad", permanent: true },
+      { source: "/porch/:path*", destination: "/quad/:path*", permanent: true },
+    ];
+  },
 };
 
 export default nextConfig;

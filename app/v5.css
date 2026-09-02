@@ -318,9 +318,9 @@
 .v5-page .rb-go{display:inline-block;align-self:flex-start;font:800 12.5px/1 var(--cond);letter-spacing:.12em;text-transform:uppercase;color:#fff;background:var(--navy);padding:13px 19px;border-radius:5px;margin-top:auto;box-shadow:var(--sh-sm);border:none}
 .v5-page .rb-go:hover{background:var(--navy-deep)}
 
-/* ═══ PORCH ═══ */
-.v5-page .porch{background:var(--off);border-top:1px solid var(--hair);padding:42px 0 46px}
-.v5-page .porch-grid{display:grid;grid-template-columns:1.65fr 1fr;gap:30px;align-items:start}
+/* ═══ QUAD ═══ */
+.v5-page .quad{background:var(--off);border-top:1px solid var(--hair);padding:42px 0 46px}
+.v5-page .quad-grid{display:grid;grid-template-columns:1.65fr 1fr;gap:30px;align-items:start}
 .v5-page .thread{display:flex;gap:15px;background:var(--white);border:1px solid var(--hair);border-radius:10px;padding:16px 18px;margin-bottom:12px;box-shadow:var(--sh-sm);transition:transform .15s,box-shadow .2s;align-items:flex-start}
 .v5-page .thread:hover{transform:translateY(-2px);box-shadow:var(--sh-md)}
 .v5-page .thread .av{width:38px;height:38px;min-width:38px;border-radius:50%;font:800 13px/38px var(--cond);text-align:center;color:#fff;box-shadow:var(--sh-sm)}
@@ -333,14 +333,14 @@
 .v5-page .thread .replies{margin-left:auto;text-align:center;min-width:56px;background:var(--off);border-radius:8px;padding:9px 8px}
 .v5-page .thread .replies b{display:block;font:800 17px/1 var(--slab);color:var(--navy)}
 .v5-page .thread .replies span{font:600 9px/1 var(--cond);letter-spacing:.12em;text-transform:uppercase;color:var(--mut)}
-.v5-page .porch-side{background:linear-gradient(150deg,var(--navy) 0%,var(--navy-deep) 100%);border-radius:12px;padding:26px;color:#EDF1F7;box-shadow:var(--sh-lg);position:sticky;top:88px}
-.v5-page .porch-side .on{display:flex;align-items:center;gap:9px;font:700 11px/1 var(--cond);letter-spacing:.14em;text-transform:uppercase;color:#8CE99A;margin-bottom:12px}
-.v5-page .porch-side .on::before{content:"";width:7px;height:7px;border-radius:50%;background:#8CE99A;animation:v5pulse 1.6s infinite}
-.v5-page .porch-side h3{font:800 23px/1.15 var(--slab);margin-bottom:9px}
-.v5-page .porch-side p{font:400 13.5px/1.55 var(--body);color:#B9C6D8;margin-bottom:18px}
-.v5-page .porch-side .btn{display:inline-block;font:800 12.5px/1 var(--cond);letter-spacing:.12em;text-transform:uppercase;background:var(--gold);color:var(--mast);padding:13px 20px;border:none;border-radius:5px;box-shadow:var(--sh-sm)}
-.v5-page .porch-side .btn:hover{background:#DCB43A}
-.v5-page .porch-side .rules{font:500 11px/1.6 var(--body);color:#8FA0B8;margin-top:14px}
+.v5-page .quad-side{background:linear-gradient(150deg,var(--navy) 0%,var(--navy-deep) 100%);border-radius:12px;padding:26px;color:#EDF1F7;box-shadow:var(--sh-lg);position:sticky;top:88px}
+.v5-page .quad-side .on{display:flex;align-items:center;gap:9px;font:700 11px/1 var(--cond);letter-spacing:.14em;text-transform:uppercase;color:#8CE99A;margin-bottom:12px}
+.v5-page .quad-side .on::before{content:"";width:7px;height:7px;border-radius:50%;background:#8CE99A;animation:v5pulse 1.6s infinite}
+.v5-page .quad-side h3{font:800 23px/1.15 var(--slab);margin-bottom:9px}
+.v5-page .quad-side p{font:400 13.5px/1.55 var(--body);color:#B9C6D8;margin-bottom:18px}
+.v5-page .quad-side .btn{display:inline-block;font:800 12.5px/1 var(--cond);letter-spacing:.12em;text-transform:uppercase;background:var(--gold);color:var(--mast);padding:13px 20px;border:none;border-radius:5px;box-shadow:var(--sh-sm)}
+.v5-page .quad-side .btn:hover{background:#DCB43A}
+.v5-page .quad-side .rules{font:500 11px/1.6 var(--body);color:#8FA0B8;margin-top:14px}
 
 /* ═══ SHORTS STRIP (demoted) ═══ */
 .v5-page .shorts-strip{background:var(--mast);padding:24px 0}
@@ -489,12 +489,12 @@
 
 /* ═══ RESPONSIVE ═══ */
 @media(max-width:1080px){
-  .v5-page .top-grid,.v5-page .nb-grid,.v5-page .porch-grid{grid-template-columns:1fr}
+  .v5-page .top-grid,.v5-page .nb-grid,.v5-page .quad-grid{grid-template-columns:1fr}
   .v5-page .ep-grid{grid-template-columns:repeat(2,1fr)}
   .v5-page .sat-grid{grid-template-columns:1fr}
   .v5-page .shorts{grid-template-columns:repeat(4,1fr)}
   .v5-page .shorts .short:nth-child(n+5){display:none}
-  .v5-page .porch-side{position:static}
+  .v5-page .quad-side{position:static}
   .v5-page .tour{grid-template-columns:1fr}
   .v5-page .tour .photo{display:none}
 }

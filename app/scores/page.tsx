@@ -252,7 +252,7 @@ export default async function ScoresPage() {
 
       <section className="on-dark tight">
         <div className="wrap">
-          <p className="eyebrow">The Porch Guide to the Week</p>
+          <p className="eyebrow">The Quad Guide to the Week</p>
           <h2 className="display" style={{ fontSize: 36 }}>The Best Game in Every Conference</h2>
           {!DEMO_MODE && (
             <div style={{ marginTop: 14, maxWidth: 720 }}>
@@ -323,13 +323,13 @@ export default async function ScoresPage() {
           <h2 className="display" style={{ fontSize: 36 }}>Top 10 Games of the Week</h2>
           {DEMO_MODE && <PreseasonChip />}
           <p className="lede">
-            Not the biggest brands — the games most worth your Saturday this week, ranked by the porch. Re-ranked
+            Not the biggest brands — the games most worth your Saturday this week, ranked by the Quad. Re-ranked
             every Thursday. Argue accordingly.
           </p>
           {!DEMO_MODE && (
             <div style={{ marginTop: 14 }}>
               <EmptyState
-                kicker="RANKED BY THE PORCH"
+                kicker="RANKED BY THE QUAD"
                 title="The Week 1 Watch List drops Thursday of opening week"
                 body="Josh ranks the ten games most worth your Saturday — not the biggest brands, the best football."
               />

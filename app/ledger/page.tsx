@@ -22,7 +22,7 @@ const DEMO_STATS = [
 ] as const;
 
 const DEMO_ENTRIES = [
-  { g: "Georgia 31, Bama 28", stars: "★★★★★", note: '"Watched on the porch with Dad. Instant classic."' },
+  { g: "Georgia 31, Bama 28", stars: "★★★★★", note: '"Watched it with Dad. Instant classic."' },
   { g: "Oregon 45, UW 42", stars: "★★★★☆", note: '"Stayed up till 2am ET. Worth it."' },
   { g: "Army 17, Navy 14", stars: "★★★★★", note: '"Attended. Bucket list, checked."' },
   { g: "Vandy 24, UT 21", stars: "★★★☆☆", note: '"Chaos. Beautiful chaos."' },

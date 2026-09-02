@@ -12,7 +12,7 @@ import HeroWire from "@/components/home/HeroWire";
 import ShowSectionV5, { ShortsStrip } from "@/components/home/ShowSectionV5";
 import PeoplesGames from "@/components/home/PeoplesGames";
 import NotebookTrending, { type BracketSeed } from "@/components/home/NotebookTrending";
-import PorchSection from "@/components/home/PorchSection";
+import QuadSection from "@/components/home/QuadSection";
 import PlaybookSection from "@/components/home/PlaybookSection";
 import { AnnualsSection, StoreSection, GiftSection, FollowSection } from "@/components/home/StaticBands";
 
@@ -33,7 +33,7 @@ export default async function Home() {
     getSlateGames(1, 6).catch(() => []),
     getChannelStats().catch(() => null),
     // publicClient() itself throws when Supabase env is absent — wrap the
-    // whole expression so a bare env still renders the porch join panel.
+    // whole expression so a bare env still renders the Quad join panel.
     (async () => getThreads(publicClient(), { limit: 4 }))().catch(() => []),
     getLatestPublished().catch(() => null),
   ]);
@@ -94,7 +94,7 @@ export default async function Home() {
         logos={Object.fromEntries([notebookLead, ...notebookStack].filter((a): a is NonNullable<typeof a> => Boolean(a)).map((a) => { const t = a.primaryTeam || a.teams?.[0] || ""; const slug = t ? resolveTeamSlug(t, dir) : ""; return [a._id, slug ? (dir[slug]?.logo ?? teamLogoUrl(slug)) : null]; }))}
       />
       <PeoplesGames />
-      <PorchSection threads={threads} />
+      <QuadSection threads={threads} />
       <ShortsStrip shorts={shorts} />
       <PlaybookSection />
       <AnnualsSection photo={featured ? { src: `https://i.ytimg.com/vi/${featured.id}/maxresdefault.jpg`, alt: `Josh Pate on the set of ${featured.title.replace(/ - Josh Pate's College Football Show/i, "")}` } : null} />

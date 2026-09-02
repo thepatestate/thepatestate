@@ -16,7 +16,7 @@ export interface TriageResult {
   reason: string;
 }
 
-const SYSTEM = `You triage posts for a college football fan community ("The Porch").
+const SYSTEM = `You triage posts for a college football fan community ("The Quad").
 Classify the post's risk tier:
 
 - "high": personal attacks or harassment, threats, slurs, doxxing (posting

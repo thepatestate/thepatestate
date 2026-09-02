@@ -37,9 +37,9 @@ const v5cond = Barlow_Condensed({
 const v5sans = Public_Sans({ subsets: ["latin"], weight: "variable", variable: "--v5-sans-f" });
 
 export const metadata: Metadata = {
-  title: { default: "The Pate State — The Front Porch of College Football", template: "%s — The Pate State" },
+  title: { default: "The Pate State — College Football's Common Ground", template: "%s — The Pate State" },
   description:
-    "The online home of Josh Pate's College Football Show. New episodes all week, all season. Pull up a chair.",
+    "The online home of Josh Pate's College Football Show. New episodes all week, all season. Meet me on the Quad.",
   metadataBase: new URL(SITE_URL),
 };
 

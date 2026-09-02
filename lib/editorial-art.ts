@@ -1,7 +1,7 @@
 // Central editorial-art library for the 2026 image-first redesign.
 //
 // Every article-like card/tile across the site (Notebook cards, Wire rail,
-// Porch hot rows, team-page article thumbs, etc.) pulls its photo from here
+// Quad hot rows, team-page article thumbs, etc.) pulls its photo from here
 // instead of hardcoding a path — so a category always resolves to a
 // visually-fitting image, and every page can guarantee it never shows the
 // same photo twice.

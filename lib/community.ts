@@ -1,4 +1,4 @@
-// The Porch community data layer (v2 brief §3). Two access paths:
+// The Quad community data layer (v2 brief §3). Two access paths:
 //  - publicClient(): cookie-less anon client whose fetches opt into Next's
 //    data cache (short revalidate) — used by static surfaces (homepage
 //    Trending) and public reads. RLS hides hidden content from anon.
@@ -141,7 +141,7 @@ export async function getUpvotes(
 }
 
 /** Trending threads for the homepage (real data only — returns [] until the
- * porch has genuine activity: at least one reply or 3+ threads). */
+ * Quad has genuine activity: at least one reply or 3+ threads). */
 export async function getTrendingThreads(limit = 4): Promise<ThreadSummary[]> {
   try {
     const db = publicClient();

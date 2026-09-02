@@ -7,7 +7,7 @@ import { LAUNCH_TEAMS } from "@/lib/team-data";
 export const metadata: Metadata = {
   title: "All 136 Teams",
   description:
-    "Every FBS program in The Pate State — deep team hubs for the biggest fanbases, with schedule, roster, portal moves, Josh's receipts, and each team's porch.",
+    "Every FBS program in The Pate State — deep team hubs for the biggest fanbases, with schedule, roster, portal moves, Josh's receipts, and each team's Quad.",
   alternates: { canonical: "/teams" },
 };
 
@@ -30,7 +30,7 @@ export default async function TeamsPage() {
           <h1>All 136 Teams</h1>
           <p className="lede">
             One hub per program: the real schedule and roster, portal moves, what Josh has actually said, and the
-            team&apos;s own porch. The biggest fanbases are live — the rest unlock as their hubs ship.
+            team&apos;s own Quad. The biggest fanbases are live — the rest unlock as their hubs ship.
           </p>
         </div>
       </header>
@@ -64,7 +64,7 @@ export default async function TeamsPage() {
           </div>
           <p style={{ marginTop: 18, fontFamily: "var(--mono)", fontSize: 12, color: "var(--ink-dim)" }}>
             Team list via CollegeFootballData · hubs expand conference by conference — want yours next?
-            Make noise on <Link href="/community" style={{ color: "var(--lamp-deep)" }}>the Porch</Link>.
+            Make noise on <Link href="/community" style={{ color: "var(--lamp-deep)" }}>the Quad</Link>.
           </p>
         </div>
       </section>
@@ -72,7 +72,7 @@ export default async function TeamsPage() {
       <div className="cta-band">
         <div className="wrap row">
           <div>
-            <h3>Follow your teams, get your porch.</h3>
+            <h3>Follow your teams, get your Quad.</h3>
             <p>CITIZENSHIP IS FREE — YOUR PROGRAMS&apos; NEWS, GAMES, AND THREADS, FIRST</p>
           </div>
           <Link className="btn" href="/join" style={{ borderColor: "var(--lamp)", color: "var(--lamp)" }}>

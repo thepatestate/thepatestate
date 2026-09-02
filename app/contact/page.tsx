@@ -36,7 +36,7 @@ export default function ContactPage() {
           ))}
           <p style={{ fontFamily: "var(--mono)", fontSize: 12, color: "var(--ink-dim)", marginTop: 8 }}>
             Mailbag questions for the show don&apos;t go here — those live on{" "}
-            <Link href="/porch" style={{ color: "var(--lamp-deep)" }}>the Porch</Link>.
+            <Link href="/quad" style={{ color: "var(--lamp-deep)" }}>the Quad</Link>.
           </p>
         </div>
       </section>

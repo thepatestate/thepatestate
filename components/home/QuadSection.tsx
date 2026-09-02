@@ -2,28 +2,28 @@ import Link from "next/link";
 import type { ThreadSummary } from "@/lib/community";
 import RelTime from "@/components/RelTime";
 
-// v5 "Live on the Porch": real community threads + the join panel. With no
+// v5 "Live on the Quad": real community threads + the join panel. With no
 // threads yet, the panel stands alone — no fabricated conversation (§0.1).
 const AV_CLASSES = ["a1", "a2", "a3", "a4"] as const;
 
-export default function PorchSection({ threads }: { threads: ThreadSummary[] }) {
+export default function QuadSection({ threads }: { threads: ThreadSummary[] }) {
   const visible = threads.filter((t) => !t.hidden).slice(0, 4);
   const side = (
-    <div className="porch-side">
-      <div className="on">The porch is open</div>
+    <div className="quad-side">
+      <div className="on">The Quad is open</div>
       <h3>Team threads. Poll arguments. Gameday chats.</h3>
-      <p>Moderated like a front porch, not a mosh pit. Every take signed. Citizens only.</p>
-      <Link className="btn" href="/community">Pull Up a Chair →</Link>
+      <p>Moderated like a campus quad, not a mosh pit. Every take signed. Citizens only.</p>
+      <Link className="btn" href="/community">Meet Me on the Quad →</Link>
       <div className="rules">Free with citizenship · House rules apply</div>
     </div>
   );
   return (
-    <section className="porch" id="porch">
+    <section className="quad" id="quad">
       <div className="wrap">
         <div className="sect-head">
           <div>
-            <div className="eyebrow">Pull Up a Chair</div>
-            <h2>Live on the Porch</h2>
+            <div className="eyebrow">Meet Me on the Quad</div>
+            <h2>Live on the Quad</h2>
             <div className="sub">The comment section, if the comment section had manners.</div>
           </div>
           <Link className="more" href="/community">All Threads →</Link>
@@ -31,7 +31,7 @@ export default function PorchSection({ threads }: { threads: ThreadSummary[] }) 
         {visible.length === 0 ? (
           side
         ) : (
-          <div className="porch-grid">
+          <div className="quad-grid">
             <div>
               {visible.map((t, i) => {
                 const author = t.author_label ?? t.citizens?.display_handle ?? "a citizen";

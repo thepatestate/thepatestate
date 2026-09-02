@@ -916,8 +916,8 @@ footer{background:var(--navy);color:var(--chalk-dim);padding:34px 0 40px;font-fa
 .myteams-chip{display:inline-flex;align-items:center;gap:7px;text-decoration:none;color:var(--ink);border:1px solid var(--line-l);border-radius:20px;padding:4px 12px 4px 5px;background:#fff;font-family:var(--mono);font-size:11px}
 .myteams-chip:hover{border-color:var(--lamp-deep)}
 
-/* --- The Porch community (v2 brief §3.1 — On3-caliber board readability) --- */
-.porch-page{background:#EFEDE8;min-height:60vh;padding-bottom:40px}
+/* --- The Quad community (v2 brief §3.1 — On3-caliber board readability) --- */
+.quad-page{background:#EFEDE8;min-height:60vh;padding-bottom:40px}
 .board-bar{background:var(--navy);color:var(--chalk);padding:20px 0 18px}
 .board-bar.team{border-bottom:4px solid var(--lamp)}
 .board-bar .kicker{font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--lamp)}

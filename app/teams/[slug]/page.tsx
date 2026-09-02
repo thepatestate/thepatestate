@@ -33,7 +33,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (!info || !LAUNCH_TEAMS.includes(slug)) return { title: "Teams" };
   return {
     title: `${info.school} — Team Hub`,
-    description: `${info.school} in The Pate State: the real 2026 schedule, roster, portal moves, what Josh has actually said, and the ${info.school} Porch.`,
+    description: `${info.school} in The Pate State: the real 2026 schedule, roster, portal moves, what Josh has actually said, and the ${info.school} Quad.`,
     alternates: { canonical: `/teams/${slug}` },
     robots: { index: false },
   };
@@ -150,14 +150,14 @@ export default async function TeamHubPage({ params }: { params: Promise<{ slug: 
             )}
             {board && (
               <Link className="btn" href={`/community/${board.slug}`} style={{ borderColor: "rgba(243,239,230,.5)", color: "var(--chalk)" }}>
-                💬 The {info.school} Porch
+                💬 The {info.school} Quad
               </Link>
             )}
           </div>
         </div>
       </div>
 
-      <div className="porch-page">
+      <div className="quad-page">
         <div className="wrap">
           <div className="hub-grid">
             <div className="hub-main">
@@ -255,10 +255,10 @@ export default async function TeamHubPage({ params }: { params: Promise<{ slug: 
                 )}
               </div>
 
-              {/* Team porch (§4.3) */}
+              {/* Team Quad (§4.3) */}
               <div className="hub-card">
                 <div className="sec-head" style={{ marginBottom: 8 }}>
-                  <p className="eyebrow" style={{ margin: 0 }}>The {info.school} Porch</p>
+                  <p className="eyebrow" style={{ margin: 0 }}>The {info.school} Quad</p>
                   {board && <Link className="view-all" href={`/community/${board.slug}`}>Start a thread →</Link>}
                 </div>
                 {board ? (
@@ -268,18 +268,18 @@ export default async function TeamHubPage({ params }: { params: Promise<{ slug: 
                     </div>
                   ) : (
                     <EmptyState
-                      kicker="FIRST CHAIR IS OPEN"
-                      title={`Nobody's said a word on the ${info.school} Porch yet`}
-                      body="Start the first thread — the porch remembers its founders."
+                      kicker="FIRST WORD IS YOURS"
+                      title={`Nobody's said a word on the ${info.school} Quad yet`}
+                      body="Start the first thread — the Quad remembers its founders."
                       cta={{ href: `/community/${board.slug}`, label: "Open the board →" }}
                     />
                   )
                 ) : (
                   <EmptyState
                     kicker="COMING SOON"
-                    title={`The ${info.school} Porch opens with demand`}
-                    body="Team boards open as their fanbases show up — meanwhile the Front Porch is everyone's."
-                    cta={{ href: "/community", label: "Join the Front Porch →" }}
+                    title={`The ${info.school} Quad opens with demand`}
+                    body="Team boards open as their fanbases show up — meanwhile the Main Quad is everyone's."
+                    cta={{ href: "/community", label: "Join the Main Quad →" }}
                   />
                 )}
               </div>
@@ -431,7 +431,7 @@ export default async function TeamHubPage({ params }: { params: Promise<{ slug: 
                 <a href={SOCIAL_LINKS.instagram} target="_blank" rel="noopener">◉ <b>Instagram</b></a>
                 <a href={SOCIAL_LINKS.tiktok} target="_blank" rel="noopener">♪ <b>TikTok</b></a>
                 {board ? (
-                  <Link href={`/community/${board.slug}`}>💬 <b>The {info.school} Porch</b></Link>
+                  <Link href={`/community/${board.slug}`}>💬 <b>The {info.school} Quad</b></Link>
                 ) : (
                   <Link href="/community">💬 <b>The Boards</b></Link>
                 )}

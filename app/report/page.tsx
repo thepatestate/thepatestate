@@ -144,7 +144,7 @@ export default function ReportPage() {
           <h2 className="display" style={{ fontSize: 32 }}>The Next Level Past Phil Steele</h2>
           <p className="lede">
             Same obsessive depth, none of the eye-chart. Every number explained, every projection accountable —
-            graded publicly against results in December, because the porch keeps receipts.
+            graded publicly against results in December, because the Quad keeps receipts.
           </p>
         </div>
       </section>

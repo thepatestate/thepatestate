@@ -344,7 +344,7 @@ export default async function WireStoryPage({ params }: { params: Promise<{ slug
           <div className="rc">
             <div className="hd">Citizenship</div>
             <Link className="cta" href="/join">Join Free</Link>
-            <p className="sub">Picks logged. Polls archived. The Porch gets the last word.</p>
+            <p className="sub">Picks logged. Polls archived. The Quad gets the last word.</p>
           </div>
         </aside>
       </div></div>

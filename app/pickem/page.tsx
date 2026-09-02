@@ -9,7 +9,7 @@ import { createArtPicker } from "@/lib/editorial-art";
 import { getVideos, SOCIAL_LINKS } from "@/lib/youtube";
 
 export const metadata: Metadata = {
-  title: "Porch Pick'Em",
+  title: "Quad Pick'Em",
   description: "Ten games a week against Josh and the whole State — free forever, streaks and patches, real prizes. Season champ watches a game with Josh.",
   alternates: { canonical: "/pickem" },
 };
@@ -23,7 +23,7 @@ export const revalidate = 21600;
 
 const DEMO_LEADERBOARD = [
   { rank: "1.", name: "SicEmSaturdays", pts: "1,842 PTS", streak: "W14" },
-  { rank: "2.", name: "PorchSwingProphet", pts: "1,791 PTS", streak: "W11" },
+  { rank: "2.", name: "QuadProphet", pts: "1,791 PTS", streak: "W11" },
   { rank: "3.", name: "Josh Pate", pts: "1,764 PTS", streak: "W9" },
   { rank: "4.", name: "GroveGoblin", pts: "1,733 PTS", streak: null },
   { rank: "5.", name: "ChalkEater88", pts: "1,700 PTS", streak: null },
@@ -128,8 +128,8 @@ export default async function PickemPage() {
     <main className="v5-lite">
       <header className="page-head">
         <div className="wrap">
-          <p className="crumb">The Pate State / Porch Pick&apos;Em</p>
-          <h1>Porch Pick&apos;Em</h1>
+          <p className="crumb">The Pate State / Quad Pick&apos;Em</p>
+          <h1>Quad Pick&apos;Em</h1>
           <p className="lede">Ten games a week against Josh and the whole State. Free forever. The prizes are real.</p>
         </div>
       </header>
@@ -177,7 +177,7 @@ export default async function PickemPage() {
             </div>
             <div>
               <p className="eyebrow">The Prize Ladder</p>
-              <h2 className="display" style={{ fontSize: 34 }}>Win the Porch</h2>
+              <h2 className="display" style={{ fontSize: 34 }}>Win the Quad</h2>
               <div style={{ marginTop: 10 }}>
                 {DEMO_PRIZES.map((p) => (
                   <div className="prize-row" key={p.tier}>

@@ -5,7 +5,7 @@ const content = {
   episode: { ytId: "abcdefghijk", title: "Weekend Truths", thumbnailUrl: "https://i.ytimg.com/vi/abcdefghijk/hqdefault.jpg" },
   articles: [{ headline: "The Case For Texas", dek: "A look.", slug: "the-case-for-texas" }],
 };
-const opts = { intro: "Here's the porch this morning.", unsubscribeUrl: "https://thepatestate.com/api/playbook/unsubscribe?uid=u1&sig=s1" };
+const opts = { intro: "Here's the Quad this morning.", unsubscribeUrl: "https://thepatestate.com/api/playbook/unsubscribe?uid=u1&sig=s1" };
 
 describe("uid signing", () => {
   it("roundtrips", () => { const s = signUid("user-123"); expect(verifyUid("user-123", s)).toBe(true); });

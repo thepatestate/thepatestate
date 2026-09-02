@@ -11,9 +11,9 @@ import { CHANNEL_URL, SOCIAL_LINKS } from "@/lib/youtube";
 import { createArtPicker } from "@/lib/editorial-art";
 
 export const metadata: Metadata = {
-  title: "Pate's Porch — Community",
+  title: "Pate's Quad — Community",
   description: "The community room of The Pate State: the mailbag, watch parties, the tour, and where citizens live between Saturdays.",
-  alternates: { canonical: "/porch" },
+  alternates: { canonical: "/quad" },
 };
 
 // --- Preseason-preview sample data ---------------------------------------
@@ -43,7 +43,7 @@ const DEMO_MAILBAG = [
 const DEMO_CHAMPIONS = [
   { label: "2025 PICK'EM CHAMP", who: "SicEmSaturdays" },
   { label: "2025 LEDGER: MOST GAMES", who: "GroveGoblin · 96" },
-  { label: "2025 TRAVELER OF THE YEAR", who: "PorchSwingProphet · 14 STADIUMS" },
+  { label: "2025 TRAVELER OF THE YEAR", who: "QuadProphet · 14 STADIUMS" },
 ] as const;
 
 const DEMO_HOT = [
@@ -71,11 +71,11 @@ const DEMO_TOUR = [
 const FOLLOW_LINKS = [
   { href: CHANNEL_URL, label: "▶ YOUTUBE — JOSH PATE'S CFB SHOW" },
   { href: SOCIAL_LINKS.x, label: "𝕏 @JOSHPATECFB — DAILY TAKES" },
-  { href: SOCIAL_LINKS.instagram, label: "◉ @JOSHPATECFB — BEHIND THE PORCH" },
-  { href: SOCIAL_LINKS.tiktok, label: "♪ TIKTOK — 60-SECOND PORCH" },
+  { href: SOCIAL_LINKS.instagram, label: "◉ @JOSHPATECFB — BEHIND THE QUAD" },
+  { href: SOCIAL_LINKS.tiktok, label: "♪ TIKTOK — 60-SECOND QUAD" },
 ] as const;
 
-export default async function PorchPage() {
+export default async function QuadPage() {
   const citizen = await getCitizen();
   const art = createArtPicker();
 
@@ -83,8 +83,8 @@ export default async function PorchPage() {
     <main className="v5-lite">
       <header className="page-head">
         <div className="wrap">
-          <p className="crumb">The Pate State / Pate&apos;s Porch</p>
-          <h1>Pate&apos;s Porch</h1>
+          <p className="crumb">The Pate State / Pate&apos;s Quad</p>
+          <h1>Pate&apos;s Quad</h1>
           <p className="lede">
             The community room — your mailbag, your ledger, your leagues, the watch parties, and the tour. This is
             where citizens live.
@@ -150,13 +150,13 @@ export default async function PorchPage() {
                 </div>
               ) : (
                 <div style={{ marginTop: 14 }}>
-                  <GateCard next="/porch" />
+                  <GateCard next="/quad" />
                 </div>
               )}
             </div>
             <div>
               <div className="panel" style={{ marginBottom: 16 }}>
-                <p className="eyebrow">Your Corner of the Porch</p>
+                <p className="eyebrow">Your Corner of the Quad</p>
                 <h3>Ledger · Leagues · Patches</h3>
                 <p>
                   Your logged games, your pick&apos;em leagues, your stadium passport, and your poll-vote streak —
@@ -206,15 +206,15 @@ export default async function PorchPage() {
 
       <section className="on-soft tight">
         <div className="wrap">
-          <p className="eyebrow">Where the Porch Is Loudest</p>
+          <p className="eyebrow">Where the Quad Is Loudest</p>
           <h2 className="display" style={{ fontSize: 32 }}>Join the Conversation</h2>
           {DEMO_MODE && <PreseasonChip />}
           {!DEMO_MODE && (
             <div style={{ maxWidth: 820, marginTop: 14 }}>
               <EmptyState
                 kicker="THE BOARDS ARE OPEN"
-                title="The Porch is live — pull up a chair"
-                body="The national Front Porch, recruiting and portal talk, the Film Room, and a porch for every big fanbase. Citizenship is the only ticket in."
+                title="The Quad is live — grab a spot"
+                body="The national Main Quad, recruiting and portal talk, the Film Room, and a Quad for every big fanbase. Citizenship is the only ticket in."
                 cta={{ href: "/community", label: "Open the Boards →" }}
               />
             </div>
@@ -278,7 +278,7 @@ export default async function PorchPage() {
             </div>
             <div className="panel panel-accent-field">
               <p className="eyebrow">The Tour</p>
-              <h3>The Porch, Live</h3>
+              <h3>The Quad, Live</h3>
               {DEMO_MODE ? (
                 DEMO_TOUR.map((t) => (
                   <div className="tour-row" key={t.date}>
@@ -288,7 +288,7 @@ export default async function PorchPage() {
                 ))
               ) : (
                 <EmptyState
-                  kicker="THE PORCH TOUR"
+                  kicker="THE QUAD TOUR"
                   title="Tour dates announced soon"
                   body="Campus stops are being booked now — citizens get first dibs the moment dates drop."
                 />

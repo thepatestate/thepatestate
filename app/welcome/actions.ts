@@ -13,7 +13,7 @@ const ERROR_COPY: Record<string, string> = {
   charset: "Letters, numbers, and underscores only.",
   underscore: "Can't start or end with an underscore.",
   reserved: "That one's taken by the State.",
-  taken: "That handle's already on the porch — try another.",
+  taken: "That handle's already on the Quad — try another.",
   auth: "Your session expired — head back to the join page.",
 };
 

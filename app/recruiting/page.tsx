@@ -428,9 +428,9 @@ export default async function RecruitingPage() {
             <span className="pgo">Watch the Show →</span>
           </Link>
           <Link className="pitem" href="/community">
-            <span className="tm">The Porch</span>
-            <h5>Argue the fits with the rest of the porch — the portal conversation never sleeps in the community boards.</h5>
-            <span className="pgo">Pull Up a Chair →</span>
+            <span className="tm">The Quad</span>
+            <h5>Argue the fits with the rest of the Quad — the portal conversation never sleeps in the community boards.</h5>
+            <span className="pgo">Meet Me on the Quad →</span>
           </Link>
         </div>
       </div></section>

@@ -26,7 +26,7 @@ function useMyTeamsCount(): number | null {
 }
 
 // v5 masthead. Wayfinding labels stay plain (v2 brief §2.1): "Latest" → the
-// Notebook, "Rankings" → the JP Poll, "Community" → the Porch.
+// Notebook, "Rankings" → the JP Poll, "Community" → the Quad.
 const LINKS = [
   { href: "/notebook", label: "Latest" },
   { href: "/show", label: "Show" },
@@ -40,7 +40,7 @@ const LINKS = [
 const MORE_LINKS = [
   { href: "/teams", label: "Teams" },
   { href: "/tailgate", label: "Tailgate" },
-  { href: "/porch", label: "The Porch Tour" },
+  { href: "/quad", label: "The Quad Tour" },
   { href: "/report", label: "The Report" },
   { href: "/shop", label: "Shop" },
   { href: "/about", label: "About" },
@@ -69,7 +69,7 @@ export default function Masthead() {
       <div className="wrap mast">
         <Link className="logo" href="/">
           <span className="name">The Pate <em>State</em></span>
-          <span className="kicker">The Front Porch of College Football</span>
+          <span className="kicker">College Football's Common Ground</span>
         </Link>
         <nav className="main">
           {LINKS.map((l) => (

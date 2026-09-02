@@ -43,7 +43,7 @@ function confirmPage(uid: string, sig: string): string {
     `padding: 12px 24px; font-family: Arial, Helvetica, sans-serif; font-size: 14px; font-weight: bold; cursor: pointer;">` +
     `Take me off the list</button>` +
     `</form>`;
-  return pageShell("Unsubscribe", "Sure you want off the porch?", body);
+  return pageShell("Unsubscribe", "Sure you want off the Quad?", body);
 }
 
 function failurePage(): string {

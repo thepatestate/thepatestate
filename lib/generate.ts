@@ -425,7 +425,7 @@ export interface PlaybookIntro {
 
 const PLAYBOOK_FALLBACK: PlaybookIntro = {
   subject: "The Playbook — The Pate State",
-  intro: "Here's what's new on the porch.",
+  intro: "Here's what's new on the Quad.",
 };
 
 const PLAYBOOK_SCHEMA = {

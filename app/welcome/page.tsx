@@ -25,7 +25,7 @@ export default async function WelcomePage({
         <div className="wrap">
           <p className="crumb">The Pate State / Citizenship</p>
           <h1>Claim Your Handle</h1>
-          <p className="lede">One more step and your seat on the porch is saved.</p>
+          <p className="lede">One more step and your spot on the Quad is saved.</p>
         </div>
       </header>
       <section className="tight">

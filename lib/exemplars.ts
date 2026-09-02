@@ -22,7 +22,7 @@ export function exemplarProse(name: string): string {
   body = body.replace(/<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>/g, "");
   // Chrome that isn't prose: rail, source box, tags, share row, pulse.
   body = body.replace(/<(aside|nav|footer)[\s\S]*?<\/\1>/g, "");
-  body = body.replace(/<div class="(a-src|a-tags|a-share|pulse|yt|a-pb|a-porch|a-author)"[\s\S]*?<\/div>\s*<\/div>/g, "");
+  body = body.replace(/<div class="(a-src|a-tags|a-share|pulse|yt|a-pb|a-quad|a-porch|a-author)"[\s\S]*?<\/div>\s*<\/div>/g, "");
   body = body.replace(/<h([1-4])[^>]*>/g, "\n\n## ").replace(/<\/h[1-4]>/g, "\n");
   body = body.replace(/<(p|li|blockquote|div|tr)[^>]*>/g, "\n").replace(/<br\s*\/?>/g, "\n");
   body = body.replace(/<[^>]+>/g, "");

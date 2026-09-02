@@ -6,7 +6,7 @@ import { resolveReport } from "@/app/community/actions";
 import RelTime from "@/components/RelTime";
 
 export const metadata: Metadata = {
-  title: "Moderation — The Porch",
+  title: "Moderation — The Quad",
   robots: { index: false },
 };
 
@@ -66,17 +66,17 @@ export default async function ModPage() {
     <main className="v5-lite">
       <div className="board-bar">
         <div className="wrap">
-          <p className="kicker">Staff Only · The Porch</p>
+          <p className="kicker">Staff Only · The Quad</p>
           <h1>The Mod Desk</h1>
           <p className="sub">Open reports first, the permanent log below. Permanent decisions are human-only.</p>
         </div>
       </div>
-      <div className="porch-page">
+      <div className="quad-page">
         <div className="wrap" style={{ maxWidth: 880 }}>
           <p className="eyebrow" style={{ marginTop: 24 }}>Open Reports ({reports.length})</p>
           {reports.length === 0 && (
             <p style={{ fontFamily: "var(--mono)", fontSize: 13, color: "var(--ink-dim)", marginTop: 10 }}>
-              Queue&apos;s clear. The porch is behaving.
+              Queue&apos;s clear. The Quad is behaving.
             </p>
           )}
           {reports.map((r) => {

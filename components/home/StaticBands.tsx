@@ -56,7 +56,7 @@ export function AnnualsSection({ photo }: { photo?: { src: string; alt: string }
         </div>
         <div className="tour">
           <div className="copy">
-            <div className="eyebrow">The Porch Goes On the Road</div>
+            <div className="eyebrow">The Quad Goes On the Road</div>
             <h3>Live &amp; On Campus</h3>
             <span className="badge">The 2026 Tour Is Taking Shape · Dates Soon</span>
             <p>The broadcast desk, on a quad near you. Citizens get first dibs the moment tickets drop.</p>
@@ -104,7 +104,7 @@ export function CFLSection() {
         </div>
         <div className="tour">
           <div className="copy">
-            <div className="eyebrow">The Porch Goes On the Road</div>
+            <div className="eyebrow">The Quad Goes On the Road</div>
             <h3>Live &amp; On Campus</h3>
             <span className="badge">The 2026 Tour Is Taking Shape · Dates Soon</span>
             <p>The broadcast desk, on a quad near you. Citizens get first dibs the moment tickets drop.</p>
@@ -127,7 +127,7 @@ export function CFLSection() {
 
 const PRODUCTS = [
   { name: "The Creed Tee · Tri-Blend", price: "$28", photo: "/img/product-tee.jpg", alt: "The Creed Tee, folded flat" },
-  { name: "Porch Flag", price: "$34", photo: "/img/product-flag.jpg", alt: "The Pate State porch flag" },
+  { name: "Quad Flag", price: "$34", photo: "/img/product-flag.jpg", alt: "The Pate State Quad flag" },
   { name: "Gameday Hat", price: "$32", photo: "/img/product-hat.jpg", alt: "The Pate State gameday hat" },
 ];
 
@@ -184,7 +184,7 @@ export function FollowSection({ subs }: { subs?: string }) {
   return (
     <section className="follow">
       <div className="wrap">
-        <h2>Follow the Porch Everywhere</h2>
+        <h2>Follow the Quad Everywhere</h2>
         <a className="soc yt" href={CHANNEL_URL} target="_blank" rel="noopener">▶ YouTube{subs ? ` · ${subs}` : ""}</a>
         <a className="soc x" href={SOCIAL_LINKS.x} target="_blank" rel="noopener">𝕏 @JoshPateCFB</a>
         <a className="soc ig" href={SOCIAL_LINKS.instagram} target="_blank" rel="noopener">◉ Instagram</a>

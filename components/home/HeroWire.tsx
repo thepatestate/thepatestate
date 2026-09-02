@@ -80,17 +80,17 @@ export default function HeroWire({ featured, wire }: {
           <Link className="as-item" href="/play">
             <span className="ico">✓</span>
             <div>
-              <div className="k">Porch Pick&apos;Em</div>
+              <div className="k">Quad Pick&apos;Em</div>
               <h4>Ten games a week against Josh and the whole State</h4>
               <span className="go">Make Your Picks →</span>
             </div>
           </Link>
           <Link className="as-item" href="/community">
-            <span className="ico">🪑</span>
+            <span className="ico">🌳</span>
             <div>
-              <div className="k">The Porch</div>
+              <div className="k">The Quad</div>
               <h4>Citizens are talking ball right now</h4>
-              <span className="go">Pull Up a Chair →</span>
+              <span className="go">Meet Me on the Quad →</span>
             </div>
           </Link>
         </div>
