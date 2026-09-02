@@ -1,0 +1,1309 @@
+<title>Fatal Four</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Public+Sans:wght@400;500;600;700&display=swap">
+
+<style>
+/* &#x2500;&#x2500; Fatal Four &#xB7; The Pate State &#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;
+   Single-theme dark navy. Every color painted explicitly from tokens below. */
+:root{
+  --field:#0B1A33;
+  --field-2:#0E1F3F;
+  --panel:#102647;
+  --panel-2:#0C1D39;
+  --line:#1E3557;
+  --line-soft:#17294a;
+  --gold:#C9A227;
+  --gold-hi:#E8C75B;
+  --red:#B3202A;
+  --red-hi:#E0525C;
+  --ink:#F3EEE2;
+  --muted:#9AA7BF;
+  --muted-2:#6E7E9B;
+  --glass:#DCE9FF;
+  --green:#4FB477;
+  --disp:"Barlow Condensed","Oswald","Arial Narrow",sans-serif;
+  --body:"Public Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
+  --r:10px;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:var(--field);
+  color:var(--ink);
+  font-family:var(--body);
+  font-size:15px;
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3{margin:0;font-family:var(--disp);font-weight:800;text-wrap:balance;letter-spacing:.01em}
+button,input,select{font:inherit;color:inherit}
+::selection{background:var(--gold);color:#141414}
+:focus-visible{outline:2px solid var(--gold-hi);outline-offset:2px;border-radius:4px}
+
+.wrap{max-width:1240px;margin:0 auto;padding:clamp(16px,2.6vw,30px) clamp(14px,2.6vw,30px) 60px}
+
+/* &#x2500;&#x2500; labels &#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500; */
+.lbl{
+  font-family:var(--disp);font-weight:700;font-size:12px;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--muted);
+}
+.lbl-gold{color:var(--gold)}
+.num{font-variant-numeric:tabular-nums}
+
+/* &#x2500;&#x2500; masthead &#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500; */
+.mast{
+  display:flex;flex-wrap:wrap;align-items:flex-end;gap:14px 22px;
+  padding-bottom:14px;margin-bottom:16px;
+  border-bottom:1px solid var(--line);
+}
+.mast .brand{display:flex;flex-direction:column;gap:2px}
+.mast h1{
+  font-size:clamp(40px,7.4vw,74px);line-height:.86;letter-spacing:.005em;
+  color:var(--ink);
+}
+.mast h1 em{font-style:normal;color:var(--gold)}
+.mast .sub{max-width:44ch;color:var(--muted);font-size:14px}
+.mast .rail{margin-left:auto;display:flex;flex-direction:column;gap:6px;align-items:flex-end}
+.chip{
+  display:inline-flex;align-items:center;gap:7px;
+  border:1px solid var(--line);background:var(--panel-2);
+  padding:5px 10px;border-radius:100px;
+  font-family:var(--disp);font-weight:700;font-size:12px;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--muted);white-space:nowrap;
+}
+.chip b{color:var(--ink);font-weight:800}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--gold);flex:0 0 auto}
+
+/* &#x2500;&#x2500; hero stage &#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500; */
+.hero{
+  position:relative;border:1px solid var(--line);border-radius:14px;
+  background:
+    radial-gradient(120% 70% at 18% -10%, rgba(160,196,255,.14), transparent 60%),
+    radial-gradient(120% 70% at 84% -14%, rgba(201,162,39,.13), transparent 58%),
+    radial-gradient(90% 55% at 50% 118%, rgba(120,160,220,.16), transparent 70%),
+    linear-gradient(180deg,#0C1E3C 0%, #0A1730 100%);
+  overflow:hidden;
+}
+.hero::after{ /* stadium light haze */
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:
+    conic-gradient(from 200deg at 12% -12%, rgba(255,255,255,.07), transparent 22%),
+    conic-gradient(from 300deg at 92% -10%, rgba(255,255,255,.06), transparent 20%);
+}
+.stage{position:relative;height:clamp(376px,54vh,528px)}
+
+/* elevation axis */
+.axis{position:absolute;left:0;top:26px;bottom:26px;width:150px;z-index:2}
+.axis .tick{position:absolute;left:0;right:0;display:flex;align-items:center;gap:8px;transform:translateY(50%)}
+.axis .tick .bar{height:1px;background:var(--line);flex:1 1 auto;min-width:10px}
+.axis .tick .v{
+  font-family:var(--disp);font-weight:700;font-size:13px;letter-spacing:.08em;
+  color:var(--muted-2);padding-left:14px;width:44px;text-align:right;flex:0 0 auto;
+}
+.axis .tick .cap{
+  font-family:var(--disp);font-weight:700;font-size:10.5px;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--muted-2);white-space:nowrap;
+  position:absolute;left:58px;top:-14px;
+}
+.axis .tick.major .v{color:var(--ink)}
+.axis .tick.major .bar{background:var(--line);box-shadow:0 0 0 0 transparent}
+.axis .tick.top .cap{color:var(--gold)}
+
+.field{position:absolute;left:150px;right:0;top:26px;bottom:26px}
+.lift{position:absolute;left:0;right:0;top:0;display:flex;align-items:center;justify-content:center;
+  transition:transform .9s cubic-bezier(.22,1,.36,1);will-change:transform}
+.bub{display:block;overflow:visible}
+.readout{
+  position:absolute;right:10px;top:50%;transform:translateY(-50%);
+  text-align:right;pointer-events:none;
+}
+.readout .n{font-family:var(--disp);font-weight:800;font-size:54px;line-height:.9;color:var(--ink);letter-spacing:.01em}
+.readout .k{font-family:var(--disp);font-weight:700;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.readout.final .n{color:var(--gold)}
+
+/* bubble internals */
+#bubbleGroup{transform-origin:150px 150px}
+.ripple #bubbleGroup{animation:ripple .72s cubic-bezier(.22,1,.36,1)}
+@keyframes ripple{0%{transform:scale(1)}22%{transform:scale(1.035)}55%{transform:scale(.988)}100%{transform:scale(1)}}
+#rim{transition:stroke-opacity .4s}
+.ripple #rim{animation:rimw .72s ease-out}
+@keyframes rimw{0%{stroke-width:1.1}25%{stroke-width:2.4}100%{stroke-width:1.1}}
+#shimmer{opacity:0}
+.shimmer #shimmer{animation:shim 3.6s ease-in-out infinite}
+@keyframes shim{0%{opacity:0;transform:translateX(-150px)}35%{opacity:.85}100%{opacity:0;transform:translateX(180px)}}
+
+.orb{opacity:1;transition:opacity .5s ease}
+.orb-x{transition:transform .95s cubic-bezier(.55,.02,.5,1)}
+.orb-y{transition:transform .95s cubic-bezier(.12,.72,.24,1)}
+.orb-bob{animation:bob var(--dur,3s) ease-in-out infinite;animation-delay:var(--ph,0s)}
+@keyframes bob{0%,100%{transform:translateY(-3px)}50%{transform:translateY(3px)}}
+.orb .abbr{font-family:var(--disp);font-weight:800;letter-spacing:.02em;text-anchor:middle;dominant-baseline:central}
+.orb.enter{opacity:0}
+.orb .body{transition:transform .35s ease}
+.orb.sink .body{filter:saturate(.28) brightness(.72)}
+.orb.pop{animation:pop .5s ease-out forwards;pointer-events:none}
+@keyframes pop{0%{opacity:1}30%{opacity:.9}100%{opacity:0}}
+.orb.pop .orb-bob{animation:none;transform:scale(1.4);transition:transform .5s ease-out}
+.tether{stroke:var(--muted-2);stroke-width:1;stroke-dasharray:2 4;opacity:.5}
+.pt{animation:pt .6s ease-out forwards}
+@keyframes pt{0%{opacity:.95;transform:translate(0,0) scale(1)}100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(.3)}}
+
+/* week strip */
+.strip{
+  display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;
+  padding:12px clamp(14px,2.4vw,22px);
+  border-top:1px solid var(--line);
+  background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(0,0,0,.12));
+  position:relative;z-index:3;
+}
+.strip .seg{display:flex;align-items:baseline;gap:7px;font-size:13.5px;color:var(--muted)}
+.strip .seg b{font-family:var(--disp);font-weight:800;font-size:19px;color:var(--ink);letter-spacing:.01em}
+.strip .sep{color:var(--line);font-size:16px}
+.up{color:var(--green)}.down{color:var(--red-hi)}
+.strip .delta b{font-size:19px}
+
+/* &#x2500;&#x2500; control bar &#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500; */
+.bar{
+  display:flex;flex-wrap:wrap;gap:10px;align-items:center;
+  margin:14px 0 18px;
+}
+.btn{
+  font-family:var(--disp);font-weight:700;font-size:14px;letter-spacing:.1em;text-transform:uppercase;
+  background:var(--panel);border:1px solid var(--line);color:var(--ink);
+  padding:10px 16px;border-radius:8px;cursor:pointer;transition:background .18s,border-color .18s,transform .12s;
+}
+.btn:hover{background:#153059;border-color:#2A4A78}
+.btn:active{transform:translateY(1px)}
+.btn[disabled]{opacity:.4;cursor:not-allowed}
+.btn.gold{background:var(--gold);border-color:var(--gold);color:#16130A}
+.btn.gold:hover{background:var(--gold-hi);border-color:var(--gold-hi)}
+.btn.ghost{background:transparent}
+.btn.sm{padding:7px 11px;font-size:12.5px}
+.bar .spacer{flex:1 1 auto}
+
+/* &#x2500;&#x2500; panels &#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500; */
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;align-items:start}
+.panel{
+  border:1px solid var(--line);border-radius:12px;background:var(--field-2);
+  padding:16px;display:flex;flex-direction:column;gap:12px;min-width:0;
+}
+.panel > header{display:flex;align-items:baseline;justify-content:space-between;gap:10px;
+  border-bottom:1px solid var(--line-soft);padding-bottom:9px}
+.panel h2{font-size:19px;letter-spacing:.04em;text-transform:uppercase;color:var(--ink)}
+.hint{font-size:12.5px;color:var(--muted-2);line-height:1.45}
+
+/* build panel */
+.search{
+  width:100%;background:var(--panel-2);border:1px solid var(--line);border-radius:8px;
+  padding:9px 11px;color:var(--ink);font-size:14px;
+}
+.search::placeholder{color:var(--muted-2)}
+.tlist{max-height:206px;overflow-y:auto;display:flex;flex-direction:column;gap:2px;margin:0 -4px;padding:0 4px}
+.tlist::-webkit-scrollbar{width:8px}
+.tlist::-webkit-scrollbar-thumb{background:#1C3559;border-radius:8px}
+.trow{
+  display:flex;align-items:center;gap:9px;width:100%;text-align:left;
+  background:transparent;border:1px solid transparent;border-radius:7px;
+  padding:6px 8px;cursor:pointer;transition:background .14s,border-color .14s;
+}
+.trow:hover{background:var(--panel);border-color:var(--line)}
+.trow[disabled]{opacity:.34;cursor:default}
+.trow[disabled]:hover{background:transparent;border-color:transparent}
+.swatch{width:16px;height:16px;border-radius:50%;flex:0 0 auto;border:1.5px solid}
+.trow .nm{flex:1 1 auto;font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rk{font-family:var(--disp);font-weight:700;font-size:12px;letter-spacing:.06em;color:var(--muted-2);flex:0 0 auto}
+.rk.in{color:var(--gold)}
+.plus{font-family:var(--disp);font-weight:800;font-size:16px;color:var(--muted-2);flex:0 0 auto;width:14px;text-align:center}
+.trow:hover .plus{color:var(--gold)}
+
+.roster{display:flex;flex-direction:column;gap:4px}
+.rrow{display:flex;align-items:center;gap:8px;padding:5px 6px;border-radius:7px;background:var(--panel-2);border:1px solid var(--line-soft)}
+.rrow .math{flex:1 1 auto;font-size:12.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rrow .math b{color:var(--ink);font-weight:600}
+.rrow .pts{font-family:var(--disp);font-weight:800;font-size:15px;color:var(--ink);flex:0 0 auto}
+.rrow.lift-y .pts{color:var(--gold)}
+.rrow.sink-y .pts{color:var(--muted-2)}
+.x{background:transparent;border:0;color:var(--muted-2);cursor:pointer;font-size:15px;line-height:1;padding:2px 3px;flex:0 0 auto}
+.x:hover{color:var(--red-hi)}
+
+.segs{display:flex;gap:4px;flex-wrap:wrap}
+.seg-btn{
+  font-family:var(--disp);font-weight:700;font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;
+  background:var(--panel-2);border:1px solid var(--line);color:var(--muted);
+  padding:6px 9px;border-radius:6px;cursor:pointer;transition:.15s;
+}
+.seg-btn:hover:not([disabled]){color:var(--ink);border-color:#2A4A78}
+.seg-btn[aria-pressed="true"]{background:var(--gold);border-color:var(--gold);color:#16130A}
+.seg-btn[disabled]{opacity:.35;cursor:not-allowed}
+
+.swapbox{display:flex;flex-direction:column;gap:7px;border-top:1px solid var(--line-soft);padding-top:11px}
+.selrow{display:flex;gap:6px;flex-wrap:wrap}
+select{
+  flex:1 1 120px;min-width:0;background:var(--panel-2);border:1px solid var(--line);
+  border-radius:7px;padding:7px 8px;font-size:13px;
+}
+select[disabled]{opacity:.45}
+.fee{font-size:12.5px;color:var(--muted)}
+.fee b{color:var(--red-hi);font-weight:700}
+
+/* tailgate */
+.tg-scroll{overflow-x:auto;padding-bottom:4px}
+.tg{display:flex;gap:6px;min-width:322px}
+.tg .col{flex:1 1 0;min-width:40px;display:flex;flex-direction:column;align-items:center;gap:6px}
+.tg .track{position:relative;width:100%;height:186px;border-bottom:1px solid var(--line)}
+.tg .track::before{content:"";position:absolute;left:50%;top:0;bottom:0;width:1px;background:linear-gradient(180deg,transparent,var(--line-soft))}
+.tg .mini{position:absolute;left:50%;transform:translate(-50%,50%);transition:bottom .9s cubic-bezier(.22,1,.36,1)}
+.tg .who{font-family:var(--disp);font-weight:700;font-size:10px;letter-spacing:.04em;text-transform:uppercase;
+  color:var(--muted);text-align:center;line-height:1.1}
+.tg .who span{display:block}
+.tg .sc{font-family:var(--disp);font-weight:800;font-size:15px;color:var(--ink);line-height:1}
+.tg .ct{font-size:10px;color:var(--muted-2);letter-spacing:.04em}
+.tg .col.you .who{color:var(--gold)}
+.gapline{font-size:13px;color:var(--muted);border-top:1px solid var(--line-soft);padding-top:10px}
+.gapline b{font-family:var(--disp);font-weight:800;font-size:17px;color:var(--ink)}
+
+/* state */
+.dist{width:100%;height:auto;display:block}
+.statrow{display:flex;gap:14px;flex-wrap:wrap;align-items:baseline}
+.statrow .big{font-family:var(--disp);font-weight:800;font-size:26px;line-height:1;color:var(--ink)}
+.statrow .big .of{color:var(--muted-2);font-size:16px}
+.pct{font-family:var(--disp);font-weight:800;font-size:14px;letter-spacing:.08em;text-transform:uppercase;
+  color:#16130A;background:var(--gold);padding:3px 8px;border-radius:5px}
+
+/* rules */
+.rules{grid-column:1/-1}
+.rgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(244px,1fr));gap:16px 26px}
+.rule h3{font-family:var(--disp);font-weight:700;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:5px}
+.rule p{margin:0;font-size:13.2px;color:var(--muted);line-height:1.55}
+.rule p b{color:var(--ink);font-weight:600}
+.slices{display:flex;flex-direction:column;gap:3px;margin-top:6px}
+.sl{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--muted)}
+.sl .k{font-family:var(--disp);font-weight:700;letter-spacing:.06em;width:54px;flex:0 0 auto;color:var(--ink)}
+.sl .v{font-variant-numeric:tabular-nums;flex:1 1 auto}
+.sl .meter{flex:0 0 40px;height:4px;background:var(--line-soft);border-radius:3px;overflow:hidden}
+.sl .meter i{display:block;height:100%;background:var(--gold);border-radius:3px}
+
+/* toasts */
+.toasts{position:fixed;right:14px;bottom:14px;display:flex;flex-direction:column;gap:8px;z-index:50;max-width:min(330px,86vw)}
+.toast{
+  border:1px solid var(--line);border-left:3px solid var(--gold);
+  background:#0F2444;color:var(--ink);border-radius:8px;padding:9px 12px;font-size:13px;
+  box-shadow:0 10px 26px rgba(0,0,0,.42);
+  animation:tin .34s cubic-bezier(.22,1,.36,1), tout .34s ease-in 3.16s forwards;
+}
+.toast.bad{border-left-color:var(--red)}
+.toast .t{font-family:var(--disp);font-weight:700;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);display:block}
+@keyframes tin{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:none}}
+@keyframes tout{to{opacity:0;transform:translateX(20px)}}
+
+.final-note{font-size:13px;color:var(--muted);border-top:1px solid var(--line-soft);padding-top:10px}
+.final-note b{color:var(--gold);font-weight:700}
+
+/* &#x2500;&#x2500; responsive &#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500; */
+@media (max-width:980px){
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:700px){
+  .grid{grid-template-columns:minmax(0,1fr)}
+  .readout{display:none}
+  .axis{width:96px}
+  .field{left:96px}
+  .axis .tick .cap{left:44px;font-size:9.5px}
+  .axis .tick .v{width:34px;padding-left:8px;font-size:12px}
+  .mast .rail{margin-left:0;align-items:flex-start;flex-direction:row;flex-wrap:wrap}
+  .stage{height:340px}
+}
+@media (max-width:400px){
+  .wrap{padding-left:12px;padding-right:12px}
+  .strip .seg b{font-size:17px}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .lift,.orb-x,.orb-y,.tg .mini,.orb .body{transition:opacity .2s linear !important}
+  .orb-bob,.ripple #bubbleGroup,.ripple #rim,.shimmer #shimmer{animation:none !important}
+  .orb{transition:opacity .25s linear}
+  .toast{animation:none}
+  .pt{display:none}
+}
+</style>
+
+<div class="wrap">
+
+  <div class="mast">
+    <div class="brand">
+      <span class="lbl lbl-gold">The Pate State &#xB7; Fan Game</span>
+      <h1>FATAL <em>FOUR</em></h1>
+      <p class="sub">Pick your bubble. Every team you add splits the same 1,000 points, so a four-team bubble is worth more per team than a twenty. Then hold your nerve until January.</p>
+    </div>
+    <div class="rail">
+      <span class="chip"><span class="dot"></span>Week <b id="weekChip">1</b></span>
+      <span class="chip">Sample rankings &#xB7; 2026</span>
+    </div>
+  </div>
+
+  <section class="hero" aria-label="Your bubble">
+    <div class="stage" id="stage">
+      <div class="axis" id="axis"></div>
+      <div class="field" id="fieldEl">
+        <div class="lift" id="lift">
+          <svg class="bub" id="bub" viewBox="0 0 300 300" width="300" height="300" role="img" aria-labelledby="bubTitle">
+            <title id="bubTitle">Your bubble, floating at your live score</title>
+            <defs>
+              <radialGradient id="glassg" cx="36%" cy="28%" r="78%">
+                <stop offset="0" stop-color="#D6E8FF" stop-opacity=".28"/>
+                <stop offset=".42" stop-color="#7FA6D8" stop-opacity=".10"/>
+                <stop offset=".84" stop-color="#0B1A33" stop-opacity=".04"/>
+                <stop offset="1" stop-color="#A8CBFF" stop-opacity=".17"/>
+              </radialGradient>
+              <radialGradient id="rimg" cx="50%" cy="50%" r="50%">
+                <stop offset=".80" stop-color="#DCE9FF" stop-opacity="0"/>
+                <stop offset=".955" stop-color="#DCE9FF" stop-opacity=".30"/>
+                <stop offset="1" stop-color="#DCE9FF" stop-opacity=".06"/>
+              </radialGradient>
+              <linearGradient id="shg" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0" stop-color="#C9A227" stop-opacity="0"/>
+                <stop offset=".5" stop-color="#E8C75B" stop-opacity=".55"/>
+                <stop offset="1" stop-color="#C9A227" stop-opacity="0"/>
+              </linearGradient>
+              <filter id="soft" x="-40%" y="-40%" width="180%" height="180%">
+                <feGaussianBlur stdDeviation="5"/>
+              </filter>
+              <filter id="soft2" x="-40%" y="-40%" width="180%" height="180%">
+                <feGaussianBlur stdDeviation="2.4"/>
+              </filter>
+              <clipPath id="ball"><circle cx="150" cy="150" r="146"/></clipPath>
+            </defs>
+            <g id="bubbleGroup">
+              <circle cx="150" cy="150" r="146" fill="url(#glassg)"/>
+              <circle cx="150" cy="150" r="146" fill="url(#rimg)"/>
+              <ellipse cx="104" cy="84" rx="46" ry="27" fill="#FFFFFF" opacity=".15" filter="url(#soft)"/>
+              <ellipse cx="196" cy="222" rx="34" ry="15" fill="#BCD6FF" opacity=".08" filter="url(#soft)"/>
+              <path d="M40 196 A 146 146 0 0 0 262 196" fill="none" stroke="#DCE9FF" stroke-opacity=".10" stroke-width="1"/>
+              <g id="tethers"></g>
+              <g id="orbs"></g>
+              <g clip-path="url(#ball)"><rect id="shimmer" x="-40" y="0" width="90" height="300" fill="url(#shg)"/></g>
+              <circle id="rim" cx="150" cy="150" r="146" fill="none" stroke="#DCE9FF" stroke-opacity=".34" stroke-width="1.1"/>
+              <g id="parts"></g>
+            </g>
+          </svg>
+          <div class="readout" id="readout">
+            <div class="n num" id="roN">0</div>
+            <div class="k" id="roK">Live score</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="strip">
+      <div class="seg">Each team worth <b class="num" id="sShare">250</b></div>
+      <span class="sep">&#xB7;</span>
+      <div class="seg">Live score <b class="num" id="sScore">0</b></div>
+      <span class="sep">&#xB7;</span>
+      <div class="seg delta" id="sDelta"><b class="num">Even</b><span id="sDeltaTxt">since Tuesday</span></div>
+      <span class="sep">&#xB7;</span>
+      <div class="seg" id="sTeams">4 teams in the bubble</div>
+    </div>
+  </section>
+
+  <div class="bar">
+    <button class="btn gold" id="bAdv">Advance a week</button>
+    <button class="btn" id="bPlay">Play the playoff</button>
+    <button class="btn ghost" id="bReset">Reset</button>
+    <span class="spacer"></span>
+    <span class="chip" id="entryChip">Entry window open</span>
+    <span class="chip" id="swapChip">Swap available</span>
+  </div>
+
+  <div class="grid">
+
+    <!-- 1 &#xB7; BUILD -->
+    <section class="panel">
+      <header><h2>Build your bubble</h2><span class="lbl num" id="capNote">4 / 20</span></header>
+      <input class="search" id="q" type="search" placeholder="Search 56 FBS teams" aria-label="Search teams" autocomplete="off">
+      <div class="tlist" id="tlist"></div>
+      <div>
+        <span class="lbl">Entry week</span>
+        <div class="segs" id="entrySegs" style="margin-top:7px"></div>
+        <p class="hint" id="entryHint" style="margin:7px 0 0"></p>
+      </div>
+      <div>
+        <span class="lbl">Your bubble</span>
+        <div class="roster" id="roster" style="margin-top:7px"></div>
+      </div>
+      <div class="swapbox">
+        <span class="lbl">One swap per season</span>
+        <div class="selrow">
+          <select id="swapOut" aria-label="Team to drop"></select>
+          <select id="swapIn" aria-label="Team to add"></select>
+        </div>
+        <div class="selrow" style="align-items:center">
+          <span class="fee" id="feeTxt">Fee this week: <b class="num">20</b> pts</span>
+          <button class="btn sm" id="bSwap" style="flex:0 0 auto;margin-left:auto">Make the swap</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2 &#xB7; TAILGATE -->
+    <section class="panel">
+      <header><h2>You vs the tailgate</h2><span class="lbl">6 friends</span></header>
+      <div class="tg-scroll"><div class="tg" id="tg"></div></div>
+      <div class="gapline" id="gapLine">Gap to the leader: <b class="num">0</b></div>
+      <p class="hint">Same math for everyone. Small bubbles pay more per team; big bubbles just need one to survive.</p>
+    </section>
+
+    <!-- 3 &#xB7; STATE -->
+    <section class="panel">
+      <header><h2>You vs the state</h2><span class="lbl">8,400 bubbles</span></header>
+      <svg class="dist" id="dist" viewBox="0 0 620 210" role="img" aria-labelledby="distTitle">
+        <title id="distTitle">Distribution of all bubble scores with your position marked</title>
+      </svg>
+      <div class="statrow">
+        <span class="big num" id="rankBig">No. 0 <span class="of">of 8,400</span></span>
+        <span class="pct num" id="rankPct">Top 50%</span>
+      </div>
+      <p class="hint" id="medianHint"></p>
+    </section>
+
+    <!-- 5 &#xB7; RULES -->
+    <section class="panel rules">
+      <header><h2>How Fatal Four works</h2><span class="lbl">Plain fan language</span></header>
+      <div class="rgrid">
+        <div class="rule">
+          <h3>The share</h3>
+          <p>You get <b>1,000 points</b> to spread across a bubble of 1 to 20 FBS teams. Each team's share is <b>1,000 &#xF7; your team count</b>, and four is the floor &#x2014; one team, or four, each share is <b>250</b>. Ten teams: 100 apiece. Twenty: 50.</p>
+        </div>
+        <div class="rule">
+          <h3>Late entry docks you</h3>
+          <p>Lock in before the season and every share is worth <b>100%</b>. Week 2 pays <b>90%</b>, Week 3 <b>80%</b>, Week 4 <b>70%</b>. After Week 4 the window shuts and you're out until next year.</p>
+        </div>
+        <div class="rule">
+          <h3>One swap. That's it.</h3>
+          <p>One team out, one team in, once a season. The new team inherits the old share. The fee is <b>20 points times the current week</b> &#x2014; 20 in Week 1, 200 in Week 10 &#x2014; and it comes straight off your score. No swaps after Week 10.</p>
+        </div>
+        <div class="rule">
+          <h3>Poll slice</h3>
+          <p>Your live score is what you'd bank if the season ended today: each share times its team's slice of the poll.</p>
+          <div class="slices" id="sliceTable"></div>
+        </div>
+        <div class="rule">
+          <h3>Season end</h3>
+          <p>Each team takes the <b>better</b> of two numbers: what the playoff paid it &#x2014; <b>20%</b> for making the 12-team field, <b>50%</b> for reaching the quarterfinal, <b>100%</b> for the Final Four &#x2014; or its slice of the final poll. Ties break to the <b>smaller bubble</b>, then to whoever entered earliest.</p>
+        </div>
+      </div>
+      <div class="final-note" id="finalNote" hidden></div>
+    </section>
+
+  </div>
+</div>
+
+<div class="toasts" id="toasts" aria-live="polite"></div>
+
+<script>
+(function(){
+"use strict";
+var REDUCE = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/* \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
+   DATA
+   \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550 */
+var TEAMS = [
+ ["ALA","Alabama","#9E1B32","#98A2A8"],   ["ASU","Arizona State","#8C1D40","#FFC627"],
+ ["ARK","Arkansas","#9D2235","#F1F1F1"],  ["AUB","Auburn","#0C2340","#E87722"],
+ ["BAY","Baylor","#154734","#FFB81C"],    ["BSU","Boise State","#0033A0","#D64309"],
+ ["BYU","BYU","#002E5D","#C5C5C5"],       ["CIN","Cincinnati","#E00122","#1A1A1A"],
+ ["CLEM","Clemson","#F66733","#522D80"],  ["COLO","Colorado","#CFB87C","#1A1A1A"],
+ ["DUKE","Duke","#00539B","#F1F1F1"],     ["FLA","Florida","#0021A5","#FA4616"],
+ ["FSU","Florida State","#782F40","#CEB888"], ["UGA","Georgia","#BA0C2F","#1A1A1A"],
+ ["GT","Georgia Tech","#003057","#B3A369"],["ILL","Illinois","#13294B","#FF5F05"],
+ ["IND","Indiana","#990000","#EEEDEB"],   ["IOWA","Iowa","#FFCD00","#1A1A1A"],
+ ["ISU","Iowa State","#C8102E","#F1BE48"],["KU","Kansas","#0051BA","#E8000D"],
+ ["KSU","Kansas State","#512888","#D1D1D1"],["UK","Kentucky","#0033A0","#F1F1F1"],
+ ["LOU","Louisville","#AD0000","#1A1A1A"],["LSU","LSU","#461D7C","#FDD023"],
+ ["MIA","Miami","#005030","#F47321"],     ["MICH","Michigan","#00274C","#FFCB05"],
+ ["MSU","Michigan State","#18453B","#F1F1F1"],["MINN","Minnesota","#7A0019","#FFCC33"],
+ ["MSST","Mississippi State","#660000","#F1F1F1"],["MIZ","Missouri","#1A1A1A","#F1B82D"],
+ ["NEB","Nebraska","#E41C38","#FDF9F7"],  ["UNC","North Carolina","#13294B","#4B9CD3"],
+ ["ND","Notre Dame","#0C2340","#C99700"], ["OSU","Ohio State","#BB0000","#8C8C8C"],
+ ["OU","Oklahoma","#841617","#FDF9F7"],   ["OKST","Oklahoma State","#FF7300","#1A1A1A"],
+ ["MISS","Ole Miss","#14213D","#CE1126"], ["ORE","Oregon","#154733","#FEE123"],
+ ["PSU","Penn State","#041E42","#F1F1F1"],["PITT","Pitt","#003594","#FFB81C"],
+ ["SMU","SMU","#354CA1","#C8102E"],       ["SCAR","South Carolina","#73000A","#1A1A1A"],
+ ["STAN","Stanford","#8C1515","#F1F1F1"], ["SYR","Syracuse","#F76900","#000E54"],
+ ["TCU","TCU","#4D1979","#A3A9AC"],       ["TENN","Tennessee","#FF8200","#58595B"],
+ ["TEX","Texas","#BF5700","#F1F1F1"],     ["TAMU","Texas A&M","#500000","#F1F1F1"],
+ ["TTU","Texas Tech","#CC0000","#1A1A1A"],["UCLA","UCLA","#2D68C4","#F2A900"],
+ ["USC","USC","#990000","#FFC72C"],       ["UTAH","Utah","#CC0000","#F1F1F1"],
+ ["VT","Virginia Tech","#630031","#CF4420"],["WASH","Washington","#4B2E83","#B7A57A"],
+ ["WVU","West Virginia","#002855","#EAAA00"],["WIS","Wisconsin","#C5050C","#F1F1F1"]
+].map(function(t){ return {id:t[0], name:t[1], c1:t[2], c2:t[3]}; });
+
+var BY_ID = {};
+TEAMS.forEach(function(t){ BY_ID[t.id]=t; });
+
+/* Sample AP Top 25 for 2026 \u2014 labelled "Sample rankings" on the page. */
+var RANKS_0 = ["OSU","UGA","TEX","CLEM","PSU","ND","ORE","ALA","LSU","MIA","TAMU","IND",
+               "OU","TENN","MICH","MISS","ASU","USC","ISU","ILL","UTAH","BYU","SMU","BSU","FLA"];
+
+var DOCKS = [{k:"Preseason",p:1},{k:"Week 2",p:.9},{k:"Week 3",p:.8},{k:"Week 4",p:.7}];
+
+var FRIENDS = [
+  {h:"SwampFox", d:["Swamp","Fox"], teams:["FLA","UGA","TENN","MIA","OSU"],      entry:0},
+  {h:"HailState_Hannah", d:["HailState","Hannah"], teams:["MSST","ALA","MISS","TAMU"],          entry:1},
+  {h:"TheGrove_Tom", d:["TheGrove","Tom"], teams:["MISS","LSU","ORE","TEX","PSU","ND"], entry:0},
+  {h:"BuckeyeBrent", d:["Buckeye","Brent"], teams:["OSU","ORE","PSU","IND"],             entry:2},
+  {h:"BayouBiscuit", d:["Bayou","Biscuit"], teams:["LSU","TEX","ND","OKST","WIS","UTAH","BYU","SMU","TCU"], entry:0},
+  {h:"ThirdSat_Tay", d:["ThirdSat","Tay"], teams:["TENN","ALA","UGA"],                  entry:1}
+];
+
+/* \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
+   SCORE MATH  (the whole game, in one place)
+
+   share      = 1000 / max(N,4)   \u00B7 N = teams in the bubble, four is the floor
+   dock       = 100/90/80/70% by the week you entered
+   poll slice = what a rank is worth, as a % of a share:
+                  #1-4   -> 100, 96, 92, 88
+                  #5-8   ->  60, 56, 52, 48
+                  #9-12  ->  30, 27, 24, 21
+                  #13-25 ->  12 down to 0, one point per rung (#13=12 \u2026 #25=0)
+                  unranked -> 0
+   live score = SUM(share x dock x slice) - swap fee already paid
+   season end = each team takes MAX(playoff credit, final poll slice), where
+                playoff credit is 20% (made the 12-team field), 50% (quarter-
+                final) or 100% (Final Four).
+   \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550 */
+function sliceFor(rank){
+  if(!rank) return 0;                                  // unranked / popped
+  if(rank<=4)  return [100,96,92,88][rank-1];
+  if(rank<=8)  return [60,56,52,48][rank-5];
+  if(rank<=12) return [30,27,24,21][rank-9];
+  if(rank<=25) return 12-(rank-13);
+  return 0;
+}
+function shareOf(n, entryIdx){ return (1000/Math.max(n,4)) * DOCKS[entryIdx].p; }
+function scoreOf(teams, entryIdx, ranks, fee, playoff){
+  var share = shareOf(teams.length, entryIdx), total = 0;
+  for(var i=0;i<teams.length;i++){
+    var r = ranks.indexOf(teams[i])+1;
+    var pct = sliceFor(r);
+    if(playoff) pct = Math.max(pct, playoffCredit(teams[i], playoff));
+    total += share*pct/100;
+  }
+  return Math.max(0, Math.round(total - (fee||0)));
+}
+function playoffCredit(id, po){
+  if(po.f4.indexOf(id)>=0) return 100;
+  if(po.qf.indexOf(id)>=0) return 50;
+  if(po.field.indexOf(id)>=0) return 20;
+  return 0;
+}
+
+/* \u2500\u2500 deterministic RNG \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 */
+function mulberry32(a){
+  return function(){
+    a |= 0; a = a + 0x6D2B79F5 | 0;
+    var t = Math.imul(a ^ a>>>15, 1|a);
+    t = t + Math.imul(t ^ t>>>7, 61|t) ^ t;
+    return ((t ^ t>>>14) >>> 0) / 4294967296;
+  };
+}
+
+/* \u2500\u2500 the state of everybody else (8,400 synthetic bubbles) \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 */
+var DIST = (function(){
+  var r = mulberry32(20260902), out = [], i, u, v, z, x;
+  for(i=0;i<8400;i++){
+    do{
+      u = Math.max(1e-9, r()); v = r();
+      z = Math.sqrt(-2*Math.log(u)) * Math.cos(2*Math.PI*v);   // Box-Muller
+      x = Math.exp(5.10 + 0.60*z);                             // right-skewed
+    } while(x > 1000);
+    out.push(x);
+  }
+  return out.sort(function(a,b){return a-b;});
+})();
+var DIST_MEDIAN = Math.round(DIST[Math.floor(DIST.length/2)]);
+function stateRank(score){                 // how many bubbles beat yours, +1
+  var lo=0, hi=DIST.length;
+  while(lo<hi){ var m=(lo+hi)>>1; if(DIST[m] <= score) lo=m+1; else hi=m; }
+  return DIST.length - lo + 1;
+}
+
+/* \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
+   STATE
+   \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550 */
+var S;
+function freshState(){
+  return {
+    week:1, entry:0,
+    bubble:["UGA","TEX","LSU","MICH"],
+    ranks:RANKS_0.slice(),
+    swapUsed:false, fee:0,
+    playoff:null,
+    lastScore:null
+  };
+}
+function rankOf(id){ return S.ranks.indexOf(id)+1; }
+function liveScore(){ return scoreOf(S.bubble, S.entry, S.ranks, S.fee, S.playoff); }
+function swapFee(){ return 20 * S.week; }
+
+/* \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
+   DOM helpers
+   \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550 */
+var $ = function(id){ return document.getElementById(id); };
+var SVGNS = "http://www.w3.org/2000/svg";
+function svg(tag, attrs){
+  var e = document.createElementNS(SVGNS, tag);
+  for(var k in attrs) e.setAttribute(k, attrs[k]);
+  return e;
+}
+function lum(hex){
+  var n = parseInt(hex.slice(1),16);
+  return (0.299*(n>>16&255) + 0.587*(n>>8&255) + 0.114*(n&255))/255;
+}
+
+/* \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
+   THE BUBBLE
+   \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550 */
+var orbsG = $("orbs"), tethersG = $("tethers"), partsG = $("parts"), bubEl = $("bub");
+var liftEl = $("lift"), stageEl = $("stage"), fieldEl = $("fieldEl");
+var bubbleD = 300;
+
+function orbRadius(n){
+  if(n<=2) return 46; if(n<=4) return 39; if(n<=6) return 33;
+  if(n<=9) return 28; if(n<=12) return 24; if(n<=16) return 20.5; return 17.5;
+}
+/* Phyllotaxis slots inside the sphere, then handed out top-first so the teams
+   with the most lift sit high and the dead weight sags to the bottom. */
+function slots(n, R){
+  var pts=[], i, t, r, a;
+  if(n===1) return [[150,150]];
+  for(i=0;i<n;i++){
+    t = (i+0.5)/n;
+    r = R*Math.sqrt(t);
+    a = i*2.39996 + 1.1;
+    pts.push([150 + r*Math.cos(a), 150 + r*Math.sin(a)]);
+  }
+  return pts;
+}
+
+function renderOrbs(){
+  var n = S.bubble.length;
+  var R = orbRadius(n);
+  var maxR = 146 - R - 7;
+  var pos = slots(n, maxR).sort(function(a,b){ return a[1]-b[1]; });
+
+  // most lift first
+  var order = S.bubble.slice().sort(function(a,b){
+    var d = sliceFor(rankOf(b)) - sliceFor(rankOf(a));
+    return d !== 0 ? d : a.localeCompare(b);
+  });
+
+  var present = {};
+  order.forEach(function(id, i){ present[id] = pos[i]; });
+
+  // leave
+  Array.prototype.slice.call(orbsG.children).forEach(function(g){
+    var id = g.getAttribute("data-id");
+    if(!present[id]){ popOrb(g); }
+  });
+  // tethers redraw wholesale
+  while(tethersG.firstChild) tethersG.removeChild(tethersG.firstChild);
+
+  order.forEach(function(id, i){
+    var t = BY_ID[id], p = pos[i], rank = rankOf(id);
+    var isLift = rank>=1 && rank<=8;
+    var isSink = (rank===0 || rank>=13);
+    var g = orbsG.querySelector('[data-id="'+id+'"]');
+    var fresh = !g;
+
+    if(fresh){
+      g = svg("g", {"class":"orb", "data-id":id});
+      var gx = svg("g", {"class":"orb-x"});
+      var gy = svg("g", {"class":"orb-y"});
+      var gb = svg("g", {"class":"orb-bob"});
+      var body = svg("g", {"class":"body"});
+      body.appendChild(svg("circle", {"class":"glow", r:1, fill:"none", stroke:"#C9A227",
+        "stroke-width":3, opacity:0, filter:"url(#soft2)"}));
+      body.appendChild(svg("circle", {"class":"disc", r:1, fill:t.c1, stroke:t.c2, "stroke-width":2.2}));
+      var tx = svg("text", {"class":"abbr", y:0.5, fill:"#fff"});
+      tx.textContent = id;
+      body.appendChild(tx);
+      var ch = svg("path", {"class":"chev", fill:"#E0525C", opacity:0, d:"M-5,-3 L5,-3 L0,4 Z"});
+      body.appendChild(ch);
+      gb.appendChild(body); gy.appendChild(gb); gx.appendChild(gy); g.appendChild(gx);
+      gb.style.setProperty("--ph", (-(i*0.37)).toFixed(2)+"s");
+      gb.style.setProperty("--dur", (2.4 + (i%5)*0.34).toFixed(2)+"s");
+      orbsG.appendChild(g);
+      // fly in from off to the right, on a curve (x and y ease differently)
+      if(REDUCE){
+        g.classList.add("enter");
+        gx.setAttribute("transform","translate("+p[0]+",0)");
+        gy.setAttribute("transform","translate(0,"+p[1]+")");
+        requestAnimationFrame(function(){ g.classList.remove("enter"); });
+      } else {
+        g.classList.add("enter");
+        gx.setAttribute("transform","translate(408,0)");
+        gy.setAttribute("transform","translate(0,262)");
+        requestAnimationFrame(function(){
+          requestAnimationFrame(function(){
+            g.classList.remove("enter");
+            gx.setAttribute("transform","translate("+p[0]+",0)");
+            gy.setAttribute("transform","translate(0,"+p[1]+")");
+          });
+        });
+      }
+    } else {
+      g.querySelector(".orb-x").setAttribute("transform","translate("+p[0]+",0)");
+      g.querySelector(".orb-y").setAttribute("transform","translate(0,"+p[1]+")");
+    }
+
+    var disc = g.querySelector(".disc"), glow = g.querySelector(".glow"),
+        txt = g.querySelector(".abbr"), chev = g.querySelector(".chev");
+    disc.setAttribute("r", R);
+    disc.setAttribute("fill", t.c1);
+    disc.setAttribute("stroke", isLift ? "#C9A227" : t.c2);
+    glow.setAttribute("r", R+5);
+    glow.setAttribute("opacity", isLift ? .62 : 0);
+    txt.setAttribute("font-size", Math.max(10, R*0.62));
+    txt.setAttribute("fill", lum(t.c1) > .62 ? "#12203A" : "#FFFFFF");
+    txt.setAttribute("y", R>26 ? -1 : 0);
+    chev.setAttribute("opacity", isSink ? .95 : 0);
+    chev.setAttribute("transform","translate(0,"+(R*0.52+2)+") scale("+(R/26).toFixed(2)+")");
+    g.classList.toggle("sink", isSink);
+
+    if(isSink){
+      tethersG.appendChild(svg("line", {"class":"tether",
+        x1:p[0], y1:p[1]+R, x2:p[0], y2:Math.min(292, 150 + Math.sqrt(Math.max(0,146*146-Math.pow(p[0]-150,2))) - 4)}));
+    }
+  });
+
+  ripple();
+}
+
+function popOrb(g){
+  var m = /translate\(([-\d.]+)/.exec(g.querySelector(".orb-x").getAttribute("transform")||"");
+  var m2 = /translate\(0,([-\d.]+)/.exec(g.querySelector(".orb-y").getAttribute("transform")||"");
+  var x = m?parseFloat(m[1]):150, y = m2?parseFloat(m2[1]):150;
+  g.classList.add("pop");
+  if(!REDUCE){
+    for(var i=0;i<7;i++){
+      var a = (i/7)*Math.PI*2 + 0.4;
+      var c = svg("circle", {"class":"pt", cx:x, cy:y, r:2.2, fill:"#DCE9FF"});
+      c.style.setProperty("--dx", (Math.cos(a)*36).toFixed(1)+"px");
+      c.style.setProperty("--dy", (Math.sin(a)*36).toFixed(1)+"px");
+      partsG.appendChild(c);
+      (function(el){ setTimeout(function(){ if(el.parentNode) el.parentNode.removeChild(el); }, 700); })(c);
+    }
+  }
+  setTimeout(function(){ if(g.parentNode) g.parentNode.removeChild(g); }, REDUCE?260:520);
+}
+
+var rippleT;
+function ripple(){
+  if(REDUCE) return;
+  bubEl.classList.remove("ripple");
+  void bubEl.offsetWidth;
+  bubEl.classList.add("ripple");
+  clearTimeout(rippleT);
+  rippleT = setTimeout(function(){ bubEl.classList.remove("ripple"); }, 780);
+}
+
+/* altitude = score */
+function layout(){
+  var sh = stageEl.clientHeight - 52;
+  var fw = fieldEl.clientWidth;
+  bubbleD = Math.max(150, Math.min(320, Math.min(sh*0.66, fw*0.62)));
+  bubEl.setAttribute("width", bubbleD);
+  bubEl.setAttribute("height", bubbleD);
+  liftEl.style.height = bubbleD + "px";
+  placeBubble();
+}
+function placeBubble(){
+  var sh = stageEl.clientHeight - 52;
+  var travel = Math.max(0, sh - bubbleD);
+  var alt = Math.max(0, Math.min(1, liveScore()/1000));
+  liftEl.style.transform = "translateY(" + ((1-alt)*travel).toFixed(1) + "px)";
+}
+
+/* \u2500\u2500 elevation axis \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 */
+function buildAxis(){
+  var ax = $("axis");
+  ax.innerHTML = "";
+  var ticks = [
+    {v:1000, cap:"Perfect bubble", major:true, top:true},
+    {v:750,  cap:"Final Four pace", major:true},
+    {v:500,  cap:"Quarterfinal pace", major:true},
+    {v:250,  cap:"Made-the-field pace", major:true},
+    {v:0,    cap:"Ground", major:true}
+  ];
+  ticks.forEach(function(t){
+    var d = document.createElement("div");
+    d.className = "tick" + (t.major?" major":"") + (t.top?" top":"");
+    d.style.bottom = (t.v/1000*100) + "%";
+    d.innerHTML = '<span class="v num">'+t.v+'</span><span class="bar"></span><span class="cap">'+t.cap+'</span>';
+    ax.appendChild(d);
+  });
+}
+
+/* \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
+   PANELS
+   \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550 */
+function renderTeamList(){
+  var q = $("q").value.trim().toLowerCase();
+  var list = $("tlist");
+  list.innerHTML = "";
+  var rows = TEAMS.filter(function(t){
+    return !q || t.name.toLowerCase().indexOf(q)>=0 || t.id.toLowerCase().indexOf(q)>=0;
+  }).sort(function(a,b){
+    var ra = rankOf(a.id)||99, rb = rankOf(b.id)||99;
+    return ra!==rb ? ra-rb : a.name.localeCompare(b.name);
+  });
+  if(!rows.length){
+    var e = document.createElement("p");
+    e.className = "hint"; e.textContent = "No FBS team by that name. Try an abbreviation \u2014 TEX, PSU, BSU.";
+    list.appendChild(e); return;
+  }
+  rows.forEach(function(t){
+    var inB = S.bubble.indexOf(t.id)>=0;
+    var full = S.bubble.length>=20;
+    var b = document.createElement("button");
+    b.className = "trow"; b.type = "button";
+    if(inB || full || S.playoff) b.setAttribute("disabled","");
+    var r = rankOf(t.id);
+    b.innerHTML =
+      '<span class="swatch" style="background:'+t.c1+';border-color:'+t.c2+'"></span>' +
+      '<span class="nm">'+t.name+'</span>' +
+      '<span class="rk'+(r&&r<=12?" in":"")+'">'+(r?"#"+r:"UR")+'</span>' +
+      '<span class="plus">'+(inB?"&#10003;":"+")+'</span>';
+    b.addEventListener("click", function(){ addTeam(t.id); });
+    list.appendChild(b);
+  });
+}
+
+function renderRoster(){
+  var host = $("roster");
+  host.innerHTML = "";
+  var share = shareOf(S.bubble.length, S.entry);
+  S.bubble.slice().sort(function(a,b){
+    return (rankOf(a)||99) - (rankOf(b)||99);
+  }).forEach(function(id){
+    var t = BY_ID[id], r = rankOf(id), pct = sliceFor(r);
+    var credit = pct, tag = "";
+    if(S.playoff){
+      var pc = playoffCredit(id, S.playoff);
+      if(pc > pct){ credit = pc; tag = pc===100?"Final Four":(pc===50?"Quarterfinal":"Made the field"); }
+    }
+    var row = document.createElement("div");
+    row.className = "rrow " + (r&&r<=8 ? "lift-y" : (!r||r>=13 ? "sink-y" : ""));
+    row.innerHTML =
+      '<span class="swatch" style="background:'+t.c1+';border-color:'+t.c2+'"></span>' +
+      '<span class="math"><b>'+t.name+'</b> \u00B7 '+(r?"#"+r:"popped")+(tag?" \u00B7 "+tag:"")+' \u00B7 '+
+        Math.round(share)+' &times; '+credit+'%</span>' +
+      '<span class="pts num">'+Math.round(share*credit/100)+'</span>';
+    var x = document.createElement("button");
+    x.className = "x"; x.type="button"; x.innerHTML = "&times;";
+    x.title = "Drop " + t.name;
+    x.setAttribute("aria-label","Drop "+t.name);
+    if(S.playoff) x.setAttribute("disabled","");
+    x.addEventListener("click", function(){ removeTeam(id); });
+    row.appendChild(x);
+    host.appendChild(row);
+  });
+  if(S.fee>0){
+    var f = document.createElement("div");
+    f.className = "rrow";
+    f.innerHTML = '<span class="math" style="color:var(--red-hi)">Swap fee paid</span>' +
+                  '<span class="pts num" style="color:var(--red-hi)">&minus;'+S.fee+'</span>';
+    host.appendChild(f);
+  }
+}
+
+function renderEntry(){
+  var host = $("entrySegs");
+  host.innerHTML = "";
+  var closed = S.week > 4 || !!S.playoff;
+  DOCKS.forEach(function(d, i){
+    var b = document.createElement("button");
+    b.className = "seg-btn"; b.type="button";
+    b.setAttribute("aria-pressed", S.entry===i ? "true":"false");
+    if(closed) b.setAttribute("disabled","");
+    b.textContent = d.k + " \u00B7 " + Math.round(d.p*100) + "%";
+    b.addEventListener("click", function(){ S.entry = i; render(); toast("Entry set to "+d.k+" \u2014 shares pay "+Math.round(d.p*100)+"%"); });
+    host.appendChild(b);
+  });
+  $("entryHint").textContent = closed
+    ? "Entry closed after Week 4. Your bubble is locked at " + Math.round(DOCKS[S.entry].p*100) + "% of every share."
+    : "Enter late and every share is docked. You are at " + Math.round(DOCKS[S.entry].p*100) + "%.";
+  $("entryChip").textContent = closed ? "Entry closed" : "Entry window open";
+}
+
+function renderSwap(){
+  var so = $("swapOut"), si = $("swapIn");
+  var prevOut = so.value, prevIn = si.value;
+  so.innerHTML = ""; si.innerHTML = "";
+  S.bubble.forEach(function(id){
+    var o = document.createElement("option"); o.value=id; o.textContent = "Out: " + BY_ID[id].name; so.appendChild(o);
+  });
+  TEAMS.filter(function(t){ return S.bubble.indexOf(t.id)<0; }).forEach(function(t){
+    var r = rankOf(t.id);
+    var o = document.createElement("option"); o.value=t.id;
+    o.textContent = "In: " + t.name + (r?" (#"+r+")":"");
+    si.appendChild(o);
+  });
+  if(prevOut && S.bubble.indexOf(prevOut)>=0) so.value = prevOut;
+  if(prevIn && S.bubble.indexOf(prevIn)<0) si.value = prevIn;
+
+  var dead = S.swapUsed || S.week>10 || !!S.playoff;
+  so.disabled = si.disabled = dead;
+  $("bSwap").disabled = dead;
+  $("feeTxt").innerHTML = S.swapUsed
+    ? 'Swap used in Week ' + S.swapWeek + ' \u00B7 <b class="num">&minus;' + S.fee + '</b> pts'
+    : (S.week>10 ? 'Swap window closed after Week 10'
+                 : 'Fee this week: <b class="num">' + swapFee() + '</b> pts');
+  $("swapChip").textContent = S.swapUsed ? "Swap spent" : (S.week>10 ? "Swap window closed" : "Swap available \u00B7 " + swapFee() + " pts");
+}
+
+/* \u2500\u2500 tailgate \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 */
+function renderTailgate(){
+  var host = $("tg");
+  var mine = { h:"YOU", d:["You",""], teams:S.bubble, entry:S.entry, fee:S.fee, you:true };
+  var all = [mine].concat(FRIENDS.map(function(f){
+    return { h:f.h, d:f.d, teams:f.teams, entry:f.entry, fee:0 };
+  }));
+  all.forEach(function(p){ p.score = scoreOf(p.teams, p.entry, S.ranks, p.fee, S.playoff); });
+  var best = all.reduce(function(a,b){ return b.score>a.score?b:a; });
+
+  if(host.children.length !== all.length){
+    host.innerHTML = "";
+    all.forEach(function(p){
+      var c = document.createElement("div");
+      c.className = "col" + (p.you?" you":"");
+      c.innerHTML = '<div class="track"><div class="mini"></div></div>' +
+                    '<div class="sc num">0</div>' +
+                    '<div class="who"></div>' +
+                    '<div class="ct num"></div>';
+      host.appendChild(c);
+    });
+  }
+  all.forEach(function(p, i){
+    var c = host.children[i];
+    var mini = c.querySelector(".mini");
+    var d = p.you ? 26 : 20;
+    var lead = p === best;
+    mini.style.bottom = (p.score/1000*100).toFixed(1) + "%";
+    mini.innerHTML =
+      '<svg width="'+(d+16)+'" height="'+(d+18)+'" viewBox="'+(-(d+16)/2)+' '+(-(d+18)+6)+' '+(d+16)+' '+(d+18)+'" style="overflow:visible">' +
+      (lead ? '<path d="M-7,-'+(d/2+7)+' l3.5,5 3.5,-6.5 3.5,6.5 3.5,-5 -1.4,7.5 -11.2,0 z" fill="#C9A227"/>' : '') +
+      '<circle cx="0" cy="0" r="'+(d/2)+'" fill="rgba(160,196,255,.10)" stroke="'+(p.you?"#C9A227":"#2A4A78")+'" stroke-width="'+(p.you?2:1.2)+'"/>' +
+      '<circle cx="'+(-d/7)+'" cy="'+(-d/5)+'" r="'+(d/7)+'" fill="#DCE9FF" opacity=".22"/>' +
+      '</svg>';
+    c.querySelector(".sc").textContent = p.score;
+    c.querySelector(".who").innerHTML = p.d.map(function(w){return w?"<span>"+w+"</span>":"";}).join("");
+    c.querySelector(".ct").textContent = p.teams.length + (p.teams.length===1?" team":" teams");
+  });
+
+  var gap = best.score - all[0].score;
+  $("gapLine").innerHTML = gap<=0
+    ? 'You lead the tailgate by <b class="num">' + (all[0].score - all.slice(1).reduce(function(a,b){return Math.max(a,b.score);},0)) + '</b>'
+    : 'Gap to the leader (' + best.h + '): <b class="num">' + gap + '</b>';
+}
+
+/* \u2500\u2500 the state \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 */
+var BINS = (function(){
+  var b = new Array(40).fill(0);
+  DIST.forEach(function(v){ b[Math.min(39, Math.floor(v/25))]++; });
+  // light smoothing so the area reads as a curve, not a comb
+  return b.map(function(_,i){
+    var a = b[i-1]||0, c = b[i], d = b[i+1]||0;
+    return (a + 2*c + d)/4;
+  });
+})();
+
+function renderState(){
+  var el = $("dist");
+  while(el.childNodes.length>1) el.removeChild(el.lastChild);
+  var W=620,H=210, padL=8, padR=8, padB=30, padT=16;
+  var iw = W-padL-padR, ih = H-padT-padB;
+  var max = Math.max.apply(null, BINS);
+  var x = function(v){ return padL + (v/1000)*iw; };
+  var y = function(c){ return padT + ih - (c/max)*ih; };
+
+  var g = svg("g", {});
+  // baseline + gridlines at the pace marks
+  [250,500,750].forEach(function(v){
+    g.appendChild(svg("line", {x1:x(v), y1:padT, x2:x(v), y2:padT+ih, stroke:"#17294a", "stroke-width":1}));
+  });
+
+  var d = "M " + x(0) + " " + (padT+ih);
+  BINS.forEach(function(c,i){ d += " L " + x(i*25+12.5).toFixed(1) + " " + y(c).toFixed(1); });
+  d += " L " + x(1000) + " " + (padT+ih) + " Z";
+  var grad = svg("linearGradient", {id:"dg", x1:"0", y1:"0", x2:"0", y2:"1"});
+  grad.appendChild(svg("stop", {offset:"0", "stop-color":"#4C7FC4", "stop-opacity":".42"}));
+  grad.appendChild(svg("stop", {offset:"1", "stop-color":"#4C7FC4", "stop-opacity":".05"}));
+  var defs = svg("defs", {}); defs.appendChild(grad); g.appendChild(defs);
+  g.appendChild(svg("path", {d:d, fill:"url(#dg)"}));
+  g.appendChild(svg("path", {d:d, fill:"none", stroke:"#7FA6D8", "stroke-width":1.6, "stroke-linejoin":"round"}));
+  g.appendChild(svg("line", {x1:padL, y1:padT+ih, x2:W-padR, y2:padT+ih, stroke:"#1E3557", "stroke-width":1}));
+
+  // median
+  var mx = x(DIST_MEDIAN);
+  g.appendChild(svg("line", {x1:mx, y1:padT+4, x2:mx, y2:padT+ih, stroke:"#9AA7BF", "stroke-width":1, "stroke-dasharray":"3 4"}));
+  var mt = svg("text", {x:mx+5, y:padT+13, fill:"#9AA7BF", "font-size":11, "font-family":"Barlow Condensed, sans-serif",
+    "font-weight":700, "letter-spacing":"0.08em"});
+  mt.textContent = "MEDIAN " + DIST_MEDIAN;
+  g.appendChild(mt);
+
+  // you
+  var sc = liveScore(), yx = x(sc);
+  var flip = yx > W-130;
+  g.appendChild(svg("line", {x1:yx, y1:padT-6, x2:yx, y2:padT+ih, stroke:"#C9A227", "stroke-width":2}));
+  g.appendChild(svg("circle", {cx:yx, cy:padT+ih, r:4.5, fill:"#C9A227"}));
+  var yt = svg("text", {x:flip?yx-7:yx+7, y:padT-1, fill:"#C9A227", "font-size":13,
+    "font-family":"Barlow Condensed, sans-serif", "font-weight":800, "letter-spacing":"0.08em",
+    "text-anchor": flip?"end":"start"});
+  yt.textContent = "YOU " + sc;
+  g.appendChild(yt);
+
+  // axis labels
+  [[0,"0"],[250,"250"],[500,"500"],[750,"750"],[1000,"1000"]].forEach(function(p,i,arr){
+    var t = svg("text", {x:x(p[0]), y:padT+ih+16, fill:"#6E7E9B", "font-size":11,
+      "font-family":"Barlow Condensed, sans-serif", "font-weight":700, "letter-spacing":"0.08em",
+      "text-anchor": i===0?"start":(i===arr.length-1?"end":"middle")});
+    t.textContent = p[1];
+    g.appendChild(t);
+  });
+  var cap = svg("text", {x:padL, y:H-4, fill:"#6E7E9B", "font-size":10.5,
+    "font-family":"Barlow Condensed, sans-serif", "font-weight":700, "letter-spacing":"0.12em"});
+  cap.textContent = "BUBBLE SCORE \u00B7 8,400 ENTRIES";
+  g.appendChild(cap);
+  el.appendChild(g);
+
+  var rk = stateRank(sc);
+  var pct = Math.max(1, Math.round(rk/DIST.length*100));
+  $("rankBig").innerHTML = 'No. ' + rk.toLocaleString() + ' <span class="of">of 8,400</span>';
+  $("rankPct").textContent = "Top " + pct + "%";
+  $("medianHint").textContent = "The median bubble in the state sits at " + DIST_MEDIAN +
+    ". Most entries pile up under 250 \u2014 too many teams, not enough of them ranked.";
+}
+
+/* \u2500\u2500 slice table in the rules card \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 */
+function buildSliceTable(){
+  var host = $("sliceTable");
+  var rows = [
+    ["#1\u20134",   "100 \u00B7 96 \u00B7 92 \u00B7 88%", 100],
+    ["#5\u20138",   "60 \u00B7 56 \u00B7 52 \u00B7 48%",  60],
+    ["#9\u201312",  "30 \u00B7 27 \u00B7 24 \u00B7 21%",  30],
+    ["#13\u201325", "12% down to 0",       12],
+    ["Unranked","0 \u2014 a popped team pays nothing", 0]
+  ];
+  rows.forEach(function(r){
+    var d = document.createElement("div");
+    d.className = "sl";
+    d.innerHTML = '<span class="k">'+r[0]+'</span><span class="meter"><i style="width:'+r[2]+'%"></i></span>' +
+                  '<span class="v">'+r[1]+'</span>';
+    host.appendChild(d);
+  });
+}
+
+/* \u2500\u2500 the week strip \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 */
+var countTimer;
+function renderStrip(prev){
+  var sc = liveScore();
+  var share = Math.round(shareOf(S.bubble.length, S.entry));
+  $("sShare").textContent = share;
+  $("sTeams").textContent = S.bubble.length + (S.bubble.length===1?" team in the bubble":" teams in the bubble");
+  countUp($("sScore"), sc);
+  countUp($("roN"), sc);
+  $("roK").textContent = S.playoff ? "Final score" : "Live score";
+  $("readout").classList.toggle("final", !!S.playoff);
+
+  var el = $("sDelta");
+  if(prev === null || prev === undefined){
+    el.className = "seg delta";
+    el.innerHTML = '<b class="num">Holding</b><span>at ' + sc + ' since Tuesday</span>';
+  } else {
+    var d = sc - prev;
+    el.className = "seg delta " + (d>0?"up":(d<0?"down":""));
+    el.innerHTML = '<b class="num">' + (d>0?"Up ":(d<0?"Down ":"Even ")) + '<span id="dNum">' + Math.abs(d) + '</span></b>' +
+                   '<span>since Tuesday</span>';
+    if(!REDUCE) countUp(document.getElementById("dNum"), Math.abs(d), 0);
+  }
+}
+function countUp(el, to, from){
+  if(!el) return;
+  var start = (from===undefined) ? (parseInt(el.textContent.replace(/\D/g,""),10)||0) : from;
+  if(REDUCE || start===to){ el.textContent = to; return; }
+  var t0 = performance.now(), dur = 700;
+  function step(t){
+    var k = Math.min(1, (t-t0)/dur);
+    var e = 1 - Math.pow(1-k, 3);
+    el.textContent = Math.round(start + (to-start)*e);
+    if(k<1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+/* \u2500\u2500 toasts \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 */
+function toast(msg, kind){
+  var host = $("toasts");
+  var d = document.createElement("div");
+  d.className = "toast" + (kind==="bad"?" bad":"");
+  d.innerHTML = '<span class="t">' + (kind==="bad"?"Bubble trouble":"Bubble watch") + '</span>' + msg;
+  host.appendChild(d);
+  setTimeout(function(){ if(d.parentNode) d.parentNode.removeChild(d); }, 3600);
+  while(host.children.length>4) host.removeChild(host.firstChild);
+}
+
+/* \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
+   ACTIONS
+   \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550 */
+function addTeam(id){
+  if(S.playoff) return;
+  if(S.bubble.indexOf(id)>=0) return;
+  if(S.bubble.length>=20){ toast("Twenty is the cap. At that size each team is only worth 50 \u2014 add a 21st and there is nothing left to split.", "bad"); return; }
+  var prev = liveScore();
+  S.bubble.push(id);
+  render(prev);
+  var r = rankOf(id);
+  toast(BY_ID[id].name + " joins the bubble" + (r ? " at #" + r : ", unranked"));
+}
+function removeTeam(id){
+  if(S.playoff) return;
+  if(S.bubble.length<=1){ toast("You need at least one team. A bubble of none floats nowhere.", "bad"); return; }
+  var prev = liveScore();
+  S.bubble.splice(S.bubble.indexOf(id),1);
+  render(prev);
+  toast(BY_ID[id].name + " is out of the bubble", "bad");
+}
+function doSwap(){
+  if(S.swapUsed || S.week>10 || S.playoff) return;
+  var out = $("swapOut").value, inn = $("swapIn").value;
+  if(!out || !inn) return;
+  var prev = liveScore();
+  S.bubble[S.bubble.indexOf(out)] = inn;
+  S.swapUsed = true; S.swapWeek = S.week; S.fee = swapFee();
+  render(prev);
+  toast(BY_ID[inn].name + " takes over " + BY_ID[out].name + "'s share \u00B7 fee " + S.fee + " pts", "bad");
+}
+
+/* poll movement: deterministic, a few places swap, one team drops out,
+   one team comes in from the unranked pool. */
+function advanceWeek(){
+  if(S.playoff) return;
+  var prev = liveScore();
+  var before = {};
+  S.bubble.forEach(function(id){ before[id] = rankOf(id); });
+
+  S.week++;
+  var rnd = mulberry32(4820 + S.week*977);
+  var r = S.ranks.slice(), i, k;
+  for(i=0;i<4;i++){ k = Math.floor(rnd()*24); var tmp=r[k]; r[k]=r[k+1]; r[k+1]=tmp; }
+  // one bigger climber
+  var from = 6 + Math.floor(rnd()*17);
+  var to = Math.max(1, from - (2 + Math.floor(rnd()*4)));
+  var climber = r.splice(from,1)[0]; r.splice(to,0,climber);
+  // one team falls out, one enters
+  var outIdx = 18 + Math.floor(rnd()*7);
+  var dropped = r.splice(outIdx,1)[0];
+  var pool = TEAMS.filter(function(t){ return r.indexOf(t.id)<0; });
+  var entrant = pool[Math.floor(rnd()*pool.length)].id;
+  r.push(entrant);
+  S.ranks = r;
+
+  render(prev);
+
+  // what the fan actually cares about
+  var msgs = [];
+  S.bubble.forEach(function(id){
+    var was = before[id], now = rankOf(id);
+    if(was && !now) msgs.push([BY_ID[id].name + " crashed out of the Top 25.", "bad"]);
+    else if(!was && now) msgs.push([BY_ID[id].name + " is back in the poll at #" + now + ".", "ok"]);
+    else if(now && now<=8 && (was>8 || !was)) msgs.push([BY_ID[id].name + " is elevating your bubble (#" + now + ").", "ok"]);
+    else if(now && was && was-now>=3) msgs.push([BY_ID[id].name + " climbed to #" + now + ".", "ok"]);
+    else if(now && was && now-was>=3) msgs.push([BY_ID[id].name + " slid to #" + now + ".", "bad"]);
+  });
+  if(dropped === climber){} // no-op guard
+  if(!msgs.length) msgs.push(["Quiet week. " + BY_ID[dropped].name + " fell out of the poll; " + BY_ID[entrant].name + " took the spot.", "ok"]);
+  msgs.slice(0,3).forEach(function(m, i){
+    setTimeout(function(){ toast(m[0], m[1]==="bad"?"bad":""); }, i*420);
+  });
+  if(S.week===5) toast("Entry window is closed. Whatever you have is what you ride.", "bad");
+}
+
+function playPlayoff(){
+  if(S.playoff) return;
+  var prev = liveScore();
+  var rnd = mulberry32(90211 + S.week);
+  var field = S.ranks.slice(0,12);
+  // seeds 1-4 get the bye; 5v12, 6v11, 7v10, 8v9 in the first round
+  var qf = field.slice(0,4);
+  [[4,11],[5,10],[6,9],[7,8]].forEach(function(p){
+    qf.push(rnd() < 0.72 ? field[p[0]] : field[p[1]]);   // higher seed usually holds
+  });
+  // four survive the quarterfinal
+  var f4 = [], pool = qf.slice();
+  while(f4.length<4){
+    var idx = Math.floor(Math.pow(rnd(),1.6)*pool.length);
+    f4.push(pool.splice(Math.min(idx,pool.length-1),1)[0]);
+  }
+  S.playoff = {field:field, qf:qf, f4:f4};
+  render(prev);
+  if(!REDUCE) bubEl.classList.add("shimmer");
+
+  var note = $("finalNote");
+  note.hidden = false;
+  note.innerHTML = 'Final Four: <b>' + f4.map(function(i){return BY_ID[i].name;}).join(" \u00B7 ") +
+    '</b>. Every team in your bubble banked the better of its playoff run or its final poll slice. ' +
+    'Your season closes at <b>' + liveScore() + '</b> points.';
+  var mine = S.bubble.filter(function(id){ return f4.indexOf(id)>=0; });
+  if(mine.length) toast(mine.map(function(i){return BY_ID[i].name;}).join(" and ") + " reached the Final Four \u2014 full share.");
+  else toast("No Final Four team in your bubble. You take the poll slices.", "bad");
+  $("bAdv").disabled = true;
+  $("bPlay").disabled = true;
+}
+
+function reset(){
+  S = freshState();
+  bubEl.classList.remove("shimmer");
+  $("finalNote").hidden = true;
+  $("bAdv").disabled = false;
+  $("bPlay").disabled = false;
+  $("q").value = "";
+  while(orbsG.firstChild) orbsG.removeChild(orbsG.firstChild);
+  render(null);
+  toast("Back to the preseason. Four teams, 250 apiece.");
+}
+
+/* \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
+   RENDER
+   \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550 */
+function render(prev){
+  $("weekChip").textContent = S.week;
+  $("capNote").textContent = S.bubble.length + " / 20";
+  renderOrbs();
+  placeBubble();
+  renderTeamList();
+  renderRoster();
+  renderEntry();
+  renderSwap();
+  renderTailgate();
+  renderState();
+  renderStrip(prev===undefined?null:prev);
+}
+
+/* wiring */
+$("q").addEventListener("input", renderTeamList);
+$("bSwap").addEventListener("click", doSwap);
+$("bAdv").addEventListener("click", advanceWeek);
+$("bPlay").addEventListener("click", playPlayoff);
+$("bReset").addEventListener("click", reset);
+window.addEventListener("resize", layout);
+
+S = freshState();
+buildAxis();
+buildSliceTable();
+layout();
+render(null);
+setTimeout(function(){ toast("Georgia is elevating your bubble (#2)."); }, 900);
+setTimeout(function(){ toast("Michigan is sagging at #15 \u2014 10% of a share."); }, 2200);
+})();
+</script>
