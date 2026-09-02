@@ -2,6 +2,25 @@ import Link from "next/link";
 import Image from "next/image";
 import type { SanityArticle } from "@/lib/sanity";
 import { createArtPicker } from "@/lib/editorial-art";
+import { teamLogoUrl } from "@/lib/teams-meta";
+
+// Josh (2026-09-02, via Isaac): the homepage's pictures must be REAL, not
+// AI renders. The only real photography the site owns today is the show
+// itself, so a Josh column shows its episode's frame (YouTube's own
+// thumbnail); a staff piece, which has no photograph, shows the team's mark
+// on a tinted field instead of a generated scene. The AI hero stays on the
+// article page only until licensed photos arrive.
+function realArt(a: SanityArticle, logos: Record<string, string | null>): { kind: "photo"; src: string; alt: string } | { kind: "mark"; logo: string | null } {
+  if (a.episode?.ytId) return { kind: "photo", src: `https://i.ytimg.com/vi/${a.episode.ytId}/maxresdefault.jpg`, alt: a.episode.title || a.headline };
+  return { kind: "mark", logo: logos[a._id] ?? (a.primaryTeam ? teamLogoUrl(a.primaryTeam) : null) };
+}
+function TeamMark({ logo, size }: { logo: string | null; size: number }) {
+  return (
+    <span className="nb-mark" aria-hidden="true">
+      {logo ? <Image src={logo} alt="" width={size} height={size} style={{ width: size, height: size, objectFit: "contain" }} /> : <b className="ps" style={{ fontSize: Math.round(size * 0.4) }}>PS</b>}
+    </span>
+  );
+}
 import { formatDate } from "@/lib/format";
 import RelTime from "@/components/RelTime";
 import EmptyState from "@/components/EmptyState";
@@ -32,15 +51,18 @@ export interface BracketSeed {
   seed: number;
 }
 
-export default function NotebookTrending({ lead, stack, trending, seeds, seedSource = "poll" }: {
+export default function NotebookTrending({ lead, stack, trending, seeds, seedSource = "poll", logos = {} }: {
   lead: SanityArticle | null;
   stack: SanityArticle[];
   trending: SanityArticle[];
   seeds: BracketSeed[];
   seedSource?: "poll" | "josh";
+  /** Team logo per article id, resolved by the page from the CFBD directory. */
+  logos?: Record<string, string | null>;
 }) {
   const art = createArtPicker();
-  const leadImg = lead?.heroUrl ? { src: lead.heroUrl, alt: lead.headline } : art.pick("weekend-truths");
+  const leadArt = lead ? realArt(lead, logos) : null;
+  const leadImg = leadArt?.kind === "photo" ? { src: leadArt.src, alt: leadArt.alt } : art.pick("weekend-truths");
   // Mockup pairs are [1v8, 4v5] left · [2v7, 3v6] right.
   const pairs: [number, number][] = [[0, 7], [3, 4]];
   const pairsR: [number, number][] = [[1, 6], [2, 5]];
@@ -63,7 +85,11 @@ export default function NotebookTrending({ lead, stack, trending, seeds, seedSou
               <>
                 <Link className="nb-feat" href={`/notebook/${lead.slug.current}`}>
                   <div className="art">
-                    <Image src={leadImg.src} alt={leadImg.alt} fill sizes="(max-width:1080px) 100vw, 780px" style={{ objectFit: "cover" }} />
+                    {leadArt?.kind === "mark" ? (
+                      <TeamMark logo={leadArt.logo} size={140} />
+                    ) : (
+                      <Image src={leadImg.src} alt={leadImg.alt} fill sizes="(max-width:1080px) 100vw, 780px" style={{ objectFit: "cover", objectPosition: leadArt?.kind === "photo" ? "50% 22%" : "50% 50%" }} />
+                    )}
                     <span className="art-lbl">{seriesLabel(lead.episode?.series)}</span>
                   </div>
                   <div className="pad">
@@ -79,11 +105,15 @@ export default function NotebookTrending({ lead, stack, trending, seeds, seedSou
                 {stack.length > 0 && (
                   <div className="nb-stack">
                     {stack.map((a) => {
-                      const img = a.heroUrl ? { src: a.heroUrl, alt: a.headline, logo: false } : { ...art.pick("generic", a.headline), logo: false };
+                      const ra = realArt(a, logos);
                       return (
                         <Link className="nb-row" href={`/notebook/${a.slug.current}`} key={a._id}>
                           <span className="im">
-                            <Image src={img.src} alt="" fill sizes="128px" style={{ objectFit: "cover" }} />
+                            {ra.kind === "photo" ? (
+                              <Image src={ra.src} alt="" fill sizes="128px" style={{ objectFit: "cover", objectPosition: "50% 22%" }} />
+                            ) : (
+                              <TeamMark logo={ra.logo} size={44} />
+                            )}
                           </span>
                           <div>
                             <span className="t">The Notebook · {seriesLabel(a.episode?.series)}</span>

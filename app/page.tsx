@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getVideos, isEpisode, getShorts, getChannelStats, compactCount } from "@/lib/youtube";
 import { getPublishedArticles, getJoshArticles, getWireItems } from "@/lib/sanity";
+import { resolveTeamSlug } from "@/lib/wire";
 import { getSlateGames, getTeamDirectory } from "@/lib/cfbd";
 import { getThreads, publicClient } from "@/lib/community";
 import { getLatestPublished, getBoardResults } from "@/lib/jp-poll";
@@ -90,12 +91,13 @@ export default async function Home() {
         trending={notebookTrending}
         seeds={seeds}
         seedSource={seedSource}
+        logos={Object.fromEntries([notebookLead, ...notebookStack].filter((a): a is NonNullable<typeof a> => Boolean(a)).map((a) => { const t = a.primaryTeam || a.teams?.[0] || ""; const slug = t ? resolveTeamSlug(t, dir) : ""; return [a._id, slug ? (dir[slug]?.logo ?? teamLogoUrl(slug)) : null]; }))}
       />
       <PeoplesGames />
       <PorchSection threads={threads} />
       <ShortsStrip shorts={shorts} />
       <PlaybookSection />
-      <AnnualsSection />
+      <AnnualsSection photo={featured ? { src: `https://i.ytimg.com/vi/${featured.id}/maxresdefault.jpg`, alt: `Josh Pate on the set of ${featured.title.replace(/ - Josh Pate's College Football Show/i, "")}` } : null} />
       <StoreSection />
       <GiftSection />
       <FollowSection subs={stats ? compactCount(stats.subscribers) : undefined} />

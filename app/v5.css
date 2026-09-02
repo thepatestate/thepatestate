@@ -417,6 +417,10 @@
 .v5-page .an-grid{grid-template-columns:repeat(5,1fr)}
 .v5-page .an-grid .tg.photo{aspect-ratio:3/3.6}
 .v5-page .an-grid .tg-photo{background-position:center 30%}
+/* 2026-09-02: a staff piece has no photograph — the team's mark on a tinted field */
+.v5-page .nb-mark{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:radial-gradient(520px 260px at 70% 10%,rgba(201,162,39,.28),transparent 58%),linear-gradient(140deg,#1A2C55 0%,var(--navy-deep) 62%,#0E2240 100%)}
+.v5-page .nb-mark img{filter:drop-shadow(0 10px 30px rgba(0,0,0,.5))}
+.v5-page .nb-mark .ps{font-family:var(--cond);font-weight:800;letter-spacing:.08em;color:var(--gold)}
 /* 2026-09-02: the guide's own cover page, set like a document on the card */
 .v5-page .an-grid .tg.guide{background:linear-gradient(168deg,#131F38 0%,#0A1730 100%)}
 .v5-page .an-grid .tg.guide::before{background:radial-gradient(360px 260px at 50% 0%,rgba(201,162,39,.22),transparent 60%)}
