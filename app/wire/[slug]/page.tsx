@@ -177,7 +177,7 @@ export default async function WireStoryPage({ params }: { params: Promise<{ slug
           <div className="a-body">
             {/* Wire Editorial System v2.0 §47–48: headers adapt to the story; the
                 writer's title wins, the label below is the fallback. */}
-            {story.bodyMarkdown ? (
+            {story.bodyMarkdown && !story.whyBody && !story.readBody ? (
               // Editorial Engine V3: the desk's story is one body at the depth
               // the reporting supported; the modules below stay empty.
               story.bodyMarkdown.split(/\n{2,}/).map((p, i) => p.trim()).filter(Boolean).map((p, i) => (
@@ -186,7 +186,7 @@ export default async function WireStoryPage({ params }: { params: Promise<{ slug
             ) : (
               <>
                 <SectionHead n={next()} kicker="The News" title={story.openTitle || "What Happened"} />
-                <p>{story.whatHappened}</p>
+                {(story.whatHappened ?? "").split(/\n{2,}/).map((p, i) => p.trim()).filter(Boolean).map((p, i) => <p key={i}>{p}</p>)}
               </>
             )}
 
@@ -245,9 +245,7 @@ export default async function WireStoryPage({ params }: { params: Promise<{ slug
 
             {story.readBody && (
               <>
-                {/* Kit 04 §4 module 12: a small label when Josh hasn't spoken on today's
-                    news — never a closer. */}
-                <SectionHead n={next()} kicker="Honest Scale" title="What Happens Next" />
+                <SectionHead n={next()} kicker="The Thesis" title="The Pate State Read" />
                 <div className="readcard">
                   <p>{story.readBody}</p>
                 </div>

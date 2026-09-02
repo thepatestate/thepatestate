@@ -10,6 +10,7 @@ import "./styles/v3-recruiting.css";
 import "./styles/v3-community.css";
 import "./styles/v3-play.css";
 import "./styles/v3-wire-story.css";
+import "./styles/v3-column.css";
 import RhythmBar from "@/components/chrome/RhythmBar";
 import Masthead from "@/components/chrome/Masthead";
 import Footer from "@/components/Footer";

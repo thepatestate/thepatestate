@@ -1,0 +1,18 @@
+/* Josh's Read / Notebook article page — the approved 2026-09-01 column mockup.
+   Rides on .v5.pg-wirestory's architecture (the page carries both classes);
+   this sheet holds only the column-specific parts. */
+.v5.pg-column .a-kick .nb{font:800 11px/1 var(--cond);letter-spacing:.16em;text-transform:uppercase;color:#fff;background:var(--w-navy);padding:7px 11px;border-radius:4px}
+.v5.pg-column .a-hero img.cover{width:100%;aspect-ratio:16/8.5;object-fit:cover;display:block}
+/* body typography: ArticleBody output mapped to the mockup's a-body scale */
+.v5.pg-column .story-body p{font:400 17px/1.75 var(--body);color:#232A35;margin:0 0 22px}
+.v5.pg-column .story-body>div>p:first-of-type::first-letter,.v5.pg-column .story-body>p:first-of-type::first-letter{font:800 54px/0.9 var(--cond);color:var(--w-navy);float:left;padding:6px 10px 0 0}
+.v5.pg-column .story-body h3.display{font:800 24px/1.25 var(--slab);letter-spacing:-.015em;color:var(--w-navy);margin:40px 0 14px}
+.v5.pg-column .story-body .pullquote{border-left:4px solid var(--w-gold);padding:6px 0 6px 22px;margin:30px 0;font:600 21px/1.45 var(--body);font-style:italic;color:var(--w-navy)}
+.v5.pg-column .story-body .pullquote .who{display:block;font:700 10.5px/1 var(--cond);letter-spacing:.14em;text-transform:uppercase;color:var(--w-mut);margin-top:10px;font-style:normal}
+.v5.pg-column .story-body .quote-link{color:var(--w-gold-dk);font-weight:600;text-decoration:underline;text-decoration-color:rgba(201,162,39,.4);text-underline-offset:3px}
+.v5.pg-column .linebox{background:var(--w-cream);border:1px solid rgba(201,162,39,.35);border-left:4px solid var(--w-red);border-radius:12px;box-shadow:var(--w-sh-sm);padding:22px 24px;margin:28px 0}
+.v5.pg-column .linebox .eb{font:800 10px/1 var(--cond);letter-spacing:.2em;text-transform:uppercase;color:var(--w-red);margin-bottom:10px}
+.v5.pg-column .linebox p{font:600 20px/1.5 var(--body);font-style:italic;color:var(--w-navy);margin:0 0 10px}
+.v5.pg-column .linebox small{font:700 10.5px/1.5 var(--cond);letter-spacing:.12em;text-transform:uppercase;color:var(--w-mut)}
+.v5.pg-column .story-media{aspect-ratio:16/9;margin:26px 0}
+.v5.pg-column .sig{font:800 16px/1 var(--cond);letter-spacing:.08em;color:var(--w-navy);margin:6px 0 22px}

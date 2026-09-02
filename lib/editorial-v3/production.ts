@@ -11,6 +11,7 @@ import { runReportedEngine, type ReportedMaterial } from "./reported-engine";
 import { runJoshAdditive } from "./josh-additive";
 import { rosterNames } from "./roster";
 import { JOSH_BRACKET_FIELD, JOSH_BRACKET_FINAL, JOSH_BRACKET_LABEL } from "@/lib/josh-bracket";
+import { modulateStory } from "@/lib/editorial-v3/modulate";
 import { teamFactSheet } from "@/lib/fact-sheet";
 import { getTeamDirectory } from "@/lib/cfbd";
 import { resolveTeamSlug } from "@/lib/wire";
@@ -56,6 +57,10 @@ export async function v3WireStory(input: { clusterKey: string; teams: string[]; 
   if (run.artifacts.fact?.verdict !== "pass") return { ok: false, reason: `factcheck-${run.artifacts.fact?.verdict}:${input.clusterKey}`, run };
   if (run.artifacts.quit && !run.artifacts.quit.didFinish) return { ok: false, reason: `quit:${run.artifacts.quit.reason}`, run };
   const paras = paragraphs(run.final.bodyMarkdown);
+  // Page modules (2026-09-01): the finished story laid out into the wire
+  // page's architecture. Fail-soft — a modulate error ships the flat body.
+  let mods: Awaited<ReturnType<typeof modulateStory>>["modules"] | null = null;
+  try { const m = await modulateStory(run.final, run.artifacts.pack!, run.artifacts.brief!, input.tier ?? wireTier()); mods = m.modules; run.calls.push(m.call); } catch (err) { console.log(`[v3:wire:${input.clusterKey}] modulate failed: ${err instanceof Error ? err.message : err}`); }
   const teamDir = await getTeamDirectory().catch(() => ({}) as Record<string, unknown>);
   const teams = [...new Set([...(run.final.teams ?? []), ...input.teams])].map((t) => resolveTeamSlug(t, teamDir)).filter(Boolean);
   const confirmed = (run.artifacts.pack?.facts ?? []).every((f) => f.status === "confirmed");
@@ -67,15 +72,20 @@ export async function v3WireStory(input: { clusterKey: string; teams: string[]; 
       verification: confirmed ? "confirmed" : "reported",
       category: input.category ?? "general",
       teams,
-      whatHappened: paras[0] ?? "",
+      whatHappened: mods?.whatHappened ?? paras[0] ?? "",
       bodyMarkdown: run.final.bodyMarkdown,
+      ...(mods ? {
+        openTitle: mods.openTitle, whyTitle: mods.whyTitle ?? undefined, whyBody: mods.whyBody ?? undefined,
+        missing: mods.missing ?? undefined, callout: mods.callout ?? undefined,
+        section04Title: mods.section04Title ?? undefined, section04Body: mods.section04Body ?? undefined,
+        chessboard: mods.chessboard ?? undefined, readBody: mods.readBody ?? undefined,
+        watching: mods.watching, facts: mods.facts,
+      } : {}),
       // Impact follows the item's importance (the news), not the depth (the
       // word count): a 120-word item about a court order is not "low".
       impact: input.importance != null ? (input.importance >= 8 ? "significant" : input.importance >= 5 ? "moderate" : "low") : run.artifacts.brief?.depth === "analysis" ? "significant" : run.artifacts.brief?.depth === "story" ? "moderate" : "low",
       impactRationale: run.artifacts.brief?.depthReason ?? "",
-      stats: [],
-      watching: [],
-      facts: [],
+      stats: mods?.stats ?? [],
       sources: sources.map((s) => ({ outlet: s.outlets[0], url: s.urls[0] })),
       productionMethod: "v3-desk",
       v3Depth: run.artifacts.brief?.depth ?? "item",
