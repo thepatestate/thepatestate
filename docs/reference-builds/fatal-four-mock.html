@@ -103,6 +103,8 @@ button,input,select{font:inherit;color:inherit}
 }
 .tray.swapping{box-shadow:inset 0 0 0 1px var(--gold)}
 .trayhead{padding:10px 12px 9px;border-bottom:1px solid var(--line-soft);flex:0 0 auto}
+.chiprow{display:block}
+.t25row{margin-top:6px}
 .trayhead .segs{gap:3px}
 .trayhead .seg-btn{padding:5px 7px;font-size:11px}
 .trayhead .search{margin-top:7px;padding:7px 10px;font-size:13px}
@@ -192,7 +194,19 @@ button,input,select{font:inherit;color:inherit}
 .field{position:absolute;left:150px;right:0;top:26px;bottom:26px}
 .lift{position:absolute;left:0;right:0;top:0;display:flex;align-items:center;justify-content:center;
   transition:transform .9s cubic-bezier(.22,1,.36,1);will-change:transform}
-.bub{display:block;overflow:visible}
+.bub{display:block;overflow:visible;touch-action:none}
+.orb .hit{pointer-events:all}
+.orb.sel .disc{stroke:#E8C75B;stroke-width:3.4}
+.orbpill{
+  position:absolute;z-index:7;transform:translate(-50%,-100%);width:max-content;white-space:nowrap;
+  display:flex;align-items:center;gap:6px;padding:5px 6px;border-radius:100px;
+  background:#0F2444;border:1px solid var(--line);box-shadow:0 10px 22px rgba(0,0,0,.5);
+}
+.orbx{
+  background:transparent;border:0;color:var(--muted);cursor:pointer;font-size:16px;line-height:1;
+  padding:2px 6px 4px;
+}
+.orbx:hover{color:var(--red-hi)}
 .readout{                                   /* hangs off the sphere's right rim */
   position:absolute;left:50%;top:50%;transform:translateY(-50%);
   margin-left:var(--tagoff,150px);padding-left:30px;text-align:left;pointer-events:none;
@@ -202,7 +216,7 @@ button,input,select{font:inherit;color:inherit}
 .readout::after{content:"";position:absolute;left:0;top:50%;width:6px;height:6px;border-radius:50%;
   background:var(--gold);transform:translate(-50%,-50%)}
 .readout .n{font-family:var(--disp);font-weight:800;font-size:54px;line-height:.9;color:var(--ink);letter-spacing:.01em}
-.readout .k{font-family:var(--disp);font-weight:700;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.readout .k{font-family:var(--disp);font-weight:700;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
 .readout.final .n{color:var(--gold)}
 
 /* bubble internals */
@@ -278,8 +292,6 @@ button,input,select{font:inherit;color:inherit}
 .strip .seg{display:flex;align-items:baseline;gap:7px;font-size:13.5px;color:var(--muted)}
 .strip .seg b{font-family:var(--disp);font-weight:800;font-size:19px;color:var(--ink);letter-spacing:.01em}
 .strip .sep{color:var(--line);font-size:16px}
-.up{color:var(--green)}.down{color:var(--red-hi)}
-.strip .delta b{font-size:19px}
 
 /* &#x2500;&#x2500; control bar &#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500; */
 .bar{
@@ -336,6 +348,7 @@ button,input,select{font:inherit;color:inherit}
 .segs{display:flex;gap:4px;flex-wrap:wrap}
 .seg-btn{
   font-family:var(--disp);font-weight:700;font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;
+  white-space:nowrap;
   background:var(--panel-2);border:1px solid var(--line);color:var(--muted);
   padding:6px 9px;border-radius:6px;cursor:pointer;transition:.15s;
 }
@@ -577,19 +590,45 @@ select[disabled]{opacity:.45}
   .stagewrap{display:block;height:auto}
   .stage{height:clamp(430px,66vh,600px)}
   .tray{height:auto;border-left:0;border-top:1px solid var(--line)}
+  .trayhead{display:flex;flex-direction:column;padding:10px 12px 8px}
+  .trayhead .search{order:-1;margin:0 0 8px}
+  .chiprow{display:flex;flex-wrap:nowrap;overflow-x:auto;gap:4px;padding-bottom:2px;
+    scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .chiprow::-webkit-scrollbar{display:none}
+  .chiprow .segs{flex-wrap:nowrap}
+  .t25row{margin-top:0}
+  .trayhint{margin:7px 0 0}
   .traylist{
-    display:flex;overflow-x:auto;overflow-y:hidden;gap:10px;
+    display:flex;overflow-x:auto;overflow-y:hidden;gap:12px;
     padding:12px 12px 14px;scrollbar-width:thin;
+    -webkit-overflow-scrolling:touch;scroll-snap-type:x proximity;
   }
   .traylist::-webkit-scrollbar{height:8px}
-  .tray-item{flex:0 0 62px}
+  .tray-item{flex:0 0 72px;scroll-snap-align:start}
+  .torb{width:56px;height:56px}
+  .torb .ab{font-size:14px}
+  .tnm{max-width:72px;font-size:10.5px}
   .trayempty{flex:1 1 auto}
   .swapask{font-size:12px}
+  .orbpill .btn.sm{padding:8px 13px}
+  .strip{gap:4px 16px}
+  .strip .sep{display:none}
+  .sealtag{display:none}
+  .readout{                                   /* a pill parked under the sphere */
+    left:50%;top:0;transform:translateX(-50%);margin-left:0;padding:5px 14px;
+    display:flex;align-items:baseline;gap:9px;white-space:nowrap;
+    background:rgba(11,26,51,.88);border:1px solid var(--line);border-radius:100px;
+    box-shadow:0 8px 20px rgba(0,0,0,.4);
+  }
+  .readout::before,.readout::after,.readout .draft-tag{display:none}
+  .readout .n{font-size:28px;line-height:1}
+  .readout .k{font-size:9.5px;letter-spacing:.11em}
+  .readout .ceil{margin-top:0}
+  .readout .ceil b{font-size:12.5px}
 }
 @media (max-width:700px){
   .mbody{column-count:1}
   .grid{grid-template-columns:minmax(0,1fr)}
-  .readout,.sealtag{display:none}
   .axis{width:70px}
   .field{left:70px}
   .axis .tick .cap{left:44px;font-size:9.5px}
@@ -691,11 +730,15 @@ select[disabled]{opacity:.45}
           </div>
           <div class="readout" id="readout">
               <div class="n num" id="roN">0</div>
-              <div class="k" id="roK">Live score &#xB7; not locked yet</div>
+              <div class="k" id="roK">Live score &#xB7; not locked</div>
               <div class="k ceil">Max <b class="num" id="roCeilN">1,000</b></div>
               <div class="draft-tag" id="roDraft">Not locked in yet</div>
             </div>
           </div>
+        </div>
+        <div class="orbpill" id="orbPill" hidden>
+          <button class="btn sm gold" type="button" id="orbPillGo">Drop from bubble</button>
+          <button class="orbx" type="button" id="orbPillX" aria-label="Cancel">&times;</button>
         </div>
         <div class="swapask" id="swapAsk" hidden>
           <p id="swapAskT"></p>
@@ -704,9 +747,11 @@ select[disabled]{opacity:.45}
       </div>
       <aside class="tray" id="tray" aria-label="Team tray">
         <div class="trayhead">
-          <div class="segs" id="confChips"></div>
-          <div class="segs" style="margin-top:6px">
-            <button class="seg-btn" type="button" id="t25" aria-pressed="false">Top 25 only</button>
+          <div class="chiprow">
+            <div class="segs" id="confChips"></div>
+            <div class="segs t25row">
+              <button class="seg-btn" type="button" id="t25" aria-pressed="false">Top 25 only</button>
+            </div>
           </div>
           <input class="search" id="q" type="search" placeholder="Search teams" aria-label="Search teams" autocomplete="off">
           <p class="trayhint" id="trayHint">Drag a team into the bubble, or tap to add.</p>
@@ -720,8 +765,6 @@ select[disabled]{opacity:.45}
       <div class="seg">Live score <b class="num" id="sScore">0</b></div>
       <span class="sep">&#xB7;</span>
       <div class="seg">Max <b class="num" id="sCeil">1,000</b></div>
-      <span class="sep">&#xB7;</span>
-      <div class="seg delta" id="sDelta"><b class="num">Even</b><span id="sDeltaTxt">since Tuesday</span></div>
       <span class="sep">&#xB7;</span>
       <div class="seg" id="sTeams">4 teams in the bubble</div>
     </div>
@@ -897,6 +940,8 @@ select[disabled]{opacity:.45}
 (function(){
 "use strict";
 var REDUCE = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+var COARSE = window.matchMedia && window.matchMedia("(pointer: coarse)").matches;
+function hitScale(){ return (COARSE || window.innerWidth <= 760) ? 1.5 : 1.05; }
 
 /* \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
    DATA
@@ -1315,6 +1360,7 @@ function renderOrbs(){
         st.appendChild(ln);
       });
       var body = svg("g", {"class":"body"});
+      body.appendChild(svg("circle", {"class":"hit", r:1, fill:"none"}));
       body.appendChild(svg("circle", {"class":"glow", r:1, fill:"none", stroke:"#C9A227",
         "stroke-width":3, opacity:0, filter:"url(#soft2)"}));
       body.appendChild(svg("circle", {"class":"laurel", r:1, fill:"none", stroke:"#E8C75B",
@@ -1373,6 +1419,8 @@ function renderOrbs(){
         txt = g.querySelector(".abbr"), chev = g.querySelector(".chev"),
         crack = g.querySelector(".crack"), laurel = g.querySelector(".laurel"),
         ot2 = g.querySelector(".outtag"), dark = lum(t.c1) > .62;
+    g.setAttribute("data-r", rr);
+    g.querySelector(".hit").setAttribute("r", (rr * hitScale()).toFixed(1));
     disc.setAttribute("r", rr);
     disc.setAttribute("fill", t.c1);
     disc.setAttribute("stroke", isLift ? "#C9A227" : t.c2);
@@ -1463,6 +1511,7 @@ function layout(){
   bubEl.setAttribute("height", bubbleD);
   liftEl.style.height = bubbleD + "px";
   $("readout").style.setProperty("--tagoff", (bubbleD/2).toFixed(0) + "px");
+  if(window.innerWidth > 760) $("readout").style.top = "";
   placeBubble();
   placeCeiling();
 }
@@ -1471,6 +1520,18 @@ function travelPx(){ return Math.max(0, (stageEl.clientHeight - 52) - bubbleD - 
 function placeBubble(){
   var alt = Math.max(0, Math.min(1, liveScore()/1000));
   liftEl.style.transform = "translateY(" + ((1-alt)*travelPx()).toFixed(1) + "px)";
+  placeTag(alt);
+}
+/* On a phone the score rides under the sphere instead of off its right rim,
+   dropping further when dead weight is hanging there. */
+function placeTag(alt){
+  var ro = $("readout");
+  if(window.innerWidth > 760){ ro.style.top = ""; return; }
+  var liftTop = (1 - alt) * travelPx();
+  var fieldH = stageEl.clientHeight - 52;
+  var want = bubbleD * (goneTeams().length ? 1.27 : 1.02) + 12;
+  var room = fieldH - liftTop - 36;
+  ro.style.top = Math.max(bubbleD * 1.02, Math.min(want, room)).toFixed(0) + "px";
 }
 
 /* The lid: a translucent plate parked where the sphere's crown would sit if
@@ -1544,10 +1605,14 @@ function trayRows(){
 function trayHint(){
   if(S.playoff) return "The season is settled. Nothing moves now.";
   if(S.pendingOut) return "Pick who comes in for " + BY_ID[S.pendingOut].name + ".";
-  if(!S.locked) return "Drag a team into the bubble, or tap to add. Drag one out to drop it.";
+  if(!S.locked) return window.innerWidth <= 760
+    ? "Tap a team to add it. Tap one in the bubble to drop it."
+    : "Drag a team into the bubble, or tap to add. Drag one out to drop it.";
   if(S.swapUsed) return "Locked. Your swap is gone. This bubble is set.";
   if(S.week > 10) return "Locked. The swap window closed after Week 10.";
-  return "Locked. Drag a team out of the bubble to spend your one swap.";
+  return window.innerWidth <= 760
+    ? "Locked. Tap a team in the bubble to spend your one swap."
+    : "Locked. Drag a team out of the bubble to spend your one swap.";
 }
 function renderTray(){
   var list = $("traylist"), st = list.scrollTop, sl = list.scrollLeft;
@@ -1679,7 +1744,8 @@ function dragUp(e){
   var d = drag; drag = null; endDrag();
   if(d.kind === "orb"){
     d.g.classList.remove("dragging");
-    if(!d.moved || !d.out){ renderOrbs(); return; }   // let go inside: it settles back
+    if(!d.moved){ selectOrb(d.id); return; }          // a tap, not a drag
+    if(!d.out){ renderOrbs(); return; }               // let go inside: it settles back
     dropOrbOut(d.id, d.g);
     return;
   }
@@ -1704,6 +1770,65 @@ function abortDrag(){
   if(d.kind === "orb"){ d.g.classList.remove("dragging"); renderOrbs(); }
   else if(d.ghost && d.ghost.parentNode) d.ghost.parentNode.removeChild(d.ghost);
 }
+/* \u2500\u2500 the tap path \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
+   Dragging a team out is the desktop move. On a phone you tap the orb and
+   the one thing you can do to it comes up on a pill above it. */
+var selId = null;
+function orbXY(g){
+  var r = bubEl.getBoundingClientRect();
+  var m  = /translate\(([-\d.]+)/.exec(g.querySelector(".orb-x").getAttribute("transform")||"");
+  var m2 = /translate\(0,([-\d.]+)/.exec(g.querySelector(".orb-y").getAttribute("transform")||"");
+  var x = m ? parseFloat(m[1]) : 150, y = m2 ? parseFloat(m2[1]) : 150;
+  return {x:r.left + x/300*r.width, y:r.top + y/300*r.height, s:r.width/300};
+}
+function placePill(){
+  if(!selId) return;
+  var g = orbsG.querySelector('[data-id="'+selId+'"]');
+  if(!g){ clearSel(); return; }
+  var p = orbXY(g), st = stageEl.getBoundingClientRect();
+  var rr = parseFloat(g.getAttribute("data-r") || 20);
+  var pill = $("orbPill");
+  pill.style.left = (p.x - st.left).toFixed(0) + "px";
+  pill.style.top  = (p.y - st.top - rr*p.s - 12).toFixed(0) + "px";
+}
+function clearSel(){
+  if(selId){
+    var g = orbsG.querySelector('[data-id="'+selId+'"]');
+    if(g) g.classList.remove("sel");
+  }
+  selId = null;
+  if($("orbPill")) $("orbPill").hidden = true;
+}
+function selectOrb(id){
+  clearSel();
+  if(S.playoff || S.pendingOut) return;
+  var g = orbsG.querySelector('[data-id="'+id+'"]');
+  if(!g) return;
+  if(S.locked && S.swapUsed){ toast("Your swap is gone. The roster is locked.", "bad"); return; }
+  if(S.locked && S.week > 10){ toast("The swap window closed after Week 10.", "bad"); return; }
+  selId = id;
+  g.classList.add("sel");
+  $("orbPillGo").textContent = S.locked ? "Swap out" : "Drop from bubble";
+  $("orbPill").hidden = false;
+  placePill();
+}
+function pillAct(){
+  var id = selId;
+  if(!id) return;
+  var g = orbsG.querySelector('[data-id="'+id+'"]');
+  clearSel();
+  if(!g) return;
+  if(!S.locked){
+    if(S.bubble.length <= 1){ toast("You need at least one team.", "bad"); return; }
+    removeTeam(id);
+    return;
+  }
+  var m = /translate\(([-\d.]+)/.exec(g.querySelector(".orb-x").getAttribute("transform")||"");
+  var x = m ? parseFloat(m[1]) : 150;
+  setOrbAt(g, 150 + (x >= 150 ? 176 : -176), 150);   // park it outside the rim
+  dropOrbOut(id, g);
+}
+
 function dropOrbOut(id, g){
   if(!S.locked){                                      // a draft drops teams for free
     if(S.bubble.length <= 1){
@@ -2070,21 +2195,10 @@ function renderStrip(prev){
   countUp($("roN"), sc);
   countUp($("sCeil"), cl, undefined, fmtN);
   countUp($("roCeilN"), cl, undefined, fmtN);
-  $("roK").textContent = S.playoff ? "Final score" : (S.locked ? "Live score" : "Live score \u00B7 not locked yet");
+  $("roK").textContent = S.playoff ? "Final score" : (S.locked ? "Live score" : "Live score \u00B7 not locked");
   $("roDraft").hidden = S.locked || !!S.playoff;
   $("readout").classList.toggle("final", !!S.playoff);
 
-  var el = $("sDelta");
-  if(prev === null || prev === undefined){
-    el.className = "seg delta";
-    el.innerHTML = '<b class="num">Holding</b><span>at ' + sc + ' since Tuesday</span>';
-  } else {
-    var d = sc - prev;
-    el.className = "seg delta " + (d>0?"up":(d<0?"down":""));
-    el.innerHTML = '<b class="num">' + (d>0?"Up ":(d<0?"Down ":"Even ")) + '<span id="dNum">' + Math.abs(d) + '</span></b>' +
-                   '<span>since Tuesday</span>';
-    if(!REDUCE) countUp(document.getElementById("dNum"), Math.abs(d), 0);
-  }
 }
 function countUp(el, to, from, fmt){
   if(!el) return;
@@ -2417,6 +2531,7 @@ function applyPoll(mutate){
   S.bubble.forEach(function(id){ was[id] = {c:creditOf(id), r:rankOf(id), e:isEliminated(id)}; });
   var prev = liveScore();
   mutate();
+
   var drops = [], outs = [];
   S.bubble.forEach(function(id){
     if(isEliminated(id)){ if(!was[id].e) outs.push(id); }
@@ -2425,7 +2540,7 @@ function applyPoll(mutate){
   droppedOut(drops);
   letGo(outs);
   render(prev);
-  return {drops:drops, outs:outs, was:was};
+  return {drops:drops, outs:outs, was:was, prev:prev};
 }
 
 function advanceWeek(){
@@ -2458,6 +2573,12 @@ function advanceWeek(){
     }, 1500);
   } else if(S.week === 5){
     toast("Entry window is closed. Whatever you have is what you ride.", "bad");
+  }
+  var moved = liveScore() - r.prev;
+  if(moved !== 0){
+    setTimeout(function(){
+      toast("Your bubble moved " + (moved > 0 ? "+" : "\u2212") + Math.abs(moved) + " this week", moved < 0 ? "bad" : "");
+    }, 240);
   }
   if(S.week === SEASON.length) setTimeout(function(){ toast("Final poll is in. Play the playoff."); }, 1900);
 }
@@ -2503,6 +2624,7 @@ function reset(){
    RENDER
    \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550 */
 function render(prev){
+  clearSel();
   markSeen();
   syncCrowns();
   $("weekChip").textContent = S.week;
@@ -2552,12 +2674,20 @@ $("q").addEventListener("input", renderTray);
 $("t25").addEventListener("click", function(){ top25Only = !top25Only; renderTray(); });
 $("swapAskX").addEventListener("click", function(){ cancelSwapAsk(); });
 document.addEventListener("keydown", function(e){
-  if(e.key === "Escape"){ abortDrag(); cancelSwapAsk(); }
+  if(e.key === "Escape"){ abortDrag(); cancelSwapAsk(); clearSel(); }
 });
 $("bSwap").addEventListener("click", doSwap);
 $("bAdv").addEventListener("click", advanceWeek);
 $("bPlay").addEventListener("click", playPlayoff);
 $("bReset").addEventListener("click", reset);
+$("orbPillGo").addEventListener("click", pillAct);
+$("orbPillX").addEventListener("click", clearSel);
+document.addEventListener("pointerdown", function(e){
+  if(!selId) return;
+  if(e.target.closest && (e.target.closest("#orbPill") || e.target.closest(".orb"))) return;
+  clearSel();
+}, true);
+window.addEventListener("scroll", placePill, {passive:true});
 $("bRules").addEventListener("click", openRules);
 $("bRulesX").addEventListener("click", closeRules);
 $("rulesBg").addEventListener("click", closeRules);
@@ -2570,7 +2700,7 @@ $("cfBack").addEventListener("click", function(){ lockStep(false); });
   $(id).addEventListener("input", function(){ $("bLockGo").disabled = !callFilled(); });
   $(id).addEventListener("keydown", function(e){ if(e.key === "Enter") doLock(); });
 });
-window.addEventListener("resize", layout);
+window.addEventListener("resize", function(){ clearSel(); layout(); });
 
 S = freshState();
 buildAxis();
