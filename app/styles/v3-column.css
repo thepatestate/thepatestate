@@ -24,3 +24,8 @@
 .v5.pg-column .rc .nx small{display:block}
 .v5.pg-column .rc .nx b{display:block;margin-top:5px}
 .v5.pg-column .story-media{aspect-ratio:16/9;height:auto}
+/* the wire page dropped its Impact Rating card (2026-08-21), so .impact never
+   made the wire sheet — the column rail defines it itself */
+.v5.pg-column .rc .impact{display:flex;align-items:flex-start;gap:12px}
+.v5.pg-column .rc .impact .badge{font:800 12px/1 var(--cond);letter-spacing:.08em;text-transform:uppercase;color:var(--w-gold-dk);background:var(--w-cream);border:1px solid rgba(201,162,39,.45);padding:8px 10px;border-radius:6px;white-space:nowrap;flex:none}
+.v5.pg-column .rc .impact p{font:400 12.5px/1.55 var(--body);color:var(--w-mut);margin:0}
