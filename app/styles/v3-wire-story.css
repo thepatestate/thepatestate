@@ -46,7 +46,7 @@
 .v5.pg-wirestory .a-hero .ph{aspect-ratio:16/8.5;position:relative;display:flex;align-items:center;justify-content:center}
 .v5.pg-wirestory .a-hero .ph::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,rgba(10,23,48,.45) 100%)}
 .v5.pg-wirestory .a-hero .ph img{width:150px;height:150px;object-fit:contain;filter:drop-shadow(0 10px 30px rgba(0,0,0,.5))}
-.v5.pg-wirestory .a-hero img.cover{width:100%;height:auto;aspect-ratio:16/8.5;object-fit:cover;display:block}
+.v5.pg-wirestory .a-hero img.article-hero-image{width:100%;height:auto;aspect-ratio:16/8.5;object-fit:cover;display:block}
 .v5.pg-wirestory .a-hero .lbl{position:absolute;right:14px;bottom:12px;font:700 9px/1 var(--cond);letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.55);z-index:2}
 .v5.pg-wirestory .a-body p{font:400 17px/1.75 var(--body);color:#232A35;margin-bottom:22px}
 .v5.pg-wirestory .a-body>p:first-of-type::first-letter{font:800 54px/0.9 var(--cond);color:var(--w-navy);float:left;padding:6px 10px 0 0}

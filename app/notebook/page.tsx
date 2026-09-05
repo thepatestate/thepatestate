@@ -55,7 +55,7 @@ function ArticleThumb({ a, size }: { a: SanityArticle; size: string }) {
     return (
       <span className="im">
         <Image src={a.heroUrl} alt="" fill sizes={size} style={{ objectFit: "cover" }} />
-        {logo && <Image className="chip" src={logo} alt="" width={22} height={22} />}
+        {logo && <Image className="nb-team-logo" src={logo} alt="" width={22} height={22} />}
       </span>
     );
   }

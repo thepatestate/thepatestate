@@ -195,10 +195,10 @@
 
 /* ── The Player Index (2026-08-19) ── */
 .v5.pg-recruiting .pindex{padding:26px 0 10px}
-.v5.pg-recruiting .pindex .p-head{display:flex;align-items:baseline;gap:14px;margin-bottom:12px}
-.v5.pg-recruiting .pindex .p-head h3{font:800 22px/1.1 var(--slab)}
-.v5.pg-recruiting .pindex .p-head .eb{font:800 10.5px/1 var(--cond);letter-spacing:.15em;text-transform:uppercase;color:var(--gold-dk,#8a6a1f)}
-.v5.pg-recruiting .pindex .p-head a{margin-left:auto;font:800 11.5px/1 var(--cond);letter-spacing:.1em;text-transform:uppercase;color:var(--gold-dk,#8a6a1f)}
+.v5.pg-recruiting .pindex .player-index-head{display:flex;align-items:baseline;gap:14px;margin-bottom:12px}
+.v5.pg-recruiting .pindex .player-index-head h3{font:800 22px/1.1 var(--slab);color:var(--navy);text-transform:none}
+.v5.pg-recruiting .pindex .player-index-head .eb{font:800 10.5px/1 var(--cond);letter-spacing:.15em;text-transform:uppercase;text-transform:uppercase;color:var(--gold-dk,#8a6a1f)}
+.v5.pg-recruiting .pindex .player-index-head a{margin-left:auto;font:800 11.5px/1 var(--cond);letter-spacing:.1em;text-transform:uppercase;text-transform:uppercase;color:var(--gold-dk,#8a6a1f)}
 .v5.pg-recruiting .rank-table.players .stars{color:var(--gold-dk,#8a6a1f);font-size:11px;margin-left:8px;letter-spacing:.1em}
 .v5.pg-recruiting .rank-table.players .tcell b{font-weight:700}
 .v5.pg-recruiting .pindex-more{display:inline-block;margin-top:12px;font:800 12px/1 var(--cond);letter-spacing:.1em;text-transform:uppercase;color:var(--gold-dk,#8a6a1f)}

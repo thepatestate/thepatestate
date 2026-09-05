@@ -340,7 +340,7 @@ export default async function RecruitingPage() {
           (Josh, 2026-08-19). Real 247Sports Composite player rankings. */}
       {playerIndex && (
         <section className="pindex" id="player-index"><div className="wrap">
-          <div className="p-head">
+          <div className="player-index-head">
             <span className="eb">The Class of {playerIndex.year}</span>
             <h3>The Player Index</h3>
             <Link href="/recruiting/players">Top 100 · By Position →</Link>

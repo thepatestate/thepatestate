@@ -158,7 +158,7 @@ export default async function WireStoryPage({ params }: { params: Promise<{ slug
             <div className="a-hero">
               {/* AI editorial illustration (2026-09-02): every Wire story
                   carries one; the logo graphic below is the fallback. */}
-              <img className="cover" src={story.heroUrl} alt="" width={1152} height={640} />
+              <img className="article-hero-image" src={story.heroUrl} alt="" width={1152} height={640} />
               <span className="lbl">{story.heroCredit ? `Photo: ${story.heroCredit}` : "The Pate State · Editorial Illustration"}</span>
             </div>
           ) : teamLogo && (

@@ -2,7 +2,7 @@
    Rides on .v5.pg-wirestory's architecture (the page carries both classes);
    this sheet holds only the column-specific parts. */
 .v5.pg-column .a-kick .nb{font:800 11px/1 var(--cond);letter-spacing:.16em;text-transform:uppercase;color:#fff;background:var(--w-navy);padding:7px 11px;border-radius:4px}
-.v5.pg-column .a-hero img.cover{width:100%;height:auto;aspect-ratio:16/8.5;object-fit:cover;display:block}
+.v5.pg-column .a-hero img.article-hero-image{width:100%;height:auto;aspect-ratio:16/8.5;object-fit:cover;display:block}
 /* body typography: ArticleBody output mapped to the mockup's a-body scale */
 .v5.pg-column .story-body p{font:400 17px/1.75 var(--body);color:#232A35;margin:0 0 22px}
 .v5.pg-column .story-body>div>p:first-of-type::first-letter,.v5.pg-column .story-body>p:first-of-type::first-letter{font:800 54px/0.9 var(--cond);color:var(--w-navy);float:left;padding:6px 10px 0 0}

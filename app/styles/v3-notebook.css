@@ -74,7 +74,7 @@
 .v5.pg-notebook .nb-row:hover{transform:translateY(-3px);box-shadow:var(--sh-md)}
 /* fill anchor: photo thumbs use next/image fill inside this box */
 .v5.pg-notebook .nb-row .im{position:relative;width:128px;min-width:128px;height:84px;border-radius:8px;overflow:hidden}
-.v5.pg-notebook .nb-row .im .chip{position:absolute;right:5px;bottom:5px;width:22px;height:22px;filter:drop-shadow(0 2px 5px rgba(0,0,0,.5));z-index:2}
+.v5.pg-notebook .nb-row .im .nb-team-logo{position:absolute;right:5px;bottom:5px;width:22px;height:22px;filter:drop-shadow(0 2px 5px rgba(0,0,0,.5));z-index:2}
 .v5.pg-notebook .nb-row .im.logo{background:linear-gradient(150deg,var(--navy),var(--navy-deep));display:flex;align-items:center;justify-content:center}
 .v5.pg-notebook .nb-row .im.logo .lg{width:42px;height:42px;filter:drop-shadow(0 4px 10px rgba(0,0,0,.4))}
 .v5.pg-notebook .nb-row .t{font:800 10px/1 var(--cond);letter-spacing:.13em;text-transform:uppercase;color:var(--red);margin-bottom:5px;display:block}
