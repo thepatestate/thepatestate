@@ -1,2715 +1,865 @@
-<title>Fatal Four</title>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="/favicon.ico">
+<title>Fatal Four · The Pate State</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Public+Sans:wght@400;500;600;700&display=swap">
-
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Barlow:wght@400;500;600;700&family=Barlow+Semi+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
-/* &#x2500;&#x2500; Fatal Four &#xB7; The Pate State &#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;
-   Single-theme dark navy. Every color painted explicitly from tokens below. */
+/* ============================================================
+   FATAL FOUR · The Pate State fan game
+   Tokens: Navy #101E3C · Red #C8102E · Gold #C9A227 · White #FFFFFF (page override: stark white, no cream/Paper here)
+   Gold discipline: Lock In CTA + earned status ONLY.
+   Teal is never used here — teal belongs to The AI Predictor.
+   ============================================================ */
 :root{
-  --field:#0B1A33;
-  --field-2:#0E1F3F;
-  --panel:#102647;
-  --panel-2:#0C1D39;
-  --line:#1E3557;
-  --line-soft:#17294a;
+  --navy:#101E3C;
+  --navy-deep:#0A1329;
+  --panel:#16264A;
+  --panel-edge:rgba(255,255,255,0.16);
+  --paper:#FFFFFF;          /* stark white on this page — no cream */
+  --ink:#EEF2F9;            /* primary text — cool light, no cream cast */
+  --ink-2:#B9C4DA;          /* secondary text — lifted for contrast */
+  --ink-3:#8B99B8;          /* tertiary */
   --gold:#C9A227;
-  --gold-hi:#E8C75B;
-  --red:#B3202A;
-  --red-hi:#E0525C;
-  --ink:#F3EEE2;
-  --muted:#9AA7BF;
-  --muted-2:#6E7E9B;
-  --glass:#DCE9FF;
-  --green:#4FB477;
-  --disp:"Barlow Condensed","Oswald","Arial Narrow",sans-serif;
-  --body:"Public Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
-  --r:10px;
+  --gold-bright:#E3BC3F;
+  --red:#C8102E;
+  --red-bright:#E8425C;
+  --line:rgba(255,255,255,0.22);
+  --line-soft:rgba(255,255,255,0.12);
+  --f-display:'Oswald',sans-serif;
+  --f-body:'Barlow',sans-serif;
+  --f-data:'Barlow Semi Condensed',sans-serif;
 }
-*{box-sizing:border-box}
-[hidden]{display:none !important}
+*{margin:0;padding:0;box-sizing:border-box}
+html{font-size:17px}
 body{
-  margin:0;
-  background:var(--field);
-  color:var(--ink);
-  font-family:var(--body);
-  font-size:15px;
-  line-height:1.5;
-  -webkit-font-smoothing:antialiased;
-}
-h1,h2,h3{margin:0;font-family:var(--disp);font-weight:800;text-wrap:balance;letter-spacing:.01em}
-button,input,select{font:inherit;color:inherit}
-::selection{background:var(--gold);color:#141414}
-:focus-visible{outline:2px solid var(--gold-hi);outline-offset:2px;border-radius:4px}
-
-.wrap{max-width:1240px;margin:0 auto;padding:clamp(16px,2.6vw,30px) clamp(14px,2.6vw,30px) 60px}
-
-/* &#x2500;&#x2500; labels &#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500; */
-.lbl{
-  font-family:var(--disp);font-weight:700;font-size:12px;
-  letter-spacing:.12em;text-transform:uppercase;color:var(--muted);
-}
-.lbl-gold{color:var(--gold)}
-.num{font-variant-numeric:tabular-nums}
-
-/* &#x2500;&#x2500; masthead &#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500; */
-.mast{
-  display:flex;flex-wrap:wrap;align-items:flex-end;gap:14px 22px;
-  padding-bottom:14px;margin-bottom:16px;
-  border-bottom:1px solid var(--line);
-}
-.mast .brand{display:flex;flex-direction:column;gap:2px}
-.mast h1{
-  font-size:clamp(40px,7.4vw,74px);line-height:.86;letter-spacing:.005em;
-  color:var(--ink);
-}
-.mast h1 em{font-style:normal;color:var(--gold)}
-.mast .sub{max-width:44ch;color:var(--muted);font-size:14px}
-.mast .rail{margin-left:auto;display:flex;flex-direction:column;gap:6px;align-items:flex-end}
-.chip{
-  display:inline-flex;align-items:center;gap:7px;
-  border:1px solid var(--line);background:var(--panel-2);
-  padding:5px 10px;border-radius:100px;
-  font-family:var(--disp);font-weight:700;font-size:12px;letter-spacing:.11em;text-transform:uppercase;
-  color:var(--muted);white-space:nowrap;
-}
-.chip b{color:var(--ink);font-weight:800}
-.dot{width:6px;height:6px;border-radius:50%;background:var(--gold);flex:0 0 auto}
-
-/* &#x2500;&#x2500; hero stage &#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500; */
-.hero{
-  position:relative;border:1px solid var(--line);border-radius:14px;
   background:
-    radial-gradient(120% 70% at 18% -10%, rgba(160,196,255,.14), transparent 60%),
-    radial-gradient(120% 70% at 84% -14%, rgba(201,162,39,.13), transparent 58%),
-    radial-gradient(90% 55% at 50% 118%, rgba(120,160,220,.16), transparent 70%),
-    linear-gradient(180deg,#0C1E3C 0%, #0A1730 100%);
-  overflow:hidden;
+    radial-gradient(1200px 700px at 75% -10%, #1A2C57 0%, transparent 60%),
+    linear-gradient(180deg,#0D1832 0%, var(--navy) 45%, #0C1730 100%);
+  color:var(--ink);
+  font-family:var(--f-body);
+  line-height:1.55;
+  min-height:100vh;
 }
-.hero::after{ /* stadium light haze */
-  content:"";position:absolute;inset:0;pointer-events:none;
-  background:
-    conic-gradient(from 200deg at 12% -12%, rgba(255,255,255,.07), transparent 22%),
-    conic-gradient(from 300deg at 92% -10%, rgba(255,255,255,.06), transparent 20%);
-}
-.stagewrap{display:flex;align-items:stretch;height:clamp(430px,72vh,760px)}
-.stage{position:relative;height:100%;flex:1 1 auto;min-width:0}
+.wrap{max-width:1360px;margin:0 auto;padding:0 28px 80px}
 
-/* ── team tray ────────────────────────────────────────────────────── */
-.tray{
-  flex:0 0 232px;min-width:0;height:100%;display:flex;flex-direction:column;
-  border-left:1px solid var(--line);position:relative;z-index:3;
-  background:linear-gradient(180deg, rgba(255,255,255,.025), rgba(0,0,0,.14));
-}
-.tray.swapping{box-shadow:inset 0 0 0 1px var(--gold)}
-.trayhead{padding:10px 12px 9px;border-bottom:1px solid var(--line-soft);flex:0 0 auto}
-.chiprow{display:block}
-.t25row{margin-top:6px}
-.trayhead .segs{gap:3px}
-.trayhead .seg-btn{padding:5px 7px;font-size:11px}
-.trayhead .search{margin-top:7px;padding:7px 10px;font-size:13px}
-.trayhint{margin:6px 0 0;font-size:11px;color:var(--muted-2);line-height:1.3}
-.tray.swapping .trayhint{color:var(--gold)}
-.traylist{
-  flex:1 1 auto;min-height:0;overflow-y:auto;align-content:start;
-  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px 4px;padding:12px 10px 16px;
-}
-.traylist::-webkit-scrollbar{width:8px}
-.traylist::-webkit-scrollbar-thumb{background:#1C3559;border-radius:8px}
-.trayempty{grid-column:1/-1;font-size:12.5px;color:var(--muted-2);line-height:1.45}
-.tray-item{
-  position:relative;background:transparent;border:0;padding:2px 0;border-radius:8px;
-  display:flex;flex-direction:column;align-items:center;gap:5px;
-  cursor:grab;touch-action:none;
-}
-.tray-item:hover .torb{transform:translateY(-2px) scale(1.07)}
-.tray-item:hover .tnm{color:var(--ink)}
-.torb{
-  width:44px;height:44px;border-radius:50%;border:2px solid;position:relative;
-  display:grid;place-items:center;flex:0 0 auto;transition:transform .18s ease;
-}
-.torb .ab{font-family:var(--disp);font-weight:800;font-size:12.5px;letter-spacing:.02em}
-.torb .rkb{
-  position:absolute;top:-5px;right:-8px;background:var(--gold);color:#16130A;
-  border-radius:6px;padding:0 3px;font-family:var(--disp);font-weight:800;font-size:9.5px;
-}
-.tnm{
-  font-family:var(--disp);font-weight:700;font-size:10px;letter-spacing:.05em;text-transform:uppercase;
-  color:var(--muted);text-align:center;line-height:1.15;max-width:68px;
-  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
-}
-.tray-item.in{cursor:default}
-.tray-item.in .torb{opacity:.26}
-.tray-item.in .tnm{color:var(--muted-2)}
-.tray-item.in::after{
-  content:"\2713";position:absolute;top:9px;left:50%;transform:translateX(-50%);
-  font-family:var(--disp);font-weight:800;font-size:21px;color:var(--gold);
-}
-.dragghost{
-  position:fixed;left:0;top:0;width:48px;height:48px;border-radius:50%;border:2px solid;
-  display:grid;place-items:center;font-family:var(--disp);font-weight:800;font-size:13px;
-  pointer-events:none;z-index:60;box-shadow:0 10px 24px rgba(0,0,0,.5);
-}
+/* ---------- header ---------- */
+header{padding:52px 0 30px;display:flex;flex-wrap:wrap;gap:24px;justify-content:space-between;align-items:flex-end}
+.eyebrow{font-family:var(--f-display);font-weight:600;letter-spacing:.22em;font-size:.82rem;color:var(--ink-2);text-transform:uppercase;margin-bottom:10px}
+h1{font-family:var(--f-display);font-weight:700;font-size:clamp(3rem,7vw,5.2rem);line-height:.95;letter-spacing:.01em;color:var(--paper);text-transform:uppercase}
+h1 .four{color:var(--gold)}
+.sub{max-width:560px;margin-top:16px;font-size:1.12rem;color:var(--ink-2)}
+.sub strong{color:var(--ink);font-weight:600}
+.hdr-right{display:flex;flex-direction:column;gap:12px;align-items:flex-end}
+.chip{border:1.5px solid var(--line);border-radius:999px;padding:9px 18px;font-family:var(--f-display);font-size:.8rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink);background:rgba(255,255,255,.04);white-space:nowrap}
+.chip .dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--gold);margin-right:9px;vertical-align:1px}
+.authority{max-width:340px;text-align:right;font-size:.95rem;color:var(--ink-2);border-right:3px solid var(--gold);padding-right:14px}
+.authority b{color:var(--paper);font-weight:600}
 
-/* ── dragging a team out ────────────────────────────────────────── */
-.orb{cursor:grab;touch-action:none}
-.orb.dragging{cursor:grabbing}
-.orb.dragging .orb-x,.orb.dragging .orb-y,
-.orb.parked .orb-x,.orb.parked .orb-y{transition:none}
-.orb.dragging .orb-bob,.orb.parked .orb-bob{animation:none}
-.orb.dragging .body{transform:scale(1.15)}
-.orb.parked .body{transform:scale(1.06)}
-#rimHalo{opacity:0;transition:opacity .2s ease}
-.bub.out #rim,.bub.in #rim{stroke-dasharray:none;stroke-width:2.4;stroke-opacity:.95}
-.bub.out #rim{stroke:#E0525C}
-.bub.in #rim{stroke:#E8C75B}
-.bub.out #rimHalo{opacity:.55;stroke:#E0525C}
-.bub.in #rimHalo{opacity:.5;stroke:#E8C75B}
-.swapask{
-  position:absolute;left:50%;bottom:10px;transform:translateX(-50%);z-index:6;
-  display:flex;align-items:center;gap:12px;max-width:min(94%,540px);
-  background:#0F2444;border:1px solid var(--line);border-left:3px solid var(--gold);
-  border-radius:9px;padding:8px 12px;box-shadow:0 10px 26px rgba(0,0,0,.45);
-}
-.swapask p{margin:0;font-size:13px;color:var(--ink)}
-.swapask p b{color:var(--gold);font-weight:700}
+/* ---------- top action bar ---------- */
+.actionbar{display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin:6px 0 26px}
+.btn{font-family:var(--f-display);font-weight:600;letter-spacing:.12em;text-transform:uppercase;font-size:.92rem;padding:15px 26px;border-radius:10px;border:1.5px solid var(--line);background:rgba(255,255,255,.05);color:var(--ink);cursor:pointer;transition:background .15s,border-color .15s}
+.btn:hover{background:rgba(255,255,255,.1);border-color:var(--paper)}
+.btn:focus-visible{outline:3px solid var(--gold-bright);outline-offset:2px}
+.btn-gold{background:var(--gold);border-color:var(--gold);color:var(--navy-deep);font-weight:700}
+.btn-gold:hover{background:var(--gold-bright);border-color:var(--gold-bright)}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.bar-note{margin-left:auto;display:flex;gap:12px;flex-wrap:wrap}
+.pill{border:1.5px solid var(--line-soft);border-radius:999px;padding:9px 16px;font-family:var(--f-display);font-size:.78rem;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-2)}
+.pill b{color:var(--ink)}
+.pill .fee{color:var(--red);font-weight:700}
 
-/* elevation axis */
-.axis{position:absolute;left:0;top:26px;bottom:26px;width:150px;z-index:2}
-.axis .tick{position:absolute;left:0;right:0;display:flex;align-items:center;gap:8px;transform:translateY(50%)}
-.axis .tick .bar{height:1px;background:var(--line);flex:1 1 auto;min-width:10px}
-.axis .tick .v{
-  font-family:var(--disp);font-weight:700;font-size:13px;letter-spacing:.08em;
-  color:var(--muted-2);padding-left:14px;width:44px;text-align:right;flex:0 0 auto;
-}
-.axis .tick .cap{
-  font-family:var(--disp);font-weight:700;font-size:10.5px;letter-spacing:.11em;
-  text-transform:uppercase;color:var(--muted-2);white-space:nowrap;
-  position:absolute;left:58px;top:-14px;
-}
-.axis .tick.major .v{color:var(--ink)}
-.axis .tick.major .bar{background:var(--line);box-shadow:0 0 0 0 transparent}
-.axis .tick.top .cap{color:var(--gold)}
+/* ---------- scoreline strip · paper surface ---------- */
+.scoreline{display:flex;flex-wrap:wrap;gap:8px 42px;align-items:baseline;background:var(--paper);border:1.5px solid rgba(16,30,60,.12);border-radius:14px;padding:18px 26px;margin-bottom:40px;box-shadow:0 10px 30px rgba(0,0,0,.10)}
+.scoreline .stat{display:flex;align-items:baseline;gap:10px}
+.scoreline .num{font-family:var(--f-data);font-weight:700;font-size:1.9rem;color:var(--navy)}
+.scoreline .num.hero{font-size:2.2rem}
+.scoreline .lbl{font-size:1rem;color:#53617A;font-weight:500}
 
-.field{position:absolute;left:150px;right:0;top:26px;bottom:26px}
-.lift{position:absolute;left:0;right:0;top:0;display:flex;align-items:center;justify-content:center;
-  transition:transform .9s cubic-bezier(.22,1,.36,1);will-change:transform}
-.bub{display:block;overflow:visible;touch-action:none}
-.orb .hit{pointer-events:all}
-.orb.sel .disc{stroke:#E8C75B;stroke-width:3.4}
-.orbpill{
-  position:absolute;z-index:7;transform:translate(-50%,-100%);width:max-content;white-space:nowrap;
-  display:flex;align-items:center;gap:6px;padding:5px 6px;border-radius:100px;
-  background:#0F2444;border:1px solid var(--line);box-shadow:0 10px 22px rgba(0,0,0,.5);
-}
-.orbx{
-  background:transparent;border:0;color:var(--muted);cursor:pointer;font-size:16px;line-height:1;
-  padding:2px 6px 4px;
-}
-.orbx:hover{color:var(--red-hi)}
-.readout{                                   /* hangs off the sphere's right rim */
-  position:absolute;left:50%;top:50%;transform:translateY(-50%);
-  margin-left:var(--tagoff,150px);padding-left:30px;text-align:left;pointer-events:none;
-}
-.readout::before{content:"";position:absolute;left:2px;top:50%;width:24px;height:1px;
-  background:linear-gradient(90deg,rgba(220,233,255,.12),rgba(220,233,255,.6))}
-.readout::after{content:"";position:absolute;left:0;top:50%;width:6px;height:6px;border-radius:50%;
-  background:var(--gold);transform:translate(-50%,-50%)}
-.readout .n{font-family:var(--disp);font-weight:800;font-size:54px;line-height:.9;color:var(--ink);letter-spacing:.01em}
-.readout .k{font-family:var(--disp);font-weight:700;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
-.readout.final .n{color:var(--gold)}
+.scoreline .final-outlook{flex-basis:100%;border-top:1px solid rgba(16,30,60,.18);padding-top:12px;margin-top:4px}
+.scoreline .final-outlook .stat{flex-wrap:wrap}
+.scoreline .final-outlook p{color:#53617A;font-size:.95rem;margin-top:4px}
 
-/* bubble internals */
-#bubbleGroup{transform-origin:150px 150px}
-.ripple #bubbleGroup{animation:ripple .72s cubic-bezier(.22,1,.36,1)}
-@keyframes ripple{0%{transform:scale(1)}22%{transform:scale(1.035)}55%{transform:scale(.988)}100%{transform:scale(1)}}
-#rim{transition:stroke-opacity .4s}
-.ripple #rim{animation:rimw .72s ease-out}
-@keyframes rimw{0%{stroke-width:1.1}25%{stroke-width:2.4}100%{stroke-width:1.1}}
-#shimmer{opacity:0}
-.shimmer #shimmer{animation:shim 3.6s ease-in-out infinite}
-@keyframes shim{0%{opacity:0;transform:translateX(-150px)}35%{opacity:.85}100%{opacity:0;transform:translateX(180px)}}
+/* ---------- stage: axis + bubble + roster ---------- */
+.stage{display:grid;grid-template-columns:150px 1fr 360px;gap:26px;background:var(--panel);border:1.5px solid var(--panel-edge);border-radius:18px;padding:28px;margin-bottom:40px}
+.axis{position:relative;height:640px;font-family:var(--f-display)}
+.axis .tick{position:absolute;left:0;right:0;transform:translateY(50%)}
+.axis .tick .val{font-family:var(--f-data);font-weight:700;font-size:1.05rem;color:var(--paper)}
+.axis .tick .name{font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-2);margin-top:2px;line-height:1.3}
+.field{position:relative;height:640px;border-radius:14px;overflow:hidden;border:1px solid rgba(255,255,255,.20);box-shadow:0 16px 40px rgba(0,0,0,.22);background:
+  radial-gradient(closest-side at 50% 46%, rgba(255,255,255,.16) 0%, rgba(255,255,255,.05) 30%, transparent 58%),
+  radial-gradient(closest-side at 50% 46%, #24396B 0%, #16264E 52%, #0A1329 100%)}
+.gridline{position:absolute;left:0;right:0;border-top:1px solid rgba(255,255,255,.16)}
+.liveline{position:absolute;left:0;right:0;border-top:2.5px dashed var(--paper);transition:top .6s ease}
+.liveline span{position:absolute;left:12px;top:-30px;font-family:var(--f-data);font-weight:700;font-size:1rem;color:var(--navy-deep);background:var(--paper);padding:3px 12px;border-radius:6px}
+.orb{position:absolute;left:50%;transform:translateX(-50%);width:min(74%,470px);aspect-ratio:1;border-radius:50%;
+  background:radial-gradient(circle at 34% 28%, rgba(255,255,255,.24) 0%, rgba(255,255,255,.08) 34%, rgba(16,30,60,.12) 66%, rgba(10,19,41,.45) 100%);
+  border:2px dashed rgba(255,255,255,.75);
+  box-shadow:inset 0 -40px 80px rgba(10,19,41,.55), inset 0 24px 60px rgba(255,255,255,.07), 0 0 90px rgba(255,255,255,.18), 0 24px 70px rgba(0,0,0,.45);
+  transition:top .6s ease}
+.teamchip{position:absolute;width:76px;height:76px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--f-display);font-weight:700;font-size:.95rem;letter-spacing:.05em;color:var(--paper);cursor:pointer;border:3px solid rgba(255,255,255,.85);box-shadow:0 8px 22px rgba(0,0,0,.5);transition:top .6s ease,left .6s ease,transform .15s;text-shadow:0 1px 3px rgba(0,0,0,.6)}
+.teamchip:hover{transform:scale(1.08)}
+.teamchip:focus-visible{outline:3px solid var(--gold-bright);outline-offset:3px}
+.teamchip.top10{box-shadow:0 0 0 4px rgba(227,188,63,.55), 0 8px 22px rgba(0,0,0,.5)}
+.teamchip .rm{position:absolute;top:-7px;right:-7px;width:24px;height:24px;border-radius:50%;background:var(--paper);color:var(--navy-deep);font-family:var(--f-body);font-weight:700;font-size:.9rem;display:none;align-items:center;justify-content:center;line-height:1}
+.teamchip:hover .rm{display:flex}
+.legend{display:flex;flex-wrap:wrap;gap:22px;margin-top:16px;grid-column:1 / 3;font-size:.98rem;color:var(--ink-2)}
+.legend .key{display:flex;align-items:center;gap:9px}
+.swatch{width:20px;height:20px;border-radius:50%;flex:0 0 auto}
+.sw-halo{background:#2A3C68;box-shadow:0 0 0 3px rgba(227,188,63,.6)}
+.sw-plain{background:#2A3C68;border:2px solid rgba(255,255,255,.85)}
+.sw-line{width:26px;height:0;border-top:2.5px dashed #FFFFFF;border-radius:0}
 
-.orb{opacity:1;transition:opacity .5s ease}
-.orb-x{transition:transform .95s cubic-bezier(.55,.02,.5,1)}
-.orb-y{transition:transform .95s cubic-bezier(.12,.72,.24,1)}
-.orb-bob{animation:bob var(--dur,3s) ease-in-out infinite;animation-delay:var(--ph,0s)}
-@keyframes bob{0%,100%{transform:translateY(-3px)}50%{transform:translateY(3px)}}
-.orb .abbr{font-family:var(--disp);font-weight:800;letter-spacing:.02em;text-anchor:middle;dominant-baseline:central}
-.orb.enter{opacity:0}
-.orb .body{transition:transform .35s ease}
-.orb.sink .body{filter:saturate(.28) brightness(.72)}
-.orb.pop{animation:pop .5s ease-out forwards;pointer-events:none}
-@keyframes pop{0%{opacity:1}30%{opacity:.9}100%{opacity:0}}
-.orb.pop .orb-bob{animation:none;transform:scale(1.4);transition:transform .5s ease-out}
-.tether{stroke:var(--muted-2);stroke-width:1;stroke-dasharray:2 4;opacity:.5}
-.pt{animation:pt .6s ease-out forwards}
-@keyframes pt{0%{opacity:.95;transform:translate(0,0) scale(1)}100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(.3)}}
+/* ---------- roster rail ---------- */
+.rail{background:rgba(255,255,255,.035);border-radius:14px;padding:18px}
+.rail h2{font-family:var(--f-display);font-weight:600;font-size:1.15rem;letter-spacing:.1em;text-transform:uppercase;color:var(--paper);margin-bottom:6px}
+.rail .hint{font-size:.98rem;color:var(--ink-2);margin-bottom:14px}
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.fbtn{font-family:var(--f-display);font-size:.72rem;letter-spacing:.11em;text-transform:uppercase;padding:8px 13px;border-radius:8px;border:1.5px solid var(--line-soft);background:transparent;color:var(--ink-2);cursor:pointer}
+.fbtn.on{background:var(--paper);border-color:var(--paper);color:var(--navy-deep);font-weight:600}
+.search{width:100%;padding:13px 15px;border-radius:10px;border:1.5px solid var(--line);background:rgba(10,19,41,.5);color:var(--ink);font-family:var(--f-body);font-size:1rem;margin-bottom:14px}
+.search::placeholder{color:var(--ink-3)}
+.search:focus{outline:2.5px solid var(--paper);outline-offset:1px}
+.rosterlist{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-height:470px;overflow-y:auto;padding-right:6px}
+.rosterlist::-webkit-scrollbar{width:8px}
+.rosterlist::-webkit-scrollbar-thumb{background:rgba(255,255,255,.2);border-radius:4px}
+.tile{position:relative;border:none;background:transparent;cursor:pointer;text-align:center;font-family:var(--f-body);color:var(--ink-2);padding:4px 2px 6px;border-radius:10px}
+.tile:hover{background:rgba(255,255,255,.06)}
+.tile:focus-visible{outline:3px solid var(--gold-bright);outline-offset:2px}
+.tile .ball{position:relative;width:60px;height:60px;margin:0 auto 7px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--f-display);font-weight:700;font-size:.82rem;color:var(--paper);border:2.5px solid rgba(255,255,255,.75);text-shadow:0 1px 3px rgba(0,0,0,.6)}
+.tile .rk{position:absolute;top:-6px;right:-6px;background:var(--navy-deep);border:1.5px solid var(--line-soft);color:var(--ink);font-family:var(--f-data);font-weight:700;font-size:.7rem;border-radius:999px;padding:1px 7px}
+.tile .ck{position:absolute;bottom:-4px;right:-4px;width:22px;height:22px;border-radius:50%;background:var(--paper);color:var(--navy-deep);display:none;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;border:2px solid var(--navy-deep)}
+.tile.in .ck{display:flex}
+.tile.in .ball{border-color:var(--paper);box-shadow:0 0 0 3px rgba(255,255,255,.35)}
+.tile .nm{font-size:.85rem;line-height:1.25;color:var(--ink);font-weight:500}
 
-/* ── the sphere reacts: shells flatten, teams crack, ballast hangs ── */
-.shell{transform-origin:150px 150px;transition:transform .8s cubic-bezier(.22,1,.36,1)}
-.bub.bomb #bubbleGroup{animation:bomb .78s cubic-bezier(.24,1.3,.4,1)}
-@keyframes bomb{
-  0%{transform:translate(0,0)}12%{transform:translate(-3px,7px)}24%{transform:translate(3px,10px)}
-  38%{transform:translate(-2px,6px)}55%{transform:translate(1px,-3px)}75%{transform:translate(0,1px)}
-  100%{transform:translate(0,0)}
-}
-.orb .crack{opacity:0;transition:opacity .22s ease}
-.orb.cracked .crack{opacity:.92}
-.orb .streaks{opacity:0;transition:opacity .45s ease}
-.orb.lift .streaks{opacity:.7}
-.orb.lift .streaks line{animation:streak 2.3s ease-out infinite}
-@keyframes streak{0%{opacity:0;transform:translateY(7px)}28%{opacity:.95}100%{opacity:0;transform:translateY(-15px)}}
-.orb .laurel{opacity:0;transition:opacity .5s ease}
-.orb.f4 .laurel{opacity:1}
-.orb .seedbadge,.orb .crown{opacity:0;transition:opacity .35s ease}
-.orb.seeded .seedbadge{opacity:1}
-.orb.crowned .crown{opacity:.95}
-.orb.ballast .seedbadge,.orb.ballast .crown{opacity:0}
-.orb .outtag{opacity:0;transition:opacity .5s ease .35s}
-.orb.ballast .outtag{opacity:1}
-.orb.ballast .body{filter:saturate(.08) brightness(.62)}
-.orb.weigh .body{filter:saturate(.06) brightness(.58)}
-.dent{transition:d .6s ease}
-.bub.release #bubbleGroup{animation:release .85s cubic-bezier(.3,1,.4,1)}
-@keyframes release{
-  0%{transform:translate(0,0) scale(1,1)}18%{transform:translate(0,4px) scale(1.025,.955)}
-  52%{transform:translate(0,-3px) scale(.99,1.025)}78%{transform:translate(0,1px) scale(1.005,.995)}
-  100%{transform:translate(0,0) scale(1,1)}
-}
-.orb.ballast .orb-bob{animation:sway var(--dur,4.4s) ease-in-out infinite}
-@keyframes sway{0%,100%{transform:translateX(-3px) rotate(-2.6deg)}50%{transform:translateX(3px) rotate(2.6deg)}}
-.tether.slack{stroke:var(--muted-2);stroke-dasharray:none;opacity:.42}
-
-/* week strip */
-.strip{
-  display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;
-  padding:12px clamp(14px,2.4vw,22px);
-  border-top:1px solid var(--line);
-  background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(0,0,0,.12));
-  position:relative;z-index:3;
-}
-.strip .seg{display:flex;align-items:baseline;gap:7px;font-size:13.5px;color:var(--muted)}
-.strip .seg b{font-family:var(--disp);font-weight:800;font-size:19px;color:var(--ink);letter-spacing:.01em}
-.strip .sep{color:var(--line);font-size:16px}
-
-/* &#x2500;&#x2500; control bar &#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500; */
-.bar{
-  display:flex;flex-wrap:wrap;gap:10px;align-items:center;
-  margin:14px 0 18px;
-}
-.btn{
-  font-family:var(--disp);font-weight:700;font-size:14px;letter-spacing:.1em;text-transform:uppercase;
-  background:var(--panel);border:1px solid var(--line);color:var(--ink);
-  padding:10px 16px;border-radius:8px;cursor:pointer;transition:background .18s,border-color .18s,transform .12s;
-}
-.btn:hover{background:#153059;border-color:#2A4A78}
-.btn:active{transform:translateY(1px)}
-.btn[disabled]{opacity:.4;cursor:not-allowed}
-.btn.gold{background:var(--gold);border-color:var(--gold);color:#16130A}
-.btn.gold:hover{background:var(--gold-hi);border-color:var(--gold-hi)}
-.btn.ghost{background:transparent}
-.btn.sm{padding:7px 11px;font-size:12.5px}
-.bar .spacer{flex:1 1 auto}
-
-/* &#x2500;&#x2500; panels &#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500; */
-.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;align-items:start}
-.panel{
-  border:1px solid var(--line);border-radius:12px;background:var(--field-2);
-  padding:16px;display:flex;flex-direction:column;gap:12px;min-width:0;
-}
-.panel > header{display:flex;align-items:baseline;justify-content:space-between;gap:10px;
-  border-bottom:1px solid var(--line-soft);padding-bottom:9px}
-.panel h2{font-size:19px;letter-spacing:.04em;text-transform:uppercase;color:var(--ink)}
-.hint{font-size:12.5px;color:var(--muted-2);line-height:1.45}
-
-/* build panel */
-.search{
-  width:100%;background:var(--panel-2);border:1px solid var(--line);border-radius:8px;
-  padding:9px 11px;color:var(--ink);font-size:14px;
-}
-.search::placeholder{color:var(--muted-2)}
-.swatch{width:16px;height:16px;border-radius:50%;flex:0 0 auto;border:1.5px solid}
-.conf{
-  font-family:var(--disp);font-weight:700;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;
-  color:var(--muted-2);border:1px solid var(--line);border-radius:4px;padding:1px 4px;flex:0 0 auto;
-}
-
-.roster{display:flex;flex-direction:column;gap:4px}
-.rrow{display:flex;align-items:center;gap:8px;padding:5px 6px;border-radius:7px;background:var(--panel-2);border:1px solid var(--line-soft)}
-.rrow .math{flex:1 1 auto;font-size:12.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.rrow .math b{color:var(--ink);font-weight:600}
-.rrow .pts{font-family:var(--disp);font-weight:800;font-size:15px;color:var(--ink);flex:0 0 auto}
-.rrow.lift-y .pts{color:var(--gold)}
-.rrow.sink-y .pts{color:var(--muted-2)}
-.x{background:transparent;border:0;color:var(--muted-2);cursor:pointer;font-size:15px;line-height:1;padding:2px 3px;flex:0 0 auto}
-.x:hover{color:var(--red-hi)}
-
-.segs{display:flex;gap:4px;flex-wrap:wrap}
-.seg-btn{
-  font-family:var(--disp);font-weight:700;font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;
-  white-space:nowrap;
-  background:var(--panel-2);border:1px solid var(--line);color:var(--muted);
-  padding:6px 9px;border-radius:6px;cursor:pointer;transition:.15s;
-}
-.seg-btn:hover:not([disabled]){color:var(--ink);border-color:#2A4A78}
-.seg-btn[aria-pressed="true"]{background:var(--gold);border-color:var(--gold);color:#16130A}
-.seg-btn[disabled]{opacity:.35;cursor:not-allowed}
-
-.swapbox{display:flex;flex-direction:column;gap:7px;border-top:1px solid var(--line-soft);padding-top:11px}
-.selrow{display:flex;gap:6px;flex-wrap:wrap}
-select{
-  flex:1 1 120px;min-width:0;background:var(--panel-2);border:1px solid var(--line);
-  border-radius:7px;padding:7px 8px;font-size:13px;
-}
-select[disabled]{opacity:.45}
-.fee{font-size:12.5px;color:var(--muted)}
-.fee b{color:var(--red-hi);font-weight:700}
+/* ---------- dashboard row ---------- */
+.dash{display:grid;grid-template-columns:1.15fr 1fr 1fr;gap:26px;margin-bottom:40px}
+.panel{background:var(--panel);border:1.5px solid var(--panel-edge);border-radius:18px;padding:26px}
+.panel h2{font-family:var(--f-display);font-weight:600;font-size:1.3rem;letter-spacing:.08em;text-transform:uppercase;color:var(--paper)}
+.panel .ph{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:18px;gap:10px}
+.panel .ph .meta{font-family:var(--f-display);font-size:.82rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-2);white-space:nowrap}
+.seclbl{font-family:var(--f-display);font-size:.82rem;letter-spacing:.17em;text-transform:uppercase;color:var(--ink-2);margin:20px 0 10px}
+.weekpills{display:flex;flex-wrap:wrap;gap:9px}
+.wpill{font-family:var(--f-display);font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;padding:10px 15px;border-radius:9px;border:1.5px solid var(--line-soft);background:transparent;color:var(--ink-2);cursor:pointer}
+.wpill.on{background:var(--paper);border-color:var(--paper);color:var(--navy-deep);font-weight:600}
+.wnote{font-size:.98rem;color:var(--ink-2);margin-top:12px}
+.rows{margin-top:6px}
+.row{display:flex;align-items:center;gap:12px;padding:13px 4px;border-bottom:1px solid rgba(255,255,255,.1)}
+.row .conf{font-family:var(--f-display);font-size:.68rem;letter-spacing:.1em;border:1.5px solid var(--line-soft);border-radius:6px;padding:3px 7px;color:var(--ink-2);flex:0 0 auto}
+.row .ballmini{width:22px;height:22px;border-radius:50%;flex:0 0 auto;border:2px solid rgba(255,255,255,.7)}
+.row .tname{font-weight:600;color:var(--paper);font-size:1.05rem}
+.row .tmath{color:var(--ink-2);font-size:.95rem}
+.row .pts{margin-left:auto;font-family:var(--f-data);font-weight:700;font-size:1.25rem;color:var(--paper)}
+.row .x{background:none;border:none;color:var(--ink-3);font-size:1.15rem;cursor:pointer;padding:4px 6px;line-height:1}
+.row .x:hover{color:var(--red-bright)}
+.totrow{display:flex;justify-content:space-between;align-items:center;padding:15px 4px;border-bottom:1px solid rgba(255,255,255,.1);font-size:1.08rem}
+.totrow b{font-family:var(--f-data);font-size:1.55rem;color:var(--paper)}
+.swaprow{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+select{width:100%;padding:13px 12px;border-radius:10px;border:1.5px solid var(--line);background:rgba(10,19,41,.55);color:var(--ink);font-family:var(--f-body);font-size:1rem}
+.swapfoot{display:flex;justify-content:space-between;align-items:center;margin-top:16px;gap:12px;flex-wrap:wrap}
+.swapfoot .fee{font-size:1.02rem;color:var(--ink-2)}
+.swapfoot .fee b{color:var(--red);font-family:var(--f-data);font-size:1.2rem}
 
 /* tailgate */
-.tg-scroll{overflow-x:auto;padding-bottom:4px}
-.tg{display:flex;gap:6px;min-width:360px}
-.tg .col{flex:1 1 0;min-width:46px;display:flex;flex-direction:column;align-items:center;gap:6px}
-.tg .track{position:relative;width:100%;height:186px;border-bottom:1px solid var(--line)}
-.tg .track::before{content:"";position:absolute;left:50%;top:0;bottom:0;width:1px;background:linear-gradient(180deg,transparent,var(--line-soft))}
-.tg .mini{position:absolute;left:50%;transform:translate(-50%,50%);transition:bottom .9s cubic-bezier(.22,1,.36,1)}
-.tg .who{font-family:var(--disp);font-weight:700;font-size:10px;letter-spacing:.04em;text-transform:uppercase;
-  color:var(--muted);text-align:center;line-height:1.1}
-.tg .who span{display:block}
-.tg .sc{font-family:var(--disp);font-weight:800;font-size:15px;color:var(--ink);line-height:1}
-.tg .ct{font-size:10px;color:var(--muted-2);letter-spacing:.04em}
-.tg .col.you .who{color:var(--gold)}
-.gapline{font-size:13px;color:var(--muted);border-top:1px solid var(--line-soft);padding-top:10px}
-.gapline b{font-family:var(--disp);font-weight:800;font-size:17px;color:var(--ink)}
+.tg-stage{display:flex;align-items:flex-end;gap:4px;height:230px;margin:8px 0 6px;overflow-x:auto;padding:26px 2px 0}
+.tg-col{flex:1;min-width:74px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:8px;position:relative}
+.tg-ball{border-radius:50%;background:radial-gradient(circle at 32% 28%, rgba(255,255,255,.2), rgba(42,60,104,.9) 60%, rgba(16,30,60,.95));border:2px solid rgba(255,255,255,.5);position:relative}
+.tg-ball.me{border-color:var(--paper);border-width:2.5px}
+.tg-crown{position:absolute;top:-24px;left:50%;transform:translateX(-50%);font-size:1.25rem;filter:drop-shadow(0 2px 3px rgba(0,0,0,.5))}
+.tg-score{font-family:var(--f-data);font-weight:700;font-size:1.35rem;color:var(--paper)}
+.tg-name{font-family:var(--f-display);font-size:.68rem;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-2);text-align:center;line-height:1.35}
+.tg-teams{font-size:.85rem;color:var(--ink-3)}
+.tg-cap{font-size:.95rem;color:var(--ink-2);border-top:1px solid rgba(255,255,255,.1);padding-top:14px;margin-top:8px}
+.tg-lead{font-size:1.08rem;margin-top:14px}
+.tg-lead b{font-family:var(--f-data);font-size:1.45rem;color:var(--paper)}
 
 /* state */
-.dist{width:100%;height:auto;display:block}
-.statrow{display:flex;gap:14px;flex-wrap:wrap;align-items:baseline}
-.statrow .big{font-family:var(--disp);font-weight:800;font-size:26px;line-height:1;color:var(--ink)}
-.statrow .big .of{color:var(--muted-2);font-size:16px}
-.pct{font-family:var(--disp);font-weight:800;font-size:14px;letter-spacing:.08em;text-transform:uppercase;
-  color:#16130A;background:var(--gold);padding:3px 8px;border-radius:5px}
+.dist{margin:6px 0 14px}
+.rankline{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin:8px 0 6px}
+.rankline .no{font-family:var(--f-display);font-weight:700;font-size:2.3rem;color:var(--paper)}
+.rankline .of{color:var(--ink-2);font-size:1.05rem}
+.badge-earned{font-family:var(--f-display);font-weight:700;font-size:.85rem;letter-spacing:.13em;text-transform:uppercase;background:var(--gold);color:var(--navy-deep);border-radius:8px;padding:8px 14px}
+.cta-inline{display:inline-block;margin-top:8px;color:var(--gold-bright);font-weight:600;text-decoration:none;border-bottom:2px solid rgba(227,188,63,.5);cursor:pointer;background:none;border-top:none;border-left:none;border-right:none;font-family:var(--f-body);font-size:1.05rem;padding:0}
+.statecopy{font-size:1.02rem;color:var(--ink-2);margin-top:16px}
 
-/* how to play + full rules modal */
-.rules{grid-column:1/-1}
-.howto{list-style:none;margin:0;padding:0;display:grid;gap:14px 26px;
-  grid-template-columns:repeat(auto-fit,minmax(252px,1fr))}
-.howto li{display:flex;gap:11px;align-items:flex-start}
-.hn{font-family:var(--disp);font-weight:800;font-size:15px;color:#16130A;background:var(--gold);
-  border-radius:6px;width:24px;height:24px;display:grid;place-items:center;flex:0 0 auto}
-.howto p{margin:0;font-size:13.6px;color:var(--muted);line-height:1.5}
-.howfoot{display:flex;align-items:center;gap:14px;flex-wrap:wrap;font-size:13.4px;color:var(--muted);
-  border-top:1px solid var(--line-soft);padding-top:12px}
-.howfoot .btn{margin-left:auto}
-.modal{position:fixed;inset:0;z-index:80;display:flex;align-items:center;justify-content:center;padding:20px}
-.mbg{position:absolute;inset:0;background:rgba(4,10,22,.74)}
-.mcard{
-  position:relative;width:100%;max-width:780px;max-height:86vh;display:flex;flex-direction:column;
-  background:var(--field-2);border:1px solid var(--line);border-radius:14px;
-  box-shadow:0 24px 60px rgba(0,0,0,.55);animation:mpop .22s ease-out;
-}
-@keyframes mpop{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
-.mcard > header{display:flex;align-items:center;justify-content:space-between;gap:12px;
-  padding:14px 18px;border-bottom:1px solid var(--line)}
-.mcard h2{font-size:22px;letter-spacing:.04em;text-transform:uppercase;color:var(--ink)}
-.mbody{overflow-y:auto;padding:16px 18px 22px;column-count:2;column-gap:26px}
-.mbody section{break-inside:avoid;-webkit-column-break-inside:avoid;margin:0 0 15px;min-width:0}
-.mbody h3{font-family:var(--disp);font-weight:700;font-size:12px;letter-spacing:.12em;text-transform:uppercase;
-  color:var(--gold);margin:0 0 5px}
-.mbody p{margin:0;font-size:13.2px;color:var(--muted);line-height:1.55}
-.mbody p b{color:var(--ink);font-weight:600}
-.rgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(244px,1fr));gap:16px 26px}
-.rule h3{font-family:var(--disp);font-weight:700;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:5px}
-.rule p{margin:0;font-size:13.2px;color:var(--muted);line-height:1.55}
-.rule p b{color:var(--ink);font-weight:600}
-.slices{display:flex;flex-direction:column;gap:3px;margin-top:6px}
-.sl{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--muted)}
-.sl .k{font-family:var(--disp);font-weight:700;letter-spacing:.06em;width:54px;flex:0 0 auto;color:var(--ink)}
-.sl .v{font-variant-numeric:tabular-nums;flex:1 1 auto}
-.sl .meter{flex:0 0 40px;height:4px;background:var(--line-soft);border-radius:3px;overflow:hidden}
-.sl .meter i{display:block;height:100%;background:var(--gold);border-radius:3px}
+/* ---------- sandbox ---------- */
+.sandbox{background:rgba(10,19,41,.5);border:1.5px dashed var(--line-soft);border-radius:18px;padding:24px 26px;margin-bottom:40px;display:flex;flex-wrap:wrap;gap:16px;align-items:center}
+.sandbox h2{font-family:var(--f-display);font-weight:600;font-size:1.05rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2);margin-right:6px}
+.sandbox .warn{flex-basis:100%;font-size:.95rem;color:var(--ink-3)}
 
-/* ceiling marker + lock dressing */
-.readout .ceil{margin-top:4px}
-.readout .ceil b{font-family:var(--disp);font-weight:800;font-size:15px;color:var(--glass);letter-spacing:.06em}
-.readout .draft-tag{
-  margin-top:6px;font-family:var(--disp);font-weight:700;font-size:10px;
-  letter-spacing:.13em;text-transform:uppercase;color:var(--gold);
-}
-.readout.final .ceil b{color:var(--gold-hi)}
-.ceilmark{
-  position:absolute;left:0;right:0;height:11px;z-index:1;pointer-events:none;
-  background:linear-gradient(180deg,rgba(220,233,255,.02),rgba(220,233,255,.13));
-  border-bottom:1px solid rgba(220,233,255,.42);
-  transition:top .9s cubic-bezier(.22,1,.36,1);transform-origin:50% 100%;
-}
-.ceilmark span{
-  position:absolute;left:2px;top:-15px;
-  font-family:var(--disp);font-weight:700;font-size:10px;letter-spacing:.12em;
-  text-transform:uppercase;color:var(--muted-2);
-}
-.ceilmark b{color:var(--glass);font-weight:800;margin-left:4px}
-.ceilmark.press{animation:press .7s ease-out}
-@keyframes press{0%{transform:scaleY(1)}30%{transform:scaleY(2.1)}100%{transform:scaleY(1)}}
-.bub.draft #rim{stroke-opacity:.22;stroke-dasharray:6 9}
-#lockRing{opacity:0;transform-origin:150px 150px}
-.bub.locking #lockRing{animation:lockring .9s ease-out}
-@keyframes lockring{
-  0%{opacity:0;transform:scale(.93)}
-  22%{opacity:.95;transform:scale(1)}
-  100%{opacity:0;transform:scale(1.07)}
-}
-.sealtag{
-  position:absolute;right:50%;top:50%;transform:translateY(-50%);
-  margin-right:var(--tagoff,150px);padding-right:30px;pointer-events:none;
-  display:flex;flex-direction:column;align-items:flex-end;gap:7px;
-}
-.sealtag::before{content:"";position:absolute;right:2px;top:50%;width:24px;height:1px;
-  background:linear-gradient(270deg,rgba(201,162,39,.15),rgba(201,162,39,.75))}
-.sealtag::after{content:"";position:absolute;right:0;top:50%;width:6px;height:6px;border-radius:50%;
-  background:var(--gold);transform:translate(50%,-50%)}
-.sealpill{
-  border:1.4px solid var(--gold);background:rgba(11,26,51,.82);border-radius:100px;padding:4px 12px;
-  font-family:var(--disp);font-weight:800;font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;
-  color:var(--gold-hi);white-space:nowrap;
-}
-.sealpill.final{border-radius:6px;letter-spacing:.22em;transform:rotate(-6deg)}
-.confirm{
-  display:none;
-  border:1px solid var(--line);border-left:3px solid var(--gold);
-  background:var(--panel-2);border-radius:10px;padding:13px 15px;margin:-6px 0 18px;
-}
-.confirm.on{display:block}
-.confirm p{margin:0 0 9px;font-size:13.5px;color:var(--muted);max-width:70ch}
-.confirm p b{color:var(--ink);font-weight:600}
-.cfhead{display:flex;align-items:baseline;gap:10px;margin-bottom:5px}
-.cfhead h3{font-size:19px;letter-spacing:.03em;text-transform:uppercase}
-.confirm .acts{display:flex;gap:8px;margin-top:11px}
-.seedlist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px;max-width:520px}
-.seedrow{
-  display:flex;align-items:center;gap:9px;padding:6px 8px;border-radius:7px;
-  background:var(--panel);border:1px solid var(--line-soft);cursor:grab;touch-action:none;
-}
-.seedrow.drop{border-color:var(--gold);background:#153059}
-.seedrow .grip{color:var(--muted-2);font-size:13px;letter-spacing:-2px;flex:0 0 auto}
-.sn{
-  font-family:var(--disp);font-weight:800;font-size:12px;color:#16130A;background:var(--gold);
-  border-radius:5px;padding:1px 6px;flex:0 0 auto;min-width:20px;text-align:center;
-}
-.seedrow .nm{flex:1 1 auto;font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.crowntag{
-  font-family:var(--disp);font-weight:700;font-size:10px;letter-spacing:.12em;text-transform:uppercase;
-  color:var(--gold);flex:0 0 auto;
-}
-.ups{display:flex;gap:3px;flex:0 0 auto}
-.ups button{
-  background:var(--panel-2);border:1px solid var(--line);color:var(--muted);
-  border-radius:5px;width:22px;height:20px;line-height:1;cursor:pointer;font-size:10px;padding:0;
-}
-.ups button:hover:not([disabled]){color:var(--ink);border-color:#2A4A78}
-.ups button[disabled]{opacity:.3;cursor:not-allowed}
-.tbfield{display:block;font-size:12.5px;color:var(--muted);max-width:340px}
-.tbfield input{margin-top:6px}
-.callrow{display:flex;align-items:flex-end;gap:10px}
-.callrow .tbfield{max-width:128px}
-.cdash{color:var(--muted-2);padding-bottom:9px;font-size:15px}
-.crownpick{display:flex;flex-direction:column;gap:12px;max-width:660px}
-.cslots{display:flex;gap:8px;flex-wrap:wrap}
-.cslot{
-  flex:1 1 132px;min-width:124px;display:flex;align-items:center;gap:9px;padding:7px 10px;
-  border-radius:8px;background:var(--panel-2);border:1px dashed var(--line);color:var(--muted);
-  cursor:pointer;text-align:left;font:inherit;
-}
-.cslot.filled{border-style:solid;border-color:var(--gold);background:var(--panel);color:var(--ink)}
-.cslot.over{border-color:var(--gold-hi);background:#153059}
-.cslot .lab{font-family:var(--disp);font-weight:700;font-size:10px;letter-spacing:.1em;
-  text-transform:uppercase;color:var(--muted-2);flex:0 0 auto}
-.cslot.filled .lab{color:var(--gold)}
-.cslot .nm{font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1 1 auto}
-.cpool{display:flex;flex-wrap:wrap;gap:9px}
-.corb{
-  background:transparent;border:0;padding:0;width:58px;position:relative;cursor:grab;touch-action:none;
-  display:flex;flex-direction:column;align-items:center;gap:4px;
-}
-.corb .tnm{max-width:58px}
-.corb.on .torb{box-shadow:0 0 0 2px var(--gold)}
-.corb .cnum{
-  position:absolute;top:-4px;right:3px;background:var(--gold);color:#16130A;border-radius:5px;
-  font-family:var(--disp);font-weight:800;font-size:9.5px;padding:0 4px;
-}
-.sn.champ{display:inline-flex;align-items:center;justify-content:center;padding:2px 5px}
-.sn.champ svg{display:block}
-.tbline{
-  display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 16px;
-  padding:9px clamp(14px,2.4vw,22px);border-top:1px solid var(--line-soft);
-  background:rgba(0,0,0,.16);position:relative;z-index:3;font-size:13px;color:var(--muted);
-}
-.tbline b{color:var(--ink);font-weight:600}
-.tbline i{font-style:normal}
-.tbline i.good{color:var(--green)}
-.tbline i.bad2{color:var(--red-hi)}
-.tbline .q{border-bottom:1px dotted var(--muted-2);cursor:help}
-.tbline .tienote{color:var(--gold);flex-basis:100%}
-.tiewin{
-  font-family:var(--disp);font-weight:700;font-size:9px;letter-spacing:.08em;text-transform:uppercase;
-  color:var(--gold);line-height:1.1;
-}
-.chip.lockchip b{color:var(--gold)}
-.rrow.tot{background:transparent;border-color:var(--line)}
-.rrow.tot .math{color:var(--ink);font-weight:600}
-.rrow.cel{background:transparent;border-color:transparent}
-.rrow.cel .math,.rrow.cel .pts{color:var(--muted)}
-.tg .cl{font-family:var(--disp);font-weight:700;font-size:9.5px;letter-spacing:.06em;
-  text-transform:uppercase;color:var(--muted-2);line-height:1.1;white-space:nowrap}
-.tg .col.you.draft .who{color:var(--muted)}
-.drafty{color:var(--gold);opacity:.92}
+/* ---------- how to play · paper surface ---------- */
+.howto{background:var(--paper);border:1.5px solid var(--paper);border-radius:18px;padding:30px;box-shadow:0 10px 32px rgba(0,0,0,.35)}
+.howto .ph{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:22px}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:26px}
+.step{display:flex;gap:14px}
+.step .n{flex:0 0 auto;width:36px;height:36px;border-radius:9px;background:var(--navy);color:var(--paper);font-family:var(--f-data);font-weight:700;font-size:1.1rem;display:flex;align-items:center;justify-content:center}
+.step p{font-size:1.02rem;color:#3B486A}
+.step p b{color:var(--navy-deep);font-weight:700}
+.howfoot{display:flex;justify-content:space-between;align-items:center;gap:16px;border-top:1.5px solid rgba(16,30,60,.18);margin-top:24px;padding-top:20px;flex-wrap:wrap}
+.howfoot .n1{font-size:1.05rem;color:#3B486A}
+.btn-dark{background:var(--navy);border-color:var(--navy);color:var(--paper)}
+.btn-dark:hover{background:var(--navy-deep);border-color:var(--navy-deep)}
 
-/* toasts */
-.toasts{position:fixed;right:14px;bottom:14px;display:flex;flex-direction:column;gap:8px;z-index:50;max-width:min(330px,86vw)}
-.toast{
-  border:1px solid var(--line);border-left:3px solid var(--gold);
-  background:#0F2444;color:var(--ink);border-radius:8px;padding:9px 12px;font-size:13px;
-  box-shadow:0 10px 26px rgba(0,0,0,.42);
-  animation:tin .34s cubic-bezier(.22,1,.36,1), tout .34s ease-in 3.16s forwards;
-}
-.toast.bad{border-left-color:var(--red)}
-.toast .t{font-family:var(--disp);font-weight:700;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);display:block}
-@keyframes tin{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:none}}
-@keyframes tout{to{opacity:0;transform:translateX(20px)}}
+/* inset subcards — quiet navy, matching the rail treatment */
+.subcard{background:rgba(255,255,255,.035);border-radius:12px;padding:18px;margin-top:20px}
+.subcard .seclbl{margin-top:0}
+.statenote{margin-top:16px}
+.statenote p{color:var(--ink-2);font-size:1.02rem;margin:0}
+.statenote b{color:#FFFFFF}
 
-.final-note{font-size:13px;color:var(--muted);border-top:1px solid var(--line-soft);padding-top:10px}
-.final-note b{color:var(--gold);font-weight:700}
+/* toast */
+.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--paper);color:var(--navy-deep);font-weight:600;padding:14px 24px;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.45);opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;font-size:1.02rem;z-index:50;max-width:90vw;text-align:center}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
-/* &#x2500;&#x2500; responsive &#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500;&#x2500; */
-@media (max-width:980px){
-  .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .tray{flex-basis:196px}
-  .traylist{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media (max-width:1120px){
+  .stage{grid-template-columns:110px 1fr}
+  .rail{grid-column:1 / 3}
+  .dash{grid-template-columns:1fr}
+  .steps{grid-template-columns:1fr 1fr}
 }
-@media (max-width:760px){
-  .stagewrap{display:block;height:auto}
-  .stage{height:clamp(430px,66vh,600px)}
-  .tray{height:auto;border-left:0;border-top:1px solid var(--line)}
-  .trayhead{display:flex;flex-direction:column;padding:10px 12px 8px}
-  .trayhead .search{order:-1;margin:0 0 8px}
-  .chiprow{display:flex;flex-wrap:nowrap;overflow-x:auto;gap:4px;padding-bottom:2px;
-    scrollbar-width:none;-webkit-overflow-scrolling:touch}
-  .chiprow::-webkit-scrollbar{display:none}
-  .chiprow .segs{flex-wrap:nowrap}
-  .t25row{margin-top:0}
-  .trayhint{margin:7px 0 0}
-  .traylist{
-    display:flex;overflow-x:auto;overflow-y:hidden;gap:12px;
-    padding:12px 12px 14px;scrollbar-width:thin;
-    -webkit-overflow-scrolling:touch;scroll-snap-type:x proximity;
-  }
-  .traylist::-webkit-scrollbar{height:8px}
-  .tray-item{flex:0 0 72px;scroll-snap-align:start}
-  .torb{width:56px;height:56px}
-  .torb .ab{font-size:14px}
-  .tnm{max-width:72px;font-size:10.5px}
-  .trayempty{flex:1 1 auto}
-  .swapask{font-size:12px}
-  .orbpill .btn.sm{padding:8px 13px}
-  .strip{gap:4px 16px}
-  .strip .sep{display:none}
-  .sealtag{display:none}
-  .readout{                                   /* a pill parked under the sphere */
-    left:50%;top:0;transform:translateX(-50%);margin-left:0;padding:5px 14px;
-    display:flex;align-items:baseline;gap:9px;white-space:nowrap;
-    background:rgba(11,26,51,.88);border:1px solid var(--line);border-radius:100px;
-    box-shadow:0 8px 20px rgba(0,0,0,.4);
-  }
-  .readout::before,.readout::after,.readout .draft-tag{display:none}
-  .readout .n{font-size:28px;line-height:1}
-  .readout .k{font-size:9.5px;letter-spacing:.11em}
-  .readout .ceil{margin-top:0}
-  .readout .ceil b{font-size:12.5px}
+@media (max-width:680px){
+  html{font-size:16px}
+  .wrap{padding:0 16px 60px}
+  .stage{grid-template-columns:64px 1fr;padding:16px}
+  .axis .tick .name{display:none}
+  .field,.axis{height:520px}
+  .teamchip{width:60px;height:60px;font-size:.8rem}
+  .steps{grid-template-columns:1fr}
+  .rosterlist{grid-template-columns:repeat(3,1fr)}
+  .hdr-right{align-items:flex-start}
+  .authority{text-align:left;border-right:none;border-left:3px solid var(--gold);padding-right:0;padding-left:14px}
 }
-@media (max-width:700px){
-  .mbody{column-count:1}
-  .grid{grid-template-columns:minmax(0,1fr)}
-  .axis{width:70px}
-  .field{left:70px}
-  .axis .tick .cap{left:44px;font-size:9.5px}
-  .axis .tick .v{width:34px;padding-left:8px;font-size:12px}
-  .mast .rail{margin-left:0;align-items:flex-start;flex-direction:row;flex-wrap:wrap}
-}
-@media (max-width:400px){
-  .wrap{padding-left:12px;padding-right:12px}
-  .strip .seg b{font-size:17px}
-}
-
 @media (prefers-reduced-motion:reduce){
-  .mcard{animation:none}
-  .lift,.orb-x,.orb-y,.tg .mini,.orb .body,.ceilmark{transition:opacity .2s linear !important}
-  .bub.locking #lockRing{animation:lockfade .5s ease-out}
-  @keyframes lockfade{0%{opacity:0}40%{opacity:.75}100%{opacity:0}}
-  .orb-bob,.ripple #bubbleGroup,.ripple #rim,.shimmer #shimmer{animation:none !important}
-  .bub.bomb #bubbleGroup,.bub.release #bubbleGroup,.orb.lift .streaks line,
-  .orb.ballast .orb-bob,.ceilmark.press{animation:none !important}
-  .shell{transition:none}
-  .orb{transition:opacity .25s linear}
-  .toast{animation:none}
-  .pt{display:none}
+  *{transition:none !important}
 }
+/* Touch and keyboard controls share the same native buttons. */
+.stage > *, .panel, .rail{min-width:0}
+button, input, select{touch-action:manipulation}
+:focus-visible{outline:3px solid var(--gold-bright);outline-offset:3px}
+.fbtn,.row .x{min-height:44px;min-width:44px}
+.pill .fee,.swapfoot .fee b{color:var(--red-bright)}
+.teamchip:disabled{cursor:default}
+.teamchip:disabled .rm{display:none}
+.lock-summary,.results{margin:0 0 24px;padding:20px;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
+.lock-summary:empty{display:none}
+dialog{margin:auto;width:min(620px,calc(100% - 32px));max-height:90dvh;overflow:auto;padding:26px;border:1px solid var(--line);border-radius:18px;background:var(--panel);color:var(--ink)}
+dialog::backdrop{background:rgba(0,0,0,.75)}
+dialog h2{font-family:var(--f-display);margin-bottom:12px}
+dialog p{color:var(--ink-2);margin:12px 0}
+.crown-options{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:18px 0}
+.crown-options button{padding:12px;letter-spacing:0;text-transform:none;font-family:var(--f-body)}
+.crown-options [aria-pressed=true]{border-color:var(--gold);background:rgba(201,162,39,.16)}
+.score-call{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:18px 0}
+.score-call input{width:100%;font:inherit;padding:12px;background:var(--navy-deep);color:white;border:1px solid var(--line);border-radius:8px}
+.dialog-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:20px}
+#lockError{color:#FFB8C3}
+[hidden]{display:none!important}
+@media(max-width:1120px){
+ .rosterlist{display:flex;overflow-x:auto;overflow-y:hidden;max-height:none;padding:8px 4px 14px;gap:12px}
+ .rosterlist .tile{flex:0 0 88px}
+ .rail{grid-row:2}
+ .legend{grid-row:3}
+}
+@media(max-width:680px){
+ .stage{grid-template-columns:30px minmax(0,1fr);gap:12px;padding:12px}
+ .field,.axis{height:560px}
+ .panel{padding:20px}
+ .panel .ph{flex-wrap:wrap}
+ .teamchip{width:44px;height:44px;font-size:.65rem;border-width:2px}
+ .teamchip .rm{display:flex;width:18px;height:18px;top:-4px;right:-4px;font-size:.75rem}
+ .rail{padding:12px}
+ .scoreline{padding:16px;gap:8px 20px}
+ .swaprow{grid-template-columns:1fr}
+ .row{gap:8px}
+ .howto{padding:20px}
+}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;scroll-behavior:auto!important}}
 </style>
-
+</head>
+<body>
 <div class="wrap">
 
-  <div class="mast">
-    <div class="brand">
-      <span class="lbl lbl-gold">The Pate State &#xB7; Fan Game</span>
-      <h1>FATAL <em>FOUR</em></h1>
-      <p class="sub">Pick the teams you think make the Final Four. Fewer teams, more points each. Lock it in and watch it move all season.</p>
+  <header>
+    <div>
+      <div class="eyebrow">The Pate State · Fan Game</div>
+      <h1>Fatal <span class="four">Four</span></h1>
+      <p class="sub">Pick the teams you think are the <strong>last four standing</strong>. Fewer teams, more points each. Lock it in and your bubble rides the rankings all season.</p>
     </div>
-    <div class="rail">
-      <span class="chip"><span class="dot"></span>Week <b id="weekChip">1</b></span>
-      <span class="chip">Sample rankings &#xB7; 2026</span>
+    <div class="hdr-right">
+      <div class="chip"><span class="dot"></span>Week <span id="weekNum">1</span> · <span id="entryStatus">Entry window open</span></div>
+      <p class="authority">Scored by <b>the JP Poll</b> every week. The moment the committee starts voting, your bubble switches to <b>the playoff rankings</b> the rest of the way.</p>
+    </div>
+  </header>
+
+  <div class="actionbar">
+    <button class="btn btn-gold" id="lockBtn">Lock in your bubble</button>
+    <div class="bar-note">
+      <span class="pill" id="swapPill">Swap available · <b class="fee">20 pts</b></span>
     </div>
   </div>
 
-  <section class="hero" aria-label="Your bubble">
-    <div class="stagewrap">
-      <div class="stage" id="stage">
-        <div class="axis" id="axis"></div>
-        <div class="field" id="fieldEl">
-          <div class="ceilmark" id="ceilMark"><span>Max <b class="num" id="ceilMarkN">1,000</b></span></div>
-          <div class="lift" id="lift">
-            <svg class="bub" id="bub" viewBox="0 0 300 300" width="300" height="300" role="img" aria-labelledby="bubTitle">
-              <title id="bubTitle">Your bubble, floating at your live score</title>
-              <defs>
-                <radialGradient id="glassg" cx="36%" cy="28%" r="78%">
-                  <stop offset="0" stop-color="#D6E8FF" stop-opacity=".28"/>
-                  <stop offset=".42" stop-color="#7FA6D8" stop-opacity=".10"/>
-                  <stop offset=".84" stop-color="#0B1A33" stop-opacity=".04"/>
-                  <stop offset="1" stop-color="#A8CBFF" stop-opacity=".17"/>
-                </radialGradient>
-                <radialGradient id="rimg" cx="50%" cy="50%" r="50%">
-                  <stop offset=".80" stop-color="#DCE9FF" stop-opacity="0"/>
-                  <stop offset=".955" stop-color="#DCE9FF" stop-opacity=".30"/>
-                  <stop offset="1" stop-color="#DCE9FF" stop-opacity=".06"/>
-                </radialGradient>
-                <linearGradient id="shg" x1="0" y1="0" x2="1" y2="0">
-                  <stop offset="0" stop-color="#C9A227" stop-opacity="0"/>
-                  <stop offset=".5" stop-color="#E8C75B" stop-opacity=".55"/>
-                  <stop offset="1" stop-color="#C9A227" stop-opacity="0"/>
-                </linearGradient>
-                <filter id="soft" x="-40%" y="-40%" width="180%" height="180%">
-                  <feGaussianBlur stdDeviation="5"/>
-                </filter>
-                <filter id="soft2" x="-40%" y="-40%" width="180%" height="180%">
-                  <feGaussianBlur stdDeviation="2.4"/>
-                </filter>
-                <clipPath id="ball"><circle cx="150" cy="150" r="146"/></clipPath>
-              </defs>
-              <g id="bubbleGroup">
-                <g class="shell" id="shellBack">
-                  <circle cx="150" cy="150" r="146" fill="url(#glassg)"/>
-                  <circle cx="150" cy="150" r="146" fill="url(#rimg)"/>
-                  <ellipse id="topGlow" cx="150" cy="72" rx="112" ry="64" fill="url(#topg)" opacity="0"/>
-                  <ellipse cx="104" cy="84" rx="46" ry="27" fill="#FFFFFF" opacity=".15" filter="url(#soft)"/>
-                  <ellipse cx="196" cy="222" rx="34" ry="15" fill="#BCD6FF" opacity=".08" filter="url(#soft)"/>
-                  <path d="M40 196 A 146 146 0 0 0 262 196" fill="none" stroke="#DCE9FF" stroke-opacity=".10" stroke-width="1"/>
-                </g>
-                <g id="tethers"></g>
-                <g id="orbs"></g>
-                <g id="dents"></g>
-                <g class="shell" id="shellFront">
-                  <g clip-path="url(#ball)"><rect id="shimmer" x="-40" y="0" width="90" height="300" fill="url(#shg)"/></g>
-                  <circle id="rim" cx="150" cy="150" r="146" fill="none" stroke="#DCE9FF" stroke-opacity="var(--rimop,.34)" stroke-width="1.1"/>
-                  <circle id="rimHalo" cx="150" cy="150" r="146" fill="none" stroke="#E0525C" stroke-width="6" filter="url(#soft2)"/>
-                  <circle id="lockRing" cx="150" cy="150" r="146" fill="none" stroke="#E8C75B" stroke-width="3"/>
-                </g>
-                <g id="parts"></g>
-              </g>
-            </svg>
-            <div class="sealtag" id="sealTag" hidden>
-            <span class="sealpill final" id="sealFinal" hidden>Final</span>
-            <span class="sealpill" id="sealTxt">Locked &#xB7; Preseason</span>
-          </div>
-          <div class="readout" id="readout">
-              <div class="n num" id="roN">0</div>
-              <div class="k" id="roK">Live score &#xB7; not locked</div>
-              <div class="k ceil">Max <b class="num" id="roCeilN">1,000</b></div>
-              <div class="draft-tag" id="roDraft">Not locked in yet</div>
-            </div>
-          </div>
-        </div>
-        <div class="orbpill" id="orbPill" hidden>
-          <button class="btn sm gold" type="button" id="orbPillGo">Drop from bubble</button>
-          <button class="orbx" type="button" id="orbPillX" aria-label="Cancel">&times;</button>
-        </div>
-        <div class="swapask" id="swapAsk" hidden>
-          <p id="swapAskT"></p>
-          <button class="btn sm ghost" type="button" id="swapAskX">Cancel</button>
-        </div>
-      </div>
-      <aside class="tray" id="tray" aria-label="Team tray">
-        <div class="trayhead">
-          <div class="chiprow">
-            <div class="segs" id="confChips"></div>
-            <div class="segs t25row">
-              <button class="seg-btn" type="button" id="t25" aria-pressed="false">Top 25 only</button>
-            </div>
-          </div>
-          <input class="search" id="q" type="search" placeholder="Search teams" aria-label="Search teams" autocomplete="off">
-          <p class="trayhint" id="trayHint">Drag a team into the bubble, or tap to add.</p>
-        </div>
-        <div class="traylist" id="traylist"></div>
-      </aside>
+  <div class="scoreline">
+    <span class="stat"><span class="lbl" id="scoreHeading">Weekly score</span><span class="num hero" id="liveScoreTop">579</span></span>
+    <span class="stat"><span class="num" id="perTeam">125</span><span class="lbl">per team</span></span>
+    <span class="stat"><span class="lbl" id="countTop">8 teams in the bubble</span></span>
+    <div class="final-outlook">
+      <span class="stat"><span class="lbl final-score-label">Best possible season-end score</span><span class="num" id="maxTop">500</span></span>
+      <p id="finalScoreNote">At season’s end, only your teams in the real Final Four score. Your weekly score counts every team, so it can be higher.</p>
     </div>
-    <div class="strip">
-      <div class="seg"><b class="num" id="sShare">250</b> per team</div>
-      <span class="sep">&#xB7;</span>
-      <div class="seg">Live score <b class="num" id="sScore">0</b></div>
-      <span class="sep">&#xB7;</span>
-      <div class="seg">Max <b class="num" id="sCeil">1,000</b></div>
-      <span class="sep">&#xB7;</span>
-      <div class="seg" id="sTeams">4 teams in the bubble</div>
+  </div>
+
+  <section class="stage" aria-label="Your bubble">
+    <div class="axis" id="axis">
+      <div class="tick" style="top:0"><div class="val">1,000</div><div class="name">Points</div></div>
+      <div class="tick" style="top:25%"><div class="val">750</div><div class="name">Points</div></div>
+      <div class="tick" style="top:50%"><div class="val">500</div><div class="name">Points</div></div>
+      <div class="tick" style="top:75%"><div class="val">250</div><div class="name">Points</div></div>
+      <div class="tick" style="top:100%;transform:translateY(-100%)"><div class="val">0</div><div class="name">Points</div></div>
     </div>
-    <div class="tbline" id="tbLine" hidden></div>
+
+    <div class="field" id="field">
+      <div class="gridline" style="top:25%"></div>
+      <div class="gridline" style="top:50%"></div>
+      <div class="gridline" style="top:75%"></div>
+      <div class="liveline" id="liveLine"><span id="liveLineLbl">This week · 579 pts</span></div>
+      <div class="orb" id="orb"></div>
+      <div id="chips"></div>
+    </div>
+
+    <aside class="rail">
+      <h2>The field · <span id="poolCount">75</span> teams</h2>
+      <p class="hint">Tap a team to add it to your bubble. Tap again to drop it.</p>
+      <div class="filters" id="filters"></div>
+      <input class="search" id="search" type="text" placeholder="Search teams" aria-label="Search teams">
+      <div class="rosterlist" id="roster"></div>
+    </aside>
+
+    <div class="legend">
+      <span class="key"><span class="swatch sw-halo"></span>Gold halo · top 10 this week</span>
+      <span class="key"><span class="swatch sw-plain"></span>Higher in the bubble · carrying more of your score</span>
+      <span class="key"><span class="swatch sw-line"></span><span id="scoreLegend">Dashed line · weekly score in points</span></span>
+    </div>
   </section>
 
-  <div class="bar">
-    <button class="btn gold" id="bLock">Lock in your bubble</button>
-    <span class="chip lockchip" id="lockChip" hidden></span>
-    <button class="btn" id="bAdv">Advance a week</button>
-    <button class="btn" id="bPlay">Play the playoff</button>
-    <button class="btn ghost" id="bReset">Reset</button>
-    <span class="spacer"></span>
-    <span class="chip" id="entryChip">Entry window open</span>
-    <span class="chip" id="swapChip">Swap available</span>
-  </div>
+  <div id="lockSummary" class="lock-summary"></div>
+  <section id="results" class="results" hidden aria-label="Playoff result"></section>
+  <div class="dash">
 
-  <div class="confirm" id="lockConfirm" role="group" aria-label="Lock in your bubble">
-    <div class="cfstep" id="cfStep1">
-      <div class="cfhead"><span class="lbl lbl-gold">Step 1 of 2</span><h3>Crown your Final Four</h3></div>
-      <p class="hint" id="cpHint">Pick four, in order. <b>Your #1 is your champ pick</b>, the team you say wins it all. This moves no points. It only breaks ties.</p>
-      <div class="crownpick" id="crownPick" hidden>
-        <div class="cslots" id="cSlots"></div>
-        <div class="cpool" id="cPool"></div>
+    <section class="panel" aria-label="Build your bubble">
+      <div class="ph">
+        <h2>Build your bubble</h2>
+        <span class="meta"><span id="teamCount">8</span> / 20</span>
       </div>
-      <ol class="seedlist" id="seedList"></ol>
-      <span class="acts">
-        <button class="btn gold sm" id="cfNext">Next</button>
-        <button class="btn ghost sm" id="bLockNo">Keep editing</button>
-      </span>
-    </div>
-    <div class="cfstep" id="cfStep2" hidden>
-      <div class="cfhead"><span class="lbl lbl-gold">Step 2 of 2</span><h3>Call the final</h3></div>
-      <p class="hint" id="cfTxt"></p>
-      <div class="callrow">
-        <label class="tbfield" for="tbWin">Winner
-          <input class="search" type="number" id="tbWin" min="0" max="200" step="1" inputmode="numeric" placeholder="31">
-        </label>
-        <span class="cdash">&#x2013;</span>
-        <label class="tbfield" for="tbLose">Loser
-          <input class="search" type="number" id="tbLose" min="0" max="200" step="1" inputmode="numeric" placeholder="24">
-        </label>
-      </div>
-      <p class="hint">Predict the championship game score. Closest wins ties. Required.</p>
-      <span class="acts">
-        <button class="btn gold sm" id="bLockGo">Lock</button>
-        <button class="btn ghost sm" id="cfBack">Back</button>
-      </span>
-    </div>
-  </div>
 
-  <div class="grid">
+      <div class="seclbl">Entry week · set by the season</div>
+      <div class="weekpills" id="weekPills"></div>
+      <p class="wnote">Get in late and every team pays less. You're at <b id="multNote">100%</b> — it follows the week until you lock in. Doors close after Week 4.</p>
 
-    <!-- 1 &#xB7; BUILD -->
-    <section class="panel">
-      <header><h2>Build your bubble</h2><span class="lbl num" id="capNote">4 / 20</span></header>
-      <div>
-        <span class="lbl">Entry week</span>
-        <div class="segs" id="entrySegs" style="margin-top:7px"></div>
-        <p class="hint" id="entryHint" style="margin:7px 0 0"></p>
-      </div>
-      <div>
-        <span class="lbl">Your bubble</span>
-        <div class="roster" id="roster" style="margin-top:7px"></div>
-      </div>
-      <div class="swapbox">
-        <span class="lbl">One swap per season</span>
-        <div class="selrow">
-          <select id="swapOut" aria-label="Team to drop"></select>
-          <select id="swapIn" aria-label="Team to add"></select>
+      <div class="seclbl">Your bubble</div>
+      <div class="rows" id="rows"></div>
+      <div class="totrow"><span id="liveLbl">Live score · not locked in</span><b id="liveScore">579</b></div>
+      <div class="totrow"><span class="final-score-label">Best possible season-end score</span><b id="maxScore">500</b></div>
+
+      <div class="subcard">
+        <div class="seclbl">One swap per season</div>
+        <div class="swaprow">
+          <select id="swapOut" aria-label="Team to swap out"></select>
+          <select id="swapIn" aria-label="Team to swap in"></select>
         </div>
-        <div class="selrow" style="align-items:center">
-          <span class="fee" id="feeTxt">Fee this week: <b class="num">20</b> pts</span>
-          <button class="btn sm" id="bSwap" style="flex:0 0 auto;margin-left:auto">Make the swap</button>
+        <div class="swapfoot">
+          <span class="fee"><span id="feeLabel">Fee this week:</span> <b id="swapFee">20</b> pts</span>
+          <button class="btn" id="swapBtn">Make the swap</button>
         </div>
       </div>
     </section>
 
-    <!-- 2 &#xB7; TAILGATE -->
-    <section class="panel">
-      <header><h2>You vs the tailgate</h2><span class="lbl">6 friends</span></header>
-      <div class="tg-scroll"><div class="tg" id="tg"></div></div>
-      <div class="gapline" id="gapLine">Gap to the leader: <b class="num">0</b></div>
-      <p class="hint drafty" id="tgDraft">Lock in to enter the boards.</p>
-      <p class="hint">Same math for everyone. Small bubbles pay more per team. Big bubbles just need one to survive.</p>
+    <section class="panel" aria-label="You vs the tailgate">
+      <div class="ph">
+        <h2>You vs the Tailgate</h2>
+        <span class="meta">6 friends</span>
+      </div>
+      <div class="tg-stage" id="tgStage"></div>
+      <p class="tg-cap">Bubble size = how many teams are in it. Small bubbles pay more per team. Only the real Final Four earn points at the finish. Same math for everyone.</p>
+      <p class="tg-lead" id="tgLead"></p>
+      <button class="cta-inline lockTrigger">Lock in to enter the boards</button>
     </section>
 
-    <!-- 3 &#xB7; STATE -->
-    <section class="panel">
-      <header><h2>You vs the state</h2><span class="lbl">8,400 bubbles</span></header>
-      <svg class="dist" id="dist" viewBox="0 0 620 210" role="img" aria-labelledby="distTitle">
-        <title id="distTitle">Distribution of all bubble scores with your position marked</title>
-      </svg>
-      <div class="statrow">
-        <span class="big num" id="rankBig">No. 0 <span class="of">of 8,400</span></span>
-        <span class="pct num" id="rankPct">Top 50%</span>
+    <section class="panel" aria-label="You vs the state">
+      <div class="ph">
+        <h2>You vs the State</h2>
+        <span class="meta">8,400 citizens</span>
       </div>
-      <p class="hint drafty" id="stDraft">Lock in to enter the boards.</p>
-      <p class="hint" id="medianHint"></p>
-    </section>
-
-    <!-- 5 &#xB7; HOW TO PLAY -->
-    <section class="panel rules">
-      <header><h2>How to play</h2><span class="lbl">Four lines</span></header>
-      <ol class="howto">
-        <li><span class="hn">1</span><p>Pick the teams you think make the Final Four. Your 1,000 points get split across them. 4 teams = 250 each. 10 teams = 100 each.</p></li>
-        <li><span class="hn">2</span><p>Lock it in before Week 1. Late? You lose 10% a week. Doors close after Week 4.</p></li>
-        <li><span class="hn">3</span><p>Your score follows the rankings all season.</p></li>
-        <li><span class="hn">4</span><p>More teams means better odds of catching the Final Four. It also lowers your max score.</p></li>
-      </ol>
-      <div class="howfoot">
-        <span>One swap a season. It costs you.</span>
-        <button class="btn sm" type="button" id="bRules">Full game rules</button>
+      <div class="dist">
+        <svg viewBox="0 0 560 190" width="100%" role="img" aria-label="Distribution of bubble scores across all citizens">
+          <defs>
+            <linearGradient id="dg" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#2A3C68"/><stop offset="1" stop-color="#16264A"/>
+            </linearGradient>
+          </defs>
+          <path id="distPath" fill="url(#dg)" stroke="#B9C4DA" stroke-width="2"
+            d="M10,170 C60,168 70,60 110,42 C140,30 160,55 200,92 C250,138 320,160 400,166 C460,169 520,170 550,170 L550,170 L10,170 Z"/>
+          <line x1="128" y1="34" x2="128" y2="170" stroke="#B9C4DA" stroke-width="1.5" stroke-dasharray="4 4"/>
+          <text x="134" y="30" fill="#B9C4DA" font-family="Barlow Semi Condensed" font-size="15" font-weight="600">Median 163</text>
+          <line id="youLine" x1="330" y1="22" x2="330" y2="170" stroke="#FFFFFF" stroke-width="2" stroke-dasharray="5 4"/>
+          <text id="youLbl" x="336" y="18" fill="#FFFFFF" font-family="Barlow Semi Condensed" font-size="15" font-weight="700">You · 579</text>
+          <text x="10" y="187" fill="#8B99B8" font-family="Barlow Semi Condensed" font-size="13">0</text>
+          <text x="270" y="187" fill="#8B99B8" font-family="Barlow Semi Condensed" font-size="13">500</text>
+          <text x="530" y="187" fill="#8B99B8" font-family="Barlow Semi Condensed" font-size="13">1,000</text>
+        </svg>
       </div>
-      <div class="final-note" id="finalNote" hidden></div>
+      <div class="rankline">
+        <span class="no" id="stateRank">No. 119</span>
+        <span class="of">of 8,400</span>
+        <span class="badge-earned" id="topBadge">Top 1%</span>
+      </div>
+      <button class="cta-inline lockTrigger">Lock in to become a citizen — that's how you get on the boards</button>
+      <div class="statenote"><p>The median bubble in the State sits at <b>163</b>. Most entries pile up under 250. Too many teams, not enough of them ranked.</p></div>
     </section>
 
   </div>
-</div>
 
-<div class="modal" id="rulesModal" hidden>
-  <div class="mbg" id="rulesBg"></div>
-  <div class="mcard" id="rulesCard" role="dialog" aria-modal="true" aria-labelledby="rulesTitle" tabindex="-1">
-    <header>
-      <h2 id="rulesTitle">Full game rules</h2>
-      <button class="btn sm ghost" type="button" id="bRulesX">Close</button>
-    </header>
-    <div class="mbody">
-      <section>
-        <h3>Points per team</h3>
-        <p>1,000 &#xF7; your team count. Four is the floor, so 1 to 4 teams is <b>250</b> each. 5 teams is 200 each. 10 is 100. 20 is 50, and 20 is the cap.</p>
-      </section>
-      <section>
-        <h3>Getting in late</h3>
-        <p>Week 2 gets you <b>90%</b> of the points. Week 3 gets 80%. Week 4 gets 70%. After Week 4 nobody new gets in.</p>
-      </section>
-      <section>
-        <h3>The swap</h3>
-        <p>One swap a season. One team out, one team in, and the new team takes over the old team's points. The fee is <b>20 &#xD7; the week</b>, so 20 in Week 1 and 200 in Week 10, straight off your score. No swaps after Week 10.</p>
-      </section>
-      <section>
-        <h3>What a rank pays</h3>
-        <p>Your score is what you'd bank if the season ended today. It runs off the AP poll until the playoff committee's first ranking, then the committee's.</p>
-        <div class="slices" id="sliceTable"></div>
-      </section>
-      <section>
-        <h3>Your max</h3>
-        <p>The most you can still win. Four ranked teams is <b>1,000</b>. Ten is 640. Twenty is 340. It drops when a team is out for good.</p>
-      </section>
-      <section>
-        <h3>Dead weight</h3>
-        <p>A team that falls out of the Top 25 stays in your bubble and drags it down. It can climb back. A team that is out of the playoff for good hangs under the bubble. It keeps whatever it already earned.</p>
-      </section>
-      <section>
-        <h3>Season's end</h3>
-        <p>Each team pays the better of two numbers. What its playoff run paid, which is <b>20%</b> for making the field, 50% for the quarterfinal and 100% for the Final Four. Or where it finished in the final poll.</p>
-      </section>
-      <section>
-        <h3>Ties</h3>
-        <p>First your champ pick. Then how many of your crowned four made the real Final Four. Then the closest call on the championship game score. Still tied, it's split.</p>
-      </section>
-      <section>
-        <h3>Lock in</h3>
-        <p>Nothing counts until you lock in. Locking sets your entry week, your crowned four and your final score call. It closes the roster except for your one swap.</p>
-      </section>
+  <section class="sandbox" aria-label="Simulate the season">
+    <h2>Simulate the season</h2>
+    <button class="btn" id="advBtn">Advance a week</button>
+    <button class="btn" id="playoffBtn">Play the playoff</button>
+    <button class="btn" id="resetBtn">Reset</button>
+    <p class="warn">Preview only. These controls let you feel how a season moves your bubble — they don't exist in the live game.</p>
+  </section>
+
+  <section class="howto" aria-label="How to play">
+    <div class="ph">
+      <h2 style="font-family:var(--f-display);font-weight:600;font-size:1.4rem;letter-spacing:.08em;text-transform:uppercase;color:var(--navy-deep)">How to play</h2>
+      <span class="meta" style="font-family:var(--f-display);font-size:.82rem;letter-spacing:.14em;text-transform:uppercase;color:#6A7694">The basics</span>
     </div>
-  </div>
-</div>
+    <div class="steps">
+      <div class="step"><span class="n">1</span><p>Pick the teams you think are the <b>last four standing</b>. Your 1,000 points split across them. 4 teams = 250 each. 10 teams = 100 each.</p></div>
+      <div class="step"><span class="n">2</span><p>Crown your Final Four and call the title-game score. Week 1 pays full points; each later week pays 10% less. <b>Doors close after Week 4.</b></p></div>
+      <div class="step"><span class="n">3</span><p>Your weekly score follows <b>the JP Poll</b>, then the playoff rankings. At the finish, only your teams in the real Final Four score.</p></div>
+      <div class="step"><span class="n">4</span><p>More teams means better odds of catching the last four. It also lowers your max score. <b>That's the trade.</b></p></div>
+    </div>
+    <div class="howfoot">
+      <span class="n1">One swap a season. It costs you.</span>
+      <button class="btn btn-dark" id="rulesBtn">Full game rules</button>
+    </div>
+  </section>
 
-<div class="toasts" id="toasts" aria-live="polite"></div>
+</div>
+<dialog id="lockDialog" aria-labelledby="lockTitle">
+ <form id="lockForm">
+ <h2 id="lockTitle">Crown your Final Four</h2>
+ <p id="crownHint"></p>
+ <div id="crownOptions" class="crown-options"></div>
+ <p id="crownOrder" aria-live="polite"></p>
+ <h2>Call the championship score</h2>
+ <p>Predict the winner’s and loser’s points, whoever plays. Ties go to the correct champ pick, then the most Final Four picks, then the closest score call. Still tied? Share the win.</p>
+ <div class="score-call">
+ <label>Winner’s points<input id="winnerScore" type="number" inputmode="numeric" min="1" max="199" step="1" required></label>
+ <label>Loser’s points<input id="loserScore" type="number" inputmode="numeric" min="0" max="198" step="1" required></label>
+ </div>
+ <p id="lockError" role="alert"></p>
+ <div class="dialog-actions"><button type="button" class="btn" id="cancelLock">Keep editing</button><button class="btn btn-gold" type="submit">Confirm lock-in</button></div>
+ </form>
+</dialog>
+<dialog id="rulesDialog" aria-labelledby="rulesTitle">
+ <h2 id="rulesTitle">The rules</h2>
+ <p>Build a bubble of 1–20 teams. Your 1,000 points split equally across them. Ranked teams earn a share of those points each week; unranked teams earn 1%.</p>
+ <p>Lock by Week 4. Week 1 pays 100%, Week 2 pays 90%, Week 3 pays 80%, and Week 4 pays 70%. Crown up to four teams from your bubble, picking your champion first, and predict the championship score.</p>
+ <p>After locking, you get one swap before the playoff. It costs 20 points plus 5 for each week after Week 1. The fee stays deducted. Your original crowned picks and score call stay fixed, even if you swap a crowned team.</p>
+ <p>At the finish, each real Final Four team in your bubble earns its full share; all other teams earn zero. Tied scores go to the correct champion pick, then the most crowned Final Four hits, then the smallest total error across the winner’s and loser’s predicted points. Remaining ties share the win. Time never breaks a tie.</p>
+ <p>This is a season preview with sample opponents and an estimated State rank. Reset starts a fresh preview.</p>
+ <button class="btn" id="closeRules">Close rules</button>
+</dialog>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
-(function(){
-"use strict";
-var REDUCE = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-var COARSE = window.matchMedia && window.matchMedia("(pointer: coarse)").matches;
-function hitScale(){ return (COARSE || window.innerWidth <= 760) ? 1.5 : 1.05; }
+/* ============================================================
+   Data — JP Poll sample rankings, 2026 preview
+   pct(rank) = share of a team slot's value it currently pays
+   ============================================================ */
+const PCT = [100,96,92,88,72,56,52,40,30,27,24,20,16,13,10,8,7,6,5,4,3,3,2,2,2]; // ranks 1–25
+const UNRANKED_PCT = 1;
 
-/* \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
-   DATA
-   \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550 */
-var CONF_TAG = {SEC:"SEC", B1G:"B1G", ACC:"ACC", B12:"B12", OTH:"FBS"};
-var CONFS = [["ALL","All"],["SEC","SEC"],["B1G","Big Ten"],["ACC","ACC"],["B12","Big 12"],["OTH","Others"]];
-
-var TEAMS = [
- /* abbr, name, colour, trim, conference, badge \u2014 2026 alignment */
- ["ALA","Alabama","#9E1B32","#98A2A8","SEC"],        ["ARIZ","Arizona","#003366","#CC0033","B12"],
- ["ASU","Arizona State","#8C1D40","#FFC627","B12"],  ["ARK","Arkansas","#9D2235","#F1F1F1","SEC"],
- ["ARMY","Army","#2C2A29","#D4BF91","OTH","AAC"],    ["AUB","Auburn","#0C2340","#E87722","SEC"],
- ["BAY","Baylor","#154734","#FFB81C","B12"],         ["BSU","Boise State","#0033A0","#D64309","OTH","MW"],
- ["BC","Boston College","#98002E","#BC9B6A","ACC"],  ["BYU","BYU","#002E5D","#C5C5C5","B12"],
- ["CAL","California","#003262","#FDB515","ACC"],     ["CIN","Cincinnati","#E00122","#1A1A1A","B12"],
- ["CLEM","Clemson","#F66733","#522D80","ACC"],       ["COLO","Colorado","#CFB87C","#1A1A1A","B12"],
- ["DUKE","Duke","#00539B","#F1F1F1","ACC"],          ["FLA","Florida","#0021A5","#FA4616","SEC"],
- ["FSU","Florida State","#782F40","#CEB888","ACC"],  ["UGA","Georgia","#BA0C2F","#1A1A1A","SEC"],
- ["GT","Georgia Tech","#003057","#B3A369","ACC"],    ["HOU","Houston","#C8102E","#F1F1F1","B12"],
- ["ILL","Illinois","#13294B","#FF5F05","B1G"],       ["IND","Indiana","#990000","#EEEDEB","B1G"],
- ["IOWA","Iowa","#FFCD00","#1A1A1A","B1G"],          ["ISU","Iowa State","#C8102E","#F1BE48","B12"],
- ["JMU","James Madison","#450084","#CBB677","OTH","SBC"], ["KU","Kansas","#0051BA","#E8000D","B12"],
- ["KSU","Kansas State","#512888","#D1D1D1","B12"],   ["UK","Kentucky","#0033A0","#F1F1F1","SEC"],
- ["LIB","Liberty","#002D62","#A6192E","OTH","CUSA"], ["LOU","Louisville","#AD0000","#1A1A1A","ACC"],
- ["LSU","LSU","#461D7C","#FDD023","SEC"],            ["MD","Maryland","#E03A3E","#FFD520","B1G"],
- ["MEM","Memphis","#003087","#898D8D","OTH","AAC"],  ["MIA","Miami","#005030","#F47321","ACC"],
- ["MICH","Michigan","#00274C","#FFCB05","B1G"],      ["MSU","Michigan State","#18453B","#F1F1F1","B1G"],
- ["MINN","Minnesota","#7A0019","#FFCC33","B1G"],     ["MSST","Mississippi State","#660000","#F1F1F1","SEC"],
- ["MIZ","Missouri","#1A1A1A","#F1B82D","SEC"],       ["NAVY","Navy","#00205B","#C5B783","OTH","AAC"],
- ["NCST","NC State","#CC0000","#F1F1F1","ACC"],      ["NEB","Nebraska","#E41C38","#FDF9F7","B1G"],
- ["UNC","North Carolina","#13294B","#4B9CD3","ACC"], ["NW","Northwestern","#4E2A84","#F1F1F1","B1G"],
- ["ND","Notre Dame","#0C2340","#C99700","OTH","Ind."], ["OSU","Ohio State","#BB0000","#8C8C8C","B1G"],
- ["OU","Oklahoma","#841617","#FDF9F7","SEC"],        ["OKST","Oklahoma State","#FF7300","#1A1A1A","B12"],
- ["MISS","Ole Miss","#14213D","#CE1126","SEC"],      ["ORE","Oregon","#154733","#FEE123","B1G"],
- ["PSU","Penn State","#041E42","#F1F1F1","B1G"],     ["PITT","Pitt","#003594","#FFB81C","ACC"],
- ["PUR","Purdue","#CEB888","#1A1A1A","B1G"],         ["RUT","Rutgers","#CC0033","#5F6A72","B1G"],
- ["SMU","SMU","#354CA1","#C8102E","ACC"],            ["SCAR","South Carolina","#73000A","#1A1A1A","SEC"],
- ["STAN","Stanford","#8C1515","#F1F1F1","ACC"],      ["SYR","Syracuse","#F76900","#000E54","ACC"],
- ["TCU","TCU","#4D1979","#A3A9AC","B12"],            ["TENN","Tennessee","#FF8200","#58595B","SEC"],
- ["TEX","Texas","#BF5700","#F1F1F1","SEC"],          ["TAMU","Texas A&M","#500000","#F1F1F1","SEC"],
- ["TTU","Texas Tech","#CC0000","#1A1A1A","B12"],     ["TULN","Tulane","#006747","#418FDE","OTH","AAC"],
- ["UCF","UCF","#1A1A1A","#BA9B37","B12"],            ["UCLA","UCLA","#2D68C4","#F2A900","B1G"],
- ["USC","USC","#990000","#FFC72C","B1G"],            ["UTAH","Utah","#CC0000","#F1F1F1","B12"],
- ["VAN","Vanderbilt","#866D4B","#1A1A1A","SEC"],     ["UVA","Virginia","#232D4B","#F84C1E","ACC"],
- ["VT","Virginia Tech","#630031","#CF4420","ACC"],   ["WAKE","Wake Forest","#9E7E38","#1A1A1A","ACC"],
- ["WASH","Washington","#4B2E83","#B7A57A","B1G"],    ["WVU","West Virginia","#002855","#EAAA00","B12"],
- ["WIS","Wisconsin","#C5050C","#F1F1F1","B1G"]
-].map(function(t){
-  return {id:t[0], name:t[1], c1:t[2], c2:t[3], conf:t[4], tag:t[5] || CONF_TAG[t[4]]};
-});
-
-var BY_ID = {};
-TEAMS.forEach(function(t){ BY_ID[t.id]=t; });
-
-/* \u2550\u2550 A SCRIPTED SAMPLE SEASON \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
-   Twelve polls, written not rolled, so the demo actually tells a story:
-   Michigan slides 15 \u2192 19 \u2192 23 \u2192 24 and bombs out in Week 5; LSU tumbles
-   to 14 by Week 8; Texas holds the top four and Georgia the top two; Indiana
-   climbs from 12 to 4; Penn State collapses out of the poll; SMU is unranked
-   until Week 4 and then climbs to 16. Weeks 9\u201312
-   settle the field. Sample rankings \u2014 not a real AP poll. */
-var SEASON = [
- "OSU UGA TEX CLEM PSU ND ORE ALA LSU MIA TAMU IND OU TENN MICH MISS ASU USC ISU ILL UTAH BYU NEB BSU FLA",
- "OSU UGA TEX ORE CLEM ND ALA IND LSU PSU MIA TAMU OU TENN MISS ASU ISU USC MICH ILL UTAH BYU NEB FLA BSU",
- "UGA OSU TEX ORE ALA IND ND CLEM MIA LSU TENN OU TAMU MISS PSU ASU ISU USC ILL UTAH BYU NEB MICH FLA WVU",
- "UGA OSU TEX IND ORE ALA TENN ND MIA OU LSU CLEM MISS TAMU ASU ISU USC ILL BYU UTAH PSU WVU SMU MICH FLA",
- "UGA OSU TEX IND ORE ALA TENN ND MIA OU MISS LSU CLEM TAMU ASU ISU ILL USC BYU UTAH WVU SMU FLA KSU TTU",
- "UGA OSU TEX IND ALA ORE TENN MIA ND OU MISS CLEM TAMU ISU ILL LSU ASU BYU USC UTAH SMU KSU FLA WVU TTU",
- "UGA TEX OSU IND ALA TENN ORE MIA OU ND MISS CLEM TAMU ISU LSU ILL BYU ASU USC SMU UTAH KSU TTU WVU LOU",
- "UGA TEX OSU IND ALA TENN MIA ORE OU MISS ND CLEM TAMU LSU ISU ILL BYU UTAH SMU ASU KSU USC TTU WVU LOU",
- "UGA TEX OSU IND ALA MISS TENN MIA OU ORE CLEM ND TAMU LSU BYU ISU ILL SMU UTAH KSU ASU TTU USC WVU LOU",
- "UGA TEX OSU IND ALA MISS TENN OU MIA CLEM ORE TAMU ND LSU BYU ISU SMU ILL UTAH KSU TTU ASU USC WVU LOU",
- "UGA TEX OSU IND ALA MISS OU TENN MIA CLEM ORE TAMU ND LSU BYU SMU ISU ILL UTAH KSU TTU ASU USC WVU LOU",
- "UGA TEX OSU IND ALA MISS OU TENN MIA CLEM ORE TAMU ND LSU BYU SMU ISU ILL UTAH KSU TTU ASU USC WVU LOU"
-].map(function(w){ return w.split(" "); });
-
-/* The bracket the sample season feeds: the Week 12 top twelve, byes for the
-   top four, then the quarterfinal and semifinal survivors. */
-/* Out of playoff contention: the scripted week a team is mathematically done,
-   plus Selection Sunday, when everyone outside the twelve is finished. */
-var ELIMINATED = {MICH:8};
-var CHAMP = "UGA";          // the sample champion
-var RUNNER = "TEX";
-var FINAL_W = 34, FINAL_L = 27;   // Georgia 34, Texas 27 in the sample final
-
-var PLAYOFF = {
-  field: SEASON[11].slice(0,12),
-  qf:    ["UGA","TEX","OSU","IND","ALA","ORE","OU","TENN"],
-  f4:    ["UGA","TEX","OSU","IND"]
-};
-
-var DOCKS = [{k:"Preseason",p:1},{k:"Week 2",p:.9},{k:"Week 3",p:.8},{k:"Week 4",p:.7}];
-
-/* crowns[0] is that friend's champ pick. ThirdSat_Tay and BuckeyeBrent both
-   finish level with the sample bubble on points, so the whole tie-break chain
-   has to run: Tay loses on the champ pick, Brent goes all the way to the
-   score call and loses it by nine. */
-var FRIENDS = [
-  {h:"SwampFox", d:["Swamp","Fox"], teams:["OSU","UGA","TENN","MIA","FLA"], entry:1,
-   crowns:["OSU","UGA","MIA","TENN"], call:{w:38,l:31}},
-  {h:"HailState_Hannah", d:["HailState","Hannah"], teams:["ALA","MISS","TAMU","MSST"], entry:1,
-   crowns:["ALA","MISS","TAMU","MSST"], call:{w:27,l:20}},
-  {h:"TheGrove_Tom", d:["TheGrove","Tom"], teams:["TEX","MISS","LSU","ORE","PSU","ND"], entry:0,
-   crowns:["TEX","ORE","ND","MISS"], call:{w:45,l:38}},
-  {h:"BuckeyeBrent", d:["Buckeye","Brent"], teams:["OSU","UGA","MISS","ISU"], entry:2,
-   crowns:["UGA","OSU","MISS","ISU"], call:{w:42,l:34}},
-  {h:"BayouBiscuit", d:["Bayou","Biscuit"], teams:["LSU","TEX","ND","OKST","WIS","UTAH","BYU","SMU","TCU"], entry:0,
-   crowns:["LSU","TEX","ND","BYU"], call:{w:24,l:17}},
-  {h:"ThirdSat_Tay", d:["ThirdSat","Tay"], teams:["ALA","UGA","TENN","WVU"], entry:0,
-   crowns:["ALA","UGA","TENN","WVU"], call:{w:33,l:28}}
+const TEAMS = [
+  {id:'osu',  name:'Ohio State',    ab:'OSU',  conf:'B1G',   rank:1,  c:'#BB0000'},
+  {id:'uga',  name:'Georgia',       ab:'UGA',  conf:'SEC',   rank:2,  c:'#BA0C2F'},
+  {id:'tex',  name:'Texas',         ab:'TEX',  conf:'SEC',   rank:3,  c:'#BF5700'},
+  {id:'clem', name:'Clemson',       ab:'CLEM', conf:'ACC',   rank:4,  c:'#F56600'},
+  {id:'psu',  name:'Penn State',    ab:'PSU',  conf:'B1G',   rank:5,  c:'#041E42'},
+  {id:'nd',   name:'Notre Dame',    ab:'ND',   conf:'IND',   rank:6,  c:'#0C2340'},
+  {id:'ore',  name:'Oregon',        ab:'ORE',  conf:'B1G',   rank:7,  c:'#154733'},
+  {id:'ala',  name:'Alabama',       ab:'ALA',  conf:'SEC',   rank:8,  c:'#9E1B32'},
+  {id:'lsu',  name:'LSU',           ab:'LSU',  conf:'SEC',   rank:9,  c:'#461D7C'},
+  {id:'mia',  name:'Miami',         ab:'MIA',  conf:'ACC',   rank:10, c:'#005030'},
+  {id:'tamu', name:'Texas A&M',     ab:'TAMU', conf:'SEC',   rank:11, c:'#500000'},
+  {id:'ind',  name:'Indiana',       ab:'IND',  conf:'B1G',   rank:12, c:'#990000'},
+  {id:'ou',   name:'Oklahoma',      ab:'OU',   conf:'SEC',   rank:13, c:'#841617'},
+  {id:'tenn', name:'Tennessee',     ab:'TENN', conf:'SEC',   rank:14, c:'#FF8200'},
+  {id:'mich', name:'Michigan',      ab:'MICH', conf:'B1G',   rank:15, c:'#00274C'},
+  {id:'miss', name:'Ole Miss',      ab:'MISS', conf:'SEC',   rank:16, c:'#14213D'},
+  {id:'asu',  name:'Arizona State', ab:'ASU',  conf:'B12',   rank:17, c:'#8C1D40'},
+  {id:'usc',  name:'USC',           ab:'USC',  conf:'B1G',   rank:18, c:'#990000'},
+  {id:'utah', name:'Utah',          ab:'UTAH', conf:'B12',   rank:19, c:'#CC0000'},
+  {id:'fsu',  name:'Florida State', ab:'FSU',  conf:'ACC',   rank:20, c:'#782F40'},
+  {id:'ksu',  name:'Kansas State',  ab:'KSU',  conf:'B12',   rank:21, c:'#512888'},
+  {id:'fla',  name:'Florida',       ab:'FLA',  conf:'SEC',   rank:22, c:'#0021A5'},
+  {id:'lou',  name:'Louisville',    ab:'LOU',  conf:'ACC',   rank:23, c:'#AD0000'},
+  {id:'iowa', name:'Iowa',          ab:'IOWA', conf:'B1G',   rank:24, c:'#4A4A4A'},
+  {id:'boise',name:'Boise State',   ab:'BSU',  conf:'OTH',   rank:25, c:'#0033A0'},
+  {id:'sc',   name:'South Carolina',ab:'SCAR', conf:'SEC',   rank:0,  c:'#73000A'},
+  {id:'wash', name:'Washington',    ab:'WASH', conf:'B1G',   rank:0,  c:'#4B2E83'},
+  {id:'gt',   name:'Georgia Tech',  ab:'GT',   conf:'ACC',   rank:0,  c:'#B3A369'},
+  {id:'ttu',  name:'Texas Tech',    ab:'TTU',  conf:'B12',   rank:0,  c:'#CC0000'},
+  {id:'smu',  name:'SMU',           ab:'SMU',  conf:'ACC',   rank:0,  c:'#0033A0'},
+  {id:'byu',  name:'BYU',           ab:'BYU',  conf:'B12',   rank:0,  c:'#002E5D'},
+  {id:'mizz', name:'Missouri',      ab:'MIZZ', conf:'SEC',   rank:0,  c:'#F1B82D'},
+  {id:'neb',  name:'Nebraska',      ab:'NEB',  conf:'B1G',   rank:0,  c:'#E41C38'},
+  {id:'unlv', name:'UNLV',          ab:'UNLV', conf:'OTH',   rank:0,  c:'#CF0A2C'},
+  {id:'tul',  name:'Tulane',        ab:'TUL',  conf:'OTH',   rank:0,  c:'#006747'}
 ];
 
-/* \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
-   SCORE MATH  (the whole game, in one place)
+const FRIENDS = [
+  {name:'Swamp Fox',       teams:['uga','fla','lsu','tenn','tex']},
+  {name:'HailState Hannah',teams:['uga','ala','tex','ou']},
+  {name:'TheGrove Tom',    teams:['miss','uga','ala','tex','lsu','tenn']},
+  {name:'Buckeye Brent',   teams:['osu','mich','psu','ind']},
+  {name:'Bayou Biscuit',   teams:['lsu','tex','uga','ala','ou','tenn','fla','mizz','sc']},
+  {name:'Thirsday Tay',    teams:['clem','fsu','mia','lou']}
+];
 
-   share      = 1000 / max(N,4)   \u00B7 N = teams in the bubble, four is the floor
-   dock       = 100/90/80/70% by the week you entered
-   poll slice = what a rank is worth, as a % of a share:
-                  #1-4   -> 100, 96, 92, 88
-                  #5-8   ->  60, 56, 52, 48
-                  #9-12  ->  30, 27, 24, 21
-                  #13-25 ->  12 down to 0, one point per rung (#13=12 \u2026 #25=0)
-                  unranked -> 0
-   live score = SUM(share x dock x slice) - swap fee already paid
+/* ---------- state ---------- */
+const S = {
+  week:1, entryWeek:0, locked:false, swapUsed:false,
+  bubble:['osu','uga','tex','nd','ore','lsu','mia','mich'],
+  filter:'ALL', top25:false, search:'', crowns:[], call:null, fee:0, final:null
+};
+const MULTS=[1,.9,.8,.7], MULT_LBL=['Week 1 · 100%','Week 2 · 90%','Week 3 · 80%','Week 4 · 70%'];
+const $=id=>document.getElementById(id);
+const team=id=>TEAMS.find(t=>t.id===id);
+const pct=t=>t.rank>=1&&t.rank<=25?PCT[t.rank-1]:UNRANKED_PCT;
 
-   ceiling    = the most the bubble can still bank. The poll pays four teams
-                at full price, the next four at about half, the four after
-                that at a fifth, so A alive teams stack into those tiers:
-                  weight = min(A,4)x1.00 + min(A-4,4)x0.50 + min(A-8,4)x0.20
-                  ceiling = share x weight - swap fee paid
-                ALIVE = every team you hold that is not ELIMINATED from the
-                playoff. A team that has merely fallen out of the poll still
-                counts \u2014 it weighs the bubble down but can climb back. After
-                the playoff every
-                team carries its settled credit (Final Four 1.00, quarter-
-                final 0.50, field 0.20, else its final poll slice), so the
-                ceiling collapses onto the final score.
-                Sanity: 4 ranked -> 1000 \u00B7 5 -> 900 \u00B7 10 -> 640 \u00B7 20 -> 340
+function perTeamPts(n){return n?1000/n:0}
+function mult(){return MULTS[S.entryWeek]}
+function scoreOf(ids, factor=mult(), fee=0){
+  const per=perTeamPts(ids.length)*factor;
+  return Math.max(0,Math.round(ids.reduce((sum,id)=>sum+per*(S.final?(S.final.f4.includes(id)?1:0):pct(team(id))/100),0)-fee));
+}
+function maxOf(ids){
+  const n=ids.length, per=perTeamPts(n)*mult();
+  if(S.final) return scoreOf(ids, mult(), S.fee);
+  return Math.max(0,Math.round(per*Math.min(n,4)-S.fee));
+}
+/* ---------- render ---------- */
+function fmt(n){return n.toLocaleString('en-US')}
 
-   lock in    = a bubble is a DRAFT until it is locked. Locking freezes the
-                entry-week dock, stamps a timestamp (the tie-break) and
-                closes the roster; only the one swap still works.
+function renderAll(){
+  const n=S.bubble.length, per=perTeamPts(n), live=scoreOf(S.bubble,mult(),S.fee), max=maxOf(S.bubble);
 
-   season end = each team takes MAX(playoff credit, final poll slice), where
-                playoff credit is 20% (made the 12-team field), 50% (quarter-
-                final) or 100% (Final Four).
-   \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550 */
-function sliceFor(rank){
-  if(!rank) return 0;                                  // unranked / popped
-  if(rank<=4)  return [100,96,92,88][rank-1];
-  if(rank<=8)  return [60,56,52,48][rank-5];
-  if(rank<=12) return [30,27,24,21][rank-9];
-  if(rank<=25) return 12-(rank-13);
-  return 0;
-}
-function shareOf(n, entryIdx){ return (1000/Math.max(n,4)) * DOCKS[entryIdx].p; }
-function scoreOf(teams, entryIdx, ranks, fee, playoff){
-  var share = shareOf(teams.length, entryIdx), total = 0;
-  for(var i=0;i<teams.length;i++){
-    var r = ranks.indexOf(teams[i])+1;
-    var pct = sliceFor(r);
-    if(playoff) pct = Math.max(pct, playoffCredit(teams[i], playoff));
-    total += share*pct/100;
-  }
-  return Math.max(0, Math.round(total - (fee||0)));
-}
-function playoffCredit(id, po){
-  if(po.f4.indexOf(id)>=0) return 100;
-  if(po.qf.indexOf(id)>=0) return 50;
-  if(po.field.indexOf(id)>=0) return 20;
-  return 0;
-}
-function tierWeight(a){   // how many whole shares A alive teams can still earn
-  return Math.min(a,4)*1 + Math.min(Math.max(a-4,0),4)*0.5 + Math.min(Math.max(a-8,0),4)*0.2;
-}
-function ceilingOf(teams, entryIdx, ranks, fee, playoff, popped){
-  var share = shareOf(teams.length, entryIdx), w = 0, i, id;
-  if(playoff){
-    for(i=0;i<teams.length;i++){
-      id = teams[i];
-      w += Math.max(playoffCredit(id, playoff), sliceFor(ranks.indexOf(id)+1))/100;
-    }
-  } else {
-    w = tierWeight(teams.length - (popped ? popped.length : 0));
-  }
-  var c = Math.round(share*w - (fee||0));
-  // a perfectly stacked top-10 can out-run the tiers, so never sit under the score
-  return Math.max(0, c, scoreOf(teams, entryIdx, ranks, fee, playoff));
-}
+  $('weekNum').textContent=S.week;
+  $('scoreHeading').textContent=S.final?'Final score':'Weekly score';
+  $('entryStatus').textContent=S.final?'Season complete':S.locked?'Bubble locked':S.week>4?'Entry closed':'Entry window open';
+  $('perTeam').textContent=fmt(Math.round(per*mult()));
+  $('liveScoreTop').textContent=fmt(live);
+  $('maxTop').textContent=fmt(max);
+  $('countTop').textContent=n+(n===1?' team':' teams')+' in the bubble';
+  $('teamCount').textContent=n;
+  $('liveScore').textContent=fmt(live);
+  $('maxScore').textContent=fmt(max);
+  $('liveLbl').textContent=(S.final?'Final score':'Weekly score')+' · '+(S.locked?'locked in':'preview')+(S.fee?' · less '+S.fee+' swap pts':'');
+  $('multNote').textContent=Math.round(mult()*100)+'%';
 
-/* \u2550\u2550 THE TIE-BREAK CHAIN \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
-   Level on points? The champ pick settles it, your #1 against the real one.
-   Then how many of your crowned four actually made the Final Four. Then the
-   closest call on the championship game score. Then it is split.
-   None of this moves a single point. */
-function f4Hits(crowns){
-  if(!crowns || !crowns.length) return 0;
-  return crowns.filter(function(id){ return PLAYOFF.f4.indexOf(id) >= 0; }).length;
-}
-function callMiss(c){
-  return c ? Math.abs(c.w - FINAL_W) + Math.abs(c.l - FINAL_L) : Infinity;
-}
-var TIE_STEP = {"won on champ pick":1, "won on Final Four":2, "won on the score call":3};
-function tieReason(a, b){                   // why a beats b, or "" if it does not
-  if((a.champ === CHAMP) !== (b.champ === CHAMP)) return a.champ === CHAMP ? "won on champ pick" : "";
-  var ah = f4Hits(a.crowns), bh = f4Hits(b.crowns);
-  if(ah !== bh) return ah > bh ? "won on Final Four" : "";
-  var am = callMiss(a.call), bm = callMiss(b.call);
-  if(am !== bm) return am < bm ? "won on the score call" : "";
-  return "";
-}
+  /* field lines + orb */
+  const fieldH=$('field').clientHeight;
+  const yFor=v=>fieldH*(1-v/1000);
+  $('liveLine').style.top=yFor(live)+'px';
+  $('liveLineLbl').textContent=(S.final?'Final · ':'This week · ')+fmt(live)+' pts';
+  $('scoreLegend').textContent='Dashed line · '+(S.final?'final':'weekly')+' score in points';
+  document.querySelectorAll('.final-score-label').forEach(el=>el.textContent=S.final?'Season-end score':'Best possible season-end score');
+  $('finalScoreNote').textContent=S.final?'Only your teams in the real Final Four count toward this final score.':'At season’s end, only your teams in the real Final Four score. Your weekly score counts every team, so it can be higher.';
+  const orb=$('orb');
+  const orbSize=Math.min($('field').clientWidth*.74,470);
+  orb.style.top=Math.max(8,Math.min(fieldH-orbSize-8, yFor(live)-orbSize*.52))+'px';
 
-/* \u2500\u2500 deterministic RNG \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 */
-function mulberry32(a){
-  return function(){
-    a |= 0; a = a + 0x6D2B79F5 | 0;
-    var t = Math.imul(a ^ a>>>15, 1|a);
-    t = t + Math.imul(t ^ t>>>7, 61|t) ^ t;
-    return ((t ^ t>>>14) >>> 0) / 4294967296;
-  };
-}
-
-/* \u2500\u2500 the state of everybody else (8,400 synthetic bubbles) \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 */
-var DIST = (function(){
-  var r = mulberry32(20260902), out = [], i, u, v, z, x;
-  for(i=0;i<8400;i++){
-    do{
-      u = Math.max(1e-9, r()); v = r();
-      z = Math.sqrt(-2*Math.log(u)) * Math.cos(2*Math.PI*v);   // Box-Muller
-      x = Math.exp(5.10 + 0.60*z);                             // right-skewed
-    } while(x > 1000);
-    out.push(x);
-  }
-  return out.sort(function(a,b){return a-b;});
-})();
-var DIST_MEDIAN = Math.round(DIST[Math.floor(DIST.length/2)]);
-function stateRank(score){                 // how many bubbles beat yours, +1
-  var lo=0, hi=DIST.length;
-  while(lo<hi){ var m=(lo+hi)>>1; if(DIST[m] <= score) lo=m+1; else hi=m; }
-  return DIST.length - lo + 1;
-}
-
-/* \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
-   STATE
-   \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550 */
-var S;
-function freshState(){
-  return {
-    week:1, entry:0,
-    bubble:["UGA","TEX","LSU","MICH"],
-    ranks:SEASON[0].slice(),
-    swapUsed:false, fee:0,
-    playoff:null,
-    locked:false, lockedAt:null, lockLabel:null,
-    seen:{}, poppedAt:{}, crowns:[], call:null,
-    pendingOut:null,
-    lastScore:null
-  };
-}
-function rankOf(id){ return S.ranks.indexOf(id)+1; }
-function creditOf(id){                     // what this team pays right now, %
-  var p = sliceFor(rankOf(id));
-  if(S.playoff) p = Math.max(p, playoffCredit(id, S.playoff));
-  return p;
-}
-/* Unranked is not the same as popped. A team only becomes dead weight if it
-   was in the Top 25 at some point after you added it and has since fallen out
-   (or been knocked out of the playoff). A team you add while it is unranked
-   has never been up there \u2014 it just waits at the bottom of the sphere. */
-function isEliminated(id){
-  if(S.playoff) return S.playoff.f4.indexOf(id) < 0;      // only the last four survive
-  if(ELIMINATED[id] && S.week >= ELIMINATED[id]) return true;
-  return S.week >= SEASON.length && PLAYOFF.field.indexOf(id) < 0;   // Selection Sunday
-}
-function markSeen(){
-  S.bubble.forEach(function(id){
-    if(rankOf(id)){ S.seen[id] = true; delete S.poppedAt[id]; }
-    else if(S.seen[id] && S.poppedAt[id] === undefined) S.poppedAt[id] = S.week;
-  });
-}
-function forgetTeam(id){ delete S.seen[id]; delete S.poppedAt[id]; }
-function isPopped(id){ return !!S.seen[id] && creditOf(id) === 0; }   // fell out of the poll
-function goneTeams(){ return S.bubble.filter(isEliminated); }        // hangs below as ballast
-function weighTeams(){                                              // sits inside, dead weight
-  return S.bubble.filter(function(id){ return !isEliminated(id) && creditOf(id) === 0; });
-}
-function eliminatedIn(teams){ return teams.filter(isEliminated); }
-function liveScore(){ return scoreOf(S.bubble, S.entry, S.ranks, S.fee, S.playoff); }
-function liveCeiling(){ return ceilingOf(S.bubble, S.entry, S.ranks, S.fee, S.playoff, goneTeams()); }
-function swapFee(){ return 20 * S.week; }
-
-/* \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
-   DOM helpers
-   \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550 */
-var $ = function(id){ return document.getElementById(id); };
-var SVGNS = "http://www.w3.org/2000/svg";
-function svg(tag, attrs){
-  var e = document.createElementNS(SVGNS, tag);
-  for(var k in attrs) e.setAttribute(k, attrs[k]);
-  return e;
-}
-var CROWN_SVG = '<svg width="13" height="10" viewBox="-10 -10 20 13" aria-hidden="true">' +
-  '<path d="M-9,-4 l4.5,6 4.5,-8.5 4.5,8.5 4.5,-6 -1.8,9.5 -14.4,0 z" fill="#16130A"/></svg>';
-function fmtN(v){ return Number(v).toLocaleString("en-US"); }
-function stamp(d){
-  return d.toLocaleString("en-US", {month:"short", day:"numeric", hour:"numeric", minute:"2-digit"});
-}
-function lum(hex){
-  var n = parseInt(hex.slice(1),16);
-  return (0.299*(n>>16&255) + 0.587*(n>>8&255) + 0.114*(n&255))/255;
-}
-
-/* \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
-   THE BUBBLE
-   \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550 */
-var orbsG = $("orbs"), tethersG = $("tethers"), partsG = $("parts"), bubEl = $("bub"), dentsG = $("dents");
-var liftEl = $("lift"), stageEl = $("stage"), fieldEl = $("fieldEl");
-var bubbleD = 300;
-
-/* Orbs keep roughly their old size while the sphere grew, so a four-team
-   bubble reads as four fat roundels with room to breathe \u2014 and twenty still fit. */
-function orbRadius(n){
-  if(n<=2) return 33; if(n<=4) return 28; if(n<=6) return 24;
-  if(n<=9) return 20.5; if(n<=12) return 17.5; if(n<=16) return 15; return 13;
-}
-/* Phyllotaxis slots inside the sphere, squashed by the same factor the shell
-   is, then handed out top-first so the teams with the most lift sit high. */
-function slots(n, R, flat){
-  var pts=[], i, t, r, a;
-  if(n===1) return [[150,150]];
-  for(i=0;i<n;i++){
-    t = (i+0.5)/n;
-    r = R*Math.sqrt(t);
-    a = i*2.39996 + 1.1;
-    pts.push([150 + r*Math.cos(a), 150 + r*Math.sin(a)*flat]);
-  }
-  return pts;
-}
-function crackPath(r){                       // a jagged split across the disc
-  function k(v){ return (v*r).toFixed(1); }
-  return "M"+k(-0.74)+","+k(-0.46)+" L"+k(-0.18)+","+k(-0.06)+" L"+k(-0.44)+","+k(0.5)+
-         " M"+k(-0.18)+","+k(-0.06)+" L"+k(0.36)+","+k(-0.36)+
-         " M"+k(-0.18)+","+k(-0.06)+" L"+k(0.3)+","+k(0.64);
-}
-
-function renderOrbs(){
-  var n = S.bubble.length;
-  var R = orbRadius(n), Rb = R*0.72;
-  var gone = goneTeams();                             // eliminated: hangs below
-  var weigh = weighTeams();                           // dead weight, still inside
-  var flat = 1 - Math.min(.12, .03*weigh.length);     // the shell sags under it
-  var live = S.bubble.filter(function(id){
-    return gone.indexOf(id) < 0 && weigh.indexOf(id) < 0;
-  });
-  var maxR = 146 - R - 8;
-  var pos = slots(live.length, maxR*(weigh.length ? .92 : 1), flat).sort(function(a,b){ return a[1]-b[1]; });
-  var order = live.slice().sort(function(a,b){
-    var d = creditOf(b) - creditOf(a);
-    return d !== 0 ? d : a.localeCompare(b);
-  });
-  var place = {}, anchor = {};
-  order.forEach(function(id, i){ place[id] = pos[i]; });
-
-  // dead weight rests on the floor of the shell and presses a dent into it
-  while(dentsG.firstChild) dentsG.removeChild(dentsG.firstChild);
-  var wgap = Math.min(74, 200/Math.max(1, weigh.length));
-  weigh.slice().sort().forEach(function(id, i){
-    var wx = 150 + (i - (weigh.length-1)/2)*wgap;
-    var dx = Math.max(-120, Math.min(120, wx-150));
-    var floor = 150 + Math.sqrt(Math.max(0, 146*146 - dx*dx))*flat;
-    place[id] = [wx, floor - R*0.66];
-    dentsG.appendChild(svg("path", {"class":"dent", fill:"none", stroke:"#DCE9FF",
-      "stroke-opacity":".2", "stroke-width":1.3,
-      d:"M"+(wx-R*1.1).toFixed(1)+","+(floor-3).toFixed(1)+
-        " Q"+wx.toFixed(1)+","+(floor+R*0.5).toFixed(1)+
-        " "+(wx+R*1.1).toFixed(1)+","+(floor-3).toFixed(1)}));
+  /* Keep every tap target separate; stronger contributors appear first. */
+  const chips=$('chips'); chips.innerHTML='';
+  const orbTop=parseFloat(orb.style.top), fw=$('field').clientWidth;
+    const sorted=[...S.bubble].sort((a,b)=>pct(team(b))-pct(team(a)));
+  sorted.forEach((id,i)=>{
+    const t=team(id), p=pct(t);
+    const size=window.innerWidth<=680?44:76;
+    const cols=Math.max(1,Math.floor((fw-16)/(size+8)));
+    const row=Math.floor(i/cols), col=i%cols;
+    const rowCount=Math.min(cols,sorted.length-row*cols);
+    const totalH=Math.ceil(sorted.length/cols)*(size+10);
+    const top=Math.max(48,Math.min(fieldH-totalH-10,orbTop));
+    const el=document.createElement('button');
+    el.className='teamchip'+(t.rank>=1&&t.rank<=10?' top10':'');
+    el.style.background=t.c;
+    el.style.left=(fw/2-rowCount*(size+8)/2+col*(size+8)+4)+'px';
+    el.style.top=(top+row*(size+10))+'px';
+    el.disabled=S.locked||S.week>4;
+    el.innerHTML=t.ab+'<span class="rm" aria-hidden="true">×</span>';
+    el.setAttribute('aria-label','Remove '+t.name+' from your bubble');
+    el.title=t.name+(t.rank?' · #'+t.rank:' · unranked')+' · '+Math.round(per*mult()*p/100)+' pts';
+    el.onclick=()=>toggle(id);
+    chips.appendChild(el);
   });
 
-  // ballast: eliminated teams hang below the sphere on slack tethers
-  var gap = Math.min(86, 250/Math.max(1, gone.length));
-  gone.slice().sort().forEach(function(id, i){
-    var bx = 150 + (i - (gone.length-1)/2)*gap;
-    var dx = Math.max(-142, Math.min(142, bx-150));
-    anchor[id] = 150 + Math.sqrt(Math.max(0, 146*146 - dx*dx))*flat;
-    place[id] = [bx, anchor[id] + 30 + Rb + (i%2 ? 15 : 0)];
+  renderRoster(); renderRows(); renderSwap(); renderTailgate(live); renderState(live); renderWeekPills();
+
+  /* lock + swap UI */
+  $('lockBtn').textContent=S.locked?'Locked in · Citizen '+$('stateRank').textContent:'Lock in your bubble';
+  $('lockBtn').disabled=S.locked||S.week>4;
+  if(!S.locked&&S.week>4) $('lockBtn').textContent='Entry closed';
+  document.querySelectorAll('.lockTrigger').forEach(b=>{b.hidden=S.locked;b.disabled=S.week>4;});
+  $('lockSummary').textContent=S.locked?'Locked picks: '+S.crowns.map((id,i)=>(i===0?'Champion: ':'')+team(id).name).join(' · ')+' | Score call: '+S.call.w+'–'+S.call.l+'. Picks stay fixed through a swap.':'';
+  $('advBtn').disabled=!!S.final||S.week>=15;
+  $('playoffBtn').disabled=!!S.final;
+  $('swapPill').innerHTML=S.swapUsed?'Swap used · '+S.fee+' pts deducted':'Swap available · <b class="fee">'+swapFee()+' pts</b>';
+  $('swapFee').textContent=S.swapUsed?S.fee:swapFee();
+  $('feeLabel').textContent=S.swapUsed?'Fee deducted:':'Fee this week:';
+  $('swapBtn').disabled=S.swapUsed||!S.locked||!!S.final;
+  $('swapOut').disabled=$('swapIn').disabled=$('swapBtn').disabled;
+}
+
+function swapFee(){return 20+ (S.week-1)*5}
+
+function renderWeekPills(){
+  const el=$('weekPills'); el.innerHTML='';
+  MULT_LBL.forEach((l,i)=>{
+    const b=document.createElement('button');
+    b.className='wpill'+(S.entryWeek===i?' on':'');
+    b.textContent=l;
+    b.disabled=true;
+    b.setAttribute('aria-pressed',S.entryWeek===i);
+    el.appendChild(b);
   });
-
-  Array.prototype.slice.call(orbsG.children).forEach(function(g){
-    if(!place[g.getAttribute("data-id")]) popOrb(g);
-  });
-  while(tethersG.firstChild) tethersG.removeChild(tethersG.firstChild);
-
-  var lifts = 0, i = 0;
-  S.bubble.forEach(function(id){
-    var t = BY_ID[id], p = place[id], rank = rankOf(id);
-    var isBallast = gone.indexOf(id) >= 0;                  // out of contention
-    var isWeigh = !isBallast && weigh.indexOf(id) >= 0;     // dead weight, inside
-    var isLift = !isBallast && rank>=1 && rank<=8;
-    var isSink = !isBallast && (rank === 0 || rank >= 13);  // fading, or waiting
-    var isF4 = !!(S.playoff && S.playoff.f4.indexOf(id) >= 0);
-    var rr = isBallast ? Rb : R;
-    if(isLift) lifts++;
-    var g = orbsG.querySelector('[data-id="'+id+'"]');
-    i++;
-
-    if(!g){
-      g = svg("g", {"class":"orb", "data-id":id});
-      var gx = svg("g", {"class":"orb-x"});
-      var gy = svg("g", {"class":"orb-y"});
-      var gb = svg("g", {"class":"orb-bob"});
-      var st = svg("g", {"class":"streaks"});
-      [-0.52, 0, 0.52].forEach(function(f, k){
-        var ln = svg("line", {"data-f":f, stroke:"#DCE9FF", "stroke-width":1.4,
-          "stroke-linecap":"round", "stroke-opacity":".75"});
-        ln.style.animationDelay = (k*0.42).toFixed(2) + "s";
-        st.appendChild(ln);
-      });
-      var body = svg("g", {"class":"body"});
-      body.appendChild(svg("circle", {"class":"hit", r:1, fill:"none"}));
-      body.appendChild(svg("circle", {"class":"glow", r:1, fill:"none", stroke:"#C9A227",
-        "stroke-width":3, opacity:0, filter:"url(#soft2)"}));
-      body.appendChild(svg("circle", {"class":"laurel", r:1, fill:"none", stroke:"#E8C75B",
-        "stroke-width":2.4, "stroke-dasharray":"3 5"}));
-      body.appendChild(svg("circle", {"class":"disc", r:1, fill:t.c1, stroke:t.c2, "stroke-width":2.2}));
-      var tx = svg("text", {"class":"abbr", y:0.5, fill:"#fff"});
-      tx.textContent = id;
-      body.appendChild(tx);
-      body.appendChild(svg("path", {"class":"chev", fill:"#E0525C", opacity:0, d:"M-5,-3 L5,-3 L0,4 Z"}));
-      body.appendChild(svg("path", {"class":"crack", fill:"none", "stroke-width":2,
-        "stroke-linecap":"round", "stroke-linejoin":"round"}));
-      body.appendChild(svg("path", {"class":"crown", fill:"#C9A227",
-        d:"M-9,-4 l4.5,6 4.5,-8.5 4.5,8.5 4.5,-6 -1.8,9.5 -14.4,0 z"}));
-      var sb = svg("g", {"class":"seedbadge"});
-      sb.appendChild(svg("circle", {r:8.6, fill:"#0B1A33", stroke:"#C9A227", "stroke-width":1.2}));
-      var sbt = svg("text", {"class":"seednum", "text-anchor":"middle", "dominant-baseline":"central",
-        "font-family":"Barlow Condensed, sans-serif", "font-weight":800, "font-size":10.5, fill:"#E8C75B"});
-      sb.appendChild(sbt);
-      body.appendChild(sb);
-      var ot = svg("g", {"class":"outtag"});
-      ot.appendChild(svg("rect", {x:-14, y:0, width:28, height:13, rx:3.5,
-        fill:"#2A0E12", stroke:"#B3202A", "stroke-width":1}));
-      var ott = svg("text", {x:0, y:6.6, "text-anchor":"middle", "dominant-baseline":"central",
-        "font-family":"Barlow Condensed, sans-serif", "font-weight":800, "font-size":9,
-        "letter-spacing":1, fill:"#E0525C"});
-      ott.textContent = "OUT";
-      ot.appendChild(ott);
-      body.appendChild(ot);
-      gb.appendChild(st); gb.appendChild(body); gy.appendChild(gb); gx.appendChild(gy); g.appendChild(gx);
-      gb.style.setProperty("--ph", (-(i*0.37)).toFixed(2)+"s");
-      gb.style.setProperty("--dur", (2.4 + (i%5)*0.34).toFixed(2)+"s");
-      orbsG.appendChild(g);
-      (function(tid, node){
-        node.addEventListener("pointerdown", function(ev){ orbDown(ev, tid, node); });
-      })(id, g);
-      if(REDUCE){
-        g.classList.add("enter");
-        setOrbAt(g, p[0], p[1]);
-        requestAnimationFrame(function(){ g.classList.remove("enter"); });
-      } else {
-        g.classList.add("enter");
-        setOrbAt(g, 408, 262);
-        requestAnimationFrame(function(){
-          requestAnimationFrame(function(){
-            g.classList.remove("enter");
-            setOrbAt(g, p[0], p[1]);
-          });
-        });
-      }
-    } else {
-      g.classList.remove("parked");
-      setOrbAt(g, p[0], p[1]);
-    }
-
-    var disc = g.querySelector(".disc"), glow = g.querySelector(".glow"),
-        txt = g.querySelector(".abbr"), chev = g.querySelector(".chev"),
-        crack = g.querySelector(".crack"), laurel = g.querySelector(".laurel"),
-        ot2 = g.querySelector(".outtag"), dark = lum(t.c1) > .62;
-    g.setAttribute("data-r", rr);
-    g.querySelector(".hit").setAttribute("r", (rr * hitScale()).toFixed(1));
-    disc.setAttribute("r", rr);
-    disc.setAttribute("fill", t.c1);
-    disc.setAttribute("stroke", isLift ? "#C9A227" : t.c2);
-    glow.setAttribute("r", rr+5);
-    glow.setAttribute("opacity", isLift ? .62 : 0);
-    laurel.setAttribute("r", rr+7);
-    txt.setAttribute("font-size", Math.max(9, rr*0.62));
-    txt.setAttribute("fill", dark ? "#12203A" : "#FFFFFF");
-    txt.setAttribute("y", rr>26 ? -1 : 0);
-    chev.setAttribute("opacity", isSink ? .95 : 0);
-    chev.setAttribute("transform","translate(0,"+(rr*0.52+2)+") scale("+(rr/26).toFixed(2)+")");
-    crack.setAttribute("stroke", dark ? "#12203A" : "#EAF2FF");
-    crack.setAttribute("d", crackPath(rr));
-    ot2.setAttribute("transform","translate(0,"+(rr+3).toFixed(1)+")");
-    g.querySelector(".seedbadge").setAttribute("transform",
-      "translate("+(rr*0.72).toFixed(1)+","+(-rr*0.72).toFixed(1)+")");
-    g.querySelector(".crown").setAttribute("transform",
-      "translate(0,"+(-rr-10).toFixed(1)+") scale("+(rr/30).toFixed(2)+")");
-    Array.prototype.forEach.call(g.querySelectorAll(".streaks line"), function(ln){
-      var f = parseFloat(ln.getAttribute("data-f"));
-      var x = (f*rr*0.55).toFixed(1), y1 = (-rr*0.95).toFixed(1);
-      ln.setAttribute("x1", x); ln.setAttribute("x2", x);
-      ln.setAttribute("y1", y1);
-      ln.setAttribute("y2", (-rr*0.95 - rr*(f === 0 ? 1.0 : 0.66)).toFixed(1));
-    });
-    g.classList.toggle("sink", isSink);
-    g.classList.toggle("weigh", isWeigh);
-    g.classList.toggle("ballast", isBallast);
-    g.classList.toggle("lift", isLift);
-    g.classList.toggle("f4", isF4);
-
-    if(isBallast){
-      tethersG.appendChild(svg("line", {"class":"tether slack",
-        x1:p[0], y1:anchor[id], x2:p[0], y2:p[1]-rr-1}));
-    } else if(isSink){
-      tethersG.appendChild(svg("line", {"class":"tether",
-        x1:p[0], y1:p[1]+rr, x2:p[0],
-        y2:Math.min(292, 150 + Math.sqrt(Math.max(0,146*146-Math.pow(p[0]-150,2)))*flat - 4)}));
-    }
-  });
-
-  paintCrowns();
-  var f2 = "scaleY(" + flat.toFixed(3) + ")";
-  $("shellBack").style.transform = f2;
-  $("shellFront").style.transform = f2;
-  bubEl.style.setProperty("--rimop", Math.max(.08, .34 - .045*(weigh.length + gone.length)).toFixed(3));
-  $("topGlow").setAttribute("opacity", Math.min(.34, .085*lifts).toFixed(3));
-
-  ripple();
-}
-
-function popOrb(g){
-  var m = /translate\(([-\d.]+)/.exec(g.querySelector(".orb-x").getAttribute("transform")||"");
-  var m2 = /translate\(0,([-\d.]+)/.exec(g.querySelector(".orb-y").getAttribute("transform")||"");
-  var x = m?parseFloat(m[1]):150, y = m2?parseFloat(m2[1]):150;
-  g.classList.add("pop");
-  if(!REDUCE){
-    for(var i=0;i<7;i++){
-      var a = (i/7)*Math.PI*2 + 0.4;
-      var c = svg("circle", {"class":"pt", cx:x, cy:y, r:2.2, fill:"#DCE9FF"});
-      c.style.setProperty("--dx", (Math.cos(a)*36).toFixed(1)+"px");
-      c.style.setProperty("--dy", (Math.sin(a)*36).toFixed(1)+"px");
-      partsG.appendChild(c);
-      (function(el){ setTimeout(function(){ if(el.parentNode) el.parentNode.removeChild(el); }, 700); })(c);
-    }
-  }
-  setTimeout(function(){ if(g.parentNode) g.parentNode.removeChild(g); }, REDUCE?260:520);
-}
-
-var rippleT, quietRipple = 0;
-function ripple(){
-  if(REDUCE || Date.now() < quietRipple) return;
-  bubEl.classList.remove("ripple");
-  void bubEl.offsetWidth;
-  bubEl.classList.add("ripple");
-  clearTimeout(rippleT);
-  rippleT = setTimeout(function(){ bubEl.classList.remove("ripple"); }, 780);
-}
-
-/* altitude = score */
-function layout(){
-  var sh = stageEl.clientHeight - 52;
-  var fw = fieldEl.clientWidth;
-  bubbleD = window.innerWidth <= 760
-    ? Math.max(190, Math.min(window.innerWidth*0.78, fw, sh*0.74))
-    : Math.max(240, Math.min(460, sh*0.72, fw*0.62));
-  bubEl.setAttribute("width", bubbleD);
-  bubEl.setAttribute("height", bubbleD);
-  liftEl.style.height = bubbleD + "px";
-  $("readout").style.setProperty("--tagoff", (bubbleD/2).toFixed(0) + "px");
-  if(window.innerWidth > 760) $("readout").style.top = "";
-  placeBubble();
-  placeCeiling();
-}
-function ballastRoom(){ return goneTeams().length ? Math.round(bubbleD*0.20) : 0; }
-function travelPx(){ return Math.max(0, (stageEl.clientHeight - 52) - bubbleD - ballastRoom()); }
-function placeBubble(){
-  var alt = Math.max(0, Math.min(1, liveScore()/1000));
-  liftEl.style.transform = "translateY(" + ((1-alt)*travelPx()).toFixed(1) + "px)";
-  placeTag(alt);
-}
-/* On a phone the score rides under the sphere instead of off its right rim,
-   dropping further when dead weight is hanging there. */
-function placeTag(alt){
-  var ro = $("readout");
-  if(window.innerWidth > 760){ ro.style.top = ""; return; }
-  var liftTop = (1 - alt) * travelPx();
-  var fieldH = stageEl.clientHeight - 52;
-  var want = bubbleD * (goneTeams().length ? 1.27 : 1.02) + 12;
-  var room = fieldH - liftTop - 36;
-  ro.style.top = Math.max(bubbleD * 1.02, Math.min(want, room)).toFixed(0) + "px";
-}
-
-/* The lid: a translucent plate parked where the sphere's crown would sit if
-   the bubble banked its ceiling. Drop the ceiling and the plate presses down. */
-var lastCeil = null;
-function placeCeiling(){
-  var c = Math.max(0, Math.min(1000, liveCeiling()));
-  var el = $("ceilMark");
-  el.style.top = ((1 - c/1000) * travelPx()).toFixed(1) + "px";
-  $("ceilMarkN").textContent = fmtN(c);
-  if(lastCeil !== null && c < lastCeil && !REDUCE){
-    el.classList.remove("press"); void el.offsetWidth; el.classList.add("press");
-  }
-  lastCeil = c;
-}
-
-/* \u2500\u2500 elevation axis \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 */
-function buildAxis(){
-  var ax = $("axis");
-  ax.innerHTML = "";
-  var ticks = [
-    {v:1000, cap:"Perfect bubble", major:true, top:true},
-    {v:750,  cap:"Final Four pace", major:true},
-    {v:500,  cap:"Quarterfinal pace", major:true},
-    {v:250,  cap:"Made-the-field pace", major:true},
-    {v:0,    cap:"Ground", major:true}
-  ];
-  ticks.forEach(function(t){
-    var d = document.createElement("div");
-    d.className = "tick" + (t.major?" major":"") + (t.top?" top":"");
-    d.style.bottom = (t.v/1000*100) + "%";
-    d.innerHTML = '<span class="v num">'+t.v+'</span><span class="bar"></span><span class="cap">'+t.cap+'</span>';
-    ax.appendChild(d);
-  });
-}
-
-/* \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
-   PANELS
-   \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550 */
-/* \u2550\u2550 THE TRAY \u00B7 pick a team, drag it in, drag one out \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
-   Every team lives in the tray beside the bubble as an orb. Drag one over
-   the rim to add it; drag an orb out through the rim to drop it. Locked
-   bubbles cannot drop a team \u2014 dragging one out opens the one swap instead.
-   The roster's x buttons stay as the keyboard/pointer-free alternative. */
-var trayFilter = "ALL", top25Only = false, drag = null, noClickUntil = 0, tieNote = "";
-
-function buildConfChips(){
-  var host = $("confChips");
-  host.innerHTML = "";
-  CONFS.forEach(function(c){
-    var b = document.createElement("button");
-    b.className = "seg-btn"; b.type = "button";
-    b.setAttribute("aria-pressed", trayFilter === c[0] ? "true" : "false");
-    b.textContent = c[1];
-    b.addEventListener("click", function(){ trayFilter = c[0]; buildConfChips(); renderTray(); });
-    host.appendChild(b);
-  });
-}
-function trayRows(){
-  var q = $("q").value.trim().toLowerCase();
-  return TEAMS.filter(function(t){
-    if(trayFilter !== "ALL" && t.conf !== trayFilter) return false;
-    if(top25Only && !rankOf(t.id)) return false;
-    if(q && t.name.toLowerCase().indexOf(q) < 0 && t.id.toLowerCase().indexOf(q) < 0) return false;
-    return true;
-  }).sort(function(a,b){                       // rank first, then alphabetical
-    var ra = rankOf(a.id)||99, rb = rankOf(b.id)||99;
-    return ra !== rb ? ra - rb : a.name.localeCompare(b.name);
-  });
-}
-function trayHint(){
-  if(S.playoff) return "The season is settled. Nothing moves now.";
-  if(S.pendingOut) return "Pick who comes in for " + BY_ID[S.pendingOut].name + ".";
-  if(!S.locked) return window.innerWidth <= 760
-    ? "Tap a team to add it. Tap one in the bubble to drop it."
-    : "Drag a team into the bubble, or tap to add. Drag one out to drop it.";
-  if(S.swapUsed) return "Locked. Your swap is gone. This bubble is set.";
-  if(S.week > 10) return "Locked. The swap window closed after Week 10.";
-  return window.innerWidth <= 760
-    ? "Locked. Tap a team in the bubble to spend your one swap."
-    : "Locked. Drag a team out of the bubble to spend your one swap.";
-}
-function renderTray(){
-  var list = $("traylist"), st = list.scrollTop, sl = list.scrollLeft;
-  list.innerHTML = "";
-  $("q").placeholder = "Search " + TEAMS.length + " teams";
-  $("trayHint").textContent = trayHint();
-  $("t25").setAttribute("aria-pressed", top25Only ? "true" : "false");
-  var rows = trayRows();
-  if(!rows.length){
-    var e = document.createElement("p");
-    e.className = "trayempty";
-    e.textContent = "No team there. Try an abbreviation like TEX or PSU. Or widen the filter.";
-    list.appendChild(e);
-    return;
-  }
-  rows.forEach(function(t){
-    var inB = S.bubble.indexOf(t.id) >= 0, r = rankOf(t.id);
-    var b = document.createElement("button");
-    b.className = "tray-item" + (inB ? " in" : "");
-    b.type = "button";
-    b.setAttribute("data-id", t.id);
-    b.title = t.name + " \u00B7 " + t.tag + (r ? " \u00B7 #" + r : " \u00B7 unranked") + (inB ? " \u00B7 in your bubble" : "");
-    b.innerHTML =
-      '<span class="torb" style="background:'+t.c1+';border-color:'+t.c2+'">' +
-        '<span class="ab" style="color:'+(lum(t.c1) > .62 ? "#12203A" : "#FFFFFF")+'">'+t.id+'</span>' +
-        (r ? '<span class="rkb">#'+r+'</span>' : '') +
-      '</span>' +
-      '<span class="tnm">'+t.name+'</span>';
-    if(!inB){
-      b.addEventListener("pointerdown", function(e){ trayDown(e, t); });
-      b.addEventListener("click", function(){ if(Date.now() < noClickUntil) return; trayPick(t.id); });
-    }
-    list.appendChild(b);
-  });
-  list.scrollTop = st; list.scrollLeft = sl;
-}
-function trayPick(id){
-  if(S.playoff) return;
-  if(S.bubble.indexOf(id) >= 0) return;
-  if(S.pendingOut){ completeSwap(S.pendingOut, id); return; }
-  if(S.locked){
-    toast(S.swapUsed ? "Your swap is gone. The roster is locked."
-                     : "Locked. Drag a team out of the bubble to use your swap.", "bad");
-    return;
-  }
-  addTeam(id);
-}
-
-/* \u2500\u2500 pointer geometry \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 */
-function svgPt(e){
-  var r = bubEl.getBoundingClientRect();
-  return {x:(e.clientX - r.left)/r.width*300, y:(e.clientY - r.top)/r.height*300};
-}
-function insideRim(e){
-  var p = svgPt(e);
-  return Math.sqrt(Math.pow(p.x-150,2) + Math.pow(p.y-150,2)) <= 146;
-}
-function setOrbAt(g, x, y){
-  g.querySelector(".orb-x").setAttribute("transform","translate("+x.toFixed(1)+",0)");
-  g.querySelector(".orb-y").setAttribute("transform","translate(0,"+y.toFixed(1)+")");
-}
-function endDrag(){
-  window.removeEventListener("pointermove", dragMove);
-  window.removeEventListener("pointerup", dragUp);
-  window.removeEventListener("pointercancel", dragCancel);
-  bubEl.classList.remove("out","in");
-}
-
-/* \u2500\u2500 dragging an orb out of the sphere \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 */
-function orbDown(e, id, g){
-  if(drag || S.playoff || S.pendingOut) return;
-  if(e.button !== undefined && e.button !== 0) return;
-  e.preventDefault();
-  drag = {kind:"orb", id:id, g:g, moved:false, out:false, pid:e.pointerId};
-  try{ g.setPointerCapture(e.pointerId); }catch(err){}
-  orbsG.appendChild(g);                       // to the front of the pile
-  g.classList.add("dragging");
-  window.addEventListener("pointermove", dragMove);
-  window.addEventListener("pointerup", dragUp);
-  window.addEventListener("pointercancel", dragCancel);
-}
-function trayDown(e, t){
-  if(drag || S.playoff) return;
-  if(e.button !== undefined && e.button !== 0) return;
-  drag = {kind:"tray", id:t.id, team:t, moved:false, inRim:false, x0:e.clientX, y0:e.clientY, pid:e.pointerId};
-  window.addEventListener("pointermove", dragMove);
-  window.addEventListener("pointerup", dragUp);
-  window.addEventListener("pointercancel", dragCancel);
-}
-function makeGhost(t){
-  var d = document.createElement("div");
-  d.className = "dragghost";
-  d.style.background = t.c1;
-  d.style.borderColor = t.c2;
-  d.style.color = lum(t.c1) > .62 ? "#12203A" : "#FFFFFF";
-  d.textContent = t.id;
-  document.body.appendChild(d);
-  return d;
-}
-function dragMove(e){
-  if(!drag) return;
-  if(drag.kind === "orb"){
-    drag.moved = true;
-    var p = svgPt(e);
-    setOrbAt(drag.g, p.x, p.y);
-    drag.out = !insideRim(e);
-    bubEl.classList.toggle("out", drag.out);
-  } else {
-    if(!drag.moved){
-      if(Math.abs(e.clientX-drag.x0) + Math.abs(e.clientY-drag.y0) < 7) return;
-      drag.moved = true;
-      drag.ghost = makeGhost(drag.team);
-    }
-    e.preventDefault();
-    drag.ghost.style.transform = "translate("+(e.clientX-24)+"px,"+(e.clientY-24)+"px)";
-    if(drag.kind === "crown"){
-      drag.slot = slotAt(e);
-      Array.prototype.forEach.call($("cSlots").children, function(el, i){
-        el.classList.toggle("over", i === drag.slot);
-      });
-    } else {
-      drag.inRim = insideRim(e);
-      bubEl.classList.toggle("in", drag.inRim);
-    }
-  }
-}
-function dragUp(e){
-  if(!drag) return;
-  var d = drag; drag = null; endDrag();
-  if(d.kind === "orb"){
-    d.g.classList.remove("dragging");
-    if(!d.moved){ selectOrb(d.id); return; }          // a tap, not a drag
-    if(!d.out){ renderOrbs(); return; }               // let go inside: it settles back
-    dropOrbOut(d.id, d.g);
-    return;
-  }
-  if(d.ghost && d.ghost.parentNode) d.ghost.parentNode.removeChild(d.ghost);
-  if(d.kind === "crown"){
-    Array.prototype.forEach.call($("cSlots").children, function(el){ el.classList.remove("over"); });
-    if(d.moved){
-      noClickUntil = Date.now() + 350;
-      if(d.slot >= 0) dropCrown(d.id, d.slot);
-    }
-    return;
-  }
-  if(d.moved){
-    noClickUntil = Date.now() + 350;                  // the drag already answered
-    if(d.inRim) trayPick(d.id);
-  }
-}
-function dragCancel(){ abortDrag(); }
-function abortDrag(){
-  if(!drag) return;
-  var d = drag; drag = null; endDrag();
-  if(d.kind === "orb"){ d.g.classList.remove("dragging"); renderOrbs(); }
-  else if(d.ghost && d.ghost.parentNode) d.ghost.parentNode.removeChild(d.ghost);
-}
-/* \u2500\u2500 the tap path \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
-   Dragging a team out is the desktop move. On a phone you tap the orb and
-   the one thing you can do to it comes up on a pill above it. */
-var selId = null;
-function orbXY(g){
-  var r = bubEl.getBoundingClientRect();
-  var m  = /translate\(([-\d.]+)/.exec(g.querySelector(".orb-x").getAttribute("transform")||"");
-  var m2 = /translate\(0,([-\d.]+)/.exec(g.querySelector(".orb-y").getAttribute("transform")||"");
-  var x = m ? parseFloat(m[1]) : 150, y = m2 ? parseFloat(m2[1]) : 150;
-  return {x:r.left + x/300*r.width, y:r.top + y/300*r.height, s:r.width/300};
-}
-function placePill(){
-  if(!selId) return;
-  var g = orbsG.querySelector('[data-id="'+selId+'"]');
-  if(!g){ clearSel(); return; }
-  var p = orbXY(g), st = stageEl.getBoundingClientRect();
-  var rr = parseFloat(g.getAttribute("data-r") || 20);
-  var pill = $("orbPill");
-  pill.style.left = (p.x - st.left).toFixed(0) + "px";
-  pill.style.top  = (p.y - st.top - rr*p.s - 12).toFixed(0) + "px";
-}
-function clearSel(){
-  if(selId){
-    var g = orbsG.querySelector('[data-id="'+selId+'"]');
-    if(g) g.classList.remove("sel");
-  }
-  selId = null;
-  if($("orbPill")) $("orbPill").hidden = true;
-}
-function selectOrb(id){
-  clearSel();
-  if(S.playoff || S.pendingOut) return;
-  var g = orbsG.querySelector('[data-id="'+id+'"]');
-  if(!g) return;
-  if(S.locked && S.swapUsed){ toast("Your swap is gone. The roster is locked.", "bad"); return; }
-  if(S.locked && S.week > 10){ toast("The swap window closed after Week 10.", "bad"); return; }
-  selId = id;
-  g.classList.add("sel");
-  $("orbPillGo").textContent = S.locked ? "Swap out" : "Drop from bubble";
-  $("orbPill").hidden = false;
-  placePill();
-}
-function pillAct(){
-  var id = selId;
-  if(!id) return;
-  var g = orbsG.querySelector('[data-id="'+id+'"]');
-  clearSel();
-  if(!g) return;
-  if(!S.locked){
-    if(S.bubble.length <= 1){ toast("You need at least one team.", "bad"); return; }
-    removeTeam(id);
-    return;
-  }
-  var m = /translate\(([-\d.]+)/.exec(g.querySelector(".orb-x").getAttribute("transform")||"");
-  var x = m ? parseFloat(m[1]) : 150;
-  setOrbAt(g, 150 + (x >= 150 ? 176 : -176), 150);   // park it outside the rim
-  dropOrbOut(id, g);
-}
-
-function dropOrbOut(id, g){
-  if(!S.locked){                                      // a draft drops teams for free
-    if(S.bubble.length <= 1){
-      toast("You need at least one team.", "bad");
-      renderOrbs(); return;
-    }
-    removeTeam(id);
-    return;
-  }
-  if(S.swapUsed){ toast("Your swap is gone. The roster is locked.", "bad"); renderOrbs(); return; }
-  if(S.week > 10){ toast("The swap window closed after Week 10.", "bad"); renderOrbs(); return; }
-  g.classList.add("parked");                          // it hovers outside, waiting
-  S.pendingOut = id;
-  $("swapAskT").innerHTML = "Swap out <b>" + BY_ID[id].name + "</b>? Pick who comes in. Fee " + swapFee() + ".";
-  $("swapAsk").hidden = false;
-  $("tray").classList.add("swapping");
-  $("trayHint").textContent = trayHint();
-}
-function cancelSwapAsk(quiet){
-  if(!S.pendingOut) return;
-  S.pendingOut = null;
-  $("swapAsk").hidden = true;
-  $("tray").classList.remove("swapping");
-  if(!quiet){ renderOrbs(); renderTray(); }
 }
 
 function renderRoster(){
-  var host = $("roster");
-  host.innerHTML = "";
-  var share = shareOf(S.bubble.length, S.entry);
-  S.bubble.slice().sort(function(a,b){
-    return (rankOf(a)||99) - (rankOf(b)||99);
-  }).forEach(function(id){
-    var t = BY_ID[id], r = rankOf(id), pct = sliceFor(r);
-    var credit = pct, tag = "";
-    if(S.playoff){
-      var pc = playoffCredit(id, S.playoff);
-      if(pc > pct){ credit = pc; tag = pc===100?"Final Four":(pc===50?"Quarterfinal":"Made the field"); }
-    }
-    var state;
-    if(isEliminated(id)) state = r ? "#"+r+" \u00B7 out of the playoff" : "out of the playoff";
-    else state = r ? "#"+r : (isPopped(id) ? "dropped out in Week "+(S.poppedAt[id]||S.week) : "unranked");
-    var row = document.createElement("div");
-    row.className = "rrow " + (r&&r<=8 ? "lift-y" : (!r||r>=13 ? "sink-y" : ""));
-    row.innerHTML =
-      (S.locked && S.crowns.indexOf(id) === 0
-        ? '<span class="sn champ" title="Your champ pick">' + CROWN_SVG + '</span>'
-        : (S.locked && S.crowns.indexOf(id) > 0
-            ? '<span class="sn">'+(S.crowns.indexOf(id)+1)+'</span>' : '')) +
-      '<span class="swatch" style="background:'+t.c1+';border-color:'+t.c2+'"></span>' +
-      '<span class="conf">'+t.tag+'</span>' +
-      '<span class="math"><b>'+t.name+'</b> \u00B7 '+ state +
-        (tag?" \u00B7 "+tag:"")+' \u00B7 '+
-        Math.round(share)+' &times; '+credit+'%</span>' +
-      '<span class="pts num">'+Math.round(share*credit/100)+'</span>';
-    if(!S.playoff && !S.locked){
-      var x = document.createElement("button");
-      x.className = "x"; x.type="button"; x.innerHTML = "&times;";
-      x.title = "Drop " + t.name;
-      x.setAttribute("aria-label","Drop "+t.name);
-      x.addEventListener("click", function(){ removeTeam(id); });
-      row.appendChild(x);
-    }
-    host.appendChild(row);
-  });
-  if(S.fee>0){
-    var f = document.createElement("div");
-    f.className = "rrow";
-    f.innerHTML = '<span class="math" style="color:var(--red-hi)">Swap fee paid</span>' +
-                  '<span class="pts num" style="color:var(--red-hi)">&minus;'+S.fee+'</span>';
-    host.appendChild(f);
+  const el=$('roster'); el.innerHTML='';
+  const confs=['ALL','SEC','B1G','ACC','B12','OTH'];
+  const f=$('filters');
+  if(!f.dataset.built){
+    confs.forEach(c=>{
+      const b=document.createElement('button');
+      b.className='fbtn'; b.textContent=c==='B1G'?'Big Ten':c==='B12'?'Big 12':c==='OTH'?'Others':c==='ALL'?'All':c;
+      b.dataset.c=c;
+      b.onclick=()=>{S.filter=c;renderAll()};
+      f.appendChild(b);
+    });
+    const t=document.createElement('button');
+    t.className='fbtn'; t.textContent='Top 25 only'; t.dataset.c='T25';
+    t.onclick=()=>{S.top25=!S.top25;renderAll()};
+    f.appendChild(t);
+    f.dataset.built=1;
   }
-  var tot = document.createElement("div");
-  tot.className = "rrow tot";
-  tot.innerHTML = '<span class="math">' + (S.playoff ? "Final score" : "Live score") +
-                  (S.locked || S.playoff ? "" : " \u00B7 not locked in") + '</span>' +
-                  '<span class="pts num">' + fmtN(liveScore()) + '</span>';
-  host.appendChild(tot);
-  var cel = document.createElement("div");
-  cel.className = "rrow cel";
-  cel.innerHTML = '<span class="math">Max \u00B7 the most you can still win</span>' +
-                  '<span class="pts num">' + fmtN(liveCeiling()) + '</span>';
-  host.appendChild(cel);
+  [...f.children].forEach(b=>{
+    b.setAttribute('aria-pressed',b.dataset.c==='T25'?S.top25:S.filter===b.dataset.c);
+    if(b.dataset.c==='T25') b.classList.toggle('on',S.top25);
+    else b.classList.toggle('on',S.filter===b.dataset.c);
+  });
+
+  TEAMS
+    .filter(t=>S.filter==='ALL'||t.conf===S.filter||(S.filter==='OTH'&&!['SEC','B1G','ACC','B12'].includes(t.conf)))
+    .filter(t=>!S.top25||t.rank>=1)
+    .filter(t=>t.name.toLowerCase().includes(S.search))
+    .sort((a,b)=>(a.rank||99)-(b.rank||99))
+    .forEach(t=>{
+      const inB=S.bubble.includes(t.id);
+      const b=document.createElement('button');
+      b.className='tile'+(inB?' in':'');
+      b.dataset.team=t.id;
+      b.disabled=S.locked||S.week>4;
+      b.setAttribute('aria-pressed',inB);
+      b.setAttribute('aria-label',(inB?'Remove ':'Add ')+t.name);
+      b.innerHTML='<span class="ball" style="background:'+t.c+'">'+t.ab+
+        (t.rank?'<span class="rk">#'+t.rank+'</span>':'')+
+        '<span class="ck" aria-hidden="true">✓</span></span><span class="nm">'+t.name+'</span>';
+      b.onclick=()=>toggle(t.id);
+      $('roster').appendChild(b);
+    });
+  $('poolCount').textContent=el.children.length;
+  if(!el.children.length) el.textContent='No teams match. Try another search or filter.';
 }
 
-function renderEntry(){
-  var host = $("entrySegs");
-  host.innerHTML = "";
-  var closed = S.locked || S.week > 4 || !!S.playoff;
-  DOCKS.forEach(function(d, i){
-    var b = document.createElement("button");
-    b.className = "seg-btn"; b.type="button";
-    b.setAttribute("aria-pressed", S.entry===i ? "true":"false");
-    if(closed) b.setAttribute("disabled","");
-    b.textContent = d.k + " \u00B7 " + Math.round(d.p*100) + "%";
-    b.addEventListener("click", function(){ S.entry = i; render(); toast("Entry set to "+d.k+". Every team pays "+Math.round(d.p*100)+"%."); });
-    host.appendChild(b);
+function renderRows(){
+  const el=$('rows'); el.innerHTML='';
+  const per=perTeamPts(S.bubble.length)*mult();
+  [...S.bubble].sort((a,b)=>(team(a).rank||99)-(team(b).rank||99)).forEach(id=>{
+    const t=team(id), p=S.final?(S.final.f4.includes(id)?100:0):pct(t);
+    const r=document.createElement('div'); r.className='row';
+    r.innerHTML='<span class="ballmini" style="background:'+t.c+'"></span>'+
+      '<span class="conf">'+t.conf+'</span>'+
+      '<span><span class="tname">'+t.name+'</span> <span class="tmath">· '+(t.rank?'#'+t.rank:'NR')+' · '+Math.round(per)+' × '+p+'%</span></span>'+
+      '<span class="pts">'+Math.round(per*p/100)+'</span>'+
+      (S.locked||S.week>4?'':'<button class="x" aria-label="Remove '+t.name+'">×</button>');
+    if(!S.locked&&S.week<=4) r.querySelector('.x').onclick=()=>toggle(id);
+    el.appendChild(r);
   });
-  var pct = Math.round(DOCKS[S.entry].p*100);
-  $("entryHint").textContent = S.locked
-    ? "Locked in at " + DOCKS[S.entry].k + ". Every team pays " + pct + "%. That is fixed now."
-    : (S.week > 4 || S.playoff
-        ? "Entry closed after Week 4. If you never locked in, you are out."
-        : "Get in late and every team pays less. You are at " + pct + "%. It follows the week until you lock in.");
-  $("entryChip").textContent = S.locked ? "Entered \u00B7 " + DOCKS[S.entry].k
-    : (S.week > 4 || S.playoff ? "Entry closed" : "Entry window open");
 }
 
 function renderSwap(){
-  var so = $("swapOut"), si = $("swapIn");
-  var prevOut = so.value, prevIn = si.value;
-  so.innerHTML = ""; si.innerHTML = "";
-  S.bubble.forEach(function(id){
-    var o = document.createElement("option"); o.value=id; o.textContent = "Out: " + BY_ID[id].name; so.appendChild(o);
-  });
-  TEAMS.filter(function(t){ return S.bubble.indexOf(t.id)<0; }).forEach(function(t){
-    var r = rankOf(t.id);
-    var o = document.createElement("option"); o.value=t.id;
-    o.textContent = "In: " + t.name + (r?" (#"+r+")":"");
-    si.appendChild(o);
-  });
-  if(prevOut && S.bubble.indexOf(prevOut)>=0) so.value = prevOut;
-  if(prevIn && S.bubble.indexOf(prevIn)<0) si.value = prevIn;
-
-  var dead = S.swapUsed || S.week>10 || !!S.playoff;
-  so.disabled = si.disabled = dead;
-  $("bSwap").disabled = dead;
-  $("feeTxt").innerHTML = S.swapUsed
-    ? 'Swap used in Week ' + S.swapWeek + ' \u00B7 <b class="num">&minus;' + S.fee + '</b> pts'
-    : (S.week>10 ? 'Swap window closed after Week 10'
-                 : 'Fee this week: <b class="num">' + swapFee() + '</b> pts');
-  $("swapChip").textContent = S.swapUsed ? "Swap spent" : (S.week>10 ? "Swap window closed" : "Swap available \u00B7 " + swapFee() + " pts");
+  const out=$('swapOut'), inn=$('swapIn');
+  const previousOut=out.value, previousIn=inn.value;
+  out.innerHTML=S.bubble.map(id=>'<option value="'+id+'">Out: '+team(id).name+'</option>').join('');
+  inn.innerHTML=TEAMS.filter(t=>!S.bubble.includes(t.id)).sort((a,b)=>(a.rank||99)-(b.rank||99))
+    .map(t=>'<option value="'+t.id+'">In: '+t.name+(t.rank?' (#'+t.rank+')':'')+'</option>').join('');
+  if(S.bubble.includes(previousOut))out.value=previousOut;
+  if(TEAMS.some(t=>t.id===previousIn)&&!S.bubble.includes(previousIn))inn.value=previousIn;
 }
 
-/* \u2500\u2500 tailgate \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 */
-function renderTailgate(){
-  var host = $("tg");
-  var mine = { h:"YOU", d:["You", S.locked?"locked":"not locked"], teams:S.bubble, entry:S.entry, fee:S.fee,
-               you:true, champ:S.locked?S.crowns[0]:null, crowns:S.locked?S.crowns:[], call:S.locked?S.call:null };
-  var all = [mine].concat(FRIENDS.map(function(f){
-    return { h:f.h, d:f.d, teams:f.teams, entry:f.entry, fee:0, champ:f.crowns[0], crowns:f.crowns, call:f.call };
-  }));
-  all.forEach(function(p){
-    p.score = scoreOf(p.teams, p.entry, S.ranks, p.fee, S.playoff);
-    p.ceil  = ceilingOf(p.teams, p.entry, S.ranks, p.fee, S.playoff, eliminatedIn(p.teams));
+function renderTailgate(myLive){
+  const el=$('tgStage'); el.innerHTML='';
+  const entries=[{name:'You',me:true,teams:S.bubble,score:myLive,crowns:S.crowns,call:S.call},
+    ...FRIENDS.map(f=>({name:f.name,teams:f.teams,score:scoreOf(f.teams,1),crowns:f.teams.slice(0,4),call:{w:31,l:24}}))];
+  entries.sort(compareEntries);
+  const leader=entries[0];
+  entries.forEach(e=>{
+    const size=Math.min(150,26+e.teams.length*7);
+    const col=document.createElement('div'); col.className='tg-col';
+    col.innerHTML=(compareEntries(e,leader)===0?'<span class="tg-crown" title="Leading the tailgate">👑</span>':'')+
+      '<span class="tg-ball'+(e.me?' me':'')+'" style="width:'+size+'px;height:'+size+'px"></span>'+
+      '<span class="tg-score">'+fmt(e.score)+'</span>'+
+      '<span class="tg-name">'+(e.me?(S.locked?'You':'You · not locked'):e.name)+'</span>'+
+      '<span class="tg-teams">'+e.teams.length+' teams</span>';
+    el.appendChild(col);
   });
-  var best = all.reduce(function(a,b){ return b.score>a.score?b:a; });
-  tieNote = "";
-  if(S.playoff){                       // level on points? run the chain
-    var groups = {};
-    all.forEach(function(p){ (groups[p.score] = groups[p.score] || []).push(p); });
-    Object.keys(groups).forEach(function(k){
-      var g = groups[k];
-      if(g.length < 2) return;
-      var win = g[0], why = "";
-      g.forEach(function(p){ if(p !== win && tieReason(p, win)) win = p; });
-      g.forEach(function(p){                     // the tie is named by the step that ended it
-        if(p === win) return;
-        var r = tieReason(win, p);
-        if(r && (TIE_STEP[r] || 0) > (TIE_STEP[why] || 0)) why = r;
-      });
-      win.tieWin = why || "won the tie";
-      if(win.you && why === "won on the score call"){
-        var rival = null;                // the one it came down to
-        g.forEach(function(p){
-          if(p !== win && (p.champ === CHAMP) === (win.champ === CHAMP) && f4Hits(p.crowns) === f4Hits(win.crowns)) rival = p;
-        });
-        if(rival) tieNote = "You off by " + callMiss(win.call) + " \u00B7 " + rival.h +
-          " off by " + callMiss(rival.call) + " \u00B7 you win on the final score call.";
-      }
-    });
+  const me=entries.find(e=>e.me), rival=entries.filter(e=>!e.me)[0];
+  const lead=me.score-rival.score;
+  $('tgLead').innerHTML=lead===0 ? (S.final?'Level on points. Crowns and the score call decide; matching picks share the win.':'You’re tied for the tailgate lead.') : lead>0
+    ? 'You lead the tailgate by <b>'+fmt(lead)+'</b>'
+    : 'You trail the tailgate by <b>'+fmt(-lead)+'</b>';
+  if(S.final){
+    const winners=entries.filter(e=>compareEntries(e,leader)===0).map(e=>e.name);
+    $('tgLead').textContent=(winners.length>1?'Shared win: ':'Tailgate winner: ')+winners.join(', ')+'. Points first; then champion, Final Four picks, and score call.';
   }
+}
 
-  if(host.children.length !== all.length){
-    host.innerHTML = "";
-    all.forEach(function(p){
-      var c = document.createElement("div");
-      c.className = "col" + (p.you?" you":"");
-      c.innerHTML = '<div class="track"><div class="mini"></div></div>' +
-                    '<div class="sc num">0</div>' +
-                    '<div class="cl num"></div>' +
-                    '<div class="who"></div>' +
-                    '<div class="ct num"></div>';
-      host.appendChild(c);
-    });
-  }
-  all.forEach(function(p, i){
-    var c = host.children[i];
-    var mini = c.querySelector(".mini");
-    var d = p.you ? 26 : 20;
-    var lead = p === best;
-    var hollow = p.you && !S.locked;          // a draft floats without a fill
-    c.className = "col" + (p.you ? " you" : "") + (hollow ? " draft" : "");
-    mini.style.bottom = (p.score/1000*100).toFixed(1) + "%";
-    mini.innerHTML =
-      '<svg width="'+(d+16)+'" height="'+(d+18)+'" viewBox="'+(-(d+16)/2)+' '+(-(d+18)+6)+' '+(d+16)+' '+(d+18)+'" style="overflow:visible">' +
-      (lead ? '<path d="M-7,-'+(d/2+7)+' l3.5,5 3.5,-6.5 3.5,6.5 3.5,-5 -1.4,7.5 -11.2,0 z" fill="#C9A227"/>' : '') +
-      '<circle cx="0" cy="0" r="'+(d/2)+'" fill="'+(hollow?"none":"rgba(160,196,255,.10)")+'" stroke="'+(p.you?"#C9A227":"#2A4A78")+'" stroke-width="'+(p.you?2:1.2)+'"'+(hollow?' stroke-dasharray="4 4"':'')+'/>' +
-      (hollow ? '' : '<circle cx="'+(-d/7)+'" cy="'+(-d/5)+'" r="'+(d/7)+'" fill="#DCE9FF" opacity=".22"/>') +
-      '</svg>';
-    c.querySelector(".sc").textContent = p.score;
-    c.querySelector(".cl").textContent = "Max " + fmtN(p.ceil);
-    var who = c.querySelector(".who");
-    who.innerHTML = p.d.map(function(w){return w?"<span>"+w+"</span>":"";}).join("");
-    who.title = p.you
-      ? (S.locked ? "Locked " + stamp(S.lockedAt) + ""
-                  : "Not entered yet \u2014 lock in to take your timestamp")
-      : (p.h + " \u00B7 entered " + DOCKS[p.entry].k);
-    c.querySelector(".ct").textContent = p.teams.length + (p.teams.length===1?" team":" teams");
-    var tw = c.querySelector(".tiewin");
-    if(p.tieWin && !tw){ tw = document.createElement("div"); tw.className = "tiewin"; c.appendChild(tw); }
-    if(tw) tw.textContent = p.tieWin || "";
+function renderState(live){
+  /* rank estimate from the fake distribution */
+  const better=Math.max(1,Math.round(8400*Math.pow(Math.max(0,(1000-live))/1000,4.9)));
+  const rank=Math.min(8400,better);
+  $('stateRank').textContent='Est. No. '+fmt(rank);
+  const topPct=rank/8400;
+  const badge=$('topBadge');
+  if(topPct<=0.01){badge.style.display='inline-block';badge.textContent='Top 1%'}
+  else if(topPct<=0.05){badge.style.display='inline-block';badge.textContent='Top 5%'}
+  else if(topPct<=0.10){badge.style.display='inline-block';badge.textContent='Top 10%'}
+  else badge.style.display='none';
+  const x=10+540*(live/1000);
+  $('youLine').setAttribute('x1',x); $('youLine').setAttribute('x2',x);
+  const lbl=$('youLbl'); lbl.setAttribute('x',Math.min(x+6,440)); lbl.textContent='You · '+fmt(live);
+}
+
+/* ---------- actions ---------- */
+function toggle(id){
+  if(S.week>4&&!S.locked){toast('Entry is closed. Reset to build a new bubble.');return}
+  if(S.locked){toast('Your bubble is locked. Use your one swap to change it.');return}
+  const i=S.bubble.indexOf(id);
+  if(i>=0){ if(S.bubble.length<=1){toast('You need at least one team in the bubble.');return} S.bubble.splice(i,1);}
+  else{ if(S.bubble.length>=20){toast('Bubble is full — 20 teams max.');return} S.bubble.push(id);}
+  renderAll();
+  document.querySelector('#roster [data-team="'+id+'"]')?.focus({preventScroll:true});
+  toast(team(id).name+(i>=0?' removed.':' added.'));
+}
+function toast(m){const t=$('toast');t.textContent=m;t.classList.add('show');clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('show'),2600)}
+
+let draftCrowns=[];
+function renderCrowns(){
+  const needed=Math.min(4,S.bubble.length);
+  $('crownHint').textContent='Pick '+needed+' team'+(needed===1?'':'s')+' in order. Your first pick is your champion. Tap a selected team to remove it and change the order.';
+  $('crownOptions').innerHTML='';
+  S.bubble.forEach(id=>{
+    const b=document.createElement('button'), pos=draftCrowns.indexOf(id);
+    b.type='button';b.className='btn';b.setAttribute('aria-pressed',pos>=0);
+    b.textContent=(pos>=0?(pos===0?'👑 ':pos+1+'. '):'')+team(id).name;
+    b.onclick=()=>{if(pos>=0)draftCrowns.splice(pos,1);else if(draftCrowns.length<needed)draftCrowns.push(id);else{$('lockError').textContent='Remove a pick before adding another.';return} $('lockError').textContent='';renderCrowns();$('crownOptions').children[S.bubble.indexOf(id)].focus();};
+    $('crownOptions').appendChild(b);
   });
-
-  $("tgDraft").hidden = S.locked;
-  var gap = best.score - all[0].score;
-  var level = all.slice(1).filter(function(p){ return p.score === all[0].score; });
-  $("gapLine").innerHTML = gap > 0
-    ? 'Gap to the leader (' + best.h + '): <b class="num">' + gap + '</b>'
-    : (level.length
-        ? 'Level with ' + level.map(function(p){ return p.h; }).join(" and ") +
-          ' at <b class="num">' + all[0].score + '</b>. ' +
-          (all[0].tieWin ? "You " + all[0].tieWin + "." : "The tie is theirs.")
-        : 'You lead the tailgate by <b class="num">' +
-          (all[0].score - all.slice(1).reduce(function(a,b){return Math.max(a,b.score);},0)) + '</b>');
+  $('crownOrder').textContent=draftCrowns.length+' of '+needed+' selected: '+draftCrowns.map(id=>team(id).name).join(' → ');
 }
-
-function renderTiebreak(){
-  var el = $("tbLine");
-  if(!S.playoff){ el.hidden = true; return; }
-  el.hidden = false;
-  if(!S.locked){
-    el.innerHTML = '<span class="lbl lbl-gold">Tie-break</span>' +
-      '<span>You never locked in. No champ pick, no score call. You lose every tie.</span>';
-    return;
-  }
-  var champ = S.crowns[0], ok = champ === CHAMP;
-  var hits = f4Hits(S.crowns), miss = callMiss(S.call);
-  el.innerHTML = '<span class="lbl lbl-gold">Tie-break</span>' +
-    '<span>Champ pick: <b>' + BY_ID[champ].name + '</b> \u00B7 ' +
-      (ok ? '<i class="good">correct</i>' : '<i class="bad2">no, ' + BY_ID[CHAMP].name + ' won it</i>') + '</span>' +
-    '<span><span class="q" title="How many of your crowned four actually made the Final Four.">Final Four crowned</span>: <b>' +
-      hits + ' of ' + S.crowns.length + '</b></span>' +
-    '<span>Final score call: you <b>' + (S.call ? S.call.w + "\u2013" + S.call.l : "\u2014") +
-      '</b> \u00B7 actual <b>' + FINAL_W + '\u2013' + FINAL_L + '</b>' +
-      (S.call ? ' \u00B7 off by <b>' + miss + '</b>' : '') + '</span>' +
-    (tieNote ? '<span class="tienote">' + tieNote + '</span>' : '');
-}
-
-/* \u2500\u2500 the state \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 */
-var BINS = (function(){
-  var b = new Array(40).fill(0);
-  DIST.forEach(function(v){ b[Math.min(39, Math.floor(v/25))]++; });
-  // light smoothing so the area reads as a curve, not a comb
-  return b.map(function(_,i){
-    var a = b[i-1]||0, c = b[i], d = b[i+1]||0;
-    return (a + 2*c + d)/4;
-  });
-})();
-
-function renderState(){
-  var el = $("dist");
-  while(el.childNodes.length>1) el.removeChild(el.lastChild);
-  var W=620,H=210, padL=8, padR=8, padB=30, padT=16;
-  var iw = W-padL-padR, ih = H-padT-padB;
-  var max = Math.max.apply(null, BINS);
-  var x = function(v){ return padL + (v/1000)*iw; };
-  var y = function(c){ return padT + ih - (c/max)*ih; };
-
-  var g = svg("g", {});
-  // baseline + gridlines at the pace marks
-  [250,500,750].forEach(function(v){
-    g.appendChild(svg("line", {x1:x(v), y1:padT, x2:x(v), y2:padT+ih, stroke:"#17294a", "stroke-width":1}));
-  });
-
-  var d = "M " + x(0) + " " + (padT+ih);
-  BINS.forEach(function(c,i){ d += " L " + x(i*25+12.5).toFixed(1) + " " + y(c).toFixed(1); });
-  d += " L " + x(1000) + " " + (padT+ih) + " Z";
-  var grad = svg("linearGradient", {id:"dg", x1:"0", y1:"0", x2:"0", y2:"1"});
-  grad.appendChild(svg("stop", {offset:"0", "stop-color":"#4C7FC4", "stop-opacity":".42"}));
-  grad.appendChild(svg("stop", {offset:"1", "stop-color":"#4C7FC4", "stop-opacity":".05"}));
-  var defs = svg("defs", {}); defs.appendChild(grad); g.appendChild(defs);
-  g.appendChild(svg("path", {d:d, fill:"url(#dg)"}));
-  g.appendChild(svg("path", {d:d, fill:"none", stroke:"#7FA6D8", "stroke-width":1.6, "stroke-linejoin":"round"}));
-  g.appendChild(svg("line", {x1:padL, y1:padT+ih, x2:W-padR, y2:padT+ih, stroke:"#1E3557", "stroke-width":1}));
-
-  // median
-  var mx = x(DIST_MEDIAN);
-  g.appendChild(svg("line", {x1:mx, y1:padT+4, x2:mx, y2:padT+ih, stroke:"#9AA7BF", "stroke-width":1, "stroke-dasharray":"3 4"}));
-  var mt = svg("text", {x:mx+5, y:padT+13, fill:"#9AA7BF", "font-size":11, "font-family":"Barlow Condensed, sans-serif",
-    "font-weight":700, "letter-spacing":"0.08em"});
-  mt.textContent = "MEDIAN " + DIST_MEDIAN;
-  g.appendChild(mt);
-
-  // you \u2014 hollow and dashed until the bubble is locked in
-  var sc = liveScore(), yx = x(sc), draft = !S.locked;
-  var flip = yx > W-(draft?190:130);
-  var yl = svg("line", {x1:yx, y1:padT-6, x2:yx, y2:padT+ih, stroke:"#C9A227", "stroke-width":2});
-  if(draft) yl.setAttribute("stroke-dasharray", "4 4");
-  g.appendChild(yl);
-  g.appendChild(svg("circle", {cx:yx, cy:padT+ih, r:4.5, fill:draft?"#0E1F3F":"#C9A227",
-    stroke:"#C9A227", "stroke-width":1.6}));
-  var yt = svg("text", {x:flip?yx-7:yx+7, y:padT-1, fill:"#C9A227", "font-size":13,
-    "font-family":"Barlow Condensed, sans-serif", "font-weight":800, "letter-spacing":"0.08em",
-    "text-anchor": flip?"end":"start"});
-  yt.textContent = (draft ? "YOU \u00B7 NOT LOCKED " : "YOU ") + sc;
-  g.appendChild(yt);
-  // the lid
-  var cx2 = x(Math.min(1000, liveCeiling()));
-  g.appendChild(svg("line", {x1:cx2, y1:padT+4, x2:cx2, y2:padT+ih, stroke:"#C9A227",
-    "stroke-width":1, "stroke-dasharray":"2 5", "stroke-opacity":".55"}));
-
-  // axis labels
-  [[0,"0"],[250,"250"],[500,"500"],[750,"750"],[1000,"1000"]].forEach(function(p,i,arr){
-    var t = svg("text", {x:x(p[0]), y:padT+ih+16, fill:"#6E7E9B", "font-size":11,
-      "font-family":"Barlow Condensed, sans-serif", "font-weight":700, "letter-spacing":"0.08em",
-      "text-anchor": i===0?"start":(i===arr.length-1?"end":"middle")});
-    t.textContent = p[1];
-    g.appendChild(t);
-  });
-  var cap = svg("text", {x:padL, y:H-4, fill:"#6E7E9B", "font-size":10.5,
-    "font-family":"Barlow Condensed, sans-serif", "font-weight":700, "letter-spacing":"0.12em"});
-  cap.textContent = "BUBBLE SCORE \u00B7 8,400 ENTRIES";
-  g.appendChild(cap);
-  el.appendChild(g);
-
-  var rk = stateRank(sc);
-  var pct = Math.max(1, Math.round(rk/DIST.length*100));
-  $("rankBig").innerHTML = 'No. ' + rk.toLocaleString() + ' <span class="of">of 8,400</span>';
-  $("rankPct").textContent = "Top " + pct + "%";
-  $("stDraft").hidden = S.locked;
-  $("medianHint").textContent = "The median bubble in the state sits at " + DIST_MEDIAN +
-    ". Most entries pile up under 250. Too many teams, not enough of them ranked.";
-}
-
-/* \u2500\u2500 slice table in the rules card \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 */
-function buildSliceTable(){
-  var host = $("sliceTable");
-  var rows = [
-    ["#1\u20134",   "100 \u00B7 96 \u00B7 92 \u00B7 88%", 100],
-    ["#5\u20138",   "60 \u00B7 56 \u00B7 52 \u00B7 48%",  60],
-    ["#9\u201312",  "30 \u00B7 27 \u00B7 24 \u00B7 21%",  30],
-    ["#13\u201325", "12% down to 0",       12],
-    ["Unranked","0 until it climbs into the poll", 0]
-  ];
-  rows.forEach(function(r){
-    var d = document.createElement("div");
-    d.className = "sl";
-    d.innerHTML = '<span class="k">'+r[0]+'</span><span class="meter"><i style="width:'+r[2]+'%"></i></span>' +
-                  '<span class="v">'+r[1]+'</span>';
-    host.appendChild(d);
-  });
-}
-
-/* \u2500\u2500 the week strip \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 */
-var countTimer;
-function renderStrip(prev){
-  var sc = liveScore();
-  var share = Math.round(shareOf(S.bubble.length, S.entry));
-  $("sShare").textContent = share;
-  $("sTeams").textContent = S.bubble.length + (S.bubble.length===1?" team in the bubble":" teams in the bubble");
-  var cl = liveCeiling();
-  countUp($("sScore"), sc);
-  countUp($("roN"), sc);
-  countUp($("sCeil"), cl, undefined, fmtN);
-  countUp($("roCeilN"), cl, undefined, fmtN);
-  $("roK").textContent = S.playoff ? "Final score" : (S.locked ? "Live score" : "Live score \u00B7 not locked");
-  $("roDraft").hidden = S.locked || !!S.playoff;
-  $("readout").classList.toggle("final", !!S.playoff);
-
-}
-function countUp(el, to, from, fmt){
-  if(!el) return;
-  var f = fmt || function(v){ return v; };
-  var start = (from===undefined || from===null) ? (parseInt(String(el.textContent).replace(/\D/g,""),10)||0) : from;
-  if(REDUCE || start===to){ el.textContent = f(to); return; }
-  var t0 = performance.now(), dur = 700;
-  function step(t){
-    var k = Math.min(1, (t-t0)/dur);
-    var e = 1 - Math.pow(1-k, 3);
-    el.textContent = f(Math.round(start + (to-start)*e));
-    if(k<1) requestAnimationFrame(step);
-  }
-  requestAnimationFrame(step);
-}
-
-/* \u2500\u2500 toasts \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 */
-function toast(msg, kind){
-  var host = $("toasts");
-  var d = document.createElement("div");
-  d.className = "toast" + (kind==="bad"?" bad":"");
-  d.innerHTML = '<span class="t">' + (kind==="bad"?"Bubble trouble":"Bubble watch") + '</span>' + msg;
-  host.appendChild(d);
-  setTimeout(function(){ if(d.parentNode) d.parentNode.removeChild(d); }, 3600);
-  while(host.children.length>4) host.removeChild(host.firstChild);
-}
-
-/* \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
-   ACTIONS
-   \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550 */
-function addTeam(id){
-  if(S.playoff || S.locked) return;
-  if(S.bubble.indexOf(id)>=0) return;
-  if(S.bubble.length>=20){ toast("Twenty is the cap. At that size each team is worth 50.", "bad"); return; }
-  var prev = liveScore();
-  S.bubble.push(id);
-  render(prev);
-  var r = rankOf(id);
-  toast(BY_ID[id].name + " joins the bubble" + (r ? " at #" + r : ", unranked"));
-}
-function removeTeam(id){
-  if(S.playoff || S.locked) return;
-  if(S.bubble.length<=1){ toast("You need at least one team.", "bad"); return; }
-  var prev = liveScore();
-  S.bubble.splice(S.bubble.indexOf(id),1);
-  forgetTeam(id);
-  render(prev);
-  toast(BY_ID[id].name + " is out of the bubble", "bad");
-}
-function doSwap(){
-  var out = $("swapOut").value, inn = $("swapIn").value;
-  if(out && inn) completeSwap(out, inn);
-}
-function completeSwap(out, inn){
-  if(S.swapUsed || S.week>10 || S.playoff) return;
-  if(S.bubble.indexOf(out) < 0 || S.bubble.indexOf(inn) >= 0) return;
-  var prev = liveScore();
-  S.bubble[S.bubble.indexOf(out)] = inn;
-  forgetTeam(out);
-  S.swapUsed = true; S.swapWeek = S.week; S.fee = swapFee();
-  cancelSwapAsk(true);
-  render(prev);
-  toast(BY_ID[inn].name + " takes over " + BY_ID[out].name + "'s points. Fee " + S.fee + ".", "bad");
-}
-
-/* \u2500\u2500 lock in \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 */
-function entryShut(){ return S.week > 4 || !!S.playoff; }
-function seedsOn(){ return S.locked || $("lockConfirm").classList.contains("on"); }
-function syncCrowns(){                      // crowns follow the roster, order kept
-  S.crowns = S.crowns.filter(function(id){ return S.bubble.indexOf(id) >= 0; });
-  if(S.bubble.length <= 4){                 // four or fewer: they are all crowned
-    S.bubble.slice().sort(function(a,b){ return (rankOf(a)||99) - (rankOf(b)||99); })
-      .forEach(function(id){ if(S.crowns.indexOf(id) < 0) S.crowns.push(id); });
-  }
-  if(S.crowns.length > 4) S.crowns.length = 4;
-}
-function crownsNeeded(){ return Math.min(4, S.bubble.length); }
-function crownsReady(){ return S.crowns.length >= crownsNeeded(); }
-function paintCrowns(){
-  var on = seedsOn();
-  Array.prototype.forEach.call(orbsG.children, function(g){
-    var id = g.getAttribute("data-id"), i = S.crowns.indexOf(id);
-    g.classList.toggle("seeded", on && i > 0);      // 2, 3, 4 wear a numeral
-    g.classList.toggle("crowned", on && i === 0);   // the champ wears the crown
-    var t = g.querySelector(".seednum");
-    if(t) t.textContent = i > 0 ? (i+1) : "";
-  });
-}
-function renderCrownStep(){
-  var few = S.bubble.length <= 4;
-  $("seedList").hidden = !few;
-  $("crownPick").hidden = few;
-  $("cpHint").innerHTML = (few ? "Put them in order. " : "Pick four, in order. ") +
-    "<b>Your #1 is your champ pick</b>, the team you say wins it all. This moves no points. It only breaks ties.";
-  if(few) renderSeedList(); else renderCrownPick();
-  $("cfNext").disabled = !crownsReady();
-}
-function renderCrownPick(){
-  var slots = $("cSlots"), pool = $("cPool"), labels = ["Champ","2","3","4"];
-  slots.innerHTML = ""; pool.innerHTML = "";
-  labels.forEach(function(lab, i){
-    var id = S.crowns[i], t = id ? BY_ID[id] : null;
-    var b = document.createElement("button");
-    b.type = "button";
-    b.className = "cslot" + (id ? " filled" : "");
-    b.setAttribute("data-i", i);
-    b.innerHTML = '<span class="lab">' + lab + '</span>' +
-      (t ? '<span class="swatch" style="background:'+t.c1+';border-color:'+t.c2+'"></span>' +
-           '<span class="nm">' + t.name + '</span>'
-         : '<span class="nm">Tap a team</span>');
-    b.addEventListener("click", function(){
-      if(S.crowns[i]){ S.crowns.splice(i, 1); afterCrownChange(); }
-    });
-    slots.appendChild(b);
-  });
-  S.bubble.slice().sort(function(a,b){ return (rankOf(a)||99) - (rankOf(b)||99); }).forEach(function(id){
-    var t = BY_ID[id], i = S.crowns.indexOf(id), r = rankOf(id);
-    var b = document.createElement("button");
-    b.type = "button";
-    b.className = "corb" + (i >= 0 ? " on" : "");
-    b.setAttribute("data-id", id);
-    b.title = t.name + (r ? " \u00B7 #" + r : " \u00B7 unranked");
-    b.innerHTML =
-      '<span class="torb" style="background:'+t.c1+';border-color:'+t.c2+'">' +
-        '<span class="ab" style="color:'+(lum(t.c1) > .62 ? "#12203A" : "#FFFFFF")+'">'+id+'</span>' +
-      '</span>' +
-      (i >= 0 ? '<span class="cnum">'+(i+1)+'</span>' : '') +
-      '<span class="tnm">'+t.name+'</span>';
-    b.addEventListener("click", function(){ if(Date.now() < noClickUntil) return; toggleCrown(id); });
-    b.addEventListener("pointerdown", function(e){ crownDown(e, t); });
-    pool.appendChild(b);
-  });
-}
-function toggleCrown(id){
-  var i = S.crowns.indexOf(id);
-  if(i >= 0) S.crowns.splice(i, 1);
-  else if(S.crowns.length < 4) S.crowns.push(id);
-  else { toast("Four already crowned. Tap one to drop it.", "bad"); return; }
-  afterCrownChange();
-}
-function dropCrown(id, i){
-  var at = S.crowns.indexOf(id);
-  if(at >= 0) S.crowns.splice(at, 1);
-  if(i < S.crowns.length) S.crowns[i] = id;
-  else if(S.crowns.length < 4) S.crowns.push(id);
-  else S.crowns[3] = id;
-  afterCrownChange();
-}
-function afterCrownChange(){ renderCrownStep(); paintCrowns(); }
-function slotAt(e){
-  var out = -1;
-  Array.prototype.forEach.call($("cSlots").children, function(el, i){
-    var r = el.getBoundingClientRect();
-    if(e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom) out = i;
-  });
-  return out;
-}
-function crownDown(e, t){
-  if(drag) return;
-  if(e.button !== undefined && e.button !== 0) return;
-  drag = {kind:"crown", id:t.id, team:t, moved:false, x0:e.clientX, y0:e.clientY};
-  window.addEventListener("pointermove", dragMove);
-  window.addEventListener("pointerup", dragUp);
-  window.addEventListener("pointercancel", dragCancel);
-}
-function renderSeedList(){
-  var host = $("seedList");
-  host.innerHTML = "";
-  S.crowns.forEach(function(id, i){
-    var t = BY_ID[id], r = rankOf(id);
-    var li = document.createElement("li");
-    li.className = "seedrow";
-    li.setAttribute("data-id", id);
-    li.innerHTML = '<span class="grip" aria-hidden="true">\u2261</span>' +
-      '<span class="sn">'+(i+1)+'</span>' +
-      '<span class="swatch" style="background:'+t.c1+';border-color:'+t.c2+'"></span>' +
-      '<span class="nm">'+t.name+(r?" \u00B7 #"+r:"")+'</span>' +
-      (i===0 ? '<span class="crowntag">Champ</span>' : '') +
-      '<span class="ups">' +
-        '<button type="button" class="mv" data-d="-1" aria-label="Move '+t.name+' up"'+(i===0?" disabled":"")+'>\u25B2</button>' +
-        '<button type="button" class="mv" data-d="1" aria-label="Move '+t.name+' down"'+(i===S.crowns.length-1?" disabled":"")+'>\u25BC</button>' +
-      '</span>';
-    Array.prototype.forEach.call(li.querySelectorAll(".mv"), function(b){
-      b.addEventListener("click", function(e){ e.stopPropagation(); moveSeed(id, parseInt(b.getAttribute("data-d"),10)); });
-    });
-    li.addEventListener("pointerdown", function(e){ seedDown(e, id, li); });
-    host.appendChild(li);
-  });
-}
-function moveSeed(id, d){
-  var i = S.crowns.indexOf(id), j = i + d;
-  if(i < 0 || j < 0 || j >= S.crowns.length) return;
-  S.crowns.splice(j, 0, S.crowns.splice(i, 1)[0]);
-  renderSeedList();
-  paintCrowns();
-}
-var seedDrag = null;
-function seedDown(e, id, li){
-  if(e.target.closest && e.target.closest("button")) return;
+$('lockBtn').onclick=()=>{
+  if(S.locked||S.week>4)return;
+  draftCrowns=[];$('lockForm').reset();$('lockError').textContent='';renderCrowns();$('lockDialog').showModal();
+};
+$('cancelLock').onclick=()=>$('lockDialog').close();
+$('lockForm').onsubmit=e=>{
   e.preventDefault();
-  seedDrag = id;
-  li.classList.add("drop");
-  window.addEventListener("pointermove", seedMove);
-  window.addEventListener("pointerup", seedUp);
+  const w=$('winnerScore').valueAsNumber,l=$('loserScore').valueAsNumber;
+  if(S.locked||S.week>4)return;
+  if(draftCrowns.length!==Math.min(4,S.bubble.length)){$('lockError').textContent='Finish crowning your picks first.';return}
+  if(!Number.isInteger(w)||!Number.isInteger(l)||w<=l||l<0||w>199){$('lockError').textContent='Use whole points. The winner must score more than the loser.';$('winnerScore').focus();return}
+  S.crowns=[...draftCrowns];S.call={w,l};S.locked=true;
+  $('lockDialog').close();renderAll();toast('Locked in. Your picks and score call are set.');
+};
+document.querySelectorAll('.lockTrigger').forEach(b=>b.onclick=()=>$('lockBtn').click());
+$('rulesBtn').onclick=()=>$('rulesDialog').showModal();
+$('closeRules').onclick=()=>$('rulesDialog').close();
+function compareEntries(a,b){
+  if(a.score!==b.score)return b.score-a.score;
+  if(!S.final)return 0;
+  const champ=e=>Number(e.crowns[0]===S.final.champ);
+  const hits=e=>e.crowns.filter(id=>S.final.f4.includes(id)).length;
+  const miss=e=>e.call?Math.abs(e.call.w-S.final.w)+Math.abs(e.call.l-S.final.l):Infinity;
+  return champ(b)-champ(a)||hits(b)-hits(a)||(miss(a)===miss(b)?0:miss(a)-miss(b));
 }
-function seedMove(e){
-  if(!seedDrag) return;
-  var rows = Array.prototype.slice.call($("seedList").children);
-  var from = S.crowns.indexOf(seedDrag), to = from;
-  rows.forEach(function(row, i){
-    var b = row.getBoundingClientRect();
-    if(e.clientY >= b.top && e.clientY <= b.bottom) to = i;
+
+$('swapBtn').onclick=()=>{
+  if(S.swapUsed||!S.locked||S.final) return;
+  const out=$('swapOut').value, inn=$('swapIn').value;
+  if(!out||!inn) return;
+  S.bubble[S.bubble.indexOf(out)]=inn;
+  S.fee=swapFee();
+  S.swapUsed=true;
+  toast('Swap made: '+team(out).name+' out, '+team(inn).name+' in. That was your one. Fee: '+swapFee()+' pts.');
+  renderAll();
+};
+
+$('search').oninput=e=>{S.search=e.target.value.trim().toLowerCase();renderRoster()};
+
+/* ---------- season sandbox ---------- */
+let seed=7;
+function rnd(){seed=(seed*1103515245+12345)%2147483648;return seed/2147483648}
+function shuffleRanks(vol){
+  TEAMS.forEach(t=>{
+    if(t.rank>=1){
+      let d=Math.round((rnd()-0.48)*vol);
+      t.rank=Math.max(1,Math.min(25,t.rank+d));
+    } else if(rnd()<0.06){ t.rank=25; }
   });
-  if(to !== from && to >= 0){
-    S.crowns.splice(to, 0, S.crowns.splice(from, 1)[0]);
-    renderSeedList();
-    paintCrowns();
-    var el = $("seedList").children[to];
-    if(el) el.classList.add("drop");
-  }
+  /* resolve duplicate ranks into a clean 1..25 */
+  const ranked=TEAMS.filter(t=>t.rank>=1).sort((a,b)=>a.rank-b.rank||rnd()-0.5);
+  ranked.forEach((t,i)=>t.rank=i<25?i+1:0);
 }
-function seedUp(){
-  seedDrag = null;
-  window.removeEventListener("pointermove", seedMove);
-  window.removeEventListener("pointerup", seedUp);
-  renderSeedList();
-}
-function askLock(){
-  if(S.locked || entryShut()) return;
-  syncCrowns();
-  renderCrownStep();
-  var n = S.bubble.length;
-  $("cfTxt").innerHTML = "Lock <b>" + n + (n===1?" team":" teams") + "</b> at <b>Week " + S.week +
-    "</b> prices? That is <b>" + Math.round(shareOf(n, S.entry)) + "</b> points per team. You get one swap all season.";
-  $("lockConfirm").classList.add("on");
-  lockStep(false);
-  paintCrowns();
-}
-function callFilled(){ return $("tbWin").value !== "" && $("tbLose").value !== ""; }
-function lockStep(two){
-  if(two && !crownsReady()) return;
-  $("cfStep1").hidden = !!two;
-  $("cfStep2").hidden = !two;
-  if(two) $("bLockGo").disabled = !callFilled();
-  var f = two ? $("tbWin") : $("cfNext");
-  if(f) f.focus();
-}
-function closeLockAsk(){ $("lockConfirm").classList.remove("on"); paintCrowns(); }
-function doLock(){
-  if(S.locked || entryShut()) return;
-  syncCrowns();
-  if(!crownsReady()){ lockStep(false); toast("Crown four teams first.", "bad"); return; }
-  var w = parseInt($("tbWin").value, 10), l = parseInt($("tbLose").value, 10);
-  if(isNaN(w) || isNaN(l)){
-    toast("Call the final score. Winner and loser.", "bad");
-    $(isNaN(w) ? "tbWin" : "tbLose").focus();
-    return;
-  }
-  if(l > w){
-    toast("The loser cannot outscore the winner.", "bad");
-    $("tbLose").focus();
-    return;
-  }
-  cancelSwapAsk(true);
-  S.call = {w:w, l:l};
-  S.locked = true;
-  S.lockedAt = new Date();
-  S.lockLabel = DOCKS[S.entry].k;                 // the dock is fixed from here
-  closeLockAsk();
-  $("sealTxt").textContent = "Locked \u00B7 " + S.lockLabel;
-  bubEl.classList.remove("locking");
-  void bubEl.offsetWidth;
-  bubEl.classList.add("locking");
-  setTimeout(function(){ bubEl.classList.remove("locking"); }, REDUCE ? 620 : 1000);
-  render();
-  toast("Bubble locked. You're on the boards.");
-}
-function renderLock(){
-  var b = $("bLock"), chip = $("lockChip");
-  $("sealTag").hidden = !S.locked && !S.playoff;
-  $("sealTxt").hidden = !S.locked;
-  $("sealFinal").hidden = !S.playoff;
-  bubEl.classList.toggle("draft", !S.locked);
-  bubEl.classList.toggle("locked", S.locked);
-  $("bAdv").classList.toggle("gold", S.locked);
-  if(S.locked){
-    b.hidden = true;
-    chip.hidden = false;
-    chip.innerHTML = '<span class="dot"></span>Locked \u00B7 <b>' + S.lockLabel + '</b> \u00B7 ' + stamp(S.lockedAt);
-    chip.title = "Champ: " + (S.crowns[0] ? BY_ID[S.crowns[0]].name : "\u2014") +
-      " \u00B7 Final Four: " + S.crowns.map(function(i){ return BY_ID[i].name; }).join(", ") +
-      " \u00B7 Called it " + (S.call ? S.call.w + "\u2013" + S.call.l : "\u2014");
-    closeLockAsk();
-  } else {
-    b.hidden = false;
-    chip.hidden = true;
-    b.disabled = entryShut();
-    b.textContent = entryShut() ? "Entry closed" : "Lock in your bubble";
-    if(entryShut()) closeLockAsk();
-  }
-}
+$('advBtn').onclick=()=>{
+  if(S.final||S.week>=15){toast('Season is over — play the playoff.');return}
+  S.week++;
+  if(!S.locked&&S.entryWeek<3&&S.week-1<=3) S.entryWeek=Math.min(3,S.week-1);
+  shuffleRanks(4);
+  renderAll();
+  toast(S.week>4&&!S.locked?'Week '+S.week+'. Entry is closed. Reset to try a new bubble.':'Week '+S.week+'. The '+(S.week>=10?'playoff rankings':'JP Poll')+' moved — so did your bubble.');
+};
+$('playoffBtn').onclick=()=>{
+  if(S.final)return;
+  S.week=16;shuffleRanks(10);shuffleRanks(8);
+  const f4=TEAMS.filter(t=>t.rank>0).sort((a,b)=>a.rank-b.rank).slice(0,4).map(t=>t.id);
+  S.final={f4,champ:f4[0],w:34,l:27};
+  renderAll();
+  const hits=S.crowns.filter(id=>f4.includes(id)).length;
+  $('results').hidden=false;
+  $('results').innerHTML='<h2>Final Four revealed</h2><p>'+f4.map(id=>team(id).name).join(' · ')+'</p><p>Champion: <b>'+team(f4[0]).name+'</b> · '+S.final.w+'–'+S.final.l+'</p><p>Your final score: <b>'+fmt(scoreOf(S.bubble,mult(),S.fee))+'</b> points, after '+S.fee+' swap points.</p><p>'+(S.locked?'Your champ pick was '+(S.crowns[0]===f4[0]?'correct':'incorrect')+'. You crowned '+hits+' of the Final Four. Your score call missed by '+(Math.abs(S.call.w-S.final.w)+Math.abs(S.call.l-S.final.l))+' total points.':'Preview only — you did not lock an entry.')+'</p>';
+  toast('Final Four revealed. Your final score is ready.');
+};
+$('resetBtn').onclick=()=>location.reload();
 
-/* \u2500\u2500 the clock, and the moment a team bombs out \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 */
-function shake(cls, ms){
-  if(REDUCE) return;
-  quietRipple = Date.now() + ms;                // the jolt owns the sphere
-  bubEl.classList.remove(cls);
-  void bubEl.offsetWidth;
-  bubEl.classList.add(cls);
-  setTimeout(function(){ bubEl.classList.remove(cls); }, ms - 60);
-}
-function droppedOut(ids){                       // stage one: still inside, now dead weight
-  if(!ids.length) return;
-  ids.forEach(function(id){
-    var g = orbsG.querySelector('[data-id="'+id+'"]');
-    if(g) g.classList.add("cracked");           // the disc splits
-  });
-  shake("bomb", 880);
-  var names = ids.map(function(i){ return BY_ID[i].name; }).join(" and ");
-  toast(names + " fell out of the Top 25. Dead weight.", "bad");
-}
-function letGo(ids){                            // stage two: the shell lets it through
-  if(!ids.length) return;
-  shake("release", 940);
-  var names = ids.map(function(i){ return BY_ID[i].name; }).join(" and ");
-  toast(names + (ids.length > 1 ? " are" : " is") + " out of the playoff. Hanging off your bubble now.", "bad");
-}
-function applyPoll(mutate){
-  var was = {};
-  S.bubble.forEach(function(id){ was[id] = {c:creditOf(id), r:rankOf(id), e:isEliminated(id)}; });
-  var prev = liveScore();
-  mutate();
-
-  var drops = [], outs = [];
-  S.bubble.forEach(function(id){
-    if(isEliminated(id)){ if(!was[id].e) outs.push(id); }
-    else if(was[id].c > 0 && creditOf(id) === 0) drops.push(id);
-  });
-  droppedOut(drops);
-  letGo(outs);
-  render(prev);
-  return {drops:drops, outs:outs, was:was, prev:prev};
-}
-
-function advanceWeek(){
-  if(S.playoff || S.week >= SEASON.length) return;
-  cancelSwapAsk(true);
-  var r = applyPoll(function(){
-    S.week++;
-    if(!S.locked) S.entry = Math.min(DOCKS.length-1, S.week-1);
-    S.ranks = SEASON[S.week-1].slice();
-  });
-
-  var msgs = [];
-  S.bubble.forEach(function(id){
-    if(r.drops.indexOf(id) >= 0 || r.outs.indexOf(id) >= 0) return;
-    var was = r.was[id].r, now = rankOf(id);
-    if(!was && now) msgs.push([BY_ID[id].name + (S.poppedAt[id] === undefined && !S.seen[id]
-      ? " climbs into the poll at #" : " is back in the poll at #") + now + ".", "ok"]);
-    else if(now && now<=8 && (was>8 || !was)) msgs.push([BY_ID[id].name + " (#" + now + ") is lifting your bubble.", "ok"]);
-    else if(now && was && was-now>=2) msgs.push([BY_ID[id].name + " climbed to #" + now + ".", "ok"]);
-    else if(now && was && now-was>=2) msgs.push([BY_ID[id].name + " slid to #" + now + ".", "bad"]);
-  });
-  if(!msgs.length && !r.drops.length && !r.outs.length) msgs.push(["Quiet week in the poll. Your bubble holds where it was.", "ok"]);
-  msgs.slice(0,2).forEach(function(m, i){
-    setTimeout(function(){ toast(m[0], m[1]==="bad"?"bad":""); }, 520 + i*440);
-  });
-  if(!S.locked){
-    setTimeout(function(){
-      toast(S.week > 4 ? "Entry closed. You never locked in. Hit reset to play it again."
-                       : "Not locked yet. Lock in by Week 4 or you're out.", S.week > 4 ? "bad" : "");
-    }, 1500);
-  } else if(S.week === 5){
-    toast("Entry window is closed. Whatever you have is what you ride.", "bad");
-  }
-  var moved = liveScore() - r.prev;
-  if(moved !== 0){
-    setTimeout(function(){
-      toast("Your bubble moved " + (moved > 0 ? "+" : "\u2212") + Math.abs(moved) + " this week", moved < 0 ? "bad" : "");
-    }, 240);
-  }
-  if(S.week === SEASON.length) setTimeout(function(){ toast("Final poll is in. Play the playoff."); }, 1900);
-}
-
-function playPlayoff(){
-  if(S.playoff) return;
-  cancelSwapAsk(true);
-  applyPoll(function(){                         // settle the poll, then play it out
-    if(S.week < SEASON.length){
-      S.week = SEASON.length;
-      if(!S.locked) S.entry = Math.min(DOCKS.length-1, S.week-1);
-    }
-    S.ranks = SEASON[SEASON.length-1].slice();
-    S.playoff = PLAYOFF;
-  });
-  if(!REDUCE) bubEl.classList.add("shimmer");
-
-  var note = $("finalNote");
-  note.hidden = false;
-  note.innerHTML = 'Final Four: <b>' + PLAYOFF.f4.map(function(i){return BY_ID[i].name;}).join(" \u00B7 ") +
-    '</b>. Every team paid the better of its playoff run or where it finished in the final poll. ' +
-    'Your season closes at <b>' + liveScore() + '</b> points.';
-  var mine = S.bubble.filter(function(id){ return PLAYOFF.f4.indexOf(id) >= 0; });
-  if(mine.length) toast(mine.map(function(i){return BY_ID[i].name;}).join(" and ") + " reached the Final Four. Full points.");
-  else toast("No Final Four team in your bubble. You take what the rankings pay.", "bad");
-}
-
-function reset(){
-  cancelSwapAsk(true);
-  S = freshState();
-  bubEl.classList.remove("shimmer", "locking");
-  closeLockAsk();
-  $("finalNote").hidden = true;
-  $("bAdv").disabled = false;
-  $("bPlay").disabled = false;
-  $("q").value = "";
-  while(orbsG.firstChild) orbsG.removeChild(orbsG.firstChild);
-  render(null);
-  toast("Back to the preseason. Four teams, 250 each, not locked in.");
-}
-
-/* \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
-   RENDER
-   \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550 */
-function render(prev){
-  clearSel();
-  markSeen();
-  syncCrowns();
-  $("weekChip").textContent = S.week;
-  $("capNote").textContent = S.bubble.length + " / 20";
-  renderOrbs();
-  placeBubble();
-  placeCeiling();
-  renderLock();
-  renderTray();
-  renderRoster();
-  renderEntry();
-  renderSwap();
-  renderTailgate();
-  renderState();
-  renderStrip(prev===undefined?null:prev);
-  renderTiebreak();
-  $("bAdv").disabled = !!S.playoff || S.week >= SEASON.length;
-  $("bPlay").disabled = !!S.playoff;
-}
-
-/* \u2500\u2500 the full rules, in a trapped modal \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 */
-var lastFocus = null;
-function openRules(){
-  lastFocus = document.activeElement;
-  $("rulesModal").hidden = false;
-  $("rulesCard").focus();
-  document.addEventListener("keydown", rulesKeys, true);
-}
-function closeRules(){
-  if($("rulesModal").hidden) return;
-  $("rulesModal").hidden = true;
-  document.removeEventListener("keydown", rulesKeys, true);
-  if(lastFocus && lastFocus.focus) lastFocus.focus();
-}
-function rulesKeys(e){
-  if(e.key === "Escape"){ e.stopPropagation(); closeRules(); return; }
-  if(e.key !== "Tab") return;
-  var f = $("rulesCard").querySelectorAll("button, [href], input, select, textarea, [tabindex]:not([tabindex='-1'])");
-  if(!f.length) return;
-  var first = f[0], last = f[f.length-1];
-  if(e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
-  else if(!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
-}
-
-/* wiring */
-$("q").addEventListener("input", renderTray);
-$("t25").addEventListener("click", function(){ top25Only = !top25Only; renderTray(); });
-$("swapAskX").addEventListener("click", function(){ cancelSwapAsk(); });
-document.addEventListener("keydown", function(e){
-  if(e.key === "Escape"){ abortDrag(); cancelSwapAsk(); clearSel(); }
-});
-$("bSwap").addEventListener("click", doSwap);
-$("bAdv").addEventListener("click", advanceWeek);
-$("bPlay").addEventListener("click", playPlayoff);
-$("bReset").addEventListener("click", reset);
-$("orbPillGo").addEventListener("click", pillAct);
-$("orbPillX").addEventListener("click", clearSel);
-document.addEventListener("pointerdown", function(e){
-  if(!selId) return;
-  if(e.target.closest && (e.target.closest("#orbPill") || e.target.closest(".orb"))) return;
-  clearSel();
-}, true);
-window.addEventListener("scroll", placePill, {passive:true});
-$("bRules").addEventListener("click", openRules);
-$("bRulesX").addEventListener("click", closeRules);
-$("rulesBg").addEventListener("click", closeRules);
-$("bLock").addEventListener("click", askLock);
-$("bLockGo").addEventListener("click", doLock);
-$("bLockNo").addEventListener("click", closeLockAsk);
-$("cfNext").addEventListener("click", function(){ lockStep(true); });
-$("cfBack").addEventListener("click", function(){ lockStep(false); });
-["tbWin","tbLose"].forEach(function(id){
-  $(id).addEventListener("input", function(){ $("bLockGo").disabled = !callFilled(); });
-  $(id).addEventListener("keydown", function(e){ if(e.key === "Enter") doLock(); });
-});
-window.addEventListener("resize", function(){ clearSel(); layout(); });
-
-S = freshState();
-buildAxis();
-buildConfChips();
-buildSliceTable();
-layout();
-render(null);
-setTimeout(function(){ toast("Georgia (#2) is lifting your bubble."); }, 900);
-setTimeout(function(){ toast("Michigan is sagging at #15. It pays 10%."); }, 2200);
-setTimeout(function(){ toast("You're not locked in yet. Lock in to get on the boards."); }, 3600);
-})();
+window.addEventListener('resize',()=>renderAll());
+renderAll();
 </script>
+</body>
+</html>
